@@ -1,0 +1,14 @@
+{
+  "name": "trading-tracker",
+  "label": "Trading Tracker",
+  "description": "Portfolio, strategy, workflow, and whale-monitor dashboard for trading automation.",
+  "icon": "BarChart3",
+  "version": "1.0.0",
+  "tab": {
+    "path": "/trading-tracker",
+    "position": "after:graphify"
+  },
+  "entry": "dist/index.js",
+  "css": "dist/style.css",
+  "api": "plugin_api.py"
+}

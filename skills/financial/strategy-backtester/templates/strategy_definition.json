@@ -1,0 +1,44 @@
+{
+  "strategy_id": "uw_oi_carryover_v1",
+  "strategy_name": "UW OI Carryover Confirmation",
+  "asset_class": "options",
+  "strategy_family": "UW_KIAN",
+  "hypothesis": "High initial contract volume plus next-session OI carryover and same-direction ask-side follow-through improves expectancy versus volume-only flow.",
+  "universe": {
+    "source": "unusual_whales_flow_alerts",
+    "filters": {
+      "min_initial_volume": 500,
+      "min_premium": 50000,
+      "option_side": "ask_or_above_ask",
+      "dte_bucket": "1-90"
+    }
+  },
+  "entry_trigger": "initial contract volume from notable whale flow adds contract to watchlist",
+  "confirmation_rules": [
+    "next trading day after 6:35 AM PT: OI >= entry OI + max(100, 25% of entry volume)",
+    "same-direction ask-side premium exceeds bid-side premium",
+    "contract price holds above intraday average"
+  ],
+  "exit_rules": [
+    "bid-side premium dominates ask-side premium",
+    "OI fades after next market open",
+    "contract price breaks below intraday average by configured threshold",
+    "time stop after 1-3 sessions"
+  ],
+  "position_sizing": {
+    "type": "fixed_risk",
+    "risk_per_trade_pct": 1.0,
+    "max_position_pct": 10.0
+  },
+  "cost_model": {
+    "commission": 0,
+    "slippage_bps": 10,
+    "options_spread_penalty_pct": 5
+  },
+  "promotion_thresholds": {
+    "min_trades": 30,
+    "min_expectancy": 0.05,
+    "min_profit_factor": 1.25,
+    "max_drawdown_pct": 20
+  }
+}

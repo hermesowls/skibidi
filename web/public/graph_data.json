@@ -1,0 +1,487 @@
+{
+  "nodes": [
+    {
+      "id": "Skylit_GEX",
+      "name": "Skylit GEX Heatmap",
+      "community": "Signals",
+      "val": 15,
+      "color": "#f59e0b"
+    },
+    {
+      "id": "Skylit_VEX",
+      "name": "Skylit VEX Volatility",
+      "community": "Signals",
+      "val": 15,
+      "color": "#f59e0b"
+    },
+    {
+      "id": "UW_Flow",
+      "name": "Unusual Whales Flow",
+      "community": "Signals",
+      "val": 15,
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "GEX_0DTE",
+      "name": "GEX 0DTE Scalp Portfolio",
+      "community": "Portfolios",
+      "val": 22,
+      "color": "#ef4444"
+    },
+    {
+      "id": "VEX_SWING",
+      "name": "VEX Swing Portfolio",
+      "community": "Portfolios",
+      "val": 22,
+      "color": "#10b981"
+    },
+    {
+      "id": "SPY",
+      "name": "SPY",
+      "community": "Tickers",
+      "val": 18,
+      "color": "#4f46e5"
+    },
+    {
+      "id": "AAPL",
+      "name": "AAPL",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "NVDA",
+      "name": "NVDA",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "MSFT",
+      "name": "MSFT",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "QQQ",
+      "name": "QQQ",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "IWM",
+      "name": "IWM",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "TSMC",
+      "name": "TSMC",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "ASML",
+      "name": "ASML",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "SMCI",
+      "name": "SMCI",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "AMD",
+      "name": "AMD",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "AVGO",
+      "name": "AVGO",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "TSLA",
+      "name": "TSLA",
+      "community": "Tickers",
+      "val": 18,
+      "color": "#4f46e5"
+    },
+    {
+      "id": "ALB",
+      "name": "ALB",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "PANW",
+      "name": "PANW",
+      "community": "Suppliers",
+      "val": 11,
+      "color": "#06b6d4"
+    },
+    {
+      "id": "RIVN",
+      "name": "RIVN",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "LCID",
+      "name": "LCID",
+      "community": "Sympathy",
+      "val": 11,
+      "color": "#ec4899"
+    },
+    {
+      "id": "Trade_NVDA_1",
+      "name": "NVDA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_NVDA_2",
+      "name": "NVDA (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_SPY_3",
+      "name": "SPY (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_TSLA_4",
+      "name": "TSLA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_SPY_5",
+      "name": "SPY (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_TSLA_6",
+      "name": "TSLA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_SPY_7",
+      "name": "SPY (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_TSLA_8",
+      "name": "TSLA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_SPY_9",
+      "name": "SPY (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_TSLA_10",
+      "name": "TSLA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_SPY_11",
+      "name": "SPY (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_TSLA_12",
+      "name": "TSLA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_SPY_13",
+      "name": "SPY (GEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    },
+    {
+      "id": "Trade_TSLA_14",
+      "name": "TSLA (VEX)",
+      "community": "Active Trades",
+      "val": 10,
+      "color": "#e11d48"
+    }
+  ],
+  "links": [
+    {
+      "source": "SPY",
+      "target": "Skylit_GEX"
+    },
+    {
+      "source": "SPY",
+      "target": "Skylit_VEX"
+    },
+    {
+      "source": "SPY",
+      "target": "UW_Flow"
+    },
+    {
+      "source": "SPY",
+      "target": "AAPL"
+    },
+    {
+      "source": "SPY",
+      "target": "NVDA"
+    },
+    {
+      "source": "SPY",
+      "target": "MSFT"
+    },
+    {
+      "source": "SPY",
+      "target": "QQQ"
+    },
+    {
+      "source": "SPY",
+      "target": "IWM"
+    },
+    {
+      "source": "NVDA",
+      "target": "Skylit_GEX"
+    },
+    {
+      "source": "NVDA",
+      "target": "Skylit_VEX"
+    },
+    {
+      "source": "NVDA",
+      "target": "UW_Flow"
+    },
+    {
+      "source": "NVDA",
+      "target": "TSMC"
+    },
+    {
+      "source": "NVDA",
+      "target": "ASML"
+    },
+    {
+      "source": "NVDA",
+      "target": "SMCI"
+    },
+    {
+      "source": "NVDA",
+      "target": "AMD"
+    },
+    {
+      "source": "NVDA",
+      "target": "AVGO"
+    },
+    {
+      "source": "TSLA",
+      "target": "Skylit_GEX"
+    },
+    {
+      "source": "TSLA",
+      "target": "Skylit_VEX"
+    },
+    {
+      "source": "TSLA",
+      "target": "UW_Flow"
+    },
+    {
+      "source": "TSLA",
+      "target": "ALB"
+    },
+    {
+      "source": "TSLA",
+      "target": "PANW"
+    },
+    {
+      "source": "TSLA",
+      "target": "RIVN"
+    },
+    {
+      "source": "TSLA",
+      "target": "LCID"
+    },
+    {
+      "source": "Trade_NVDA_1",
+      "target": "NVDA"
+    },
+    {
+      "source": "Trade_NVDA_1",
+      "target": "VEX_SWING"
+    },
+    {
+      "source": "Trade_NVDA_2",
+      "target": "NVDA"
+    },
+    {
+      "source": "Trade_NVDA_2",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_SPY_3",
+      "target": "SPY"
+    },
+    {
+      "source": "Trade_SPY_3",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_TSLA_4",
+      "target": "TSLA"
+    },
+    {
+      "source": "Trade_TSLA_4",
+      "target": "VEX_SWING"
+    },
+    {
+      "source": "Trade_SPY_5",
+      "target": "SPY"
+    },
+    {
+      "source": "Trade_SPY_5",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_TSLA_6",
+      "target": "TSLA"
+    },
+    {
+      "source": "Trade_TSLA_6",
+      "target": "VEX_SWING"
+    },
+    {
+      "source": "Trade_SPY_7",
+      "target": "SPY"
+    },
+    {
+      "source": "Trade_SPY_7",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_TSLA_8",
+      "target": "TSLA"
+    },
+    {
+      "source": "Trade_TSLA_8",
+      "target": "VEX_SWING"
+    },
+    {
+      "source": "Trade_SPY_9",
+      "target": "SPY"
+    },
+    {
+      "source": "Trade_SPY_9",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_TSLA_10",
+      "target": "TSLA"
+    },
+    {
+      "source": "Trade_TSLA_10",
+      "target": "VEX_SWING"
+    },
+    {
+      "source": "Trade_SPY_11",
+      "target": "SPY"
+    },
+    {
+      "source": "Trade_SPY_11",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_TSLA_12",
+      "target": "TSLA"
+    },
+    {
+      "source": "Trade_TSLA_12",
+      "target": "VEX_SWING"
+    },
+    {
+      "source": "Trade_SPY_13",
+      "target": "SPY"
+    },
+    {
+      "source": "Trade_SPY_13",
+      "target": "GEX_0DTE"
+    },
+    {
+      "source": "Trade_TSLA_14",
+      "target": "TSLA"
+    },
+    {
+      "source": "Trade_TSLA_14",
+      "target": "VEX_SWING"
+    }
+  ],
+  "communities": [
+    {
+      "name": "Tickers",
+      "color": "#4f46e5",
+      "count": 2
+    },
+    {
+      "name": "Signals",
+      "color": "#f59e0b",
+      "count": 3
+    },
+    {
+      "name": "Portfolios",
+      "color": "#10b981",
+      "count": 2
+    },
+    {
+      "name": "Suppliers",
+      "color": "#06b6d4",
+      "count": 7
+    },
+    {
+      "name": "Sympathy",
+      "color": "#ec4899",
+      "count": 7
+    },
+    {
+      "name": "Active Trades",
+      "color": "#e11d48",
+      "count": 14
+    }
+  ]
+}
