@@ -20,7 +20,7 @@ Use this skill whenever analyzing options flow, dark pool activity, or stock ale
 9. **HARDCODE CARD STRUCTURE, NOT DATA**: Keep the Discord output structure as deterministic/hardcoded as possible: fixed section order, fixed labels, fixed formatting, fixed chart/link placement, and fixed disclaimer. Only dynamic API/yfinance values and the final reasoning fields should vary.
 10. **LLM REASONING SCOPE**: Use LLM judgment only for critical interpretation fields such as Technical Alignment wording, Conviction Profile nuance, and the final Action Summary. The LLM should synthesize API + chart + Kian signals into beginner-friendly trade setup guidance, not rewrite the whole card.
 11. **PATTERN LEARNING LOOP**: As the workflow matures, preserve reusable lessons about what makes trades good/bad as skill updates or compact memory. Capture patterns like ask-side continuation, next-session OI confirmation, contract price holding above intraday average, trend alignment, failed follow-through, and invalidation rules.
-12. **DETERMINISTIC DTE CALCULATION**: Always compute DTE dynamically in Python using `(datetime.strptime(expiration_date, "%Y-%m-%d") - datetime.now()).days`. NEVER guess or hallucinate DTE values or reuse static template numbers (e.g. 14 DTE or 22 DTE) in markdown output.
+12. **DETERMINISTIC DTE + SPOTTED DATE STANDARD**: Always show the whale spotted date separately from DTE. Compute DTE dynamically from the current analysis date/today, not from the whale purchase/spotted date: `(datetime.strptime(expiration_date, "%Y-%m-%d").date() - datetime.now().date()).days`. In Discord cards include `**Whale Spotted Date**`, `**Analysis Date**`, and `**Expiration Date**: YYYY-MM-DD (N DTE from analysis date)`. NEVER guess or hallucinate DTE values or reuse static template numbers.
 
 ---
 
@@ -56,7 +56,9 @@ Whenever evaluating market flow or scanning tickers, apply **The Kian Process** 
 **Ticker**: NBIS
 **Option Type**: PUT
 **Trade Side**: ASK-SIDE (BUY CONVICTION)
-**Expiration Date**: 2026-08-07 (14 DTE)
+**Whale Spotted Date**: 2026-07-27
+**Analysis Date**: 2026-07-28
+**Expiration Date**: 2026-08-07 (10 DTE from analysis date)
 **Strike Price**: $170.00
 **Contract Price**: $16.10
 **Trade Total**: $32,654,020 (20,282 contracts)

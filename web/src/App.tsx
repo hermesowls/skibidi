@@ -33,6 +33,7 @@ import {
   Globe,
   Heart,
   KeyRound,
+  Layers,
   Menu,
   MessageSquare,
   Package,
@@ -93,6 +94,7 @@ import WebhooksPage from "@/pages/WebhooksPage";
 import SystemPage from "@/pages/SystemPage";
 import ChatPage from "@/pages/ChatPage";
 import { GraphifyPage } from "@/pages/GraphifyPage";
+import { WorkflowsPage } from "@/pages/WorkflowsPage";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useI18n } from "@/i18n";
@@ -142,6 +144,7 @@ const BUILTIN_ROUTES_CORE: Record<string, ComponentType> = {
   "/cron": CronPage,
   "/skills": SkillsPage,
   "/graphify": GraphifyPage,
+  "/workflows": WorkflowsPage,
   "/plugins": PluginsPage,
   "/mcp": McpPage,
   "/pairing": PairingPage,
@@ -187,6 +190,7 @@ const BUILTIN_NAV_REST: NavItem[] = [
   { path: "/cron", labelKey: "cron", label: "Cron", icon: Clock },
   { path: "/skills", labelKey: "skills", label: "Skills", icon: Package },
   { path: "/graphify", label: "Graphify", icon: Share2 },
+  { path: "/workflows", label: "Workflows", icon: Layers },
   { path: "/plugins", labelKey: "plugins", label: "Plugins", icon: Puzzle },
   { path: "/mcp", label: "MCP", icon: Plug },
   { path: "/channels", label: "Channels", icon: Radio },
