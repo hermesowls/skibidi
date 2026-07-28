@@ -253,3 +253,19 @@ html[dir="rtl"] {
   direction: rtl;
 }
 
+/* ------------------------------------------------------------------ */
+/* Clean Modern Typography Override                                    */
+/* Replaces pixelated / stretched design system font families with      */
+/* crisp -apple-system / Inter / JetBrains Mono font stack.           */
+/* ------------------------------------------------------------------ */
+:root, html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif !important;
+  --theme-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif !important;
+  --theme-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace !important;
+  --theme-font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif !important;
+}
+
+code, kbd, pre, samp, .font-mono, .font-mono-ui {
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace !important;
+}
+
