@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, MouseEvent } from "react";
 import {
   Play,
   CheckCircle2,
@@ -15,7 +15,11 @@ import {
   Clock,
   Layers,
   ArrowRight,
-  Database
+  Database,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Move
 } from "lucide-react";
 
 interface WorkflowNode {
@@ -33,7 +37,7 @@ interface WorkflowNode {
   convictionScore?: number;
 }
 
-const NODES: WorkflowNode[] = [
+const INITIAL_NODES: WorkflowNode[] = [
   {
     id: "uw_flow",
     name: "Unusual Whales Flow Scanner",
@@ -196,15 +200,86 @@ const CONNECTIONS = [
 ];
 
 export function WorkflowsPage() {
-  const [selectedNode, setSelectedNode] = useState<WorkflowNode>(NODES[3]);
+  const [selectedNode, setSelectedNode] = useState<WorkflowNode>(INITIAL_NODES[3]);
   const [isRunningSim, setIsRunningSim] = useState(false);
   const [activePipeline, setActivePipeline] = useState("full");
+
+  // Pan & Zoom State
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [isPanning, setIsPanning] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  // Dynamic Node Positions
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>(() => {
+    const initial: Record<string, { x: number; y: number }> = {};
+    INITIAL_NODES.forEach((n) => { initial[n.id] = { x: n.x, y: n.y }; });
+    return initial;
+  });
+
+  // Node Dragging State
+  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
+  const [nodeOffset, setNodeOffset] = useState({ x: 0, y: 0 });
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const runSimulation = () => {
     setIsRunningSim(true);
     setTimeout(() => {
       setIsRunningSim(false);
     }, 2500);
+  };
+
+  // Canvas Pan Handlers
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (draggingNodeId) return;
+    setIsPanning(true);
+    setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (draggingNodeId) {
+      setNodePositions((prev) => ({
+        ...prev,
+        [draggingNodeId]: {
+          x: (e.clientX - pan.x - nodeOffset.x) / zoom,
+          y: (e.clientY - pan.y - nodeOffset.y) / zoom,
+        },
+      }));
+      return;
+    }
+
+    if (isPanning) {
+      setPan({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsPanning(false);
+    setDraggingNodeId(null);
+  };
+
+  // Node Drag Handlers
+  const handleNodeMouseDown = (e: MouseEvent<HTMLDivElement>, nodeId: string) => {
+    e.stopPropagation();
+    setSelectedNode(INITIAL_NODES.find((n) => n.id === nodeId) || selectedNode);
+    setDraggingNodeId(nodeId);
+    const pos = nodePositions[nodeId] || { x: 0, y: 0 };
+    setNodeOffset({
+      x: e.clientX - pan.x - pos.x * zoom,
+      y: e.clientY - pan.y - pos.y * zoom,
+    });
+  };
+
+  const resetView = () => {
+    setPan({ x: 0, y: 0 });
+    setZoom(1);
+    const initial: Record<string, { x: number; y: number }> = {};
+    INITIAL_NODES.forEach((n) => { initial[n.id] = { x: n.x, y: n.y }; });
+    setNodePositions(initial);
   };
 
   const getCategoryColor = (cat: WorkflowNode["category"]) => {
@@ -230,16 +305,42 @@ export function WorkflowsPage() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-semibold text-slate-100">N8N Workflow Logic Visualizer</h1>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
-                  LIVE PIPELINE
+                <h1 className="text-base font-semibold text-slate-100">N8N Interactive Workflow Canvas</h1>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono flex items-center gap-1">
+                  <Move className="h-3 w-3" /> DRAGGABLE & PANNABLE
                 </span>
               </div>
-              <p className="text-xs text-slate-400">End-to-End Logic: UW Flow → Skylit AI → Market Sentiment → Sub-Portfolios → Alpaca Paper → Dispatcher</p>
+              <p className="text-xs text-slate-400">Drag canvas or individual nodes to reposition workflow logic anytime.</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Canvas Zoom & Reset Controls */}
+            <div className="flex items-center gap-1 bg-[#1a202c] p-1 rounded-lg border border-slate-700/80 text-slate-300">
+              <button
+                onClick={() => setZoom((z) => Math.min(1.8, z + 0.15))}
+                className="p-1 hover:bg-slate-700/50 rounded"
+                title="Zoom In"
+              >
+                <ZoomIn className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={() => setZoom((z) => Math.max(0.4, z - 0.15))}
+                className="p-1 hover:bg-slate-700/50 rounded"
+                title="Zoom Out"
+              >
+                <ZoomOut className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={resetView}
+                className="p-1 hover:bg-slate-700/50 rounded"
+                title="Reset View"
+              >
+                <RotateCcw className="h-3.5 w-3.5 text-amber-400" />
+              </button>
+              <span className="text-[10px] font-mono px-2 text-slate-400">{Math.round(zoom * 100)}%</span>
+            </div>
+
             <select
               value={activePipeline}
               onChange={(e) => setActivePipeline(e.target.value)}
@@ -262,114 +363,137 @@ export function WorkflowsPage() {
               {isRunningSim ? (
                 <>
                   <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                  Simulating Data Flow...
+                  Simulating Flow...
                 </>
               ) : (
                 <>
                   <Play className="h-3.5 w-3.5 fill-current" />
-                  Test Workflow Flow
+                  Test Flow
                 </>
               )}
             </button>
           </div>
         </div>
 
-        {/* N8N Interactive Grid Canvas */}
-        <div className="flex-1 relative overflow-auto bg-[#0b0e14] cursor-grab active:cursor-grabbing">
-          {/* SVG Connection Lines */}
-          <svg className="absolute inset-0 w-[1600px] h-[600px] pointer-events-none z-0">
-            <defs>
-              <linearGradient id="flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-            {CONNECTIONS.map((conn, idx) => {
-              const fromNode = NODES.find(n => n.id === conn.from);
-              const toNode = NODES.find(n => n.id === conn.to);
-              if (!fromNode || !toNode) return null;
+        {/* N8N Draggable & Pannable Interactive Grid Canvas */}
+        <div
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          className={`flex-1 relative overflow-hidden bg-[#0b0e14] ${
+            isPanning ? "cursor-grabbing" : "cursor-grab"
+          }`}
+          style={{
+            backgroundImage: "radial-gradient(#1e293b 1px, transparent 1px)",
+            backgroundSize: `${24 * zoom}px ${24 * zoom}px`,
+            backgroundPosition: `${pan.x}px ${pan.y}px`,
+          }}
+        >
+          <div
+            className="absolute inset-0 origin-top-left transition-transform duration-75"
+            style={{
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+            }}
+          >
+            {/* Dynamic SVG Connection Lines */}
+            <svg className="absolute inset-0 w-[2400px] h-[1200px] pointer-events-none z-0">
+              <defs>
+                <linearGradient id="flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.9" />
+                </linearGradient>
+              </defs>
+              {CONNECTIONS.map((conn, idx) => {
+                const fromPos = nodePositions[conn.from];
+                const toPos = nodePositions[conn.to];
+                if (!fromPos || !toPos) return null;
 
-              const startX = fromNode.x + 220;
-              const startY = fromNode.y + 40;
-              const endX = toNode.x;
-              const endY = toNode.y + 40;
-              const controlX1 = startX + (endX - startX) / 2;
+                const startX = fromPos.x + 230;
+                const startY = fromPos.y + 50;
+                const endX = toPos.x;
+                const endY = toPos.y + 50;
+                const controlX1 = startX + (endX - startX) / 2;
 
-              return (
-                <g key={idx}>
-                  <path
-                    d={`M ${startX} ${startY} C ${controlX1} ${startY}, ${controlX1} ${endY}, ${endX} ${endY}`}
-                    fill="none"
-                    stroke="#1e293b"
-                    strokeWidth="3"
-                  />
-                  <path
-                    d={`M ${startX} ${startY} C ${controlX1} ${startY}, ${controlX1} ${endY}, ${endX} ${endY}`}
-                    fill="none"
-                    stroke="url(#flow-grad)"
-                    strokeWidth="2"
-                    strokeDasharray={isRunningSim ? "6 6" : "none"}
-                    className={isRunningSim ? "animate-dash" : ""}
-                    opacity="0.8"
-                  />
-                </g>
-              );
-            })}
-          </svg>
+                return (
+                  <g key={idx}>
+                    <path
+                      d={`M ${startX} ${startY} C ${controlX1} ${startY}, ${controlX1} ${endY}, ${endX} ${endY}`}
+                      fill="none"
+                      stroke="#1e293b"
+                      strokeWidth="3.5"
+                    />
+                    <path
+                      d={`M ${startX} ${startY} C ${controlX1} ${startY}, ${controlX1} ${endY}, ${endX} ${endY}`}
+                      fill="none"
+                      stroke="url(#flow-grad)"
+                      strokeWidth="2.5"
+                      strokeDasharray={isRunningSim ? "8 8" : "none"}
+                      className={isRunningSim ? "animate-dash" : ""}
+                      opacity="0.9"
+                    />
+                  </g>
+                );
+              })}
+            </svg>
 
-          {/* Canvas Interactive Nodes */}
-          <div className="relative w-[1600px] h-[600px] p-8 z-10">
-            {NODES.map((node) => {
-              const isSelected = selectedNode.id === node.id;
-              const colorClasses = getCategoryColor(node.category);
+            {/* Draggable Canvas Interactive Nodes */}
+            <div className="relative w-[2400px] h-[1200px] p-8 z-10">
+              {INITIAL_NODES.map((node) => {
+                const isSelected = selectedNode.id === node.id;
+                const colorClasses = getCategoryColor(node.category);
+                const pos = nodePositions[node.id] || { x: node.x, y: node.y };
 
-              return (
-                <div
-                  key={node.id}
-                  onClick={() => setSelectedNode(node)}
-                  style={{ left: `${node.x}px`, top: `${node.y}px` }}
-                  className={`absolute w-[230px] rounded-xl border bg-gradient-to-b ${colorClasses} p-4 cursor-pointer transition-all duration-200 shadow-xl ${
-                    isSelected ? "ring-2 ring-emerald-400 scale-[1.03] z-30" : "hover:scale-[1.01] hover:border-slate-500 z-20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono font-bold tracking-wider opacity-90">
-                      {node.badge}
-                    </span>
-                    {node.status === "success" && (
-                      <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30 font-mono">
-                        <CheckCircle2 className="h-3 w-3" /> OK
+                return (
+                  <div
+                    key={node.id}
+                    onMouseDown={(e) => handleNodeMouseDown(e, node.id)}
+                    style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+                    className={`absolute w-[230px] rounded-xl border bg-gradient-to-b ${colorClasses} p-4 cursor-move transition-all duration-75 shadow-2xl ${
+                      isSelected
+                        ? "ring-2 ring-emerald-400 scale-[1.03] z-30"
+                        : "hover:scale-[1.01] hover:border-slate-400 z-20"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-mono font-bold tracking-wider opacity-90">
+                        {node.badge}
                       </span>
-                    )}
-                    {node.status === "active" && (
-                      <span className="flex items-center gap-1 text-[10px] text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30 font-mono animate-pulse">
-                        <Zap className="h-3 w-3" /> TRIGGER
+                      {node.status === "success" && (
+                        <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30 font-mono">
+                          <CheckCircle2 className="h-3 w-3" /> OK
+                        </span>
+                      )}
+                      {node.status === "active" && (
+                        <span className="flex items-center gap-1 text-[10px] text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30 font-mono animate-pulse">
+                          <Zap className="h-3 w-3" /> TRIGGER
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-xs font-semibold text-slate-100 mb-1 leading-snug">
+                      {node.name}
+                    </h3>
+
+                    <p className="text-[11px] text-slate-400 line-clamp-2 mb-3">
+                      {node.summary}
+                    </p>
+
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-800/80 font-mono">
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-slate-500" />
+                        {node.lastExecution.split("at ")[1] || "06:30 PST"}
                       </span>
-                    )}
+                      {node.convictionScore && (
+                        <span className="text-emerald-400 font-bold">
+                          {node.convictionScore}/100
+                        </span>
+                      )}
+                    </div>
                   </div>
-
-                  <h3 className="text-xs font-semibold text-slate-100 mb-1 leading-snug">
-                    {node.name}
-                  </h3>
-
-                  <p className="text-[11px] text-slate-400 line-clamp-2 mb-3">
-                    {node.summary}
-                  </p>
-
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-800/80 font-mono">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3 text-slate-500" />
-                      {node.lastExecution.split("at ")[1] || "06:30 PST"}
-                    </span>
-                    {node.convictionScore && (
-                      <span className="text-emerald-400 font-bold">
-                        {node.convictionScore}/100
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
