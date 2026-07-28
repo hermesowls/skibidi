@@ -30,6 +30,7 @@ import {
   Eye,
   FolderOpen,
   FileText,
+  FlaskConical,
   Globe,
   Heart,
   KeyRound,
@@ -95,6 +96,7 @@ import SystemPage from "@/pages/SystemPage";
 import ChatPage from "@/pages/ChatPage";
 import { GraphifyPage } from "@/pages/GraphifyPage";
 import { WorkflowsPage } from "@/pages/WorkflowsPage";
+import { IncubatorPage } from "@/pages/IncubatorPage";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useI18n } from "@/i18n";
@@ -145,6 +147,7 @@ const BUILTIN_ROUTES_CORE: Record<string, ComponentType> = {
   "/skills": SkillsPage,
   "/graphify": GraphifyPage,
   "/workflows": WorkflowsPage,
+  "/incubator": IncubatorPage,
   "/plugins": PluginsPage,
   "/mcp": McpPage,
   "/pairing": PairingPage,
@@ -191,6 +194,7 @@ const BUILTIN_NAV_REST: NavItem[] = [
   { path: "/skills", labelKey: "skills", label: "Skills", icon: Package },
   { path: "/graphify", label: "Graphify", icon: Share2 },
   { path: "/workflows", label: "Workflows", icon: Layers },
+  { path: "/incubator", label: "Incubator", icon: FlaskConical },
   { path: "/plugins", labelKey: "plugins", label: "Plugins", icon: Puzzle },
   { path: "/mcp", label: "MCP", icon: Plug },
   { path: "/channels", label: "Channels", icon: Radio },
