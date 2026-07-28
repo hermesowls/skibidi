@@ -1,25 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FlaskConical,
-  TrendingUp,
-  TrendingDown,
   Sparkles,
   Zap,
   CheckCircle2,
-  AlertCircle,
   Brain,
   Layers,
   Clock,
-  Play,
   RefreshCw,
-  Sliders,
-  DollarSign,
-  ArrowUpRight,
   ShieldCheck,
   Lightbulb,
-  Building2,
-  Inbox,
-  HelpCircle
+  Building2
 } from "lucide-react";
 
 interface SubPortfolio {
@@ -259,8 +250,8 @@ const LIVE_EVOLUTIONS: EvolutionLog[] = [
 ];
 
 export function IncubatorPage() {
-  const [portfolios, setPortfolios] = useState<SubPortfolio[]>(LIVE_PORTFOLIOS);
-  const [trades, setTrades] = useState<ExperimentalTrade[]>(LIVE_ALPACA_TRADES);
+  const [portfolios] = useState<SubPortfolio[]>(LIVE_PORTFOLIOS);
+  const [trades] = useState<ExperimentalTrade[]>(LIVE_ALPACA_TRADES);
   const [evolutions, setEvolutions] = useState<EvolutionLog[]>(LIVE_EVOLUTIONS);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<string>("all");
   const [isEvolving, setIsEvolving] = useState(false);
