@@ -352,47 +352,65 @@ def extract_quote_summary_fields(qs_data: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 
+def get_finviz_quotes(symbols: list[str]) -> dict[str, dict]:
+    """Fetch quotes via Finviz Elite API if FINVIZ_API_URL is set."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    finviz_script_dir = os.path.abspath(os.path.join(script_dir, "../../../../skills/financial/financial-market-data/scripts"))
+    if finviz_script_dir not in sys.path:
+        sys.path.insert(0, finviz_script_dir)
+    try:
+        import finviz_client
+        quotes_list = finviz_client.fetch_quotes(symbols)
+        return {q["symbol"].upper(): q for q in quotes_list if "symbol" in q}
+    except Exception as e:
+        return {}
+
+
 def cmd_quote(symbols: list[str]) -> None:
     results = []
+    finviz_data = get_finviz_quotes(symbols)
 
     for sym in symbols:
         sym = sym.upper().strip()
-        entry = {"symbol": sym, "data_source": "Yahoo Finance"}
+        if sym in finviz_data:
+            entry = finviz_data[sym]
+        else:
+            entry = {"symbol": sym, "data_source": "Yahoo Finance"}
 
-        # Fetch chart for price data
-        chart_data = yf_chart(sym, interval="1d", range_="1d")
-        if chart_data:
-            q = extract_quote_from_chart(sym, chart_data)
-            entry.update(q)
+            # Fetch chart for price data
+            chart_data = yf_chart(sym, interval="1d", range_="1d")
+            if chart_data:
+                q = extract_quote_from_chart(sym, chart_data)
+                entry.update(q)
 
-        # Fetch quoteSummary for enriched data
-        qs_data = yf_quote_summary(sym)
-        if qs_data:
-            qs_fields = extract_quote_summary_fields(qs_data)
-            # Prefer quoteSummary values if chart didn't have them
-            for field in ("market_cap", "pe_ratio", "52w_high", "52w_low", "volume", "short_name"):
-                if entry.get(field) is None and qs_fields.get(field) is not None:
-                    entry[field] = qs_fields[field]
-                elif field == "market_cap" and qs_fields.get(field) is not None:
-                    # Always prefer formatted market cap from quoteSummary
-                    entry[field] = qs_fields[field]
+            # Fetch quoteSummary for enriched data
+            qs_data = yf_quote_summary(sym)
+            if qs_data:
+                qs_fields = extract_quote_summary_fields(qs_data)
+                # Prefer quoteSummary values if chart didn't have them
+                for field in ("market_cap", "pe_ratio", "52w_high", "52w_low", "volume", "short_name"):
+                    if entry.get(field) is None and qs_fields.get(field) is not None:
+                        entry[field] = qs_fields[field]
+                    elif field == "market_cap" and qs_fields.get(field) is not None:
+                        # Always prefer formatted market cap from quoteSummary
+                        entry[field] = qs_fields[field]
 
-        # Optionally enrich with Alpha Vantage
-        av_key = os.environ.get("ALPHA_VANTAGE_KEY")
-        if av_key:
-            av_data = av_overview(sym)
-            if av_data:
-                entry["data_source"] = "Yahoo Finance + Alpha Vantage"
-                if entry.get("pe_ratio") is None:
-                    pe = av_data.get("PERatio")
-                    entry["pe_ratio"] = pe if pe and pe != "None" and pe != "-" else None
-                if entry.get("market_cap") is None:
-                    mc = av_data.get("MarketCapitalization")
-                    entry["market_cap"] = fmt_large(mc)
-                if entry.get("52w_high") is None:
-                    entry["52w_high"] = av_data.get("52WeekHigh")
-                if entry.get("52w_low") is None:
-                    entry["52w_low"] = av_data.get("52WeekLow")
+            # Optionally enrich with Alpha Vantage
+            av_key = os.environ.get("ALPHA_VANTAGE_KEY")
+            if av_key:
+                av_data = av_overview(sym)
+                if av_data:
+                    entry["data_source"] = "Yahoo Finance + Alpha Vantage"
+                    if entry.get("pe_ratio") is None:
+                        pe = av_data.get("PERatio")
+                        entry["pe_ratio"] = pe if pe and pe != "None" and pe != "-" else None
+                    if entry.get("market_cap") is None:
+                        mc = av_data.get("MarketCapitalization")
+                        entry["market_cap"] = fmt_large(mc)
+                    if entry.get("52w_high") is None:
+                        entry["52w_high"] = av_data.get("52WeekHigh")
+                    if entry.get("52w_low") is None:
+                        entry["52w_low"] = av_data.get("52WeekLow")
 
         results.append(entry)
 
@@ -529,63 +547,70 @@ def cmd_compare(symbols: list[str]) -> None:
         return
 
     comparisons = []
+    finviz_data = get_finviz_quotes(symbols)
+    used_finviz = False
 
     for sym in symbols:
         sym = sym.upper().strip()
-        entry = {
-            "symbol": sym,
-            "name": None,
-            "price": None,
-            "change_pct": None,
-            "market_cap": None,
-            "pe_ratio": None,
-            "52w_high": None,
-            "52w_low": None,
-            "52w_performance_pct": None,
-        }
+        if sym in finviz_data:
+            fq = finviz_data[sym]
+            used_finviz = True
+            entry = {
+                "symbol": sym,
+                "name": fq.get("company"),
+                "price": fq.get("price"),
+                "change_pct": fq.get("change_pct"),
+                "market_cap": fq.get("market_cap"),
+                "pe_ratio": fq.get("pe_ratio"),
+                "52w_high": fq.get("52w_high"),
+                "52w_low": fq.get("52w_low"),
+                "rsi_14": fq.get("rsi_14"),
+                "sector": fq.get("sector"),
+            }
+        else:
+            entry = {
+                "symbol": sym,
+                "name": None,
+                "price": None,
+                "change_pct": None,
+                "market_cap": None,
+                "pe_ratio": None,
+                "52w_high": None,
+                "52w_low": None,
+                "52w_performance_pct": None,
+            }
 
-        # Chart data
-        chart_data = yf_chart(sym, interval="1d", range_="1d")
-        if chart_data:
-            q = extract_quote_from_chart(sym, chart_data)
-            entry["name"] = q.get("short_name")
-            entry["price"] = q.get("price")
-            entry["change_pct"] = q.get("change_pct")
-            entry["52w_high"] = q.get("52w_high")
-            entry["52w_low"] = q.get("52w_low")
+            # Chart data
+            chart_data = yf_chart(sym, interval="1d", range_="1d")
+            if chart_data:
+                q = extract_quote_from_chart(sym, chart_data)
+                entry["name"] = q.get("short_name")
+                entry["price"] = q.get("price")
+                entry["change_pct"] = q.get("change_pct")
+                entry["52w_high"] = q.get("52w_high")
+                entry["52w_low"] = q.get("52w_low")
 
-        # quoteSummary for enrichment
-        qs_data = yf_quote_summary(sym)
-        if qs_data:
-            qs = extract_quote_summary_fields(qs_data)
-            if qs.get("market_cap"):
-                entry["market_cap"] = qs["market_cap"]
-            if qs.get("pe_ratio"):
-                entry["pe_ratio"] = qs["pe_ratio"]
-            if entry["52w_high"] is None and qs.get("52w_high"):
-                entry["52w_high"] = qs["52w_high"]
-            if entry["52w_low"] is None and qs.get("52w_low"):
-                entry["52w_low"] = qs["52w_low"]
-            if entry["name"] is None and qs.get("short_name"):
-                entry["name"] = qs["short_name"]
-
-        # 52w performance: (current - 52w_low) / (52w_high - 52w_low)
-        try:
-            price_f = float(entry["price"]) if entry["price"] else None
-            high_f = float(entry["52w_high"]) if entry["52w_high"] else None
-            low_f = float(entry["52w_low"]) if entry["52w_low"] else None
-            if price_f and low_f and price_f > 0 and low_f > 0:
-                perf = ((price_f - low_f) / low_f) * 100
-                entry["52w_performance_pct"] = fmt_pct(perf)
-        except (ValueError, TypeError, ZeroDivisionError):
-            pass
+            # quoteSummary for enrichment
+            qs_data = yf_quote_summary(sym)
+            if qs_data:
+                qs = extract_quote_summary_fields(qs_data)
+                if qs.get("market_cap"):
+                    entry["market_cap"] = qs["market_cap"]
+                if qs.get("pe_ratio"):
+                    entry["pe_ratio"] = qs["pe_ratio"]
+                if entry["52w_high"] is None and qs.get("52w_high"):
+                    entry["52w_high"] = qs["52w_high"]
+                if entry["52w_low"] is None and qs.get("52w_low"):
+                    entry["52w_low"] = qs["52w_low"]
+                if entry["name"] is None and qs.get("short_name"):
+                    entry["name"] = qs["short_name"]
 
         comparisons.append(entry)
 
     output = {
         "comparison": comparisons,
         "symbols": [s.upper() for s in symbols],
-        "data_source": "Yahoo Finance",
+        "data_source": "Finviz Elite" if used_finviz else "Yahoo Finance",
     }
     print_json(output)
 

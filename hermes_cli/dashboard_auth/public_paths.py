@@ -51,6 +51,15 @@ PUBLIC_API_PATHS: frozenset[str] = frozenset({
     # Read-only theme + plugin manifests for the dashboard skin engine.
     "/api/dashboard/themes",
     "/api/dashboard/plugins",
+    # Quant Signal Matrix, Shadow Tracking, and Analyst Trader dashboard feeds
+    "/api/quant/signal-matrix",
+    "/api/quant/shadow-tracking",
+    "/api/quant/options-calc",
+    "/api/quant/dream-setup",
+    "/api/quant/live-option-chain",
+    "/api/quant/simulated-positions",
+    "/api/analyst-trader/positions",
+    "/api/analyst-trader/analysts",
     # Chronos managed-cron fire webhook (NAS -> agent). NOT cookie-gated: it
     # carries its own short-lived NAS-minted JWT (purpose=cron_fire), which the
     # handler verifies as the real auth. Must bypass the dashboard auth gate so

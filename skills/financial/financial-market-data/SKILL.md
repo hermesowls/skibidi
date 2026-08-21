@@ -15,7 +15,8 @@ Automate the collection of financial market data and production of a standardize
 - Network access.
 
 ## Data Sources
-- **Equity Indices & FX**: Yahoo Finance v8 Chart API (`https://query1.finance.yahoo.com/v8/finance/chart/{TICKER}?interval=1d&range=5d`)  
+- **Equities & Stock Data**: Finviz Elite Export API (`FINVIZ_API_URL`) - Primary real-time stock quotes, P/E, Market Cap, 52w levels, and SMAs (8, 21, 50, 100, 200).
+- **Equity Indices & FX**: Yahoo Finance v8 Chart API (`https://query1.finance.yahoo.com/v8/finance/chart/{TICKER}?interval=1d&range=5d`) — Fallback for index symbols.
 - **Crypto**: CoinGecko v3 API (`https://api.coingecko.com/api/v3/simple/price?ids={id}&vs_currencies=usd&include_24hr_change=true`)
 
 ## Workflow

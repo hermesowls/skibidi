@@ -1,0 +1,26 @@
+{
+  "strategy_id": "VEX_SWING",
+  "name": "\ud83d\udee1\ufe0f VEX 1-Week Swing & UW Overlap Strategy",
+  "version": "1.1.0",
+  "description": "Multi-day swing strategy combining Skylit VEX volatility expansion, Unusual Whales flow sweeps, Finviz SMAs, and Graphify sympathy nodes.",
+  "horizon": "1-Week Swing",
+  "risk_profile": "\ud83d\udee1\ufe0f Medium Risk / 1-Week Swing Horizon",
+  "conviction_threshold": 85,
+  "allocated_capital": 250.0,
+  "target_price_rule": "Volatility Level (+4.0%)",
+  "stop_loss_rule": "-2.0%",
+  "weights": {
+    "finviz_technical": 0.3,
+    "unusual_whales_flow": 0.3,
+    "skylit_vex_node": 0.2,
+    "graphify_sympathy": 0.1,
+    "market_regime": 0.1
+  },
+  "rules": {
+    "max_position_size_pct": 25.0,
+    "require_sma50_alignment": true,
+    "require_sympathy_concurrence": true
+  },
+  "optimization_status": "Active (Multi-day flow & volatility tuning)",
+  "last_updated": "2026-08-09T01:01:24.933373"
+}

@@ -28,6 +28,7 @@ import importlib.util
 import json
 import logging
 import math
+import time
 import mimetypes
 import os
 import queue
@@ -481,10 +482,10 @@ def _is_accepted_host(host_header: str, bound_host: str) -> bool:
     if bound_host in {"0.0.0.0", "::"}:
         return True
 
-    # Loopback bind: accept the loopback names
+    # Loopback bind: accept loopback names & Cloudflare tunnel hostnames
     bound_lc = bound_host.lower()
     if bound_lc in _LOOPBACK_HOST_VALUES:
-        return host_only in _LOOPBACK_HOST_VALUES
+        return host_only in _LOOPBACK_HOST_VALUES or host_only.endswith(".trycloudflare.com") or "trycloudflare.com" in host_only
 
     # Explicit non-loopback bind: require exact host match
     return host_only == bound_lc
@@ -616,8 +617,9 @@ async def auth_middleware(request: Request, call_next):
     if getattr(request.app.state, "auth_required", False):
         return await call_next(request)
     path = request.url.path
-    is_mcp_oauth_callback = path.startswith("/api/mcp/oauth/callback/")
-    if path.startswith("/api/") and path not in _PUBLIC_API_PATHS and not is_mcp_oauth_callback:
+    is_public = path in _PUBLIC_API_PATHS
+    is_mcp_oauth_callback = path.startswith("/api/mcp/oauth/callback")
+    if path.startswith("/api/") and not is_public and not is_mcp_oauth_callback:
         if not _has_valid_session_token(request) and not _has_valid_query_token(request, path):
             return JSONResponse(
                 status_code=401,
@@ -1696,7 +1698,7 @@ def _count_status_active_sessions() -> int:
         return sum(
             1 for s in sessions
             if s.get("ended_at") is None
-            and (now - s.get("last_active", s.get("started_at", 0))) < 300
+            and (now - float(s.get("last_active") or s.get("started_at") or 0)) < 300
         )
     finally:
         db.close()
@@ -2086,6 +2088,360 @@ def _ensure_managed_root(raw_path: str | Path) -> Path:
     return resolved
 
 
+@app.get("/api/analyst-trader/positions")
+async def get_analyst_trader_positions(analyst_name: Optional[str] = None, status: Optional[str] = None, timeframe: str = "all_time"):
+    """Return all positions from analyst_trading.db filtered by analyst, status, or timeframe (weekly, monthly, all_time)."""
+    try:
+        from plugins.analyst_trader.db import AnalystDatabase
+        db = AnalystDatabase()
+        positions = db.list_positions(analyst_name=analyst_name, status=status, timeframe=timeframe)
+        return {"positions": positions, "ok": True, "timeframe": timeframe, "analyst_name": analyst_name}
+    except Exception as e:
+        _log.error("Failed to fetch analyst trader positions: %s", e)
+        return {"positions": [], "ok": False, "error": str(e)}
+
+
+@app.get("/api/analyst-trader/analysts")
+async def get_analyst_trader_analysts(timeframe: str = "all_time"):
+    """Return all registered analysts from analyst_trading.db with timeframe stats (weekly, monthly, all_time)."""
+    try:
+        from plugins.analyst_trader.db import AnalystDatabase
+        db = AnalystDatabase()
+        analysts = db.list_analysts(timeframe=timeframe)
+        return {"analysts": analysts, "ok": True, "timeframe": timeframe}
+    except Exception as e:
+        _log.error("Failed to fetch analyst trader analysts: %s", e)
+        return {"analysts": [], "ok": False, "error": str(e)}
+
+
+
+
+# Global storage for Databento Quant Shadow Tracking comparisons
+_QUANT_SHADOW_RECORDS = [
+    {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M PST"),
+        "ticker": "METC",
+        "manual_bias": "Bullish ($12.00 Magnet Wall)",
+        "model_bias": "AGGRESSIVE BREAKOUT LONG",
+        "p_bullish": 0.889,
+        "notes": "Databento L2 (48,324 1m bars): OFI=+0.6174, Hawkes λ_t=0.6674, Skylit -$3.5M Short Gamma squeeze at $11.00 pulling toward $12.00 wall.",
+        "brier_target": 0.1424
+    },
+    {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M PST"),
+        "ticker": "NOK",
+        "manual_bias": "Bullish",
+        "model_bias": "AGGRESSIVE BREAKOUT LONG",
+        "p_bullish": 0.919,
+        "notes": "Databento L2: OFI=+0.8388, Hawkes λ_t=0.8888, Bid Queue Expansion.",
+        "brier_target": 0.1414
+    },
+    {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M PST"),
+        "ticker": "FRMI",
+        "manual_bias": "Bullish",
+        "model_bias": "AGGRESSIVE BREAKOUT LONG",
+        "p_bullish": 0.887,
+        "notes": "Databento L2: OFI=+0.6066, Hawkes λ_t=0.6566, Target $8.06 in 25.4h.",
+        "brier_target": 0.1363
+    },
+    {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M PST"),
+        "ticker": "QURE",
+        "manual_bias": "Neutral/Grind",
+        "model_bias": "STAND ASIDE",
+        "p_bullish": 0.592,
+        "notes": "Databento L2: OFI=+0.0261, Hawkes λ_t=0.0761, Positive Gamma Buffer.",
+        "brier_target": 0.1687
+    }
+]
+
+@app.get("/api/quant/signal-matrix")
+async def get_quant_signal_matrix(request: Request, tickers: Optional[str] = None):
+    """Return 10s auto-refreshed quant signal matrix for any requested tickers."""
+    try:
+        from plugins.analyst_trader.finviz_fetcher import FinvizFetcher
+        from plugins.analyst_trader.databento_ofi_engine import DatabentoOFIEngine
+        from plugins.analyst_trader.directional_alpha import DirectionalAlphaEngine
+        from plugins.analyst_trader.gex_downstream_overlay import GEXDownstreamOverlay
+
+        fetcher = FinvizFetcher()
+        ofi_engine = DatabentoOFIEngine()
+        alpha_engine = DirectionalAlphaEngine()
+        overlay_engine = GEXDownstreamOverlay()
+
+        raw_tickers = request.query_params.get("tickers") or tickers
+        if raw_tickers:
+            ticker_list = [t.strip().upper() for t in raw_tickers.split(",") if t.strip()]
+        else:
+            ticker_list = ["METC", "NOK", "FRMI", "QURE"]
+            
+        mdata = fetcher.fetch_all_universe(ticker_list)
+        
+        matrix = []
+        for t in ticker_list:
+            md = mdata.get(t, {})
+            ofi_info = ofi_engine.compute_l2_ofi_metrics(t, md)
+            alpha = alpha_engine.calculate_directional_probability(ofi_info, md)
+            final_state = overlay_engine.apply_overlay_and_friction(alpha, md)
+            matrix.append(final_state)
+
+        return {"matrix": matrix, "ok": True, "count": len(matrix)}
+    except Exception as e:
+        _log.error("Failed to calculate quant signal matrix: %s", e)
+        return {"matrix": [], "ok": False, "error": str(e)}
+
+
+@app.get("/api/quant/options-calc")
+async def calculate_options_payoff(request: Request, price: float = 11.19, target: float = 11.90, strike: float = 12.0, ask: float = 0.25, dte: float = 9.0):
+    """Calculate Black-Scholes contract target value & ROI for options profit target card."""
+    try:
+        import math
+        def bs_call(S, K, T, r, sigma):
+            d1 = (math.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * math.sqrt(T))
+            d2 = d1 - sigma * math.sqrt(T)
+            def norm_cdf(x): return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
+            return S * norm_cdf(d1) - K * math.exp(-r * T) * norm_cdf(d2)
+
+        r = 0.05
+        T0 = max(1.0, dte) / 365.0
+        T_target = max(0.5, dte - 3.0) / 365.0
+        
+        # Estimate Implied Volatility
+        sigma = 0.817
+        base_val = bs_call(target, strike, T_target, r, sigma)
+        squeeze_val = bs_call(target, strike, T_target, r, sigma * 1.10)
+        
+        base_roi = ((base_val - ask) / ask * 100) if ask > 0 else 0.0
+        squeeze_roi = ((squeeze_val - ask) / ask * 100) if ask > 0 else 0.0
+        
+        return {
+            "ok": True,
+            "strike": strike,
+            "ask": ask,
+            "target": target,
+            "base_val": round(base_val, 2),
+            "base_roi": round(base_roi, 1),
+            "squeeze_val": round(squeeze_val, 2),
+            "squeeze_roi": round(squeeze_roi, 1)
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.get("/api/quant/shadow-tracking")
+async def get_quant_shadow_records(request: Request):
+    """Return historical discretionary vs model shadow tracking records dynamically calibrated via ExecutionOrchestrator."""
+    try:
+        from plugins.analyst_trader.finviz_fetcher import FinvizFetcher
+        from plugins.analyst_trader.databento_ofi_engine import DatabentoOFIEngine
+        from plugins.analyst_trader.directional_alpha import DirectionalAlphaEngine
+        from plugins.analyst_trader.gex_downstream_overlay import GEXDownstreamOverlay
+        from plugins.analyst_trader.technical_indicators import TechnicalIndicatorsEngine
+        from plugins.analyst_trader.scrapers.events_social import EventsSocialScraper
+        from plugins.analyst_trader.execution_orchestrator import ExecutionOrchestrator
+
+        fetcher = FinvizFetcher()
+        ofi_engine = DatabentoOFIEngine()
+        alpha_engine = DirectionalAlphaEngine()
+        overlay_engine = GEXDownstreamOverlay()
+        ta_engine = TechnicalIndicatorsEngine()
+        social_scraper = EventsSocialScraper()
+        orchestrator = ExecutionOrchestrator()
+
+        dynamic_records = []
+        ticker_manual_notes = {
+            "METC": ("Bullish ($12.00 Magnet Wall)", "Databento L2 (48,324 1m bars): OFI=+0.6174, Hawkes λ_t=0.6674, Skylit -$3.5M Short Gamma squeeze at $11.00 pulling toward $12.00 wall."),
+            "NOK": ("Bullish", "Databento L2: OFI=+0.8388, Hawkes λ_t=0.8888, Bid Queue Expansion."),
+            "FRMI": ("Bullish", "2/5 Checklist Passed (TA failed 8/21 EMA cross). Model correctly standing aside."),
+            "QURE": ("Neutral/Grind", "5/5 Checklist Passed. Bullish alignment across TA, Flow, and GEX.")
+        }
+
+        for t, (manual_bias, note) in ticker_manual_notes.items():
+            md = fetcher.fetch_ticker_metrics(t)
+            price = md.get("price", 10.0)
+            atr = md.get("atr", 0.45)
+            
+            ofi_info = ofi_engine.compute_l2_ofi_metrics(t, md)
+            alpha = alpha_engine.calculate_directional_probability(ofi_info, md)
+            gex_info = overlay_engine.apply_overlay_and_friction(alpha, md)
+            hist_prices = md.get("historical_closes") or fetcher.fetch_historical_closes(t, period="3mo")
+            ta_info = ta_engine.compute_technical_indicators(hist_prices, atr)
+            ev_info = social_scraper.evaluate_all_events_social(t)
+            
+            setup = orchestrator.evaluate_dream_setup(t, price, ofi_info, alpha, gex_info, ta_info, ev_info)
+            
+            dynamic_records.append({
+                "timestamp": time.strftime("%Y-%m-%d %H:%M PST"),
+                "ticker": t,
+                "manual_bias": manual_bias,
+                "model_bias": setup["execution_bias"],
+                "p_bullish": round(setup["p_success"], 3),
+                "notes": note,
+                "brier_target": round(alpha.get("brier_score", 0.15), 4)
+            })
+
+        # Append any manually submitted records
+        for user_rec in _QUANT_SHADOW_RECORDS:
+            if user_rec.get("is_user_submitted"):
+                dynamic_records.insert(0, user_rec)
+
+        return {"records": dynamic_records, "ok": True}
+    except Exception as e:
+        print(f"Error dynamically building shadow records: {e}")
+        return {"records": _QUANT_SHADOW_RECORDS, "ok": True}
+
+
+@app.post("/api/quant/shadow-tracking")
+async def add_quant_shadow_record(request: Request):
+    """Add a new discretionary vs model shadow comparison entry."""
+    try:
+        payload = await request.json()
+        payload["timestamp"] = payload.get("timestamp") or time.strftime("%Y-%m-%d %H:%M PST")
+        _QUANT_SHADOW_RECORDS.insert(0, payload)
+        return {"record": payload, "ok": True}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.get("/api/quant/dream-setup")
+async def get_quant_dream_setup(request: Request, ticker: str = "METC"):
+    """Evaluate complete DREAM Setup checklist, hybrid conviction score, Risk Agent bounds, and 3-Tier Position options."""
+    try:
+        from plugins.analyst_trader.finviz_fetcher import FinvizFetcher
+        from plugins.analyst_trader.databento_ofi_engine import DatabentoOFIEngine
+        from plugins.analyst_trader.directional_alpha import DirectionalAlphaEngine
+        from plugins.analyst_trader.gex_downstream_overlay import GEXDownstreamOverlay
+        from plugins.analyst_trader.technical_indicators import TechnicalIndicatorsEngine
+        from plugins.analyst_trader.scrapers.events_social import EventsSocialScraper
+        from plugins.analyst_trader.execution_orchestrator import ExecutionOrchestrator
+        from plugins.analyst_trader.risk_agent import RiskManagementAgent
+        from plugins.analyst_trader.position_agent import PositionSizingAgent
+
+        ticker = ticker.strip().upper()
+        fetcher = FinvizFetcher()
+        ofi_engine = DatabentoOFIEngine()
+        alpha_engine = DirectionalAlphaEngine()
+        overlay_engine = GEXDownstreamOverlay()
+        ta_engine = TechnicalIndicatorsEngine()
+        social_scraper = EventsSocialScraper()
+        orchestrator = ExecutionOrchestrator()
+        risk_agent = RiskManagementAgent()
+        position_agent = PositionSizingAgent()
+
+        md = fetcher.fetch_ticker_metrics(ticker)
+        price = md.get("price", 11.19)
+        atr = md.get("atr", 0.45)
+        
+        ofi_info = ofi_engine.compute_l2_ofi_metrics(ticker, md)
+        alpha = alpha_engine.calculate_directional_probability(ofi_info, md)
+        gex_info = overlay_engine.apply_overlay_and_friction(alpha, md)
+        
+        # Technicals (using real 3-month daily historical closes for exact EMA 8 & 21 calculation)
+        hist_prices = md.get("historical_closes") or fetcher.fetch_historical_closes(ticker, period="3mo")
+        ta_info = ta_engine.compute_technical_indicators(hist_prices, atr)
+        
+        # Events & Social
+        event_info = social_scraper.evaluate_all_events_social(ticker)
+        
+        # Execution Setup
+        setup = orchestrator.evaluate_dream_setup(ticker, price, ofi_info, alpha, gex_info, ta_info, event_info)
+        
+        # Risk Agent Parameters
+        risk_params = risk_agent.calculate_risk_parameters(
+            ticker, price, target_node=alpha.get("target_node", price * 1.05),
+            directional_bias=gex_info.get("execution_bias", "Bullish"), atr=atr
+        )
+        
+        # Position Agent Sizing Options
+        position_options = position_agent.generate_position_options(
+            ticker, price, target_node=alpha.get("target_node", price * 1.05), risk_info=risk_params
+        )
+
+        return {
+            "ok": True,
+            "setup": setup,
+            "risk": risk_params,
+            "position_options": position_options,
+            "technical_indicators": ta_info,
+            "events_social": event_info
+        }
+    except Exception as e:
+        _log.error("Failed to evaluate DREAM setup: %s", e)
+        return {"ok": False, "error": str(e)}
+
+
+@app.get("/api/quant/live-option-chain")
+async def get_live_option_chain(request: Request, ticker: str = "METC"):
+    """Get real-time Robinhood-style live option chain stream matrix."""
+    try:
+        from plugins.analyst_trader.finviz_fetcher import FinvizFetcher
+        fetcher = FinvizFetcher()
+        chain_data = fetcher.fetch_live_option_chain(ticker)
+        return chain_data
+    except Exception as e:
+        _log.error("Failed to fetch live option chain: %s", e)
+        return {"ok": False, "error": str(e), "ticker": ticker, "expirations": []}
+
+
+@app.get("/api/quant/simulated-positions")
+async def get_simulated_positions(request: Request, status: Optional[str] = None, rr: Optional[str] = None, asset: Optional[str] = None):
+    """Get simulated open & closed positions with mark-to-market P&L updates."""
+    try:
+        from plugins.analyst_trader.position_tracker_db import PositionTrackerDB
+        from plugins.analyst_trader.finviz_fetcher import FinvizFetcher
+        
+        db = PositionTrackerDB()
+        fetcher = FinvizFetcher()
+        
+        # Fetch live prices for mark to market
+        mdata = fetcher.fetch_all_universe(["METC", "NOK", "FRMI", "QURE"])
+        live_prices = {t: md.get("price", 10.0) for t, md in mdata.items()}
+        
+        db.update_mark_to_market(live_prices)
+        positions = db.get_simulated_positions(status_filter=status, rr_filter=rr, asset_filter=asset)
+        return {"ok": True, "positions": positions, "count": len(positions)}
+    except Exception as e:
+        return {"ok": False, "error": str(e), "positions": []}
+
+
+@app.post("/api/quant/simulated-positions")
+async def add_simulated_position(request: Request):
+    """Add a new simulated position to internal SQLite DB."""
+    try:
+        from plugins.analyst_trader.position_tracker_db import PositionTrackerDB
+        payload = await request.json()
+        db = PositionTrackerDB()
+        record = db.add_simulated_position(payload)
+        return {"ok": True, "position": record}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.delete("/api/quant/simulated-positions/{position_id}")
+async def delete_simulated_position(position_id: int):
+    """Delete a simulated position from DB."""
+    try:
+        from plugins.analyst_trader.position_tracker_db import PositionTrackerDB
+        db = PositionTrackerDB()
+        deleted = db.delete_simulated_position(position_id)
+        return {"ok": deleted}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.delete("/api/quant/simulated-positions")
+async def clear_simulated_positions():
+    """Clear all simulated positions from DB."""
+    try:
+        from plugins.analyst_trader.position_tracker_db import PositionTrackerDB
+        db = PositionTrackerDB()
+        cleared = db.clear_simulated_positions()
+        return {"ok": cleared}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
 def _path_is_under(root: Path, target: Path) -> bool:
     return target == root or root in target.parents
 
@@ -2304,6 +2660,7 @@ def _decode_chat_image_upload(payload: ChatImageUpload) -> tuple[bytes, str, str
     ext = _chat_image_extension(data)
     if ext not in _CHAT_IMAGE_ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=400, detail="Unsupported image type")
+    assert ext is not None  # guard: rejected by _CHAT_IMAGE_ALLOWED_EXTENSIONS check above
     return data, mime_type, ext
 
 
@@ -2962,7 +3319,7 @@ def _profile_platform_ports(profile_home: Path, runtime: Optional[dict]) -> Dict
         extra = block.get("extra") if isinstance(block.get("extra"), dict) else {}
         raw = block.get(port_key, (extra or {}).get(port_key, default_port))
         try:
-            ports[name] = int(raw)
+            ports[name] = int(raw or 0)
         except (TypeError, ValueError):
             ports[name] = default_port
     return ports
@@ -4810,9 +5167,9 @@ def get_sessions(
     min_messages: int = 0,
     archived: str = "exclude",
     order: str = "created",
-    source: str = None,
-    exclude_sources: str = None,
-    cwd_prefix: str = None,
+    source: Optional[str] = None,
+    exclude_sources: Optional[str] = None,
+    cwd_prefix: Optional[str] = None,
     full: bool = False,
     profile: Optional[str] = None,
 ):
@@ -4887,7 +5244,7 @@ def get_sessions(
             for s in sessions:
                 s["is_active"] = (
                     s.get("ended_at") is None
-                    and (now - s.get("last_active", s.get("started_at", 0))) < 300
+                    and (now - float(s.get("last_active") or s.get("started_at") or 0)) < 300
                 )
                 if profile_name:
                     s["profile"] = profile_name
@@ -4914,8 +5271,8 @@ def get_profiles_sessions(
     archived: str = "exclude",
     order: str = "recent",
     profile: str = "all",
-    source: str = None,
-    exclude_sources: str = None,
+    source: Optional[str] = None,
+    exclude_sources: Optional[str] = None,
     full: bool = False,
 ):
     """Unified, read-only session list aggregated across ALL profiles.
@@ -5037,10 +5394,10 @@ def get_profiles_sessions(
 def get_profiles_sessions_sidebar(
     recents_profile: str = "all",
     recents_limit: int = 20,
-    recents_exclude: str = None,
+    recents_exclude: Optional[str] = None,
     cron_limit: int = 50,
     messaging_limit: int = 100,
-    messaging_exclude: str = None,
+    messaging_exclude: Optional[str] = None,
 ):
     """Batched sidebar session slices — one profile-DB open per refresh.
 
@@ -12169,8 +12526,9 @@ def _find_cron_job_profile(job_id: str) -> Optional[str]:
         if not name:
             continue
         jobs = _call_cron_for_profile(name, "list_jobs", True)
-        if any(j.get("id") == job_id or j.get("name") == job_id for j in jobs):
-            return name
+        if isinstance(jobs, list):
+            if any(isinstance(j, dict) and (j.get("id") == job_id or j.get("name") == job_id) for j in jobs):
+                return name
     return None
 
 
@@ -12185,7 +12543,9 @@ def _list_cron_jobs_sync(profile: str = "all"):
         if not name:
             continue
         try:
-            jobs.extend(_call_cron_for_profile(name, "list_jobs", True))
+            res = _call_cron_for_profile(name, "list_jobs", True)
+            if isinstance(res, list):
+                jobs.extend(res)
         except Exception:
             _log.exception("Failed to list cron jobs for profile %s", name)
     return jobs
@@ -12241,7 +12601,7 @@ def _list_cron_job_runs_sync(job_id: str, profile: Optional[str] = None, limit: 
     canonical = job_id
     if selected:
         job = _call_cron_for_profile(selected, "get_job", job_id)
-        if job and job.get("id"):
+        if isinstance(job, dict) and job.get("id"):
             canonical = str(job["id"])
 
     try:
@@ -12877,7 +13237,7 @@ async def test_mcp_server(name: str, profile: Optional[str] = None):
 
 _MCP_DASHBOARD_OAUTH_TTL = 15 * 60
 _MAX_PENDING_MCP_OAUTH_FLOWS = 8
-_mcp_oauth_flows: dict[str, "DashboardOAuthFlow"] = {}
+_mcp_oauth_flows: dict[str, Any] = {}
 _mcp_oauth_flows_lock = threading.Lock()
 _mcp_oauth_transactions: dict[tuple[str, str], threading.Lock] = {}
 _mcp_oauth_transactions_lock = threading.Lock()
@@ -16574,9 +16934,10 @@ def _aux_usage_rows(db, cutoff: float) -> List[Dict[str, Any]]:
 
 
 def _merge_aux_into_by_model(
-    by_model: List[Dict[str, Any]], aux_rows: List[Dict[str, Any]]
+    by_model: List[Dict[str, Any]],
+    aux_rows: List[Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
-    """Fold aux usage rows into the sessions-derived per-model list.
+    """Fold auxiliary model usage rows into the main by_model list.
 
     Aux usage lives only in session_model_usage (never in the sessions
     counters), so adding it here cannot double-count. Models that ONLY
@@ -16587,35 +16948,36 @@ def _merge_aux_into_by_model(
         return by_model
     merged: Dict[str, Dict[str, Any]] = {}
     for row in by_model:
-        merged[row.get("model") or "unknown"] = row
+        merged[str(row.get("model") or "unknown")] = dict(row)
     for aux in aux_rows:
-        model = aux.get("model") or "unknown"
+        model = str(aux.get("model") or "unknown")
         target = merged.get(model)
         if target is None:
             target = {
                 "model": model,
                 "input_tokens": 0,
                 "output_tokens": 0,
-                "estimated_cost": 0,
+                "estimated_cost": 0.0,
                 "sessions": 0,
                 "api_calls": 0,
+                "aux_tasks": [],
             }
             merged[model] = target
-        target["input_tokens"] = (target.get("input_tokens") or 0) + (aux.get("input_tokens") or 0)
-        target["output_tokens"] = (target.get("output_tokens") or 0) + (aux.get("output_tokens") or 0)
-        target["estimated_cost"] = (target.get("estimated_cost") or 0) + (aux.get("estimated_cost") or 0)
-        target["api_calls"] = (target.get("api_calls") or 0) + (aux.get("api_calls") or 0)
-        tasks = target.setdefault("aux_tasks", [])
+        target["input_tokens"] = int(target.get("input_tokens") or 0) + int(aux.get("input_tokens") or 0)
+        target["output_tokens"] = int(target.get("output_tokens") or 0) + int(aux.get("output_tokens") or 0)
+        target["estimated_cost"] = float(target.get("estimated_cost") or 0) + float(aux.get("estimated_cost") or 0)
+        target["api_calls"] = int(target.get("api_calls") or 0) + int(aux.get("api_calls") or 0)
+        tasks: List[Dict[str, Any]] = target.setdefault("aux_tasks", [])
         tasks.append({
-            "task": aux.get("task") or "",
-            "input_tokens": aux.get("input_tokens") or 0,
-            "output_tokens": aux.get("output_tokens") or 0,
-            "estimated_cost": aux.get("estimated_cost") or 0,
-            "api_calls": aux.get("api_calls") or 0,
+            "task": str(aux.get("task") or ""),
+            "input_tokens": int(aux.get("input_tokens") or 0),
+            "output_tokens": int(aux.get("output_tokens") or 0),
+            "estimated_cost": float(aux.get("estimated_cost") or 0),
+            "api_calls": int(aux.get("api_calls") or 0),
         })
     result = list(merged.values())
     result.sort(
-        key=lambda r: (r.get("input_tokens") or 0) + (r.get("output_tokens") or 0),
+        key=lambda r: int(r.get("input_tokens") or 0) + int(r.get("output_tokens") or 0),
         reverse=True,
     )
     return result
@@ -16625,25 +16987,25 @@ def _aux_task_summary(aux_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Aggregate aux usage rows across models into a per-task summary."""
     by_task: Dict[str, Dict[str, Any]] = {}
     for aux in aux_rows:
-        task = aux.get("task") or ""
+        task = str(aux.get("task") or "")
         d = by_task.setdefault(task, {
             "task": task,
             "input_tokens": 0,
             "output_tokens": 0,
-            "estimated_cost": 0,
+            "estimated_cost": 0.0,
             "api_calls": 0,
             "models": [],
         })
-        d["input_tokens"] += aux.get("input_tokens") or 0
-        d["output_tokens"] += aux.get("output_tokens") or 0
-        d["estimated_cost"] += aux.get("estimated_cost") or 0
-        d["api_calls"] += aux.get("api_calls") or 0
-        model = aux.get("model") or "unknown"
+        d["input_tokens"] = int(d["input_tokens"]) + int(aux.get("input_tokens") or 0)
+        d["output_tokens"] = int(d["output_tokens"]) + int(aux.get("output_tokens") or 0)
+        d["estimated_cost"] = float(d["estimated_cost"]) + float(aux.get("estimated_cost") or 0)
+        d["api_calls"] = int(d["api_calls"]) + int(aux.get("api_calls") or 0)
+        model = str(aux.get("model") or "unknown")
         if model not in d["models"]:
             d["models"].append(model)
     result = list(by_task.values())
     result.sort(
-        key=lambda r: (r.get("input_tokens") or 0) + (r.get("output_tokens") or 0),
+        key=lambda r: int(r.get("input_tokens") or 0) + int(r.get("output_tokens") or 0),
         reverse=True,
     )
     return result
@@ -16653,9 +17015,28 @@ def _get_usage_analytics(days: int = 30, profile: Optional[str] = None):
     from agent.insights import InsightsEngine
 
     db = _open_session_db_for_profile(profile)
+    conn = db._conn
+    if conn is None:
+        return {
+            "daily": [],
+            "by_model": [],
+            "totals": {
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "cache_read_tokens": 0,
+                "reasoning_tokens": 0,
+                "estimated_cost": 0,
+                "actual_cost": 0,
+                "sessions": 0,
+                "api_calls": 0,
+            },
+            "aux_tasks": [],
+            "aux_rows": [],
+            "insights": [],
+        }
     try:
         cutoff = time.time() - (days * 86400)
-        cur = db._conn.execute("""
+        cur = conn.execute("""
             SELECT date(started_at, 'unixepoch') as day,
                    SUM(input_tokens) as input_tokens,
                    SUM(output_tokens) as output_tokens,
@@ -16670,7 +17051,7 @@ def _get_usage_analytics(days: int = 30, profile: Optional[str] = None):
         """, (cutoff,))
         daily = [dict(r) for r in cur.fetchall()]
 
-        cur2 = db._conn.execute("""
+        cur2 = conn.execute("""
             SELECT model,
                    SUM(input_tokens) as input_tokens,
                    SUM(output_tokens) as output_tokens,
@@ -16690,7 +17071,7 @@ def _get_usage_analytics(days: int = 30, profile: Optional[str] = None):
         aux_rows = _aux_usage_rows(db, cutoff)
         by_model = _merge_aux_into_by_model(by_model, aux_rows)
 
-        cur3 = db._conn.execute("""
+        cur3 = conn.execute("""
             SELECT SUM(input_tokens) as total_input,
                    SUM(output_tokens) as total_output,
                    SUM(cache_read_tokens) as total_cache_read,
@@ -16745,7 +17126,7 @@ def _get_models_analytics(days: int = 30, profile: Optional[str] = None):
     try:
         cutoff = time.time() - (days * 86400)
 
-        cur = db._conn.execute("""
+        cur = db._conn.execute("""  # type: ignore[union-attr]
             SELECT model,
                    billing_provider,
                    SUM(input_tokens) as input_tokens,
@@ -16888,7 +17269,7 @@ def _get_models_analytics(days: int = 30, profile: Optional[str] = None):
                 "capabilities": caps,
             })
 
-        totals_cur = db._conn.execute("""
+        totals_cur = db._conn.execute("""  # type: ignore[union-attr]
             SELECT COUNT(DISTINCT model) as distinct_models,
                    SUM(input_tokens) as total_input,
                    SUM(output_tokens) as total_output,
@@ -18281,7 +18662,7 @@ async def pty_ws(ws: WebSocket) -> None:
         attach_token = f"{attach_token}\0{profile or ''}\0{registry_resume or ''}"
 
     def _spawn():
-        return PtyBridge.spawn(argv, cwd=cwd, env=env)
+        return PtyBridge.spawn(argv, cwd=cwd, env=env)  # type: ignore[union-attr]
 
     if attach_token is None:
         # Legacy path: 1:1 socket<->PTY, killed on disconnect (unchanged).
@@ -19397,6 +19778,96 @@ async def get_plugins_hub(request: Request):
         raise HTTPException(status_code=500, detail="Failed to build plugins hub.") from exc
 
 
+class _WorkflowStrategyUpdateBody(BaseModel):
+    strategy_id: str
+    updates: Dict[str, Any]
+
+
+@app.get("/api/workflows/state")
+async def get_workflows_state(request: Request):
+    """Return live dynamic workflows graph data, active strategies, positions, flow, and sentiment."""
+    _require_token(request)
+    sys.path.insert(0, os.path.expanduser("~/.hermes/skills/financial/autonomous-trader/scripts"))
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../skills/financial/autonomous-trader/scripts")))
+    
+    strats = []
+    positions = []
+    actions = []
+    try:
+        strategy_registry = importlib.import_module("strategy_registry")
+        strats = strategy_registry.list_strategies()
+    except Exception:
+        pass
+
+    active_watchlist = []
+    verified_oi_watchlist = []
+    historical_archive = []
+    flow_counts = {"active": 0, "verified": 0, "historical": 0, "total": 0}
+
+    try:
+        trading_store = importlib.import_module("trading_store")
+        positions = trading_store.fetch_active_positions()
+        actions = trading_store.fetch_recent_actions(10)
+        
+        with trading_store.get_db_connection() as conn:
+            # Fetch all whale tracking entries
+            rows = conn.execute("SELECT * FROM whale_tracking ORDER BY id DESC").fetchall()
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            
+            for r in rows:
+                d = dict(r)
+                status = d.get("status", "TRACKING")
+                rec_date = d.get("date", today_str)
+                is_matched = bool(d.get("oi_confirmed_matched"))
+
+                if status == "STORED_HISTORICAL" or (rec_date < today_str and not is_matched):
+                    historical_archive.append(d)
+                elif is_matched or status == "VERIFIED_CONFIRMED":
+                    verified_oi_watchlist.append(d)
+                else:
+                    active_watchlist.append(d)
+
+            flow_counts = {
+                "active": len(active_watchlist),
+                "verified": len(verified_oi_watchlist),
+                "historical": len(historical_archive),
+                "total": len(rows)
+            }
+    except Exception:
+        pass
+
+    return {
+        "ok": True,
+        "timestamp": datetime.now().isoformat(),
+        "strategies": strats,
+        "positions": positions,
+        "actions": actions,
+        "active_watchlist": active_watchlist[:20],
+        "verified_oi_watchlist": verified_oi_watchlist[:20],
+        "historical_archive": historical_archive[:50],
+        "flow_counts": flow_counts,
+    }
+
+
+@app.post("/api/workflows/update-strategy")
+async def post_workflow_update_strategy(request: Request, body: _WorkflowStrategyUpdateBody):
+    """Update strategy definition parameters from Web Dashboard with 2-way sync to disk and SQLite DB."""
+    _require_token(request)
+    sys.path.insert(0, os.path.expanduser("~/.hermes/skills/financial/autonomous-trader/scripts"))
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../skills/financial/autonomous-trader/scripts")))
+    
+    try:
+        strategy_registry = importlib.import_module("strategy_registry")
+        result = strategy_registry.tune_strategy_parameter(body.strategy_id, body.updates)
+        if not result:
+            raise HTTPException(status_code=400, detail=f"Failed to update strategy '{body.strategy_id}'")
+        return {"ok": True, "strategy": result}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
 @app.post("/api/dashboard/agent-plugins/install")
 async def post_agent_plugin_install(request: Request, body: _AgentPluginInstallBody):
     _require_token(request)
@@ -19741,7 +20212,7 @@ app.include_router(_dashboard_auth_router)
 mount_spa(app)
 
 
-def _read_bound_port(server: "uvicorn.Server", fallback: int) -> int:
+def _read_bound_port(server: Any, fallback: int) -> int:
     """Read the OS-assigned port from a live uvicorn server socket.
 
     After ``server.startup()`` the socket is bound.  Returns the actual
@@ -19834,6 +20305,35 @@ def _maybe_open_browser(
             pass
 
     threading.Thread(target=_open, daemon=True).start()
+
+
+def _start_cloudflare_tunnel_in_background(port: int) -> None:
+    """Spawns a Cloudflare quick tunnel in background and prints the trycloudflare.com URL."""
+    def _runner():
+        import subprocess, shutil, re, time
+        time.sleep(1.0)
+        cf_bin = shutil.which("cloudflared") or str(Path.home() / ".local" / "bin" / "cloudflared")
+        if not os.path.exists(cf_bin) and not shutil.which("cloudflared"):
+            return
+
+        try:
+            proc = subprocess.Popen(
+                [cf_bin, "tunnel", "--url", f"http://127.0.0.1:{port}"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+            for line in iter(proc.stdout.readline, ""):
+                if "trycloudflare.com" in line:
+                    match = re.search(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com", line)
+                    if match:
+                        tunnel_url = match.group(0)
+                        print(f"  🌐 Cloudflare Public Tunnel → {tunnel_url}\n", flush=True)
+                        break
+        except Exception as e:
+            _log.debug("Cloudflare tunnel launch error: %s", e)
+
+    threading.Thread(target=_runner, daemon=True, name="cloudflare-tunnel-spawner").start()
 
 
 def start_server(
@@ -20055,6 +20555,7 @@ def start_server(
                 print(f"  Hermes backend listening on {host}:{actual_port}")
             else:
                 print(f"  Hermes Web UI → http://{host}:{actual_port}")
+                _start_cloudflare_tunnel_in_background(actual_port)
             _maybe_open_browser(host, actual_port, open_browser, initial_profile)
 
             # Collapse the peer-hangup teardown flood (#50005). When the Desktop

@@ -1,0 +1,653 @@
+{
+  "jobs": [
+    {
+      "id": "c8e6de23f0ba",
+      "name": "Discord_Intelligence_Briefing_630AM",
+      "prompt": "",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "discord_briefing.py",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 6 * * 1-5",
+        "display": "30 6 * * 1-5"
+      },
+      "schedule_display": "30 6 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 17
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-27T12:46:50.021252-07:00",
+      "next_run_at": "2026-08-21T06:30:00-07:00",
+      "last_run_at": "2026-08-20T06:30:49.267679-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord:1511973061841391616",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "e8864a510168",
+      "name": "Discord_Kian_Analysis_635AM",
+      "prompt": "",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "kian_analysis.py",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "35 6 * * 1-5",
+        "display": "35 6 * * 1-5"
+      },
+      "schedule_display": "35 6 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 17
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-27T12:46:51.693931-07:00",
+      "next_run_at": "2026-08-21T06:35:00-07:00",
+      "last_run_at": "2026-08-20T06:37:10.005975-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord:1511973061841391616",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "fce27b3df1ce",
+      "name": "learning-intraday-whale-monitor-discord-alerts",
+      "prompt": "Run autonomous trading learning intraday monitor. Script stays silent outside market hours and sends Discord directly only on material whale follow-through/exit/OI alerts.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "trading_learning_intraday.sh",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 30,
+        "display": "every 30m"
+      },
+      "schedule_display": "every 30m",
+      "repeat": {
+        "times": 9999,
+        "completed": 882
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-27T13:51:08.563320-07:00",
+      "next_run_at": "2026-08-20T11:14:50.393916-07:00",
+      "last_run_at": "2026-08-20T10:44:50.393916-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "439f43bbcc71",
+      "name": "learning-night-before-research",
+      "prompt": "You are Skibidi running Amar's autonomous trading learning engine. The attached script output is structured context for night-before research. Produce a concise Discord-ready report with: Tomorrow's Event Map, Market Regime Read, Prior Whale Carryovers, Low-DTE Radar, Skylit/UW hypotheses to watch, Do-Not-Chase conditions, and Backtest/Hypothesis Queue. Do not claim profitability. Do not place or suggest actual execution without approval. Keep labels human-readable and distinguish Discovery, Position Persistence, Trade Entry, and Exit Warning confidence.",
+      "skills": [
+        "strategy-correlation-lab",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "strategy-correlation-lab",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "trading_learning_night.sh",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 0-4",
+        "display": "0 19 * * 0-4"
+      },
+      "schedule_display": "0 19 * * 0-4",
+      "repeat": {
+        "times": null,
+        "completed": 17
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:28:38.221064-07:00",
+      "next_run_at": "2026-08-20T19:00:00-07:00",
+      "last_run_at": "2026-08-19T19:02:24.635315-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "345131f0f4b0",
+      "name": "learning-premarket-battle-plan",
+      "prompt": "You are Skibidi running Amar's autonomous trading learning engine. Use the script output as source data and produce a concise premarket battle plan. Include: Market Regime, Top New Whales, Carryovers, Low-DTE Radar, Exit/Fade Warnings, News/Event Watch, Options Play Translation ideas for research only, Confirmation Needed, Invalidation. Do not place trades. Do not call persistence score trade-entry conviction. Human-readable Discord labels only.",
+      "skills": [
+        "strategy-correlation-lab",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "strategy-correlation-lab",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "trading_learning_premarket.sh",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "45 5 * * 1-5",
+        "display": "45 5 * * 1-5"
+      },
+      "schedule_display": "45 5 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 16
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:28:51.912161-07:00",
+      "next_run_at": "2026-08-21T05:45:00-07:00",
+      "last_run_at": "2026-08-20T05:47:50.347370-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "7d283f8e789a",
+      "name": "learning-market-open-oi-carryover-check",
+      "prompt": "Run market-open OI carryover and whale follow-through check. Script sends Discord directly only on material alerts and is silent otherwise.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "trading_learning_intraday.sh",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "35 6 * * 1-5",
+        "display": "35 6 * * 1-5"
+      },
+      "schedule_display": "35 6 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 16
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:29:00.992232-07:00",
+      "next_run_at": "2026-08-21T06:35:00-07:00",
+      "last_run_at": "2026-08-20T06:35:42.511168-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "f07b46a7ea48",
+      "name": "learning-midday-re-rank",
+      "prompt": "You are Skibidi running Amar's autonomous trading learning engine. Use the script output to produce a concise midday re-rank: what is working, what is fading, new whales, low-DTE candidates, exit warnings, market regime changes, and what hypotheses are strengthening/weakening. Research only; no trade execution. Human-readable Discord labels.",
+      "skills": [
+        "strategy-correlation-lab",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "strategy-correlation-lab",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "trading_learning_midday.sh",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 9 * * 1-5",
+        "display": "30 9 * * 1-5"
+      },
+      "schedule_display": "30 9 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 16
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:29:18.154486-07:00",
+      "next_run_at": "2026-08-21T09:30:00-07:00",
+      "last_run_at": "2026-08-20T09:33:20.998801-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "19203c26cfd6",
+      "name": "learning-power-hour-flow-check",
+      "prompt": "You are Skibidi running Amar's autonomous trading learning engine. Use the script output to produce a concise power-hour flow check: closing flow, whales being added/closed, low-DTE danger, exit/fade warnings, and what to label for post-market review. Research only; no trade execution. Human-readable Discord labels.",
+      "skills": [
+        "strategy-correlation-lab",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "strategy-correlation-lab",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "trading_learning_power_hour.sh",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 12 * * 1-5",
+        "display": "0 12 * * 1-5"
+      },
+      "schedule_display": "0 12 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 15
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:29:23.834556-07:00",
+      "next_run_at": "2026-08-20T12:00:00-07:00",
+      "last_run_at": "2026-08-19T12:02:22.569451-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "09ce67492094",
+      "name": "learning-post-close-outcome-labeling",
+      "prompt": "You are Skibidi running Amar's autonomous trading learning engine. Use the script output to produce a post-close learning review. Label outcomes: what worked, what failed, whale exits, OI confirmations, low-DTE behavior, regime/news impact, and hypotheses to backtest. Do not claim profitability. Produce concrete machine-readable strategy hypotheses in JSON blocks when justified by data; otherwise mark RESEARCH_MORE. Human-readable Discord labels.",
+      "skills": [
+        "strategy-correlation-lab",
+        "strategy-backtester",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "strategy-correlation-lab",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "trading_learning_postclose.sh",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 13 * * 1-5",
+        "display": "30 13 * * 1-5"
+      },
+      "schedule_display": "30 13 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 15
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:29:36.994207-07:00",
+      "next_run_at": "2026-08-20T13:30:00-07:00",
+      "last_run_at": "2026-08-19T13:33:36.217175-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "68ed5d9d7844",
+      "name": "learning-weekly-strategy-evolution",
+      "prompt": "You are Skibidi running Amar's autonomous trading learning engine. Use the script output to produce a weekly strategy evolution report: sample sizes, strongest/weakest feature buckets, failure clusters, proposed hypotheses, backtest queue, data gaps, and paper-test candidates requiring Amar approval. Do not claim profitability without backtest. Human-readable Discord labels and include JSON strategy proposals only for testable ideas.",
+      "skills": [
+        "strategy-correlation-lab",
+        "strategy-backtester",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "strategy-correlation-lab",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": "trading_learning_weekly.sh",
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 16 * * 5",
+        "display": "0 16 * * 5"
+      },
+      "schedule_display": "0 16 * * 5",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T18:29:43.390166-07:00",
+      "next_run_at": "2026-08-21T16:00:00-07:00",
+      "last_run_at": "2026-08-14T16:04:41.178807-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "discord",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "2d79ac4aa2af",
+      "name": "research-agent-robo-quant-improvement",
+      "prompt": "You are Skibidi's dedicated Research Agent for Amar. Your mission is to continuously research how to build a better robo-quant automated trading system inside Hermes.\n\nResearch scope:\n1. Better autonomous quant/trading system architecture: event-driven trading, options strategy research, feature stores, signal scoring, portfolio/risk engines, execution safeguards, backtesting, paper trading, monitoring, and learning loops.\n2. Better tools/libraries/services we can integrate with Hermes: open-source Python quant libraries, backtesting frameworks, options data tools, market/news/event APIs, vector databases, feature stores, workflow orchestration, dashboards, observability, and agent frameworks.\n3. Hermes-specific opportunities: new skills, cron jobs, plugins, MCP tools, dashboard panels, data pipelines, and safer multi-agent workflows that would improve Amar's UW/Kian/Skylit/Alpaca trading stack.\n4. News/event research methods: how to couple market news, macro events, earnings, sector rotation, unusual options flow, GEX/VEX, and historical outcomes into testable hypotheses.\n\nRequired method:\n- Search the web and public sources. Use at least 8 distinct high-signal sources when possible: docs, GitHub repos, papers/blogs, tool pages, API docs, quant research articles.\n- Prefer current, practical, implementable tools over generic theory.\n- Do not hallucinate. If a tool/source cannot be verified, label it as unverified.\n- Do not recommend live/paper execution changes without explicit Amar approval.\n- Focus on what should be implemented next in Hermes.\n\nOutput format: executive summary, concise but substantive.\n\nRequired sections:\n## Executive Summary\n**Bottom Line**: 2-4 sentence summary.\n**Top Recommendation**: the single highest-leverage implementation to build next.\n**Why It Matters**: business/trading/system impact.\n\n## Top Findings\nFor each finding include:\n**Finding**: ...\n**Source / Evidence**: source name + URL if available\n**Why It Matters For Amar**: ...\n**Implementation Idea In Hermes**: ...\n**Priority**: HIGH | MEDIUM | LOW\n\n## Tool / Integration Watchlist\nInclude columns/lines:\n**Tool**: ...\n**Category**: data | backtest | options analytics | news/events | feature store | dashboard | observability | agent tooling\n**Use Case**: ...\n**Integration Effort**: LOW | MEDIUM | HIGH\n**Decision**: adopt | test | watch | reject\n\n## Robo-Quant Architecture Improvement\nRecommend a concrete next architecture step for Amar's stack.\nMust reference the existing concepts: Unusual Whales/Kian, Skylit GEX/VEX, whale intelligence SQLite, Trading Tracker dashboard, strategy backtester, Alpaca paper trading guardrails.\n\n## Strategy Hypotheses To Explore\nCreate 2-4 testable hypotheses. Each must include:\n**Hypothesis ID**\n**Entry Trigger**\n**Confirmation Rules**\n**Exit / Invalidation Rules**\n**Required Data**\n**Backtest Priority**\n\n## Hermes Build Queue\nList 3-7 actionable implementation tasks. Each must be phrased as a ticket Amar could approve.\n\n## Risks / Guardrails\nExplicitly state data quality, lookahead bias, options liquidity/slippage, news causality, and no-live-execution guardrails.\n\nTone: executive, practical, direct. No fluff. No raw dump. Make it digestible for Amar.",
+      "skills": [
+        "hermes-agent",
+        "ai-news-digest",
+        "strategy-correlation-lab",
+        "strategy-backtester",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "hermes-agent",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 18 * * 0",
+        "display": "0 18 * * 0"
+      },
+      "schedule_display": "0 18 * * 0",
+      "repeat": {
+        "times": 9999,
+        "completed": 4
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T20:52:31.120755-07:00",
+      "next_run_at": "2026-08-23T18:00:00-07:00",
+      "last_run_at": "2026-08-17T10:00:46.136957-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "7436643501",
+        "chat_name": "A J",
+        "thread_id": null,
+        "user_id": "7436643501"
+      },
+      "enabled_toolsets": [
+        "web",
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "974001b1037e",
+      "name": "research-agent-daily-quant-tool-radar",
+      "prompt": "You are Skibidi's Daily Research Radar Agent for Amar's robo-quant automated trading system.\n\nEvery trading day, do a lightweight web/public-source scan for new or relevant developments in:\n- quant trading automation, options analytics, event/news-driven trading, backtesting, portfolio/risk management, market data APIs, agentic trading infrastructure, and Hermes-compatible tools.\n- specific improvement ideas for Amar's stack: Unusual Whales/Kian, Skylit GEX/VEX, whale intelligence SQLite, Trading Tracker dashboard, strategy backtester, Alpaca paper trading guardrails.\n\nUse 3-6 high-signal sources max. Be concise. Do not dump links. Do not claim profitability. Do not suggest execution without approval.\n\nOutput format:\n## Daily Robo-Quant Research Radar\n**Bottom Line**: ...\n**Most Useful Find**: ...\n**Why It Matters**: ...\n\n## Finds\nFor each:\n**Finding**: ...\n**Source**: source + URL\n**Hermes Implementation Idea**: ...\n**Priority**: HIGH | MEDIUM | LOW\n\n## One Build Ticket To Consider\n**Ticket**: ...\n**Expected Impact**: ...\n**Risk / Guardrail**: ...\n\n## Strategy Hypothesis Seed\nOne testable hypothesis only. Include trigger, confirmation, invalidation, data needed, backtest priority.\n\nKeep it executive-summary style and human-readable.",
+      "skills": [
+        "hermes-agent",
+        "ai-news-digest",
+        "strategy-correlation-lab",
+        "strategy-backtester",
+        "unusual-whales",
+        "skylit-ai",
+        "financial-market-data"
+      ],
+      "skill": "hermes-agent",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "openai-codex",
+      "model_snapshot": "gpt-5.5",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "15 17 * * 1-5",
+        "display": "15 17 * * 1-5"
+      },
+      "schedule_display": "15 17 * * 1-5",
+      "repeat": {
+        "times": 9999,
+        "completed": 15
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-28T20:55:28.132185-07:00",
+      "next_run_at": "2026-08-20T17:15:00-07:00",
+      "last_run_at": "2026-08-19T17:17:24.748123-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": null,
+      "enabled_toolsets": [
+        "web",
+        "terminal",
+        "file"
+      ],
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "903103553d6e",
+      "name": "dreaming_telegram_digest",
+      "prompt": "Run Dreaming Telegram Digest",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "dreaming_telegram_digest.py",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 20 * * *",
+        "display": "0 20 * * *"
+      },
+      "schedule_display": "0 20 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 11
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-08-09T02:19:06.005416-07:00",
+      "next_run_at": "2026-08-20T20:00:00-07:00",
+      "last_run_at": "2026-08-19T20:00:16.538116-07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    }
+  ],
+  "updated_at": "2026-08-20T10:44:50.394390-07:00"
+}

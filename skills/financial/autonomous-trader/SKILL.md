@@ -45,7 +45,7 @@ Educational mode is optional: pass `--explain`, `--educational`, `--explain-cond
 
 ## 🐋 Whale Position Monitoring Standard
 
-Use `/Users/admin/.hermes/scripts/uw_whale_position_monitor.py` to seed and monitor notable-flow whale contracts after intelligence briefings. **Initial watchlist admission is triggered by initial contract volume from notable whale flow**. Premium, ask-side urgency, Vol>OI, sector/tape context, and contract price behavior are context fields. **Subsequent checks are conviction confirmations**, not re-entry criteria: next-session OI carryover, follow-through ask-side flow, bid-side exit pressure, OI deterioration, and conviction changes.
+Use `/Users/admin/.hermes/scripts/uw_whale_position_monitor.py` to seed and monitor notable-flow whale contracts after intelligence briefings. **Initial watchlist admission is triggered by initial contract volume from notable whale flow**. Premium, ask-side urgency, Vol>OI, sector/tape context, and contract price behavior are context fields. **Do not keep presenting the same contract as fresh insight**: the monitor must store prior whales, label repeated contracts as `CARRYOVER`, add only newly seen contracts as `NEW`, and move old/non-current contracts into stored or stale monitoring instead of highlighting them. **Subsequent checks are conviction confirmations**, not re-entry criteria: next-session OI carryover, follow-through ask-side flow, bid-side exit pressure, OI deterioration, and conviction changes.
 
 **Seed watchlist**: `python3 /Users/admin/.hermes/scripts/uw_whale_position_monitor.py seed --limit 10`
 
@@ -53,7 +53,7 @@ Use `/Users/admin/.hermes/scripts/uw_whale_position_monitor.py` to seed and moni
 
 **Silent alert check**: `python3 /Users/admin/.hermes/scripts/uw_whale_position_monitor.py check --send-discord`
 
-Alerts should fire only for material changes: OI carryover confirmation, follow-through flow, possible whale exit/sell pressure, or OI fade. **OI carryover and OI fade must only be evaluated during/after the next trading day's market open** (default gate: 6:35 AM Pacific after the entry date; weekends skipped). Same-day checks may monitor follow-through flow and sell-pressure, but must not treat OI as failed/confirmed before next-session OI has had time to update. If there is no material change, stdout should be empty so recurring monitor jobs stay silent.
+Alerts should fire only for material changes: OI carryover confirmation, follow-through flow, possible whale exit/sell pressure, or OI fade. **All Discord-facing whale alerts must be human-readable first**: show contracts as `EEM $62 Put expiring Sep 18, 2026` before raw IDs, spell out `Open Interest` instead of `OI`, use `Whale-Day Volume` instead of `Entry Volume`, and label persistence scoring as `Position Persistence Score` unless it is truly a trade-entry confidence score. **OI carryover and OI fade must only be evaluated during/after the next trading day's market open** (default gate: 6:35 AM Pacific after the entry date; weekends skipped). Same-day checks may monitor follow-through flow and sell-pressure, but must not treat OI as failed/confirmed before next-session OI has had time to update. If there is no material change, stdout should be empty so recurring monitor jobs stay silent.
 
 ## 🧪 Strategy Research / Validation Pipeline
 

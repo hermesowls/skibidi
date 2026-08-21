@@ -5991,6 +5991,27 @@ class DiscordAdapter(BasePlatformAdapter):
                 if msg.type not in {discord.MessageType.default, discord.MessageType.reply}:
                     return None
                 content = getattr(msg, "clean_content", msg.content) or ""
+                if hasattr(msg, "embeds") and msg.embeds:
+                    embed_parts = []
+                    for embed in msg.embeds:
+                        if getattr(embed, "title", None):
+                            embed_parts.append(str(embed.title))
+                        if getattr(embed, "description", None):
+                            embed_parts.append(str(embed.description))
+                        fields = getattr(embed, "fields", None) or []
+                        for field in fields:
+                            fn = getattr(field, "name", "")
+                            fv = getattr(field, "value", "")
+                            if fn or fv:
+                                embed_parts.append(f"{fn}: {fv}".strip(": "))
+                        footer = getattr(embed, "footer", None)
+                        if footer and getattr(footer, "text", None):
+                            embed_parts.append(str(footer.text))
+                    if embed_parts:
+                        embed_text = "\n".join(p.strip() for p in embed_parts if p and p.strip())
+                        if embed_text:
+                            content = f"{content}\n[Embed]: {embed_text}".strip() if content else f"[Embed]: {embed_text}"
+
                 if (
                     str(getattr(msg, "id", "")) in self._nonconversational_messages
                     or _looks_like_nonconversational_history_message(content)

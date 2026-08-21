@@ -9,7 +9,7 @@ import threading
 import time
 import uuid
 import re
-from dataclasses import dataclass, fields, replace
+from dataclasses import dataclass, field, fields, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -185,16 +185,19 @@ class PooledCredential:
     agent_key: Optional[str] = None
     agent_key_expires_at: Optional[str] = None
     request_count: int = 0
-    extra: Dict[str, Any] = None  # type: ignore[assignment]
+    extra: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
-        if self.extra is None:
+        if getattr(self, "extra", None) is None:
             self.extra = {}
         self.auth_type = _normalize_pool_auth_type(
             self.provider,
             self.access_token,
             self.auth_type,
         )
+
+    def __bool__(self) -> bool:
+        return True
 
     def __getattr__(self, name: str):
         if name in _EXTRA_KEYS:
@@ -203,15 +206,16 @@ class PooledCredential:
 
     @classmethod
     def from_dict(cls, provider: str, payload: Dict[str, Any]) -> "PooledCredential":
+        payload_dict: Dict[str, Any] = payload if isinstance(payload, dict) else {}
         field_names = {f.name for f in fields(cls) if f.name != "provider"}
-        data = {k: payload.get(k) for k in field_names if k in payload}
+        data: Dict[str, Any] = {k: payload_dict.get(k) for k in field_names if k in payload_dict}
         # Rehydrated last_status_at may be an ISO string from to_dict() — normalize to float epoch
         if "last_status_at" in data and isinstance(data["last_status_at"], str):
             data["last_status_at"] = _parse_absolute_timestamp(data["last_status_at"])
-        extra = {k: payload[k] for k in _EXTRA_KEYS if k in payload and payload[k] is not None}
+        extra = {k: payload_dict[k] for k in _EXTRA_KEYS if k in payload_dict and payload_dict[k] is not None}
         data["extra"] = extra
         data.setdefault("id", uuid.uuid4().hex[:6])
-        data.setdefault("label", payload.get("source", provider))
+        data.setdefault("label", payload_dict.get("source", provider))
         data.setdefault("auth_type", AUTH_TYPE_API_KEY)
         data.setdefault("priority", 0)
         data.setdefault("source", SOURCE_MANUAL)
@@ -259,7 +263,7 @@ class PooledCredential:
                 ):
                     return token.strip()
             return ""
-        return str(self.access_token or "")
+        return self.access_token or ""
 
     @property
     def runtime_base_url(self) -> Optional[str]:
@@ -507,7 +511,7 @@ def credential_pool_matches_provider(
             # old plugins and tests may expose only select()/has_credentials().
             return True
     pool_provider = str(raw_pool_provider or "").strip().lower()
-    provider_norm = str(provider or "").strip().lower()
+    provider_norm = (provider or "").strip().lower()
     if not pool_provider or not provider_norm:
         return False
     if pool_provider == provider_norm:
@@ -518,7 +522,7 @@ def credential_pool_matches_provider(
         matched_pool = get_custom_provider_pool_key(base_url or "")
     except Exception:
         return False
-    return str(matched_pool or "").strip().lower() == pool_provider
+    return (matched_pool or "").strip().lower() == pool_provider
 
 
 DEFAULT_MAX_CONCURRENT_PER_CREDENTIAL = 1
@@ -658,6 +662,18 @@ class CredentialPool:
             if entry.id == old.id:
                 self._entries[idx] = new
                 return
+
+    def remove_entry(self, entry_id: str) -> bool:
+        """Remove an entry by id and persist pool state."""
+        with self._lock:
+            target = next((entry for entry in self._entries if entry.id == entry_id), None)
+            if target is None:
+                return False
+            self._entries = [entry for entry in self._entries if entry.id != entry_id]
+            if self._current_id == entry_id:
+                self._current_id = None
+            self._persist(removed_ids=[entry_id])
+            return True
 
     def _persist(self, *, removed_ids: Optional[List[str]] = None) -> None:
         write_credential_pool(
@@ -1177,8 +1193,8 @@ class CredentialPool:
         )
         refresh_timeout_seconds = auth_mod.env_float(env_var, 20)
         return max(
-            float(auth_mod.AUTH_LOCK_TIMEOUT_SECONDS),
-            float(refresh_timeout_seconds) + 5.0,
+            auth_mod.AUTH_LOCK_TIMEOUT_SECONDS,
+            refresh_timeout_seconds + 5.0,
         )
 
     def _refresh_entry_impl(
@@ -1189,7 +1205,7 @@ class CredentialPool:
                 from agent.anthropic_adapter import refresh_anthropic_oauth_pure
 
                 refreshed = refresh_anthropic_oauth_pure(
-                    entry.refresh_token,
+                    entry.refresh_token or "",
                     use_json=entry.source.endswith("hermes_pkce"),
                 )
                 updated = replace(
@@ -1221,7 +1237,7 @@ class CredentialPool:
                     entry = synced
                 refreshed = auth_mod.refresh_codex_oauth_pure(
                     entry.access_token,
-                    entry.refresh_token,
+                    entry.refresh_token or "",
                 )
                 updated = replace(
                     entry,
@@ -1240,7 +1256,7 @@ class CredentialPool:
                     entry = synced
                 refreshed = auth_mod.refresh_xai_oauth_pure(
                     entry.access_token,
-                    entry.refresh_token,
+                    entry.refresh_token or "",
                 )
                 updated = replace(
                     entry,
@@ -1270,7 +1286,7 @@ class CredentialPool:
                     try:
                         from agent.anthropic_adapter import refresh_anthropic_oauth_pure
                         refreshed = refresh_anthropic_oauth_pure(
-                            synced.refresh_token,
+                            synced.refresh_token or "",
                             use_json=synced.source.endswith("hermes_pkce"),
                         )
                         updated = replace(
@@ -1341,7 +1357,7 @@ class CredentialPool:
                                 tokens = state.get("tokens") or {}
                                 if isinstance(tokens, dict):
                                     store_refresh = str(tokens.get("refresh_token") or "").strip()
-                                    entry_refresh = str(entry.refresh_token or "").strip()
+                                    entry_refresh = (entry.refresh_token or "").strip()
                                     if not store_refresh or store_refresh == entry_refresh:
                                         tokens.pop("access_token", None)
                                         tokens.pop("refresh_token", None)
@@ -1411,7 +1427,7 @@ class CredentialPool:
                                 tokens = state.get("tokens") or {}
                                 if isinstance(tokens, dict):
                                     store_refresh = str(tokens.get("refresh_token") or "").strip()
-                                    entry_refresh = str(entry.refresh_token or "").strip()
+                                    entry_refresh = (entry.refresh_token or "").strip()
                                     if not store_refresh or store_refresh == entry_refresh:
                                         tokens.pop("access_token", None)
                                         tokens.pop("refresh_token", None)
@@ -1476,16 +1492,17 @@ class CredentialPool:
                                 "tls": entry.tls,
                             }
                             store_refresh = str(state.get("refresh_token") or "").strip()
-                            entry_refresh = str(entry.refresh_token or "").strip()
+                            entry_refresh = (entry.refresh_token or "").strip()
                             if not store_refresh or store_refresh == entry_refresh:
+                                auth_err = exc if isinstance(exc, auth_mod.AuthError) else auth_mod.AuthError(str(exc))
                                 auth_mod._quarantine_nous_oauth_state(
                                     state,
-                                    exc,
+                                    auth_err,
                                     reason="credential_pool_refresh_failure",
                                 )
                                 auth_mod._quarantine_nous_pool_entries(
                                     auth_store,
-                                    exc,
+                                    auth_err,
                                     reason="credential_pool_refresh_failure",
                                 )
                                 _save_provider_state(auth_store, "nous", state)
@@ -1572,7 +1589,7 @@ class CredentialPool:
         if self.provider == "anthropic":
             if entry.expires_at_ms is None:
                 return False
-            return int(entry.expires_at_ms) <= int(time.time() * 1000) + 120_000
+            return entry.expires_at_ms <= int(time.time() * 1000) + 120_000
         if self.provider == "openai-codex":
             return _codex_access_token_is_expiring(
                 entry.access_token,
@@ -2448,7 +2465,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
         # refresh_token_reused race failures.  Users who want to adopt
         # existing Codex CLI credentials get a one-time, explicit prompt
         # via `hermes auth openai-codex`.
-        if isinstance(tokens, dict) and tokens.get("access_token"):
+        if isinstance(tokens, dict) and tokens.get("access_token") and isinstance(state, dict):
             active_sources.add("device_code")
             custom_label = str(state.get("label") or "").strip()
             changed |= _upsert_entry(
@@ -2474,7 +2491,7 @@ def _seed_from_singletons(provider: str, entries: List[PooledCredential]) -> Tup
         # is the single source of truth for refresh during runtime resolution.
         state = _load_provider_state(auth_store, "xai-oauth")
         tokens = state.get("tokens") if isinstance(state, dict) else None
-        if isinstance(tokens, dict) and tokens.get("access_token"):
+        if isinstance(tokens, dict) and tokens.get("access_token") and isinstance(state, dict):
             # Device code is the only supported xAI OAuth flow; the singleton is
             # always surfaced as ``device_code`` (consistent with nous/codex).
             source = "device_code"
@@ -2545,7 +2562,7 @@ def _seed_from_env(provider: str, entries: List[PooledCredential]) -> Tuple[bool
             source_label = get_secret_source(env_var)
         except Exception:
             source_label = None
-        return str(source_label).strip() if source_label else None
+        return source_label.strip() if source_label else None
 
     def _env_payload(
         *,

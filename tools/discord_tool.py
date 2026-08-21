@@ -527,9 +527,52 @@ def _fetch_messages(
     result = []
     for msg in messages:
         author = msg.get("author", {})
-        result.append({
+        embeds_list = []
+        embed_text_parts = []
+        if msg.get("embeds") and isinstance(msg["embeds"], list):
+            for e in msg["embeds"]:
+                if not isinstance(e, dict):
+                    continue
+                eb = {}
+                if e.get("title"):
+                    eb["title"] = str(e["title"])
+                    embed_text_parts.append(str(e["title"]))
+                if e.get("description"):
+                    eb["description"] = str(e["description"])
+                    embed_text_parts.append(str(e["description"]))
+                if e.get("author") and isinstance(e["author"], dict) and e["author"].get("name"):
+                    eb["author"] = str(e["author"]["name"])
+                if e.get("footer") and isinstance(e["footer"], dict) and e["footer"].get("text"):
+                    eb["footer"] = str(e["footer"]["text"])
+                    embed_text_parts.append(str(e["footer"]["text"]))
+                if e.get("fields") and isinstance(e["fields"], list):
+                    eb_fields = []
+                    for f in e["fields"]:
+                        if isinstance(f, dict):
+                            fn = f.get("name", "")
+                            fv = f.get("value", "")
+                            if fn or fv:
+                                eb_fields.append({"name": str(fn), "value": str(fv)})
+                                embed_text_parts.append(f"{fn}: {fv}".strip(": "))
+                    if eb_fields:
+                        eb["fields"] = eb_fields
+                if eb:
+                    embeds_list.append(eb)
+
+        raw_content = msg.get("content", "")
+        # If content is empty or contains embeds, append embed text summary to content
+        if embed_text_parts:
+            embed_summary = "\n".join(p for p in embed_text_parts if p)
+            if raw_content.strip():
+                content = f"{raw_content}\n[Embed Content]:\n{embed_summary}"
+            else:
+                content = f"[Embed Content]:\n{embed_summary}"
+        else:
+            content = raw_content
+
+        msg_entry = {
             "id": msg["id"],
-            "content": msg.get("content", ""),
+            "content": content,
             "author": {
                 "id": author.get("id"),
                 "username": author.get("username"),
@@ -547,7 +590,10 @@ def _fetch_messages(
                 for r in msg.get("reactions", [])
             ] if msg.get("reactions") else [],
             "pinned": msg.get("pinned", False),
-        })
+        }
+        if embeds_list:
+            msg_entry["embeds"] = embeds_list
+        result.append(msg_entry)
     return json.dumps({"messages": result, "count": len(result)})
 
 

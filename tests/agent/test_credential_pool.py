@@ -66,7 +66,9 @@ def test_fill_first_selection_skips_recently_exhausted_entry(tmp_path, monkeypat
 
     assert entry is not None
     assert entry.id == "cred-2"
-    assert pool.current().id == "cred-2"
+    current = pool.current()
+    assert current is not None
+    assert current.id == "cred-2"
 
 
 def test_select_clears_expired_exhaustion(tmp_path, monkeypatch):
@@ -366,7 +368,9 @@ def test_mark_exhausted_and_rotate_persists_status(tmp_path, monkeypatch):
     from agent.credential_pool import load_pool
 
     pool = load_pool("anthropic")
-    assert pool.select().id == "cred-1"
+    selected = pool.select()
+    assert selected is not None
+    assert selected.id == "cred-1"
 
     next_entry = pool.mark_exhausted_and_rotate(status_code=402)
 
@@ -550,7 +554,9 @@ def test_token_invalidated_marks_credential_dead(tmp_path, monkeypatch):
     from agent.credential_pool import load_pool, STATUS_DEAD
 
     pool = load_pool("openai-codex")
-    assert pool.select().id == "cred-dead"
+    selected = pool.select()
+    assert selected is not None
+    assert selected.id == "cred-dead"
 
     # Simulate the exact OpenAI Codex 401 token_invalidated response shape.
     next_entry = pool.mark_exhausted_and_rotate(
@@ -675,7 +681,9 @@ def test_429_rate_limit_still_uses_exhausted_not_dead(tmp_path, monkeypatch):
     from agent.credential_pool import load_pool, STATUS_EXHAUSTED
 
     pool = load_pool("openai-codex")
-    assert pool.select().id == "cred-1"
+    selected = pool.select()
+    assert selected is not None
+    assert selected.id == "cred-1"
 
     next_entry = pool.mark_exhausted_and_rotate(
         status_code=429,
@@ -2278,6 +2286,52 @@ def test_get_custom_provider_pool_key(tmp_path, monkeypatch):
     assert get_custom_provider_pool_key("") is None
 
 
+def test_credential_pool_remove_entry(tmp_path, monkeypatch):
+    """remove_entry removes an entry by id, clears current_id if active, and persists."""
+    monkeypatch.setenv("HERMES_HOME", str(tmp_path / "hermes"))
+    _write_auth_store(
+        tmp_path,
+        {
+            "version": 1,
+            "credential_pool": {
+                "openrouter": [
+                    {
+                        "id": "key-1",
+                        "label": "key1",
+                        "auth_type": "api_key",
+                        "priority": 0,
+                        "source": "manual",
+                        "access_token": "token1",
+                    },
+                    {
+                        "id": "key-2",
+                        "label": "key2",
+                        "auth_type": "api_key",
+                        "priority": 1,
+                        "source": "manual",
+                        "access_token": "token2",
+                    },
+                ]
+            },
+        },
+    )
+
+    from agent.credential_pool import load_pool
+
+    pool = load_pool("openrouter")
+    assert len(pool.entries()) == 2
+    pool.select()
+
+    assert pool.remove_entry("key-1") is True
+    assert len(pool.entries()) == 1
+    assert pool.entries()[0].id == "key-2"
+    assert pool.remove_entry("non-existent") is False
+
+    auth_payload = json.loads((tmp_path / "hermes" / "auth.json").read_text())
+    assert [e["id"] for e in auth_payload["credential_pool"]["openrouter"]] == ["key-2"]
+
+
+
 def test_get_custom_provider_pool_key_prefers_name_over_base_url(tmp_path, monkeypatch):
     """When two custom providers share the same base_url, provider_name resolves to the correct one."""
     monkeypatch.setenv("HERMES_HOME", str(tmp_path / "hermes"))
@@ -3353,7 +3407,7 @@ def test_persist_preserves_concurrent_disk_only_entry(tmp_path, monkeypatch):
     pool = load_pool("anthropic")
     assert {entry.id for entry in pool.entries()} == {"cred-A", "cred-B"}
 
-    disk_snapshot = read_credential_pool("anthropic")
+    disk_snapshot = list(read_credential_pool("anthropic") or [])
     disk_snapshot.append(
         {
             "id": "cred-C",
@@ -3672,7 +3726,7 @@ class TestCredentialPoolQueryLocking:
                 self.release()
 
         probe = _InstrumentedLock()
-        pool._lock = probe
+        pool._lock = probe  # type: ignore[assignment]
 
         done = threading.Event()
 

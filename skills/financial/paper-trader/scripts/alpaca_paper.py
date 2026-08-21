@@ -60,6 +60,20 @@ def show_account_status():
         return f"⚠️ Error fetching Alpaca account: {e}"
 
 def openbb_quote(symbol):
+    # Check Finviz Elite first
+    try:
+        finviz_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../financial-market-data/scripts"))
+        if finviz_dir not in sys.path:
+            sys.path.insert(0, finviz_dir)
+        import finviz_client
+        if finviz_client.get_finviz_api_url():
+            quotes = finviz_client.fetch_quotes([symbol])
+            if quotes:
+                q = quotes[0]
+                return f"📈 **MARKET QUOTE ({symbol.upper()})**\n\n**Last Price**: ${q['price']}\n**Daily Change**: {q['change_pct']}\n**Market Cap**: {q['market_cap']}\n**P/E Ratio**: {q['pe_ratio']}\n\n*Fetched via Finviz Elite Engine.*"
+    except Exception:
+        pass
+
     try:
         from openbb import ob
         res = ob.equity.price.quote(symbol)

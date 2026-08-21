@@ -195,6 +195,36 @@ Only pass ideas that have:
 **No unresolved leakage**: entry vs confirmation timing is clean.
 **Specific thresholds**: not vague phrases like “large” unless the threshold is to be optimized in backtest.
 
+## Autonomous Robo-Quant Research Agent
+
+Dedicated research crons:
+
+**Daily Research Radar**: `research-agent-daily-quant-tool-radar` — weekday 5:15 PM Pacific, delivered to Amar's origin chat. Lightweight scan for quant automation, options analytics, event/news trading, backtesting, data APIs, dashboards, observability, and Hermes-compatible tools. Produces executive summary plus one build ticket and one testable hypothesis seed.
+
+**Weekly Deep Research Agent**: `research-agent-robo-quant-improvement` — Sundays 6:00 PM Pacific, delivered to Amar's origin chat. Deep web/public-source research on better robo-quant architecture, Hermes integrations, and strategy hypotheses. Produces executive summary, tool watchlist, architecture recommendation, strategy hypotheses, build queue, and guardrails.
+
+Both agents are research-only: no paper/live execution, no profitability claims without backtest, and recommendations must become build tickets or backtest hypotheses.
+
+## Autonomous Daily Learning Engine
+
+Amar's trading self-improvement loop is implemented through `/Users/admin/.hermes/scripts/trading_learning_engine.py` and cron wrappers:
+
+**Night research**: `trading_learning_night.sh` — event/news/regime context before next trading day.
+
+**Premarket battle plan**: `trading_learning_premarket.sh` — UW mirror, exit checks, market snapshot, and watchlist context.
+
+**Intraday monitor**: `trading_learning_intraday.sh` — no-agent alert loop; silent outside market hours and sends Discord directly only on material whale follow-through, OI carryover, or exit/fade alerts.
+
+**Midday re-rank**: `trading_learning_midday.sh` — re-ranks active hypotheses and labels what is working/fading.
+
+**Power hour**: `trading_learning_power_hour.sh` — closing-flow and risk/fade check.
+
+**Post-close review**: `trading_learning_postclose.sh` — outcome labeling and hypothesis generation.
+
+**Weekly evolution**: `trading_learning_weekly.sh` — weekly pattern/failure report and backtest queue.
+
+Canonical learning DB: `/Users/admin/.hermes/trading_logs/whale_intelligence.sqlite`. Output contexts: `/Users/admin/.hermes/trading_logs/learning_engine_outputs/`. No script in this loop places paper/live trades.
+
 ## Output Contract
 
 Every research run should produce:

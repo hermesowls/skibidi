@@ -1,3 +1,4 @@
+agent-reach:c446cb9e203421e194c90a08378dcf68
 ai-news-digest:9fee8b7569721c6f790ab944e4472d32
 airtable:30f47a4b29827da14e655356c0edd8a7
 apple-notes:5e448abf984561fb33b197045ce41388
@@ -15,10 +16,13 @@ codebase-inspection:29f67c87df868dd08e76c57b86c7a5c6
 codex:66a8aa156673b5dd6e82c4e62f04ba3a
 comfyui:c9ac1497c123c607f98a547f8cf54fc5
 computer-use:937face7c83e61b207bd08a5c0ffdff5
+dealer-level-chart-analysis:907a24ebbebaaa15c795d0b7b31fef21
+dealer-level-chart-overlays:9f14d276ae5d5010b44720458da445a0
 design-md:b40264457352831ab1d06f3ec671b532
 docx:353cd277db9bf6af2c49a7ec2258512a
 dogfood:ae6e92c2cd27c3da8a0587f089d19fe3
 evaluating-llms-harness:ac24cf5202db5b024b3079023797a0f6
+event-logistics-planning:a94b803e672ebc2cb71f3e062c6fe1f0
 excalidraw:149a572d2069ee3de2951352725a8b19
 financial-market-data:86739329e9c389ab62a6bdd49718ec01
 findmy:1d7dd3ae39cf25357a374c6bfb956442
@@ -34,6 +38,7 @@ google-workspace:95a0ff7299f92be6107d9051ab723e6b
 graphify-trading:24ef6d83f53737e8b90fe4dcb731fc91
 hermes-agent:fe4b9b98f28bceef1fa68547e889046f
 hermes-agent-skill-authoring:373715126bca9172a6acd28bdd424f10
+hermes-dashboard-plugins:b2e38e356f0ae82f3647125c80671ab3
 himalaya:7ae61574914c25d57a001d1e1efe39bf
 huggingface-hub:da338c5152d72db030bb81d923d1c64d
 humanizer:6645b341862575f452e86139c5c71ce9
@@ -49,6 +54,7 @@ node-inspect-debugger:55501511963a3a6410fc767b5ed3e21c
 notion:930f6c7d327dd86553f45e2da9d9901e
 obsidian:be02894afa45a908623ad6f9b7594199
 ocr-and-documents:af5fba9fa8ef003951ff5fe5a0a04adf
+open-design:15758caef8cefedab2f66fc364cc89a5
 opencode:d2a166c7f2c74f6e47d548ed1290c458
 openhue:ce1dd061d7f49d4752a4c0711ad2666c
 p5js:5f09fa1cb8494c93bc2f5bcbd34a2ead
@@ -60,12 +66,16 @@ popular-web-designs:b3fd685e8fbcf981755609ce98a4eea9
 powerpoint:00a6eb2ad4b7be22c1eabf6c19158836
 pretext:f17f2b6211eb81b96e1fc5d48ecc96a4
 python-debugpy:b87e0abf179c14ea51c7559dc99eb22c
+quant-shadow-tracking:632b8d5576d35307f10ad9511458e141
 requesting-code-review:f7e902570802e21f340955384385abda
 research-paper-writing:dbe2d301baeaab5c5b0539a733233a34
 serving-llms-vllm:92d66ae1f1112924634fcdcff2f86bc7
 simplify-code:400de5f892617a4f1e82c8b799142272
 sketch:f8833126112824f6a916c69630cfd042
 skylit-ai:1a14565efa789a8187a6b6adf2a4af55
+skylit-atlas:ffc45112faccaba81d40420f25fd6bae
+skylit-gex-vex-analysis:b6f2b06b18f5b1d50b5fe501d15b5b7b
+skylit-heatmap-capture-analysis:2cd00925f653a48109e94dd4c8d0438c
 songsee:644dc0f267b6661a3df6c76ce80d7f1f
 songwriting-and-ai-music:52be403c894c7bd7d6fe70f7eeaf9460
 spike:f8b8dc6f7b65c8fc9a832cb5bea1497e
@@ -73,9 +83,12 @@ strategy-backtester:d623ec45cd589e93d9ff08c2e2cf2e4b
 strategy-correlation-lab:04c89be802b34a109e16e7ba3b2ba4ef
 systematic-debugging:90bd57d854ed05d7c97f18b9a9901167
 teams-meeting-pipeline:810d4862830d1eb3daccf898f7c5ee85
+tenant-profile-orchestration:2c4dc9bed7f462a5c7751b4ca22c963c
 test-driven-development:dbf41a28c00e9bdf25b6497287231fa0
 touchdesigner-mcp:0664ded9138795d5518def4d16037650
+trading-chart-overlays:aa8870c9a532f2bbe234f548495a550c
 trading-dashboard-tracker:557768327d83376c1958ce76d84f2476
+trading-strategy-lifecycle:4b884eb559f05f0ddcaf9509ddd1b0d8
 unusual-whales:99654cbff95991f69efa35bad94dd895
 weights-and-biases:8f0e1ee92fdf7b42a1dad448176d7c64
 xlsx:5e5fdac241169b09fdef6c6b981566f4

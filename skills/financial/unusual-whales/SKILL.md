@@ -24,6 +24,39 @@ Use this skill whenever analyzing options flow, dark pool activity, or stock ale
 
 ---
 
+## Notable Flow Mirror Process
+
+When Amar asks for the OWLS/Kian-style `Notable Flow` list, do **not** treat it as a data source or as the same thing as Kian conviction cards. It is a separate generated output process.
+
+Use `/Users/admin/.hermes/scripts/uw_notable_flow_mirror.py` to generate the compact notable-flow list format, e.g. `$TICKER STRIKEC/P M/Dexp $PREMIUM AVG Avg`.
+
+**Purpose**: contract-level notable-flow output similar to Kian's simple list, before full Kian chart/card scoring.
+
+**Default command**:
+```bash
+/Users/admin/repos/hermes-agent/venv/bin/python /Users/admin/.hermes/scripts/uw_notable_flow_mirror.py --limit 11 --output /tmp/notable_flow_mirror_latest.md
+```
+
+**Discord command**:
+```bash
+/Users/admin/repos/hermes-agent/venv/bin/python /Users/admin/.hermes/scripts/uw_notable_flow_mirror.py --limit 11 --send-discord --output /tmp/notable_flow_mirror_latest.md
+```
+
+**Behavior**: aggregates UW contract/trade rows into contract-level notable rows, enriches finalists through `/option-contract/{contract}/historic`, ranks by daily premium/volume, computes DTE from analysis date, and labels novelty as `NEW` or `CARRYOVER` via `~/.hermes/trading_logs/notable_flow_mirror.sqlite`.
+
+**Exit/sell-pressure check**: after running the mirror, use `/Users/admin/.hermes/scripts/uw_notable_flow_exit_check.py` to evaluate whether mirrored whales may have sold or faded. It checks contract intraday/flow/historic endpoints for bid-side dominance, ask-side follow-through, contract price vs avg, and current/previous OI. Same-day bid-side pressure can warn of exit, but true hold/sold confirmation requires next-session OI after market open.
+
+**Exit check command**:
+```bash
+/Users/admin/repos/hermes-agent/venv/bin/python /Users/admin/.hermes/scripts/uw_notable_flow_exit_check.py
+```
+
+**Human-readable Discord rule**: All Discord-facing whale output must use human-readable contract labels first, with raw option symbols only as secondary metadata. Use labels like `Readable Contract: EEM $62 Put expiring Sep 18, 2026 | DTE From Today: 52` and `Raw Contract ID: EEM260918P00062000`. Avoid unexplained abbreviations in primary labels: write `Open Interest` instead of `OI`, `Whale-Day Volume` instead of `Entry Volume`, `Earliest Valid Open Interest Check` instead of `OI Check Window`, and `Position Persistence Score` instead of generic `Conviction` when the score measures holding/persistence rather than trade-entry confidence.
+
+**Separation rule**: Notable Flow Mirror = discovery/output list. Exit Check = sold/fade pressure. Kian Process = conviction card + chart workflow. Whale Monitor = persistence/confirmation tracking. Do not conflate them.
+
+---
+
 ## Core Methodology: The Kian Process
 
 Whenever evaluating market flow or scanning tickers, apply **The Kian Process** with progressive filter relaxation:

@@ -14,9 +14,8 @@ metadata:
 
 # Stocks Skill
 
-Read-only market data via Yahoo Finance. Five commands: `quote`, `search`,
-`history`, `compare`, `crypto`. Python stdlib only — no API key, no pip
-installs. Yahoo's endpoint is unofficial and may rate-limit or change.
+Real-time market data powered by **Finviz Elite** (`FINVIZ_API_URL`) with fallback to Yahoo Finance. Five commands: `quote`, `search`,
+`history`, `compare`, `crypto`. Python stdlib only — zero external pip dependencies.
 
 ## When to Use
 

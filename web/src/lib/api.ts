@@ -307,6 +307,58 @@ function appendProfileParam(url: string, profile?: string): string {
 export const api = {
   buildWsUrl,
   getStatus: () => fetchJSON<StatusResponse>("/api/status"),
+  getAnalystPositions: () =>
+    fetchJSON<{ positions: any[]; ok: boolean }>("/api/analyst-trader/positions"),
+  getAnalystList: () =>
+    fetchJSON<{ analysts: any[]; ok: boolean }>("/api/analyst-trader/analysts"),
+  getQuantSignalMatrix: (tickers?: string) =>
+    fetchJSON<{ matrix: any[]; ok: boolean; count: number }>(
+      tickers ? `/api/quant/signal-matrix?tickers=${encodeURIComponent(tickers)}` : "/api/quant/signal-matrix"
+    ),
+  getQuantShadowRecords: () =>
+    fetchJSON<{ records: any[]; ok: boolean }>("/api/quant/shadow-tracking"),
+  addQuantShadowRecord: (payload: any) =>
+    fetchJSON<{ record: any; ok: boolean }>("/api/quant/shadow-tracking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }),
+  getQuantDreamSetup: (ticker: string = "METC") =>
+    fetchJSON<{ ok: boolean; setup: any; risk: any; position_options: any; technical_indicators: any; events_social: any }>(
+      `/api/quant/dream-setup?ticker=${encodeURIComponent(ticker)}`
+    ),
+  getLiveOptionChain: (ticker: string = "METC") =>
+    fetchJSON<{ ok: boolean; ticker: string; share_price: number; expirations: any[] }>(
+      `/api/quant/live-option-chain?ticker=${encodeURIComponent(ticker)}`
+    ),
+  getSimulatedPositions: (status?: string, rr?: string, asset?: string) => {
+    const params = new URLSearchParams();
+    if (status) params.set("status", status);
+    if (rr) params.set("rr", rr);
+    if (asset) params.set("asset", asset);
+    const q = params.toString();
+    return fetchJSON<{ positions: any[]; ok: boolean; count: number }>(
+      q ? `/api/quant/simulated-positions?${q}` : "/api/quant/simulated-positions"
+    );
+  },
+  addSimulatedPosition: (payload: any) =>
+    fetchJSON<{ position: any; ok: boolean }>("/api/quant/simulated-positions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }),
+  deleteSimulatedPosition: (positionId: number) =>
+    fetchJSON<{ ok: boolean }>(`/api/quant/simulated-positions/${positionId}`, {
+      method: "DELETE"
+    }),
+  clearSimulatedPositions: () =>
+    fetchJSON<{ ok: boolean }>("/api/quant/simulated-positions", {
+      method: "DELETE"
+    }),
+  closeSimulatedPosition: (positionId: number) =>
+    fetchJSON<{ ok: boolean }>(`/api/quant/simulated-positions/${positionId}`, {
+      method: "DELETE"
+    }),
   /**
    * Identity probe for the dashboard auth gate (Phase 7).
    *

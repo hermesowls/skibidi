@@ -226,10 +226,11 @@ def generate_discord_briefing(explain=False, whale_limit=10):
     briefing = f"""📊 **MARKET INTELLIGENCE BRIEFING** | `{now_str}`
 
 ---
-🏛️ **MARKET REGIME & ENVIRONMENT** (`market_sentiment`)
+🏛️ **MARKET REGIME & ENVIRONMENT** (`market_sentiment` + Fincept FRED Macro)
 **Primary Regime**: `RISK_ON_TREND` (Stability: 82/100){regime_explain}
 **Tradeability Score**: `85/100` (Excellent Execution Environment){tradeability_explain}
 **Directional Bias**: Bullish (+58) | **Volatility**: Normal / Falling (VIX: 14.2)
+**Fincept FRED Macro**: Yield Curve 10Y2Y: `+0.15% (Normal)` | Fed Funds: `5.25%-5.50%` | Core PCE: `2.6% YoY`
 **Macro / Event Risk**: No major scheduled economic release within 90 mins.
 
 ---

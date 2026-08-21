@@ -1,0 +1,25 @@
+{
+  "strategy_id": "FLOW_SWEEP",
+  "name": "🌊 Unusual Whales Institutional Flow Sweep Strategy",
+  "version": "1.0.0",
+  "description": "Momentum strategy riding massive institutional option sweeps (Vol > OI, Ask-Side Urgency > $100k) with Finviz trend confirmation.",
+  "horizon": "2-5 Day Momentum",
+  "risk_profile": "🌊 Medium-High Risk / Flow Momentum Horizon",
+  "conviction_threshold": 82,
+  "allocated_capital": 200.00,
+  "target_price_rule": "Flow Breakout Level (+5.0%)",
+  "stop_loss_rule": "Prior Day Low (-3.0%)",
+  "weights": {
+    "unusual_whales_flow": 0.45,
+    "finviz_technical": 0.25,
+    "graphify_sympathy": 0.15,
+    "market_regime": 0.15
+  },
+  "rules": {
+    "min_ask_side_premium": 100000.0,
+    "require_vol_gt_oi": true,
+    "max_position_size_pct": 20.0
+  },
+  "optimization_status": "Active (Institutional flow sweep tracking)",
+  "last_updated": "2026-08-08T18:51:00Z"
+}

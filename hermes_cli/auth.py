@@ -1063,7 +1063,7 @@ def _file_lock(
                     fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
                 else:
                     lock_file.seek(0)
-                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)  # type: ignore[union-attr]
                 break
             except (BlockingIOError, OSError, PermissionError):
                 if time.monotonic() >= deadline:
@@ -1083,7 +1083,7 @@ def _file_lock(
             elif msvcrt:
                 try:
                     lock_file.seek(0)
-                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)  # type: ignore[union-attr]
                 except (OSError, IOError):
                     pass
 
@@ -1411,7 +1411,7 @@ def is_runtime_provider_routable(provider_id: str) -> bool:
     return True
 
 
-def read_credential_pool(provider_id: Optional[str] = None) -> Dict[str, Any]:
+def read_credential_pool(provider_id: Optional[str] = None) -> Any:
     """Return the persisted credential pool, or one provider slice.
 
     In profile mode, the profile's credential pool is authoritative. If a
@@ -2550,7 +2550,7 @@ def _refresh_qwen_cli_tokens(tokens: Dict[str, Any], timeout_seconds: float = 20
 
     expires_in = payload.get("expires_in")
     try:
-        expires_in_seconds = int(expires_in)
+        expires_in_seconds = int(expires_in or 0)
     except Exception:
         expires_in_seconds = 6 * 60 * 60
 
@@ -3591,7 +3591,7 @@ def _sync_codex_pool_entries(
         entry["last_error_reset_at"] = None
 
 
-def _save_codex_tokens(tokens: Dict[str, str], last_refresh: str = None, label: str = None) -> None:
+def _save_codex_tokens(tokens: Dict[str, str], last_refresh: Optional[str] = None, label: Optional[str] = None) -> None:
     """Save Codex OAuth tokens to Hermes auth store (~/.hermes/auth.json)."""
     if last_refresh is None:
         last_refresh = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -3954,7 +3954,7 @@ def resolve_codex_runtime_credentials(
             relogin_required=True,
         )
 
-    tokens = dict(data["tokens"])
+    tokens = dict(data["tokens"]) if isinstance(data["tokens"], dict) else {}  # type: ignore[arg-type]
     access_token = str(tokens.get("access_token", "") or "").strip()
     refresh_timeout_seconds = env_float("HERMES_CODEX_REFRESH_TIMEOUT_SECONDS", 20)
 
@@ -6850,7 +6850,8 @@ def _get_azure_foundry_auth_status() -> Dict[str, Any]:
 
     # api_key mode (default)
     try:
-        api_key = get_env_value_prefer_dotenv("AZURE_FOUNDRY_API_KEY") or ""
+        from hermes_cli.config import get_env_value_prefer_dotenv as _get_env
+        api_key = _get_env("AZURE_FOUNDRY_API_KEY") or ""
     except Exception:
         api_key = os.getenv("AZURE_FOUNDRY_API_KEY", "")
     info["logged_in"] = has_usable_secret(api_key)
@@ -7317,8 +7318,8 @@ def _prompt_model_selection(
         from hermes_cli.curses_ui import curses_radiolist
 
         choices = [_label_segments(mid) for mid in ordered]
-        choices.append("Enter custom model name")
-        choices.append("Skip (keep current)")
+        choices.append(("Enter custom model name", None))
+        choices.append(("Skip (keep current)", None))
 
         _upgrade_url = (portal_url or DEFAULT_NOUS_PORTAL_URL).rstrip("/")
         unavailable_footer = unavailable_message.strip()
@@ -7343,7 +7344,7 @@ def _prompt_model_selection(
 
         idx = curses_radiolist(
             "Select default model:",
-            choices,
+            choices,  # type: ignore[arg-type]
             selected=default_idx,
             cancel_returns=-1,
             description=description,
@@ -7501,7 +7502,7 @@ def _login_openai_codex(
     creds = _codex_device_code_login()
 
     # Save tokens to Hermes auth store
-    _save_codex_tokens(creds["tokens"], creds.get("last_refresh"))
+    _save_codex_tokens(creds["tokens"], creds.get("last_refresh") or None)
     config_path = _update_config_for_provider("openai-codex", creds.get("base_url", DEFAULT_CODEX_BASE_URL))
     print()
     print("Login successful!")
@@ -8721,7 +8722,7 @@ def _login_nous(args, pconfig: ProviderConfig) -> None:
             unavailable_models: list = []
             unavailable_message = ""
             if model_ids:
-                pricing = get_pricing_for_provider("nous")
+                pricing: Dict[str, Any] = get_pricing_for_provider("nous")
                 # Force fresh account data for model selection so recent credit
                 # purchases are reflected immediately.
                 free_tier = check_nous_free_tier(force_fresh=True)

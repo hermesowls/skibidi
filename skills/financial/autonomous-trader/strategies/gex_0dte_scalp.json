@@ -1,0 +1,26 @@
+{
+  "strategy_id": "GEX_0DTE",
+  "name": "⚡ GEX 0DTE Intraday Scalp Strategy",
+  "version": "1.1.0",
+  "description": "Intraday scalp strategy targeting Skylit 0DTE dealer hedging pins and Finviz momentum signals.",
+  "horizon": "0DTE Intraday",
+  "risk_profile": "⚡ High Risk / Fast Execution (0DTE)",
+  "conviction_threshold": 80,
+  "allocated_capital": 150.00,
+  "target_price_rule": "Intraday Gamma Level (+1.5%)",
+  "stop_loss_rule": "Gamma Flip Level (-0.8%)",
+  "weights": {
+    "finviz_technical": 0.35,
+    "skylit_gex_pin": 0.40,
+    "unusual_whales_flow": 0.15,
+    "market_regime": 0.10
+  },
+  "rules": {
+    "max_position_size_pct": 15.0,
+    "allow_after_hours": false,
+    "min_rsi_oversold": 30,
+    "max_rsi_overbought": 75
+  },
+  "optimization_status": "Active (Intraday gamma scalp risk tuning)",
+  "last_updated": "2026-08-08T18:51:00Z"
+}

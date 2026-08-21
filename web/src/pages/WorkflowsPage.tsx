@@ -1,16 +1,10 @@
-import React, { useState, useRef, MouseEvent, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, type MouseEvent } from "react";
 import {
   Play,
   CheckCircle2,
-  AlertCircle,
   Zap,
-  Activity,
   ShieldCheck,
-  Radio,
-  Share2,
-  TrendingUp,
   Sliders,
-  Maximize2,
   RefreshCw,
   Clock,
   Layers,
@@ -19,9 +13,7 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
-  Move,
-  MessageSquare,
-  Bot
+  Move
 } from "lucide-react";
 
 interface WorkflowNode {
@@ -454,6 +446,187 @@ export function WorkflowsPage() {
 
   const [selectedNode, setSelectedNode] = useState<WorkflowNode>(activePipeline.nodes[0]);
   const [isRunningSim, setIsRunningSim] = useState(false);
+  const parseDTE = (expiry: string, dateStr?: string): number => {
+    if (!expiry) return 0;
+    const expUpper = expiry.toUpperCase().trim();
+    if (expUpper.includes("0DTE")) return 0;
+    if (expUpper.includes("1-WK") || expUpper.includes("1WK")) return 7;
+    
+    try {
+      const expDate = new Date(expiry);
+      if (!isNaN(expDate.getTime())) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffMs = expDate.getTime() - today.getTime();
+        return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      }
+    } catch (e) {}
+
+    if (dateStr) {
+      try {
+        const recDate = new Date(dateStr);
+        if (!isNaN(recDate.getTime())) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const diffMs = recDate.getTime() - today.getTime();
+          const dte = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          if (dte < 0) return dte;
+        }
+      } catch (e) {}
+    }
+    return 0;
+  };
+
+  const [watchlistTab, setWatchlistTab] = useState<"active" | "verified" | "historical">("active");
+  const [watchlistSearch, setWatchlistSearch] = useState<string>("");
+  const [watchlistSort, setWatchlistSort] = useState<"dte_asc" | "premium" | "ask_ratio" | "date">("dte_asc");
+  const [hideExpired, setHideExpired] = useState<boolean>(true);
+  const [watchlistPage, setWatchlistPage] = useState<number>(1);
+  const pageSize = 15;
+
+  const [liveData, setLiveData] = useState<{
+    strategies: any[];
+    positions: any[];
+    actions: any[];
+    active_watchlist: any[];
+    verified_oi_watchlist: any[];
+    historical_archive: any[];
+    flow_counts: { active: number; verified: number; historical: number; total: number };
+  }>({
+    strategies: [],
+    positions: [],
+    actions: [],
+    active_watchlist: [],
+    verified_oi_watchlist: [],
+    historical_archive: [],
+    flow_counts: { active: 0, verified: 0, historical: 0, total: 0 }
+  });
+  const [isSavingStrategy, setIsSavingStrategy] = useState(false);
+
+  const rawList = watchlistTab === "active"
+    ? liveData.active_watchlist
+    : watchlistTab === "verified"
+    ? liveData.verified_oi_watchlist
+    : liveData.historical_archive;
+
+  const filteredWatchlist = useMemo(() => {
+    let list = [...(rawList || [])];
+
+    if (hideExpired) {
+      list = list.filter((i: any) => {
+        const dte = parseDTE(i.expiry, i.date);
+        return dte >= 0 && i.status !== "STORED_HISTORICAL";
+      });
+    }
+
+    if (watchlistSearch.trim()) {
+      const q = watchlistSearch.toLowerCase();
+      list = list.filter((i: any) =>
+        (i.ticker || "").toLowerCase().includes(q) ||
+        String(i.strike || "").includes(q) ||
+        (i.option_type || "").toLowerCase().includes(q)
+      );
+    }
+
+    list.sort((a: any, b: any) => {
+      if (watchlistSort === "dte_asc") {
+        const dteA = parseDTE(a.expiry, a.date);
+        const dteB = parseDTE(b.expiry, b.date);
+        return dteA - dteB;
+      }
+      if (watchlistSort === "premium") return (b.total_premium || 0) - (a.total_premium || 0);
+      if (watchlistSort === "ask_ratio") return (b.ask_ratio || 0) - (a.ask_ratio || 0);
+      return (b.date || "").localeCompare(a.date || "");
+    });
+    return list;
+  }, [rawList, watchlistSearch, watchlistSort, hideExpired]);
+
+  const totalPages = Math.ceil(filteredWatchlist.length / pageSize) || 1;
+  const paginatedWatchlist = useMemo(() => {
+    const start = (watchlistPage - 1) * pageSize;
+    return filteredWatchlist.slice(start, start + pageSize);
+  }, [filteredWatchlist, watchlistPage]);
+
+  // Poll /api/workflows/state dynamically
+  const fetchWorkflowsState = async () => {
+    try {
+      const res = await fetch("/api/workflows/state");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok) {
+          setLiveData({
+            strategies: data.strategies || [],
+            positions: data.positions || [],
+            actions: data.actions || [],
+            active_watchlist: data.active_watchlist || [],
+            verified_oi_watchlist: data.verified_oi_watchlist || [],
+            historical_archive: data.historical_archive || [],
+            flow_counts: data.flow_counts || { active: 0, verified: 0, historical: 0, total: 0 }
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("Workflows live state fetch note:", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkflowsState();
+    const interval = setInterval(fetchWorkflowsState, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 2-Way Parameter Update Handler
+  const handleSaveStrategyTune = async (strategyId: string, updates: any) => {
+    setIsSavingStrategy(true);
+    try {
+      const res = await fetch("/api/workflows/update-strategy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ strategy_id: strategyId, updates })
+      });
+      if (res.ok) {
+        await fetchWorkflowsState();
+      }
+    } catch (e) {
+      console.error("Failed to update strategy 2-way:", e);
+    } finally {
+      setIsSavingStrategy(false);
+    }
+  };
+
+  // Dynamic Node Payload Synthesis from live backend state
+  const dynamicNodes = useMemo(() => {
+    return activePipeline.nodes.map((node) => {
+      if (node.id === "strategy_router" && liveData.strategies && liveData.strategies.length > 0) {
+        const stratInputs: Record<string, any> = {};
+        const stratOutputs: Record<string, any> = {};
+        liveData.strategies.forEach((s: any) => {
+          const sId = s.strategy_id || s.id;
+          stratInputs[sId] = `${s.name || sId} (v${s.version || "1.0.0"})`;
+          stratOutputs[`${sId}_gate`] = `>= ${s.conviction_threshold}/100 (Capital: $${s.allocated_capital})`;
+        });
+        return {
+          ...node,
+          summary: `Dynamically routing signals across ${liveData.strategies.length} active registered strategies.`,
+          inputs: stratInputs,
+          outputs: stratOutputs
+        };
+      }
+      if (node.id === "alpaca_execution" && liveData.positions && liveData.positions.length > 0) {
+        const posOutputs: Record<string, any> = {};
+        liveData.positions.forEach((p: any, idx: number) => {
+          posOutputs[`position_${idx + 1}`] = `${p.ticker} (${p.mode}): Conviction ${p.conviction_score}/100 | ${p.target_price}`;
+        });
+        return {
+          ...node,
+          summary: `Submits paper orders & tracks ${liveData.positions.length} active positions in SQLite Store.`,
+          outputs: posOutputs
+        };
+      }
+      return node;
+    });
+  }, [activePipeline, liveData]);
 
   // Pan & Zoom State
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -700,7 +873,7 @@ export function WorkflowsPage() {
 
             {/* Draggable Canvas Interactive Nodes */}
             <div className="relative w-[2400px] h-[1200px] p-8 z-10">
-              {activePipeline.nodes.map((node) => {
+              {dynamicNodes.map((node) => {
                 const isSelected = selectedNode.id === node.id;
                 const colorClasses = getCategoryColor(node.category);
                 const pos = nodePositions[node.id] || { x: node.x, y: node.y };
@@ -823,13 +996,214 @@ export function WorkflowsPage() {
             </pre>
           </div>
 
+          {/* 2-Way Live Strategy Parameter Tuning Panel */}
+          {liveData.strategies && liveData.strategies.length > 0 && (
+            <div className="p-4 bg-[#141b29] rounded-xl border border-slate-700/80 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                  <Sliders className="h-4 w-4" /> 2-Way Live Parameter Tuning
+                </span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">
+                  REALTIME SYNC
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">
+                Edits saved here immediately update backend strategy configuration files (`strategies/*.json`) and sync to the engine database without code breakage.
+              </p>
+              <div className="space-y-2 pt-1">
+                {liveData.strategies.map((strat: any) => (
+                  <div key={strat.strategy_id || strat.id} className="p-3 bg-[#0a0d14] rounded-lg border border-slate-800 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="text-xs font-bold text-slate-200">{strat.name || strat.id}</span>
+                      <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                        Gate: <span className="text-amber-400 font-bold">{strat.conviction_threshold}/100</span> | Capital: ${strat.allocated_capital}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const newGate = prompt(`Enter new Conviction Gate Threshold (0-100) for ${strat.strategy_id || strat.id}:`, String(strat.conviction_threshold));
+                        if (newGate && !isNaN(Number(newGate))) {
+                          handleSaveStrategyTune(strat.strategy_id || strat.id, { conviction_threshold: Number(newGate) });
+                        }
+                      }}
+                      disabled={isSavingStrategy}
+                      className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-medium rounded border border-amber-500/40 transition-colors"
+                    >
+                      {isSavingStrategy ? "Saving..." : "Edit Rule"}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Enhanced Interactive Notable Flow Watchlist Table */}
+          <div className="p-4 bg-slate-900/80 rounded-xl border border-slate-800 space-y-3 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
+                <Zap className="h-4 w-4" /> OWLs Notable Flow Watchlist
+              </h4>
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                Total DB: {liveData.flow_counts.total} entries
+              </span>
+            </div>
+
+            {/* Search, Sort, and Hide Expired Controls */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={watchlistSearch}
+                  onChange={(e) => { setWatchlistSearch(e.target.value); setWatchlistPage(1); }}
+                  placeholder="Search ticker, strike, or type..."
+                  className="flex-1 px-2.5 py-1.5 bg-[#0a0d14] text-xs text-slate-200 rounded border border-slate-800 focus:outline-none focus:border-cyan-500 font-mono"
+                />
+                <select
+                  value={watchlistSort}
+                  onChange={(e: any) => setWatchlistSort(e.target.value)}
+                  className="px-2 py-1.5 bg-[#0a0d14] text-xs text-slate-300 rounded border border-slate-800 focus:outline-none font-mono"
+                >
+                  <option value="dte_asc">Sort: Closest DTE ⏳</option>
+                  <option value="premium">Sort: Highest Premium 💲</option>
+                  <option value="ask_ratio">Sort: Ask Buy % 📊</option>
+                  <option value="date">Sort: Newest Date 📅</option>
+                </select>
+              </div>
+
+              {/* Hide Expired Toggle */}
+              <div className="flex items-center justify-between px-1">
+                <label className="flex items-center gap-2 text-[11px] text-slate-300 font-mono cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={hideExpired}
+                    onChange={(e) => { setHideExpired(e.target.checked); setWatchlistPage(1); }}
+                    className="rounded bg-slate-800 border-slate-700 text-cyan-500 focus:ring-0 h-3.5 w-3.5"
+                  />
+                  <span>Hide Expired / Negative DTE</span>
+                </label>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  Showing {filteredWatchlist.length} active
+                </span>
+              </div>
+            </div>
+
+            {/* Tab Controls */}
+
+            {/* Tab Controls */}
+            <div className="flex items-center gap-1 bg-[#0a0d14] p-1 rounded-lg border border-slate-800 text-[11px] font-medium">
+              <button
+                onClick={() => { setWatchlistTab("active"); setWatchlistPage(1); }}
+                className={`flex-1 py-1 px-2 rounded text-center transition-colors ${
+                  watchlistTab === "active"
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                🟢 Active ({liveData.flow_counts.active})
+              </button>
+              <button
+                onClick={() => { setWatchlistTab("verified"); setWatchlistPage(1); }}
+                className={`flex-1 py-1 px-2 rounded text-center transition-colors ${
+                  watchlistTab === "verified"
+                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-bold"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                ⚡ 05:00 AM Verified ({liveData.flow_counts.verified})
+              </button>
+              <button
+                onClick={() => { setWatchlistTab("historical"); setWatchlistPage(1); }}
+                className={`flex-1 py-1 px-2 rounded text-center transition-colors ${
+                  watchlistTab === "historical"
+                    ? "bg-purple-500/20 text-purple-400 border border-purple-500/40 font-bold"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                🗄️ Archive ({liveData.flow_counts.historical})
+              </button>
+            </div>
+
+            {/* Interactive Flow Table */}
+            <div className="space-y-1.5 max-h-[340px] overflow-y-auto pr-1">
+              {paginatedWatchlist.length === 0 ? (
+                <div className="p-4 text-center text-xs text-slate-500 font-mono">
+                  No matching contracts found for this filter.
+                </div>
+              ) : (
+                paginatedWatchlist.map((item: any, idx: number) => {
+                  const isCall = (item.option_type || "CALL").toUpperCase() === "CALL";
+                  const dteVal = parseDTE(item.expiry, item.date);
+                  return (
+                    <div key={idx} className="p-2.5 bg-[#0a0d14] rounded-lg border border-slate-800/80 flex items-center justify-between text-xs font-mono hover:border-slate-700 transition-colors">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-slate-100 text-sm">{item.ticker}</span>
+                          <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${isCall ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30" : "bg-purple-500/20 text-purple-300 border border-purple-500/30"}`}>
+                            ${item.strike} {item.option_type}
+                          </span>
+                          <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
+                            dteVal < 0
+                              ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                              : dteVal === 0
+                              ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                          }`}>
+                            {dteVal < 0 ? "Expired" : dteVal === 0 ? "0DTE" : `${dteVal}DTE`}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400">
+                          Prem: <span className="text-slate-200 font-bold">${((item.total_premium || 0)).toLocaleString()}</span> | Vol: {(item.volume || 0).toLocaleString()} | OI: {(item.open_interest || 0).toLocaleString()}
+                        </div>
+                      </div>
+
+                      <div className="text-right space-y-0.5">
+                        <div className="text-emerald-400 font-bold text-xs">
+                          {Math.round((item.ask_ratio || 0.75) * 100)}% Ask Buy
+                        </div>
+                        <div className="text-[10px] text-slate-500 flex items-center gap-1 justify-end">
+                          <span>{item.date}</span>
+                          {item.oi_confirmed_matched && (
+                            <span className="text-cyan-400 font-bold">✓ Match</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-1 border-t border-slate-800 text-[11px] font-mono">
+                <button
+                  onClick={() => setWatchlistPage((p) => Math.max(1, p - 1))}
+                  disabled={watchlistPage === 1}
+                  className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 rounded"
+                >
+                  ◀ Prev
+                </button>
+                <span className="text-slate-400">
+                  Page <span className="text-slate-200 font-bold">{watchlistPage}</span> of {totalPages}
+                </span>
+                <button
+                  onClick={() => setWatchlistPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={watchlistPage === totalPages}
+                  className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 rounded"
+                >
+                  Next ▶
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Workflow Strategy Posture */}
           <div className="p-4 bg-emerald-500/5 rounded-xl border border-emerald-500/20">
             <h4 className="text-xs font-semibold text-emerald-400 mb-1 flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4" /> Strategy Logic Verification
             </h4>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Every signal step in this workflow is evaluated deterministically. Signals only advance to the execution engine when the conviction threshold (<strong>≥ 80/100</strong>) passes the Risk Gate.
+              Every signal step in this workflow is evaluated deterministically. Signals only advance to the execution engine when the conviction threshold passes the Risk Gate.
             </p>
           </div>
         </div>
