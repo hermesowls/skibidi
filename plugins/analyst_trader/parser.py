@@ -17,7 +17,8 @@ TICKER_BLACKLIST = {
     "LLC", "INC", "THE", "AND", "FOR", "WITH", "THAT", "THIS", "SOME", "TODAY",
     "NOW", "NEW", "ATH", "HOD", "LOD", "FREE", "RUNNER", "RUNNERS", "OR", "AT",
     "SOLD", "CAN", "FULLY", "OUT", "TAKE", "JUST", "GOOD", "GET", "LOOK", "HAVE",
-    "ANOTHER", "MORE", "LESS", "HALF", "PROFIT", "PROFITS", "SOME", "FEW", "PAID"
+    "ANOTHER", "MORE", "LESS", "HALF", "PROFIT", "PROFITS", "SOME", "FEW", "PAID",
+    "TRIM", "TRIMMED", "SL", "TP", "TP1", "TP2", "TP3", "STOP", "STOPPED", "SCALED", "SCALE"
 }
 
 OPTION_REGEX = re.compile(
@@ -56,8 +57,18 @@ def resolve_expiration_typo(exp_str: Optional[str]) -> Optional[str]:
 
 
 def extract_trim_ratio(text: str) -> float:
-    """Extract qualitative or explicit trim ratio from message text."""
+    """Extract qualitative or explicit trim ratio from message text (percentages, fractions, keywords)."""
     combined = text.lower()
+
+    # Check for explicit percentage (e.g. 50%, 75%, 30%, 100%)
+    pct_match = re.search(r"(\d+(?:\.\d+)?)%\s*(?:trimmed|trim|sold|out|off|closed)?", combined)
+    if pct_match:
+        try:
+            val = float(pct_match.group(1))
+            if 0 < val <= 100:
+                return val / 100.0
+        except Exception:
+            pass
 
     # Check for explicit fraction (e.g. 6/10 = 0.60, 1/2 = 0.50, 3/4 = 0.75)
     frac_match = re.search(r"(\d+)/(\d+)", combined)
@@ -70,12 +81,22 @@ def extract_trim_ratio(text: str) -> float:
         except Exception:
             pass
 
-    # Qualitative runner / leave runner keywords (leave runner = 85% trimmed, 15% runner)
-    if any(k in combined for k in ["runner", "runners", "leave runner", "free runner"]):
+    # Qualitative keyword checks
+    if any(k in combined for k in ["fully out", "all out", "sold all", "closed rest", "out rest", "100%", "closed"]):
+        return 1.0
+    if any(k in combined for k in ["runner", "runners", "leave runner", "free runner", "leaving runner"]):
         return 0.85
+    if any(k in combined for k in ["half", "1/2", "50%"]):
+        return 0.50
+    if any(k in combined for k in ["most", "75%", "3/4"]):
+        return 0.75
+    if any(k in combined for k in ["third", "1/3"]):
+        return 0.33
+    if any(k in combined for k in ["quarter", "1/4", "25%"]):
+        return 0.25
 
-    # Standard default trim ratio (15% per trim)
-    return 0.15
+    # Standard default trim ratio (50% trim of open tranche if unspecified)
+    return 0.50
 
 
 class TradeSignalParser:
@@ -83,7 +104,7 @@ class TradeSignalParser:
 
     @staticmethod
     def parse_eva(text: str, title: str, author: str) -> Optional[Dict[str, Any]]:
-        """Parse Eva's embed format: BTO QQQ 08/21/2026 750C @ 0.54"""
+        """Parse Eva's embed format: BTO QQQ 08/21/2026 750C @ 0.54 or CLOSE/TRIM updates."""
         if not text:
             return None
         combined = (title + " " + text).upper()
@@ -113,6 +134,33 @@ class TradeSignalParser:
                     "author": author or "Eva",
                     "raw_text": text
                 }
+        elif "CLOSE" in title or "TRIM" in title or "STC" in combined:
+            m = re.search(
+                r"(?:STC|CLOSE|TRIM|SOLD)\s+(?P<ticker>[A-Z]{1,5})\s*(?:(?P<strike>\d+(?:\.\d+)?)(?P<type>C|P|CALL|PUT)?)?\s*(?:@|at|\$)?\s*(?P<price>\d+(?:\.\d+)?)",
+                text,
+                re.IGNORECASE
+            )
+            if m:
+                ticker = m.group("ticker").upper()
+                if ticker not in TICKER_BLACKLIST:
+                    act = "EXIT" if any(k in combined for k in ["FULLY OUT", "ALL OUT", "CLOSE", "CLOSED"]) else "TRIM"
+                    try:
+                        price = float(m.group("price")) if m.group("price") else None
+                    except Exception:
+                        price = None
+                    return {
+                        "action": act,
+                        "ticker": ticker,
+                        "asset_type": "option",
+                        "direction": "call" if m.group("type") and m.group("type").upper().startswith("C") else "call",
+                        "strike": float(m.group("strike")) if m.group("strike") else None,
+                        "expiration": None,
+                        "price": price,
+                        "trim_ratio": extract_trim_ratio(text),
+                        "weight": 1.0,
+                        "author": author or "Eva",
+                        "raw_text": text
+                    }
         return None
 
     @staticmethod
@@ -141,7 +189,7 @@ class TradeSignalParser:
                 "expiration": resolve_expiration_typo(m_c.group("exp")) if m_c.group("exp") else None,
                 "price": None,
                 "pct_roi": roi,
-                "trim_ratio": 1.0 if act == "EXIT" else 0.5,
+                "trim_ratio": 1.0 if act == "EXIT" else extract_trim_ratio(text),
                 "weight": 1.0,
                 "author": author or "AB",
                 "raw_text": text
@@ -181,7 +229,7 @@ class TradeSignalParser:
         if not text:
             return None
         m = re.search(
-            r"(?P<ticker>[A-Z]{1,5})\s+(?P<type>calls|puts)\s+(?:up|down)?\s*(?P<roi>\d+)%",
+            r"(?P<ticker>[A-Z]{1,5})\s+(?P<type>calls|puts)?\s*(?:up|down)?\s*(?P<roi>\d+)%",
             text,
             re.IGNORECASE
         )
@@ -193,16 +241,17 @@ class TradeSignalParser:
                 roi = float(m.group("roi"))
             except Exception:
                 roi = 0.0
+            act = "EXIT" if "fully out" in text.lower() or "closed" in text.lower() else "TRIM"
             return {
-                "action": "TRIM",
+                "action": act,
                 "ticker": ticker,
                 "asset_type": "option",
-                "direction": "call" if m.group("type").lower().startswith("call") else "put",
+                "direction": "call" if (m.group("type") or "calls").lower().startswith("call") else "put",
                 "strike": None,
                 "expiration": None,
                 "price": None,
                 "pct_roi": roi,
-                "trim_ratio": 0.5,
+                "trim_ratio": extract_trim_ratio(text),
                 "weight": 1.0,
                 "author": author or "Muggzone Options",
                 "raw_text": text
@@ -227,7 +276,7 @@ class TradeSignalParser:
         text_to_parse = desc if desc else content
 
         # 0. Try Jon & Kian dedicated scraper
-        if "jon" in analyst_name.lower() or "kian" in analyst_name.lower():
+        if any(k in analyst_name.lower() for k in ["jon", "kian", "cactusjack"]):
             from plugins.analyst_trader.scrapers.jon_kian import JonKianScraper
             jk_scraper = JonKianScraper()
             msg_obj = {"content": content, "embeds": embeds, "author": author, "title": title, "description": desc}
@@ -244,7 +293,7 @@ class TradeSignalParser:
                     "expiration": cand.get("expiration"),
                     "price": cand.get("price"),
                     "pct_roi": cand.get("pct_roi"),
-                    "trim_ratio": cand.get("trim_ratio", 0.5),
+                    "trim_ratio": cand.get("trim_ratio", extract_trim_ratio(text_to_parse)),
                     "weight": 1.0,
                     "author": sub_a,
                     "sub_analyst": sub_a,
@@ -284,8 +333,8 @@ class TradeSignalParser:
 
         if "OPEN:" in title or "OPEN:" in combined_upper or "BTO" in combined_upper or "BUY" in combined_upper:
             action = "ENTRY"
-        elif "CLOSE:" in title or "CLOSE:" in combined_upper or "STC" in combined_upper or "SOLD" in combined_upper:
-            action = "EXIT" if any(k in combined_upper for k in ["FULLY OUT", "ALL OUT", "SOLD ALL", "FREE RUNNER", "ONE FREE"]) else "TRIM"
+        elif "CLOSE:" in title or "CLOSE:" in combined_upper or "STC" in combined_upper or "SOLD" in combined_upper or "TRIM" in combined_upper or "TAKING PROFITS" in combined_upper or "OUT" in combined_upper or "SL HIT" in combined_upper or "STOP" in combined_upper:
+            action = "EXIT" if any(k in combined_upper for k in ["FULLY OUT", "ALL OUT", "SOLD ALL", "CLOSED", "CLOSED REST", "OUT REST", "STOPPED OUT", "SL HIT", "FULLY CLOSED"]) else "TRIM"
         else:
             return None
 
@@ -398,6 +447,8 @@ class DiscordBackfillEngine:
             return None
 
         effective_analyst = signal.get("sub_analyst") or signal.get("author") or analyst_name
+        if "cactusjack" in effective_analyst.lower() or "cactusjackgaming212" in effective_analyst.lower():
+            effective_analyst = "Kian"
         if effective_analyst not in ("Jon", "Kian") and ("jon" in analyst_name.lower() or "kian" in analyst_name.lower()):
             effective_analyst = "Jon"
 
@@ -438,15 +489,20 @@ class DiscordBackfillEngine:
 
             if existing:
                 pos_id = existing["position_id"]
-                entry_p = float(existing["entry_price"])
+                entry_p = float(existing["entry_price"]) if existing.get("entry_price") else 1.0
 
-                # Exit price calculation
+                # Exit price & ROI calculation
                 if price is not None:
                     exit_price = price
                 elif pct_roi is not None:
                     exit_price = round(entry_p * (1.0 + pct_roi / 100.0), 2)
                 else:
                     exit_price = float(existing.get("current_price") or entry_p)
+
+                # Maintain max exit price / max ROI across progressive trims
+                current_exit_p = float(existing.get("exit_price") or 0.0)
+                if current_exit_p > exit_price:
+                    exit_price = current_exit_p
 
                 new_status = "CLOSED" if action == "EXIT" or trim_ratio >= 0.85 else "TRIMMED"
 

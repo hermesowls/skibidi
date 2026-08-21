@@ -451,28 +451,33 @@ class AnalystDatabase:
         current_weight = float(pos["contracts_or_shares"])
         current_realized_pnl = float(pos.get("realized_pnl") or 0.0)
 
+        multiplier = 100.0 if pos["asset_type"] == "option" else 1.0
+
         if status == "CLOSED" or trim_ratio >= 0.85 or current_weight * (1.0 - trim_ratio) <= 0.05:
             final_status = "CLOSED"
+            trimmed_w = current_weight
             remaining_w = 0.0
-            multiplier = 100.0 if pos["asset_type"] == "option" else 1.0
-            if pos["direction"] in ("call", "long"):
-                new_realized_pnl = (exit_price - entry_p) * multiplier
-            else:
-                new_realized_pnl = (entry_p - exit_price) * multiplier
-            roi_pct = ((exit_price - entry_p) / entry_p) * 100.0 if entry_p > 0 else 0.0
-            curr_p = exit_price
         else:
             final_status = "TRIMMED"
             trimmed_w = round(current_weight * trim_ratio, 3)
             remaining_w = round(current_weight - trimmed_w, 3)
-            multiplier = 100.0 if pos["asset_type"] == "option" else 1.0
-            if pos["direction"] in ("call", "long"):
-                segment_pnl = (exit_price - entry_p) * current_weight * multiplier
-            else:
-                segment_pnl = (entry_p - exit_price) * current_weight * multiplier
-            new_realized_pnl = current_realized_pnl + segment_pnl
-            curr_p = exit_price
-            roi_pct = ((exit_price - entry_p) / entry_p) * 100.0 if entry_p > 0 else 0.0
+
+        if pos["direction"] in ("call", "long"):
+            segment_pnl = (exit_price - entry_p) * trimmed_w * multiplier
+        else:
+            segment_pnl = (entry_p - exit_price) * trimmed_w * multiplier
+
+        new_realized_pnl = current_realized_pnl + segment_pnl
+        curr_p = exit_price
+
+        # Blended ROI % across all closed tranches (weighted average return)
+        closed_cost_basis = entry_p * (1.0 - remaining_w) * multiplier
+        if closed_cost_basis > 0:
+            roi_pct = (new_realized_pnl / closed_cost_basis) * 100.0
+        elif entry_p > 0:
+            roi_pct = ((exit_price - entry_p) / entry_p) * 100.0
+        else:
+            roi_pct = 0.0
 
         with conn:
             conn.execute("""
@@ -488,6 +493,19 @@ class AnalystDatabase:
                     updated_at = ?
                 WHERE position_id = ?
             """, (remaining_w, exit_price, curr_p, final_status, new_realized_pnl, round(roi_pct, 2), t_exit, exit_message_id, now, position_id))
+
+        # Log trade event record for trim/close tracking
+        event_kind = "CLOSE" if final_status == "CLOSED" else "TRIM"
+        self.log_trade_event(
+            position_id=position_id,
+            analyst_name=pos["analyst_name"],
+            message_id=exit_message_id or f"msg_trim_{now}",
+            event_type=event_kind,
+            ticker=pos["ticker"],
+            price=exit_price,
+            details={"trim_ratio": trim_ratio, "segment_pnl": segment_pnl, "roi_pct": round(roi_pct, 2)},
+            timestamp=t_exit
+        )
 
         if final_status == "CLOSED":
             self.recalculate_analyst_stats(pos["analyst_name"])
@@ -528,7 +546,60 @@ class AnalystDatabase:
 
         query += " ORDER BY created_at DESC"
         cur = conn.execute(query, params)
-        return [dict(r) for r in cur.fetchall()]
+        raw_positions = [dict(r) for r in cur.fetchall()]
+
+        # Fetch trade_events to build explicit trim history per position
+        pos_ids = [p["position_id"] for p in raw_positions]
+        events_by_pos: Dict[str, List[Dict[str, Any]]] = {}
+        if pos_ids:
+            placeholders = ",".join("?" for _ in pos_ids)
+            e_cur = conn.execute(f"SELECT * FROM trade_events WHERE position_id IN ({placeholders}) ORDER BY created_at ASC", pos_ids)
+            for row in e_cur.fetchall():
+                e_dict = dict(row)
+                events_by_pos.setdefault(e_dict["position_id"], []).append(e_dict)
+
+        positions = []
+        for p in raw_positions:
+            p_id = p["position_id"]
+            p_events = events_by_pos.get(p_id, [])
+            entry_p = float(p.get("entry_price") or 0.0)
+            direction = p.get("direction", "call")
+
+            trims = []
+            for ev in p_events:
+                if ev.get("event_type") in ("TRIM", "CLOSE"):
+                    ev_price = float(ev.get("price") or 0.0)
+                    if entry_p > 0 and ev_price > 0:
+                        gain_pct = ((ev_price - entry_p) / entry_p * 100.0) if direction in ("call", "long") else ((entry_p - ev_price) / entry_p * 100.0)
+                    else:
+                        gain_pct = 0.0
+                    trims.append({
+                        "event_type": ev.get("event_type"),
+                        "price": ev_price,
+                        "gain_pct": round(gain_pct, 2),
+                        "timestamp": ev.get("timestamp") or ev.get("created_at")
+                    })
+
+            # Fallback: if no trade_events exist but position status is TRIMMED or CLOSED and exit_price is present
+            if not trims and p.get("exit_price") and p.get("status") in ("TRIMMED", "CLOSED"):
+                ex_price = float(p["exit_price"])
+                if entry_p > 0:
+                    gain_pct = ((ex_price - entry_p) / entry_p * 100.0) if direction in ("call", "long") else ((entry_p - ex_price) / entry_p * 100.0)
+                else:
+                    gain_pct = float(p.get("roi_pct") or 0.0)
+                trims.append({
+                    "event_type": p["status"],
+                    "price": ex_price,
+                    "gain_pct": round(gain_pct, 2),
+                    "timestamp": p.get("exit_time") or p.get("updated_at")
+                })
+
+            p["trims"] = trims
+            p["events"] = p_events
+            positions.append(p)
+
+        return positions
+
 
     def recalculate_analyst_stats(self, analyst_name: str, timeframe: Optional[str] = None) -> Dict[str, Any]:
         conn = self._get_connection()
@@ -598,7 +669,7 @@ class AnalystDatabase:
                     status=excluded.status,
                     updated_at=excluded.updated_at
             """, (audit_id, message_id, analyst_name, ticker, discrepancy_type,
-                  orig_str, corr_str, float(confidence_score), reasoning, status, now, now))
+                  orig_str, corr_str, confidence_score, reasoning, status, now, now))
 
         cur = conn.execute("SELECT * FROM reviewer_audits WHERE audit_id = ?", (audit_id,))
         return dict(cur.fetchone())

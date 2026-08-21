@@ -15,6 +15,13 @@ import {
 } from "lucide-react";
 import { api } from "@/lib/api";
 
+export interface TrimEvent {
+  event_type: string;
+  price: number;
+  gain_pct: number;
+  timestamp?: string;
+}
+
 interface Position {
   position_id: string;
   analyst_name: string;
@@ -35,6 +42,7 @@ interface Position {
   exit_time: string | null;
   notes: string | null;
   last_price_updated_at?: string;
+  trims?: TrimEvent[];
 }
 
 const cleanAnalystName = (raw: string): string => {
@@ -195,7 +203,12 @@ export default function AnalystTrackerPage() {
     const closedCount = targetPositions.filter((p) => p.status === "CLOSED").length;
     const avgRoi = totalCount > 0 ? targetPositions.reduce((acc, p) => acc + (p.roi_pct || 0), 0) / totalCount : 0;
 
-    return { totalCount, rawOpenCount, trimmedCount, closedCount, avgRoi };
+    const closedPositions = targetPositions.filter((p) => p.status === "CLOSED" || (p.status === "TRIMMED" && (p.roi_pct || 0) > 0));
+    const closedWins = closedPositions.filter((p) => (p.roi_pct || 0) > 0);
+    const closedAvgRoi = closedWins.length > 0 ? closedWins.reduce((acc, p) => acc + (p.roi_pct || 0), 0) / closedWins.length : 0;
+    const winRate = closedPositions.length > 0 ? (closedWins.length / closedPositions.length) * 100 : 0;
+
+    return { totalCount, rawOpenCount, trimmedCount, closedCount, avgRoi, closedAvgRoi, winRate, closedWinsCount: closedWins.length };
   }, [positions, filteredPositions, analystFilter]);
 
   return (
@@ -274,18 +287,21 @@ export default function AnalystTrackerPage() {
         <div className="bg-[#131924]/80 border border-slate-800/80 rounded-xl p-5 shadow-lg backdrop-blur-md relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-              {analystFilter === "ALL" ? "Portfolio Blended ROI" : `${analystFilter} Blended ROI`}
+              {analystFilter === "ALL" ? "Portfolio ROI" : `${analystFilter} Performance`}
             </span>
             <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
               <TrendingUp className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <div className={`text-2xl font-bold ${stats.avgRoi >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-              {stats.avgRoi >= 0 ? "+" : ""}{stats.avgRoi.toFixed(1)}%
+            <div className="flex items-baseline gap-2">
+              <span className={`text-2xl font-bold ${stats.closedAvgRoi >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                +{stats.closedAvgRoi.toFixed(1)}%
+              </span>
+              <span className="text-xs text-slate-400 font-medium">Avg Closed Win</span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
-              {analystFilter === "ALL" ? "Weighted Trims & Live MTM (All Analysts)" : `Weighted Trims & Live MTM (${analystFilter})`}
+            <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+              <span className="text-indigo-300 font-semibold">{stats.avgRoi >= 0 ? "+" : ""}{stats.avgRoi.toFixed(1)}%</span> Blended Live MTM ({stats.closedWinsCount} Wins logged)
             </p>
           </div>
         </div>
@@ -412,6 +428,7 @@ export default function AnalystTrackerPage() {
                 <th className="py-3.5 px-4">Entry Date & Time</th>
                 <th className="py-3.5 px-4">Asset / Option Contract</th>
                 <th className="py-3.5 px-4">Status</th>
+                <th className="py-3.5 px-4">Trim / Close Events (% / Price)</th>
                 <th className="py-3.5 px-4">Open Weight</th>
                 <th className="py-3.5 px-4 text-right">Entry Premium</th>
                 <th className="py-3.5 px-4 text-right">Exit / Live Quote</th>
@@ -422,7 +439,7 @@ export default function AnalystTrackerPage() {
             <tbody className="divide-y divide-slate-800/50 text-sm font-normal text-slate-300">
               {filteredPositions.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-500 text-sm">
+                  <td colSpan={10} className="py-12 text-center text-slate-500 text-sm">
                     No matching analyst positions found in SQLite database.
                   </td>
                 </tr>
@@ -499,6 +516,42 @@ export default function AnalystTrackerPage() {
                           />
                           {pos.status}
                         </span>
+                      </td>
+
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        {pos.trims && pos.trims.length > 0 ? (
+                          <div className="flex flex-wrap items-center gap-1.5 max-w-xs">
+                            {pos.trims.map((trim, idx) => {
+                              const isPos = trim.gain_pct >= 0;
+                              const isClose = trim.event_type === "CLOSED" || trim.event_type === "CLOSE";
+                              return (
+                                <span
+                                  key={idx}
+                                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-mono font-bold border transition-all ${
+                                    isClose
+                                      ? isPos
+                                        ? "bg-purple-950/70 text-purple-300 border-purple-800/60 shadow-sm"
+                                        : "bg-rose-950/70 text-rose-300 border-rose-800/60 shadow-sm"
+                                      : isPos
+                                      ? "bg-amber-950/70 text-amber-300 border-amber-700/60 shadow-sm"
+                                      : "bg-slate-800 text-slate-300 border-slate-700"
+                                  }`}
+                                  title={`Event: ${trim.event_type} | Date: ${formatEntryTime(trim.timestamp)}`}
+                                >
+                                  <span className="text-[10px] uppercase font-sans font-semibold tracking-tight text-slate-400">
+                                    {isClose ? "Close" : `Trim ${idx + 1}`}:
+                                  </span>
+                                  <span>${trim.price.toFixed(2)}</span>
+                                  <span className={isPos ? "text-emerald-400 font-extrabold" : "text-rose-400 font-extrabold"}>
+                                    ({isPos ? "+" : ""}{trim.gain_pct.toFixed(1)}%)
+                                  </span>
+                                </span>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-500 italic font-mono">--</span>
+                        )}
                       </td>
 
                       <td className="py-4 px-4 whitespace-nowrap">

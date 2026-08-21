@@ -25,7 +25,7 @@ TICKER_BLACKLIST = {
     "WORK", "WORKING", "SWING", "SWINGS", "CALL", "CALLS", "PUT", "PUTS", "EXPIRE",
     "EXPIRING", "PREM", "PREMIUM", "CONTRACT", "CONTRACTS", "NODE", "SUPPORT",
     "RESISTANCE", "DAILY", "WEEKLY", "MARKET", "DOWNSIDE", "UPSIDE", "RISK", "HEDGE",
-    "INSURANCE", "CHANCE", "WORTHLESS", "FLOW", "ONLINE", "SELL"
+    "INSURANCE", "CHANCE", "WORTHLESS", "FLOW", "ONLINE", "SELL", "YES", "ITS", "ME", "SAVED", "SORRY", "FILLED", "ENJOY", "LOVE", "YA"
 }
 
 TYPO_MAP = {
@@ -39,6 +39,10 @@ def resolve_sub_analyst(message: Dict[str, Any], text_to_parse: str) -> str:
     """Determine whether message is from Jon or Kian."""
     embeds = message.get("embeds", [])
     author_id = str(message.get("author_id") or message.get("author", ""))
+    content = str(message.get("content") or "")
+
+    if "cactusjackgaming212" in author_id or "cactusjackgaming212" in content or "cactusjackgaming212" in text_to_parse:
+        return "Kian"
 
     if embeds:
         for emb in embeds:
@@ -50,7 +54,7 @@ def resolve_sub_analyst(message: Dict[str, Any], text_to_parse: str) -> str:
                 if "Kian" in author_name or "KianTrades" in author_name:
                     return "Kian"
 
-    if author_id == "523089010592055296":
+    if author_id in ("523089010592055296", "jon"):
         return "Jon"
 
     text_lower = text_to_parse.lower()
@@ -59,7 +63,7 @@ def resolve_sub_analyst(message: Dict[str, Any], text_to_parse: str) -> str:
     if "jon" in text_lower:
         return "Jon"
 
-    return "Jon"
+    return "Kian"
 
 
 class JonKianScraper(BaseAnalystScraper):
@@ -124,21 +128,20 @@ class JonKianScraper(BaseAnalystScraper):
         # 2. CLOSE / TRIM / UPDATE Card Parsing
         is_close_card = "CLOSE:" in title_upper
         is_update_card = "UPDATE:" in title_upper or "UPDATE" in title_upper
-        is_close_text = any(w in text_upper for w in ["STC", "SOLD", "TRIM", "CLOSED", "FULLY OUT", "ALL OUT", "TAKE SOME", "TAKE PROFIT"])
+        is_close_text = any(w in text_upper for w in ["STC", "SOLD", "TRIM", "CLOSED", "FULLY OUT", "ALL OUT", "TAKE SOME", "TAKE PROFIT", "OUT OF", "OFFICIALLY OUT", "OUT"])
+        is_pct_text = bool(re.search(r"\d+%", text_to_parse))
 
-        if is_close_card or is_update_card or is_close_text:
-            # Extract percentage ROI if present
+        if is_close_card or is_update_card or is_close_text or is_pct_text:
+            # Extract percentage ROI if present (take highest ROI if multiple % values present)
             pct_roi = None
-            pct_match = re.search(r"(\d+(?:\.\d+)?)%", text_to_parse)
-            if pct_match:
-                try:
-                    pct_roi = float(pct_match.group(1))
-                except Exception:
-                    pct_roi = None
+            pct_matches = [float(m) for m in re.findall(r"(\d+(?:\.\d+)?)%", text_to_parse)]
+            if pct_matches:
+                pct_roi = max(pct_matches)
 
-            # Extract exit price if present
+            # Extract exit price if present (strip percentage tokens first so 180% is not matched as $180)
+            text_for_price = re.sub(r"\b\d+(?:\.\d+)?%\s*", "", text_to_parse)
             exit_price = None
-            p_match = re.search(r"(?:@|at|\$)\s*\$?(?P<price>\d+\.\d+)|(?P<price2>\d+\.\d+)\b", text_to_parse)
+            p_match = re.search(r"(?:@|at|\$)\s*\$?(?P<price>\d+\.\d+)|(?P<price2>\d+\.\d+)\b", text_for_price)
             if p_match:
                 raw_p = p_match.group("price") or p_match.group("price2")
                 try:

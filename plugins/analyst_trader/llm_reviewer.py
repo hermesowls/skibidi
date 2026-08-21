@@ -9,7 +9,7 @@ import logging
 import os
 import re
 from typing import Any, Dict, List, Optional
-import requests
+import requests  # type: ignore[import-untyped]
 
 logger = logging.getLogger(__name__)
 
@@ -17,32 +17,65 @@ REVIEWER_SYSTEM_PROMPT = """You are a Senior Quantitative Trading Analyst & Veri
 Your job is to review raw Discord messages and analyst conversation threads, and verify whether a valid trade signal occurred.
 
 Given the candidate trade signal and surrounding conversation messages:
-1. Verify if this is a genuine trade alert (BTO, STC, Trim, Take Profit, Close, or Stop Out). Ignore general commentary, market opinions, macro chatter, or unrelated conversation.
-2. Assign a confidence_score between 0.00 and 1.00 (e.g. 0.95 for clear BTO alerts, 0.40 for ambiguous chatter).
+1. Verify if this is a genuine trade alert (BTO, STC, Trim, Take Profit, Scale, Close, or Stop Out). Ignore general commentary, market opinions, macro chatter, or unrelated conversation.
+2. Assign a confidence_score between 0.00 and 1.00 (e.g. 0.95 for clear BTO/STC/Trim alerts, 0.40 for ambiguous chatter).
 3. Return ONLY valid JSON matching this exact schema:
 
 {
   "valid_signal": true,
   "confidence_score": 0.95,
-  "action": "ENTRY",
+  "action": "TRIM",
   "ticker": "QQQ",
   "asset_type": "option",
   "direction": "call",
   "strike": 750.0,
   "expiration": "2026-08-21",
   "entry_price": 0.54,
+  "exit_price": 0.95,
+  "pct_roi": 75.9,
   "trim_ratio": 0.5,
-  "reasoning": "Explicit BTO call alert with clear strike and price."
+  "reasoning": "Explicit Trim/Take Profit alert taking 50% profits at 0.95 (+75.9%)."
 }
 """
 
 
 class LLMTradeReviewer:
-    """Hybrid LLM Trade Reviewer Agent."""
+    """Hybrid LLM Trade Reviewer Agent powered by active Hermes Agent configuration."""
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-5.5") -> None:
-        self.model = model
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY") or os.getenv("CODEX_API_KEY") or ""
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        cfg = {}
+        try:
+            from hermes_cli.config import load_config
+            cfg = load_config()
+        except Exception:
+            pass
+
+        self.model = model or cfg.get("model") or os.getenv("HERMES_MODEL") or "openai/gpt-4o-mini"
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("GEMINI_API_KEY") or os.getenv("CODEX_API_KEY") or cfg.get("api_key", "")
+        
+        if not self.api_key:
+            try:
+                from agent.credential_pool import load_pool
+                for p_id in ("openai-codex", "openrouter", "openai", "nous"):
+                    pool = load_pool(p_id)
+                    if pool and pool.has_credentials():
+                        entry = pool.peek()
+                        if entry:
+                            tok = getattr(entry, "access_token", "") or getattr(entry, "runtime_api_key", "")
+                            if tok and len(str(tok).strip()) > 4:
+                                self.api_key = str(tok).strip()
+                                break
+            except Exception:
+                pass
+
+        raw_base = base_url or cfg.get("base_url") or os.getenv("OPENAI_BASE_URL")
+        if not raw_base:
+            provider = (cfg.get("provider") or "").lower()
+            if provider == "openrouter" or "openrouter" in self.model.lower():
+                raw_base = "https://openrouter.ai/api/v1"
+            else:
+                raw_base = "https://api.openai.com/v1"
+        self.base_url = raw_base.rstrip("/")
 
     def review_candidate(
         self,
@@ -88,7 +121,8 @@ Evaluate and return JSON verification:"""
                     ],
                     "temperature": 0.1
                 }
-                resp = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload, timeout=5)
+                endpoint = f"{self.base_url}/chat/completions"
+                resp = requests.post(endpoint, headers=headers, json=payload, timeout=5)
                 if resp.status_code == 200:
                     res_json = resp.json()
                     content_out = res_json["choices"][0]["message"]["content"]
@@ -122,6 +156,8 @@ Evaluate and return JSON verification:"""
         tracked_positions: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """Audit a single raw Discord analyst message against recorded database positions."""
+        from plugins.analyst_trader.parser import extract_trim_ratio, TICKER_BLACKLIST
+
         msg_id = str(raw_msg.get("message_id") or raw_msg.get("id") or "")
         analyst_name = raw_msg.get("analyst_name", "Jon & Kian")
         content = raw_msg.get("content", "") or ""
@@ -145,7 +181,7 @@ Evaluate and return JSON verification:"""
         combined_upper = combined_text.upper()
 
         # Check if text contains trade keywords
-        trade_kw = any(w in combined_upper for w in ["BTO", "STC", "BUY", "SELL", "OPEN:", "CLOSE:", "UPDATE:", "TRIM", "CLOSED", "FULLY OUT", "ALL OUT", "RUNNER"])
+        trade_kw = any(w in combined_upper for w in ["BTO", "STC", "BUY", "SELL", "OPEN:", "CLOSE:", "UPDATE:", "TRIM", "TRIMMED", "CLOSED", "FULLY OUT", "ALL OUT", "RUNNER", "TAKING PROFITS", "SL HIT", "STOPPED OUT"])
         if not trade_kw:
             return {
                 "message_id": msg_id,
@@ -157,25 +193,33 @@ Evaluate and return JSON verification:"""
                 "corrected_data": None
             }
 
-        # Match against tracked positions for this analyst
-        ticker_candidates = ["AXTI", "HPE", "FRO", "SPY", "BNTX", "MRVL", "CAKE", "INTC", "RIOT", "MS", "RGTI", "RKLB", "FCX", "AAPL", "VIX", "CORZ", "VNET", "RARE", "IREN"]
+        # Dynamic Ticker Search: search for tracked position tickers or uppercase candidate ticker
         found_ticker = None
-        for tk in ticker_candidates:
-            if re.search(r"\b" + tk + r"\b", combined_upper):
-                found_ticker = tk
+        for p in tracked_positions:
+            p_tk = p.get("ticker", "")
+            if p_tk and re.search(r"\b" + p_tk + r"\b", combined_upper):
+                found_ticker = p_tk
                 break
+
+        if not found_ticker:
+            words = combined_upper.split()
+            for w in words:
+                w_clean = w.strip("!.,:()$").upper()
+                if 2 <= len(w_clean) <= 5 and w_clean.isalpha() and w_clean not in TICKER_BLACKLIST:
+                    found_ticker = w_clean
+                    break
 
         # Find existing position in DB
         matching_pos = None
         if found_ticker:
             for p in tracked_positions:
-                if p.get("ticker") == found_ticker:
+                if p.get("ticker") == found_ticker and p.get("status") in ("OPEN", "TRIMMED"):
                     matching_pos = p
                     break
 
         # Determine LLM/Rule semantic action
-        has_exit_kw = any(k in combined_text.lower() for k in ["rest", "fully out", "all out", "sold all", "closed"])
-        has_trim_kw = any(k in combined_text.lower() for k in ["some", "more", "trim", "trimmed", "part", "half", "6/10", "take some"])
+        has_exit_kw = any(k in combined_text.lower() for k in ["rest", "fully out", "all out", "sold all", "closed", "stopped out", "sl hit", "100%"])
+        has_trim_kw = any(k in combined_text.lower() for k in ["some", "more", "trim", "trimmed", "part", "half", "6/10", "take some", "taking profits", "tp", "scaled", "runner"])
         is_open = "OPEN:" in combined_upper or "BTO" in combined_upper or "BUY" in combined_upper
 
         if is_open:
@@ -184,13 +228,14 @@ Evaluate and return JSON verification:"""
             intended_action = "EXIT"
         elif has_trim_kw:
             intended_action = "TRIM"
-        elif "CLOSE:" in combined_upper:
-            intended_action = "EXIT"
+        elif "CLOSE:" in combined_upper or "STC" in combined_upper:
+            intended_action = "EXIT" if any(k in combined_text.lower() for k in ["fully", "all", "out", "rest"]) else "TRIM"
         else:
             intended_action = "TRIM"
 
-        # Price extraction
-        p_match = re.search(r"(?:@|at|\$)\s*\$?(?P<price>\d+\.\d+)|(?P<price2>\d+\.\d+)\b", combined_text)
+        # Price & ROI extraction
+        text_for_price = re.sub(r"\b\d+(?:\.\d+)?%\s*", "", combined_text)
+        p_match = re.search(r"(?:@|at|\$)\s*\$?(?P<price>\d+\.\d+)|(?P<price2>\d+\.\d+)\b", text_for_price)
         exit_p = None
         if p_match:
             raw_p = p_match.group("price") or p_match.group("price2")
@@ -198,6 +243,8 @@ Evaluate and return JSON verification:"""
                 exit_p = float(raw_p) if raw_p else None
             except Exception:
                 exit_p = None
+
+        trim_ratio = extract_trim_ratio(combined_text)
 
         # Compare against matched position
         if not matching_pos and found_ticker and intended_action == "ENTRY":
@@ -220,19 +267,19 @@ Evaluate and return JSON verification:"""
 
         if matching_pos:
             current_status = matching_pos.get("status")
-            if intended_action == "EXIT" and current_status == "OPEN":
+            if intended_action == "EXIT" and current_status in ("OPEN", "TRIMMED"):
                 return {
                     "message_id": msg_id,
                     "analyst_name": analyst_name,
                     "ticker": found_ticker,
                     "discrepancy_type": "ACTION_MISMATCH",
-                    "confidence_score": 0.90,
-                    "reasoning": f"Analyst announced full exit on {found_ticker}, but position was still marked {current_status}.",
+                    "confidence_score": 0.92,
+                    "reasoning": f"Analyst announced full exit on {found_ticker}, but position was marked {current_status}.",
                     "original_data": matching_pos,
                     "corrected_data": {
                         "action": "EXIT",
                         "ticker": found_ticker,
-                        "price": exit_p or matching_pos.get("entry_price"),
+                        "price": exit_p or matching_pos.get("exit_price") or matching_pos.get("entry_price"),
                         "status": "CLOSED",
                         "trim_ratio": 1.0
                     }
@@ -244,15 +291,15 @@ Evaluate and return JSON verification:"""
                     "analyst_name": analyst_name,
                     "ticker": found_ticker,
                     "discrepancy_type": "ACTION_MISMATCH",
-                    "confidence_score": 0.88,
-                    "reasoning": f"Analyst announced trim on {found_ticker}, updating status to TRIMMED.",
+                    "confidence_score": 0.90,
+                    "reasoning": f"Analyst announced trim on {found_ticker}, updating position to TRIMMED.",
                     "original_data": matching_pos,
                     "corrected_data": {
                         "action": "TRIM",
                         "ticker": found_ticker,
                         "price": exit_p or matching_pos.get("entry_price"),
                         "status": "TRIMMED",
-                        "trim_ratio": 0.5
+                        "trim_ratio": trim_ratio
                     }
                 }
 

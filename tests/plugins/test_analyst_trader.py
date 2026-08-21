@@ -50,18 +50,22 @@ class TestAnalystDatabase(unittest.TestCase):
             strike=500.0,
             expiration="11/20"
         )
+        assert pos is not None
         self.assertEqual(pos["status"], "OPEN")
         self.assertEqual(pos["entry_price"], 2.00)
 
-        # Trim
+        # Trim (50% trim of 1.0 contract -> 0.5 contracts trimmed)
         trimmed = self.db.update_position_trim_or_close("pos_1", exit_price=3.00, status="TRIMMED")
+        assert trimmed is not None
         self.assertEqual(trimmed["status"], "TRIMMED")
-        self.assertEqual(trimmed["realized_pnl"], 100.0)  # (3 - 2) * 1 * 100
+        self.assertEqual(trimmed["realized_pnl"], 50.0)  # (3 - 2) * 0.5 * 100
 
         # Close
         closed = self.db.update_position_trim_or_close("pos_1", exit_price=4.00, status="CLOSED")
+        assert closed is not None
         self.assertEqual(closed["status"], "CLOSED")
-        self.assertEqual(closed["realized_pnl"], 200.0)
+        self.assertEqual(closed["realized_pnl"], 150.0)  # $50.00 from trim + $100.00 from final exit
+
 
 
 class TestTradeSignalParser(unittest.TestCase):
@@ -195,6 +199,54 @@ class TestLLMTradeReviewer(unittest.TestCase):
         positions = self.db.list_positions(analyst_name="Jon & Kian")
         self.assertTrue(any(p["ticker"] == "AXTI" for p in positions))
 
+    def test_parse_trim_and_close_alerts(self):
+        from plugins.analyst_trader.parser import extract_trim_ratio
+        self.assertEqual(extract_trim_ratio("trimmed 50% at 3.50"), 0.50)
+        self.assertEqual(extract_trim_ratio("sold 1/2 of SPY @ 4.00"), 0.50)
+        self.assertEqual(extract_trim_ratio("fully out of SPY"), 1.0)
+        self.assertEqual(extract_trim_ratio("leaving runner"), 0.85)
+
+        sig_trim = TradeSignalParser.parse_message("TRIM SPY 500 CALL @ 3.50 (+75%)")
+        assert sig_trim is not None
+        self.assertEqual(sig_trim["action"], "TRIM")
+        self.assertEqual(sig_trim["ticker"], "SPY")
+        self.assertEqual(sig_trim["price"], 3.50)
+        self.assertEqual(sig_trim["pct_roi"], 75.0)
+
+        sig_close = TradeSignalParser.parse_message("STC SPY 500C @ 4.50 fully out")
+        assert sig_close is not None
+        self.assertEqual(sig_close["action"], "EXIT")
+        self.assertEqual(sig_close["ticker"], "SPY")
+        self.assertEqual(sig_close["price"], 4.50)
+
+    def test_trade_event_logging_on_trim(self):
+        pos = self.db.create_position(
+            position_id="pos_trim_test",
+            analyst_name="Eva",
+            channel_id="ch_eva",
+            ticker="QQQ",
+            asset_type="option",
+            direction="call",
+            entry_price=2.00,
+            strike=450.0,
+            expiration="08/21"
+        )
+        assert pos is not None
+
+        # Trim 50% at $3.00 (+50% gain)
+        trimmed = self.db.update_position_trim_or_close("pos_trim_test", exit_price=3.00, status="TRIMMED", trim_ratio=0.5)
+        assert trimmed is not None
+
+        # Verify position list includes trade event trims array
+        positions = self.db.list_positions(analyst_name="Eva")
+        self.assertEqual(len(positions), 1)
+        p = positions[0]
+        self.assertIn("trims", p)
+        self.assertTrue(len(p["trims"]) >= 1)
+        self.assertEqual(p["trims"][0]["price"], 3.00)
+        self.assertEqual(p["trims"][0]["gain_pct"], 50.0)
+
 
 if __name__ == "__main__":
     unittest.main()
+
