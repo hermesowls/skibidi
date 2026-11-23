@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/futures.md",
+  "parts": [
+    "references/categories/futures.md.part000",
+    "references/categories/futures.md.part001"
+  ],
+  "sha256": "c7cddfcce1eea07504371ef3376515696e4198b5f2dea56099bfddf54a28e6ad",
+  "bytes": 112349,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

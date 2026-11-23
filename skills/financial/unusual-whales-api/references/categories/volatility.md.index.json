@@ -1,0 +1,11 @@
+{
+  "logical_path": "references/categories/volatility.md",
+  "parts": [
+    "references/categories/volatility.md.part000",
+    "references/categories/volatility.md.part001",
+    "references/categories/volatility.md.part002"
+  ],
+  "sha256": "187d40aa54b192fd2bc4346bb5752805c5020349d1c0cb579dcfd9d9f368fa89",
+  "bytes": 160554,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

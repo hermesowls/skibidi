@@ -1,0 +1,2366 @@
+earnings_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Earnings_DTE'
+        - description: ''
+          in: query
+          name: max_earnings_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Earnings_DTE'
+        - description: ''
+          in: query
+          name: min_open_interest
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Open_Interest'
+        - description: ''
+          in: query
+          name: max_open_interest
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Open_Interest'
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Contract_Volume'
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Contract_Volume'
+        - description: ''
+          in: query
+          name: min_size
+          required: false
+          schema:
+            description: Minimum trade size in contracts.
+            example: 100
+            format: int64
+            type: integer
+        - description: ''
+          in: query
+          name: max_size
+          required: false
+          schema:
+            description: Maximum trade size in contracts.
+            example: 100
+            format: int64
+            type: integer
+        - description: ''
+          in: query
+          name: min_delta
+          required: false
+          schema:
+            description: Minimum option delta.
+            example: abs(0.5)
+            type: string
+        - description: ''
+          in: query
+          name: max_delta
+          required: false
+          schema:
+            description: Maximum option delta.
+            example: abs(0.5)
+            type: string
+        - description: ''
+          in: query
+          name: min_gamma
+          required: false
+          schema:
+            description: Minimum option gamma.
+            example: abs(0.05)
+            type: string
+        - description: ''
+          in: query
+          name: max_gamma
+          required: false
+          schema:
+            description: Maximum option gamma.
+            example: abs(0.05)
+            type: string
+        - description: ''
+          in: query
+          name: min_iv
+          required: false
+          schema:
+            description: Minimum implied volatility as a decimal.
+            example: '0.5'
+            type: string
+        - description: ''
+          in: query
+          name: max_iv
+          required: false
+          schema:
+            description: Maximum implied volatility as a decimal.
+            example: '0.5'
+            type: string
+        - description: ''
+          in: query
+          name: min_theta
+          required: false
+          schema:
+            description: Minimum option theta.
+            example: abs(0.1)
+            type: string
+        - description: ''
+          in: query
+          name: max_theta
+          required: false
+          schema:
+            description: Maximum option theta.
+            example: abs(0.1)
+            type: string
+        - description: ''
+          in: query
+          name: min_diff
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Contract_Diff'
+        - description: ''
+          in: query
+          name: max_diff
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Contract_Diff'
+        - description: ''
+          in: query
+          name: min_marketcap
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Marketcap'
+        - description: ''
+          in: query
+          name: max_marketcap
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Marketcap'
+        - description: ''
+          in: query
+          name: min_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Strike'
+        - description: ''
+          in: query
+          name: max_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Strike'
+        - description: ''
+          in: query
+          name: min_vol_oi_ratio
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Volume_OI_Ratio'
+        - description: ''
+          in: query
+          name: max_vol_oi_ratio
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Volume_OI_Ratio'
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            description: Minimum trade premium in dollars.
+            example: '25000'
+            type: string
+        - description: ''
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            description: Maximum trade premium in dollars.
+            example: '25000'
+            type: string
+        - description: ''
+          in: query
+          name: min_price
+          required: false
+          schema:
+            description: Minimum option trade price.
+            example: '5.25'
+            type: string
+        - description: ''
+          in: query
+          name: max_price
+          required: false
+          schema:
+            description: Maximum option trade price.
+            example: '5.25'
+            type: string
+        - description: ''
+          in: query
+          name: min_spread
+          required: false
+          schema:
+            description: Minimum bid-ask spread percentage.
+            example: '0.1'
+            type: string
+        - description: ''
+          in: query
+          name: max_spread
+          required: false
+          schema:
+            description: Maximum bid-ask spread percentage.
+            example: '0.1'
+            type: string
+        - description: ''
+          in: query
+          name: min_underlying_price
+          required: false
+          schema:
+            description: Minimum underlying price at execution.
+            example: '195.50'
+            type: string
+        - description: ''
+          in: query
+          name: max_underlying_price
+          required: false
+          schema:
+            description: Maximum underlying price at execution.
+            example: '195.50'
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Trades_Response'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Trades_Error_Response'
+          description: Invalid or unsupported option trade request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Trades_Error_Response'
+          description: Option trades service unavailable
+      summary: Option Trades
+      tags:
+        - option-trade
+  /api/option-trades/exchange-breakdown/{date}:
+    get:
+      callbacks: {}
+      description: |
+        Aggregates the option tape for one or more tickers on a single trading date, grouped by the
+        **options exchange** the prints executed on (e.g. `AMXO`, `ARCO`, `BATO`).
+
+        For each ticker × exchange you get the trade count, total contracts, total premium
+        (`sum(price × size × 100)`) and the call/put trade split. Set `by_trade_code=true` to additionally
+        break each row down by the upstream trade condition code (`upstream_condition_detail`, e.g. `auto`,
+        `mlat`, `slan`).
+
+        Use `min_premium` to drop smaller prints before aggregating.
+
+        **Whole-universe mode:** omit `ticker[]` to get the breakdown across the entire option universe.
+        In that mode tickers are ranked by total contracts traded that day (descending) and the response is
+        paged by ticker via `limit` (tickers per page) and `page` — so you receive the top names first. When
+        `ticker[]` is supplied this paging is ignored and exactly those tickers are returned.
+
+        NOTICE: Access to this endpoint is only included in the Advanced API subscription. Data is available
+        for trading days after 2022-01-01.
+      operationId: PublicApi.OptionTradeController.exchange_breakdown
+      parameters:
+        - description: ''
+          in: path
+          name: date
+          required: true
+          schema:
+            $ref: '#/components/schemas/Market_Date'
+        - description: One or more underlying symbols to aggregate, e.g. `ticker[]=AAPL&ticker[]=NVDA`. Omit for whole-universe mode (top names by volume).
+          in: query
+          name: ticker[]
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+        - description: Whether to additionally group each row by the upstream trade condition code.
+          example: true
+          in: query
+          name: by_trade_code
+          required: false
+          schema:
+            type: boolean
+        - description: Only include individual prints whose premium (price × size × 100) is at least this value, before aggregating. Use to filter out smaller trades.
+          example: '10000'
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            type: string
+        - description: 'Whole-universe mode only: tickers per page (ranked by volume). Default 100, max 500.'
+          example: 100
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: 'Whole-universe mode only: 1-based page of tickers. Default 1.'
+          example: 1
+          in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - description: 'Whole-universe mode only: how to rank tickers — `volume` (total contracts) or `premium` (total premium). Default `volume`.'
+          example: premium
+          in: query
+          name: order
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Trade_Exchange_Breakdown'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Exchange & Trade Code Breakdown
+      tags:
+        - option-trade
+  /api/option-trades/flow-alerts:
+    get:
+      callbacks: {}
+      description: |
+        Flow alerts are rule based aggregations on the full tape of option trades.
+
+        While there are quite a few different rules and alerts the most used one is the repeated hit family:
+        RepeatedHits, RepeatedHitsAscendingFill, RepeatedHitsDescendingFill
+
+        Each of those represent an alert when there have been multiple transactions on the same option contract
+        within a few milliseconds. This can be mean that a single order is being matched across multiple other orders
+        and creating multiple transactions. It can also just mean that there are multiple buyers/sellers at the same time.
+
+        Trades usually use the repeated hits with other data points to form a picture on whether there is some urgency
+        in entering/exiting a position in a contract/ticker.
+
+        The full current options tape including trades that do not form a RepeatedHits alert can be accessed through the
+        [Option Trades endpoint](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.index).
+        The difference between the 3 repeated hits alerts are:
+        - DescendingFill: Each transaction that comes after another in chronological order has either the same fill price as or a lower fill price than the previous transaction. The last transaction must be lower than the first transaction.
+        - AscendingFill: The opposite of DescendingFill. The fill prices increase instead of decreasing.
+        - RepeatedHits (neither ascending nor descending): When it does not fit into one of the first two categories.
+
+        To express ascending and descending in a mathmatical notion. Let p₁, p₂, …, pₙ be the fill prices of n transactions ordered chronologically:
+        - DescendingFill: pᵢ ≥ pᵢ₊₁ for all i ∈ [1, n−1], and pₙ < p₁.
+        - AscendingFill: pᵢ ≤ pᵢ₊₁ for all i ∈ [1, n−1], and pₙ > p₁.
+
+        For the individual flow alert rules and how the aggregation is based on you can
+        checkout out [https://unusualwhales.com/option-flow-alerts/rules](https://unusualwhales.com/option-flow-alerts/rules).
+
+        For any given flow alert you can take a look at the individual trades that are making up the alert by taking the alert's id
+        and use [https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.flow_alert](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.flow_alert)
+        to retrieve the individual transactions.
+
+        For real time streaming of flow alerts, subscribe to the `flow-alerts` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.flow_alerts](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.flow_alerts).
+
+        The 14-day lookback limit on the custom alerts endpoint (`/api/alerts`) does not apply to this endpoint.
+      operationId: PublicApi.OptionTradeController.flow_alerts
+      parameters:
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: 'Convenience preset for "unusual" flow, matching the [live options flow](https://unusualwhales.com/live-options-flow) default criteria: volume>OI, size>OI, all-opening, OTM, single-leg, DTE≤60, ask-side≥50%, premium≥$10k, size≥5, issue types ADR/Common Stock/ETF. Applied as defaults, so any of those filters you pass explicitly (e.g. `min_ask_perc=0.9`, `max_dte=40`) overrides the preset.'
+          in: query
+          name: unusual
+          required: false
+          schema:
+            type: boolean
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            description: 'The minimum premium on that alert. Min: 0.'
+            example: 12500.5
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            description: 'The maximum premium on that alert. Min: 0.'
+            example: 12500.5
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: min_size
+          required: false
+          schema:
+            description: 'The minimum size on that alert. Size is defined as the sum of the sizes of all transactions that make up the alert. Min: 0.'
+            example: 125
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: max_size
+          required: false
+          schema:
+            description: 'The maximum size on that alert. Min: 0.'
+            example: 125
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            description: "The minimum volume on that alert's contract at the time of the alert. Min: 0."
+            example: 125
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            description: "The maximum volume on that alert's contract at the time of the alert. Min: 0."
+            example: 125
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: min_open_interest
+          required: false
+          schema:
+            description: "The minimum open interest on that alert's contract at the time of the alert. Min: 0."
+            example: 125
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: max_open_interest
+          required: false
+          schema:
+            description: "The maximum open interest on that alert's contract at the time of the alert. Min: 0."
+            example: 125
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: all_opening
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether all transactions are opening transactions based on OI, Size & Volume. Since Flow Alerts with rule_name values of RepeatedHits, RepeatedHitsAscendingFill, and RepeatedHitsDescendingFill are composed of many individual transactions, it is extremely unlikely that the all_opening value will be true, so if you are interested in these Flow Alerts you should not set this query param to true.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_floor
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether a transaction is from the floor.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_sweep
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether a transaction is a intermarket sweep.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_call
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether a transaction is a call.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_put
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether a transaction is a put.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_ask_side
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether a transaction is ask side.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_bid_side
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether a transaction is bid side.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: rule_name[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Rule_Name'
+        - description: ''
+          in: query
+          name: min_diff
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Contract_Diff'
+        - description: ''
+          in: query
+          name: max_diff
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Contract_Diff'
+        - description: ''
+          in: query
+          name: min_volume_oi_ratio
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Volume_OI_Ratio'
+        - description: ''
+          in: query
+          name: max_volume_oi_ratio
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Volume_OI_Ratio'
+        - description: ''
+          in: query
+          name: is_otm
+          required: false
+          schema:
+            $ref: '#/components/schemas/Is_OTM_Contract'
+        - description: ''
+          in: query
+          name: issue_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Issue_types'
+        - description: ''
+          in: query
+          name: min_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_DTE'
+        - description: ''
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_DTE'
+        - description: ''
+          in: query
+          name: min_ask_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Ask_Percentage'
+        - description: ''
+          in: query
+          name: max_ask_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Ask_Percentage'
+        - description: ''
+          in: query
+          name: min_bid_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Bid_Percentage'
+        - description: ''
+          in: query
+          name: max_bid_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Bid_Percentage'
+        - description: ''
+          in: query
+          name: min_bull_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Bull_Percentage'
+        - description: ''
+          in: query
+          name: max_bull_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Bull_Percentage'
+        - description: ''
+          in: query
+          name: min_bear_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Bear_Percentage'
+        - description: ''
+          in: query
+          name: max_bear_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Bear_Percentage'
+        - description: ''
+          in: query
+          name: min_skew
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Skew'
+        - description: ''
+          in: query
+          name: max_skew
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Skew'
+        - description: ''
+          in: query
+          name: min_price
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Price'
+        - description: ''
+          in: query
+          name: max_price
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Price'
+        - description: ''
+          in: query
+          name: min_iv_change
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_IV_Change'
+        - description: ''
+          in: query
+          name: max_iv_change
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_IV_Change'
+        - description: ''
+          in: query
+          name: min_size_vol_ratio
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Size_Volume_Ratio'
+        - description: ''
+          in: query
+          name: max_size_vol_ratio
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Size_Volume_Ratio'
+        - description: ''
+          in: query
+          name: min_spread
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Spread'
+        - description: ''
+          in: query
+          name: max_spread
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Spread'
+        - description: ''
+          in: query
+          name: min_marketcap
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Marketcap'
+        - description: ''
+          in: query
+          name: max_marketcap
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Marketcap'
+        - description: ''
+          in: query
+          name: is_multi_leg
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Is_Multi_Leg'
+        - description: ''
+          in: query
+          name: size_greater_oi
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Size_Greater_Than_Open_Interest'
+        - description: ''
+          in: query
+          name: vol_greater_oi
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Volume_Greater_Than_Open_Interest'
+        - description: ''
+          in: query
+          name: min_days_between_expiry_and_earnings
+          required: false
+          schema:
+            $ref: '#/components/schemas/MinDaysBetweenExpiryAndEarnings'
+        - description: ''
+          in: query
+          name: max_days_between_expiry_and_earnings
+          required: false
+          schema:
+            $ref: '#/components/schemas/MaxDaysBetweenExpiryAndEarnings'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flow_Alert'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Flow Alerts
+      tags:
+        - option-trade
+  /api/option-trades/flow-alerts/{id}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the trades that made up the specific alert. For multi leg flow alert trades it will
+        return all the related multi leg trades.
+        For alerts such as RepeatedHits it will return all the transactions that made up that alert.
+      operationId: PublicApi.OptionTradeController.flow_alert
+      parameters:
+        - description: The UUID of the flow alert
+          in: path
+          name: id
+          required: true
+          schema:
+            format: uuid
+            type: string
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flow_Alert_Detail'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Flow Alert by ID
+      tags:
+        - option-trade
+  /api/option-trades/full-tape/{date}:
+    get:
+      callbacks: {}
+      description: |
+        Download all option transactions (the "full tape") for a given trading date.
+
+        To filter option transactions for the current trading day use the [Option Trades endpoint](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.index).
+
+        How far back you can download is determined by your plan's historical lookback window with data available since 2022-01-01.
+
+        If you are looking to build a data lake with the full tape use this skill with your agent: https://unusualwhales.com/skills/uw-options-data-lake-skill.md
+
+        You can download the data as a zip file using wget. For example, to download data for Fri Jul 25th, 2025, if your API key is "abc123":
+        ```
+        wget --header="Authorization: Bearer abc123" https://api.unusualwhales.com/api/option-trades/full-tape/2025-07-25 -O full_tape_20257225.zip
+        ```
+      operationId: PublicApi.OptionTradeController.full_tape
+      parameters:
+        - description: ''
+          in: path
+          name: date
+          required: true
+          schema:
+            $ref: '#/components/schemas/Market_Date'
+      responses:
+        '200':
+          content:
+            application/zip: {}
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Full Tape
+      tags:
+        - option-trade
+  /api/option-trades/multi-leg:
+    get:
+      callbacks: {}
+      description: |
+        A live feed of detected multi-leg option strategies — vertical spreads, iron condors, butterflies,
+        calendars, diagonals and more — reconstructed from their individual legs, newest first. Each row summarizes
+        the strategy (fill/net price, net bid/ask, net premium, net greeks, strikes, DTE range, breakevens, max profit/loss) across all legs.
+        Use the per-strategy `id` with the `legs` endpoint to fetch the individual contracts.
+
+        Decimal values are returned as strings. Defaults to the current trading day when no time bounds are given.
+        Queries are limited to a 24-hour range. If both bounds span more than 24 hours, `newer_than` is clamped
+        to 24 hours before `older_than`.
+      operationId: PublicApi.MultiLegController.index
+      parameters:
+        - description: Rows per page (default 50, max 500).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: Rows to skip for pagination (max 500).
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+        - description: Restrict to a single underlying ticker.
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            type: string
+        - description: Only strategies executed at/after this UTC timestamp (ISO-8601). Defaults to last market open. The query range is limited to 24 hours.
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            type: string
+        - description: Only strategies executed at/before this UTC timestamp (ISO-8601). The query range is limited to 24 hours.
+          in: query
+          name: older_than
+          required: false
+          schema:
+            type: string
+        - description: Filter by detected strategy name(s). Repeatable array param (e.g. `strategy[]=iron_condor&strategy[]=call_vertical_spread`).
+          in: query
+          name: strategy
+          required: false
+          schema:
+            items:
+              enum:
+                - call_butterfly_spread
+                - call_calendar
+                - call_condor
+                - call_diagonal_spread
+                - call_ratio_spread
+                - call_vertical_spread
+                - iron_butterfly
+                - iron_condor
+                - jade_lizard
+                - other
+                - put_butterfly_spread
+                - put_calendar
+                - put_condor
+                - put_diagonal_spread
+                - put_frontspread
+                - put_vertical_spread
+                - risk_reversal
+                - straddle
+                - strangle
+                - synthetic
+              type: string
+            type: array
+        - description: Exclude strategies classified as `other` (unrecognized structures).
+          in: query
+          name: exclude_other
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by direction (long/short). Repeatable array param.
+          in: query
+          name: direction
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+        - description: Filter by the strategy's net aggressor side (bid/ask/mid). Repeatable array param.
+          in: query
+          name: net_side
+          required: false
+          schema:
+            items:
+              enum:
+                - bid
+                - ask
+                - mid
+              type: string
+            type: array
+        - description: Minimum total contracts across legs.
+          in: query
+          name: min_size
+          required: false
+          schema:
+            type: integer
+        - description: Maximum total contracts across legs.
+          in: query
+          name: max_size
+          required: false
+          schema:
+            type: integer
+        - description: Minimum net premium (supports abs()).
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            type: string
+        - description: Maximum net premium (supports abs()).
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            type: string
+        - description: Minimum days-to-expiry.
+          in: query
+          name: min_dte
+          required: false
+          schema:
+            type: integer
+        - description: Maximum days-to-expiry.
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            type: integer
+        - description: Minimum number of legs.
+          in: query
+          name: min_leg_count
+          required: false
+          schema:
+            type: integer
+        - description: Maximum number of legs.
+          in: query
+          name: max_leg_count
+          required: false
+          schema:
+            type: integer
+        - description: Only strategies where every leg is out-of-the-money.
+          in: query
+          name: all_otm
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by underlying issue type(s), e.g. Common Stock, ETF. Repeatable array param.
+          in: query
+          name: issue_types
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+        - description: Filter by underlying sector(s). Repeatable array param.
+          in: query
+          name: sectors
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Multi-Leg_Trades_Response'
+          description: Multi-Leg Trades
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Multi-Leg Option Trades
+      tags:
+        - option-trade
+  /api/option-trades/multi-leg/{id}/legs:
+    get:
+      callbacks: {}
+      description: |
+        Returns the individual option legs that make up a single multi-leg strategy, aggregated by contract with
+        size-weighted greeks and prices. Pass the strategy `id` returned by the Multi-Leg Option Trades feed.
+      operationId: PublicApi.MultiLegController.legs
+      parameters:
+        - description: The multi-leg strategy id (UUID) from the trades feed.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Multi-Leg_Legs_Response'
+          description: Multi-Leg Legs
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Multi-Leg Trade Legs
+      tags:
+        - option-trade
+  /api/option-trades/optionable-tickers:
+    get:
+      callbacks: {}
+      description: |
+        Returns the current universe of underlying symbols that have listed options (sourced from the Nasdaq
+        option-root locators), sorted alphabetically. Query this daily to track new listings and delistings.
+
+        Pass `?ticker=SYMBOL` to check a single company instead — the response then reports whether that
+        symbol currently has listed options.
+
+        NOTICE: Access to this endpoint is only included in the Advanced API subscription.
+      operationId: PublicApi.OptionTradeController.optionable_tickers
+      parameters:
+        - description: 'Optional: check a single symbol instead of listing the whole universe.'
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Optionable_Tickers'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Optionable Tickers
+      tags:
+        - option-trade
+  /api/options-pulse/sectors:
+    get:
+      callbacks: {}
+      description: Latest Nasdaq Options Pulse sentiment for each sector and industry on a date.
+      operationId: PublicApi.NasdaqPulseController.sectors
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nasdaq_Options_Pulse_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Options Pulse by Sector/Industry
+      tags:
+        - options-pulse
+  /api/options-pulse/top:
+    get:
+      callbacks: {}
+      description: |
+        Cross-symbol scanner: the latest intraday sentiment per ticker on a date, ranked by sentiment.
+        `direction` `bullish` ranks highest sentiment first, `bearish` lowest first. Filterable by
+        `ticker` (prefix), `min_score`/`max_score`, and `min_txn` (minimum opening-buy transactions).
+      operationId: PublicApi.NasdaqPulseController.top
+      parameters:
+        - description: '`bullish` (default) or `bearish`.'
+          in: query
+          name: direction
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Restrict to tickers with this prefix.
+          in: query
+          name: ticker
+          required: false
+          schema:
+            type: string
+        - description: Minimum sentiment score.
+          in: query
+          name: min_score
+          required: false
+          schema:
+            type: number
+        - description: Maximum sentiment score.
+          in: query
+          name: max_score
+          required: false
+          schema:
+            type: number
+        - description: Minimum total opening-buy transactions (put + call).
+          in: query
+          name: min_txn
+          required: false
+          schema:
+            type: integer
+        - description: Max rows (default 50, max 500).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nasdaq_Options_Pulse_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Options Pulse Scanner
+      tags:
+        - options-pulse
+  /api/options-pulse/total:
+    get:
+      callbacks: {}
+      description: 'The market-wide Nasdaq Options Pulse gauge: latest snapshot + intraday series for a date.'
+      operationId: PublicApi.NasdaqPulseController.total
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nasdaq_Options_Pulse_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Market-wide Options Pulse
+      tags:
+        - options-pulse
+  /api/politician-portfolios/disclosures:
+    get:
+      callbacks: {}
+      description: |
+        Returns all annual disclosure file records for politicians.
+        Can be filtered by politician_id and/or limited to latest per politician.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticianPortfoliosController.disclosures
+      parameters:
+        - description: Filter by politician ID
+          in: query
+          name: politician_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+        - description: If true, returns only the most recent disclosure per politician
+          in: query
+          name: latest_only
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by disclosure year
+          in: query
+          name: year
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annual_Disclosures_List'
+          description: Annual Disclosures
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Annual Disclosures List
+      tags:
+        - politician_portfolios
+  /api/politician-portfolios/holders/{ticker}:
+    get:
+      callbacks: {}
+      description: |
+        Returns all politician portfolio owner names, ID, and holdings for the specified ticker.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticianPortfoliosController.holds_ticker
+      parameters:
+        - description: Stock ticker symbol (e.g., AAPL, TSLA)
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+        - description: If true, aggregates all of a politicians portfolios into a single portfolio named 'aggregated'. Default is false. Note that this does not aggregate holdings within a portfolio, only across portfolios.
+          in: query
+          name: aggregate_all_portfolios
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio_Holders'
+          description: Portfolio Holders
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Politician Portfolio Holders by Ticker
+      tags:
+        - politician_portfolios
+  /api/politician-portfolios/people:
+    get:
+      callbacks: {}
+      description: |
+        Returns all politician names and IDs.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticianPortfoliosController.people
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Politicians_List'
+          description: Politicians List
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Politicians List
+      tags:
+        - politician_portfolios
+  /api/politician-portfolios/recent_trades:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest transacted trades by congress members.
+        If a date is given, will only return reports, which's transaction date is <= the given input date.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticianPortfoliosController.recent_trades
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Ticker'
+        - description: ''
+          in: query
+          name: politician_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/Politician_ID'
+        - description: If true, will filter out any trades with a transaction date after the input date.
+          in: query
+          name: filter_late_reports
+          required: false
+          schema:
+            $ref: '#/components/schemas/Filter_Late_Reports_Only'
+        - description: The page number for the data being requested (default is 1).
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: If provided, will only return trades with a disclosure date >= this date.
+          in: query
+          name: disclosure_newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: If provided, will only return trades with a disclosure date <= this date.
+          in: query
+          name: disclosure_older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: If provided, will only return trades with a transaction date >= this date.
+          in: query
+          name: transaction_newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: If provided, will only return trades with a transaction date <= this date.
+          in: query
+          name: transaction_older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Senate_Stock'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Politician Trades
+      tags:
+        - politician_portfolios
+  /api/politician-portfolios/{politician_id}:
+    get:
+      callbacks: {}
+      description: |
+        Returns all portfolios and holdings for a politician.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticianPortfoliosController.portfolios
+      parameters:
+        - description: ''
+          in: path
+          name: politician_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+        - description: If true, aggregates all portfolios into a single portfolio named 'aggregated'. Default is false. Note that this does not aggregate holdings within a portfolio, only across portfolios.
+          in: query
+          name: aggregate_all_portfolios
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Politician_Portfolios'
+          description: Politician Portfolios
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Politician Portfolios
+      tags:
+        - politician_portfolios
+  /api/politics/fec/candidates:
+    get:
+      callbacks: {}
+      description: |
+        Federal candidates ranked by company-linked money received in a cycle: PAC-tier totals,
+        employee-tier estimates, number of distinct companies, and basic candidate info with the
+        linked politician where known.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticsFecController.candidates
+      parameters:
+        - description: Two-year election cycle, e.g. 2026. Defaults to the current cycle.
+          in: query
+          name: cycle
+          required: false
+          schema:
+            type: integer
+        - description: house | senate | president
+          in: query
+          name: office
+          required: false
+          schema:
+            type: string
+        - description: Two-letter state code.
+          in: query
+          name: state
+          required: false
+          schema:
+            type: string
+        - description: Party code, e.g. DEM, REP.
+          in: query
+          name: party
+          required: false
+          schema:
+            type: string
+        - description: Page number (default 1).
+          in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - description: Rows per page (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company_Politics_Candidates'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Candidates with company-linked contributions
+      tags:
+        - politics
+  /api/politics/fec/companies:
+    get:
+      callbacks: {}
+      description: |
+        Every public company with tracked political activity: confirmed corporate PAC count, PAC-tier
+        contribution totals, employee-tier estimates (estimated contributions by self-reported employees, kept separate from PAC numbers), party split, and lobbying spend for the cycle.
+        Sorted by PAC total.
+      operationId: PublicApi.PoliticsFecController.companies
+      parameters:
+        - description: Two-year election cycle, e.g. 2026. Defaults to the current cycle.
+          in: query
+          name: cycle
+          required: false
+          schema:
+            type: integer
+        - description: Minimum combined total.
+          in: query
+          name: min_total
+          required: false
+          schema:
+            type: integer
+        - description: Page number (default 1).
+          in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - description: Rows per page (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company_Politics_Companies'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Companies with political activity
+      tags:
+        - politics
+  /api/politics/fec/company/{ticker}/lobbying:
+    get:
+      callbacks: {}
+      description: |
+        Lobbying spend per quarter for a company from Senate LDA filings, in-house expenses
+        (self-filed reports), and outside income (hired-firm reports) as separate series, with the top
+        issue codes per period. `include_filings=true` adds the paginated filing list.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticsFecController.lobbying
+      parameters:
+        - description: Company ticker.
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: include_filings
+          required: false
+          schema:
+            type: boolean
+        - description: Page number (default 1).
+          in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - description: Rows per page (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company_Politics_Lobbying'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Company lobbying totals and issues
+      tags:
+        - politics
+  /api/politics/fec/company/{ticker}/people:
+    get:
+      callbacks: {}
+      description: |
+        The people around a public company: candidates funded by its PAC and employees (with totals),
+        politicians who traded the stock, and company insiders.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticsFecController.people
+      parameters:
+        - description: Company ticker.
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+        - description: Two-year election cycle, e.g. 2026. Defaults to the current cycle.
+          in: query
+          name: cycle
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company_Politics_People'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: People associated with a company
+      tags:
+        - politics
+  /api/politics/fec/contributions:
+    get:
+      callbacks: {}
+      description: |
+        The company-politics contribution feed. With `aggregated=true` (the default) rows are at the
+        company × candidate × cycle × tier grain - filter by `ticker` for a company's candidates, or by
+        `candidate_id` for a candidate's companies. With `aggregated=false` rows are individual
+        contributions, paginated by `cursor` (pass back `next_cursor` from the previous response);
+        `tier` selects `pac` (default) or `employee`.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticsFecController.contributions
+      parameters:
+        - description: Default true.
+          in: query
+          name: aggregated
+          required: false
+          schema:
+            type: boolean
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: candidate_id
+          required: false
+          schema:
+            type: integer
+        - description: Politician UUID (aggregated only).
+          in: query
+          name: politician_id
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: party
+          required: false
+          schema:
+            type: string
+        - description: Two-year election cycle, e.g. 2026. Defaults to the current cycle.
+          in: query
+          name: cycle
+          required: false
+          schema:
+            type: integer
+        - description: pac | employee | all (aggregated default all).
+          in: query
+          name: tier
+          required: false
+          schema:
+            type: string
+        - description: Row-level only.
+          in: query
+          name: min_amount
+          required: false
+          schema:
+            type: integer
+        - description: Row-level only, ISO date.
+          in: query
+          name: min_date
+          required: false
+          schema:
+            type: string
+        - description: Row-level only, ISO date.
+          in: query
+          name: max_date
+          required: false
+          schema:
+            type: string
+        - description: 'Aggregated only: add a totals block.'
+          in: query
+          name: include_totals
+          required: false
+          schema:
+            type: boolean
+        - description: Row-level keyset cursor.
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+        - description: Page number (default 1).
+          in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+        - description: Rows per page (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Company_Politics_Contributions'
+                  - $ref: '#/components/schemas/Company_Politics_Contribution_Rows'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Company political contributions
+      tags:
+        - politics
+  /api/politics/politician/trades:
+    get:
+      callbacks: {}
+      description: |
+        Trades reported by members of congress, with the politician linked where known.
+        If a date is given, will only return trades whose transaction date is <= the given input date.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.PoliticsFecController.politician_trades
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Ticker'
+        - description: ''
+          in: query
+          name: politician_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/Politician_ID'
+        - description: If true, will filter out any trades with a transaction date after the input date.
+          in: query
+          name: filter_late_reports
+          required: false
+          schema:
+            $ref: '#/components/schemas/Filter_Late_Reports_Only'
+        - description: The page number for the data being requested (default is 1).
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: If provided, will only return trades with a disclosure date >= this date.
+          in: query
+          name: disclosure_newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: If provided, will only return trades with a disclosure date <= this date.
+          in: query
+          name: disclosure_older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: If provided, will only return trades with a transaction date >= this date.
+          in: query
+          name: transaction_newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: If provided, will only return trades with a transaction date <= this date.
+          in: query
+          name: transaction_older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: ''
+          in: query
+          name: order_by
+          required: false
+          schema:
+            $ref: '#/components/schemas/Congress_trade_order_by_field'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Politician_Trades'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Politician's trades
+      tags:
+        - politics
+  /api/potus/posts:
+    get:
+      callbacks: {}
+      description: |
+        Returns the President's short-form social media posts (currently Truth Social), newest first.
+
+        Use `search_term` to filter posts by text content. Supports pagination via `limit` and `page`
+        (page is 0-indexed).
+      operationId: PublicApi.PotusController.posts
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_200_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: search_term
+          required: false
+          schema:
+            $ref: '#/components/schemas/POTUS_Post_Search_Term'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POTUS_Post'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: President's Posts
+      tags:
+        - potus
+  /api/potus/schedule:
+    get:
+      callbacks: {}
+      description: |
+        Returns the President's public schedule for a given date, newest first by start time.
+
+        If no `date` is provided, returns entries for the most recent scheduled date.
+        Supports pagination via `limit` and `page` (page is 0-indexed).
+      operationId: PublicApi.PotusController.schedule
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_POTUS_Schedule_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_200_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POTUS_Schedule_Entry'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schem

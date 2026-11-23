@@ -1333,6 +1333,58 @@ export const api = {
     fetchJSON<SkillHubScan>(
       `/api/skills/hub/scan?identifier=${encodeURIComponent(identifier)}`,
     ),
+
+  // ── Analyst-Trader: Notable Flow ──────────────────────────────────────
+  getResearchWatchlist: () => fetchJSON<any>('/api/analyst-trader/research-watchlist'),
+  getResearchProfiles: (version?: string) => fetchJSON<any>(`/api/analyst-trader/research-profiles${version ? `?version_id=${encodeURIComponent(version)}` : ''}`),
+  previewResearchProfile: (version_id: string, evidence: Record<string, unknown>) =>
+    fetchJSON<any>('/api/analyst-trader/research-profiles/preview', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({version_id,evidence})}),
+  saveResearchProfile: (payload: {name: string; changes: Record<string, unknown>; base_version?: string}) =>
+    fetchJSON<any>('/api/analyst-trader/research-profiles', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)}),
+
+  getNotableFlows: (params?: {
+    limit?: number;
+    ticker?: string;
+    asset_type?: string;
+    call_put?: string;
+    min_premium?: number;
+  }) => {
+    const qs = new URLSearchParams();
+    if (params?.limit) qs.set("limit", String(params.limit));
+    if (params?.ticker) qs.set("ticker", params.ticker);
+    if (params?.asset_type) qs.set("asset_type", params.asset_type);
+    if (params?.call_put) qs.set("call_put", params.call_put);
+    if (params?.min_premium) qs.set("min_premium", String(params.min_premium));
+    const q = qs.toString();
+    return fetchJSON<{ ok: boolean; flows: any[]; count: number }>(
+      `/api/analyst-trader/notable-flow${q ? `?${q}` : ""}`,
+    );
+  },
+  getLiveQuotes: (tickers: string[]) =>
+    fetchJSON<{ ok: boolean; quotes: Record<string, { price: number | null; change_pct: number | null; is_extended_hours?: boolean; source?: string; as_of?: string }> }>(
+      `/api/analyst-trader/live-quotes?tickers=${encodeURIComponent(tickers.join(","))}&live=true`,
+    ),
+  backfillNotableFlow: (limit = 100) =>
+    fetchJSON<{ ok: boolean; stats?: { total_processed: number; new_flows_saved: number }; error?: string }>(
+      `/api/analyst-trader/notable-flow/backfill?limit=${limit}`,
+      { method: "POST" },
+    ),
+  getPortfolioSummary: () =>
+    fetchJSON<{ ok: boolean; portfolios: { copy_trader: any; autonomous_ai: any } }>(
+      "/api/analyst-trader/portfolio",
+    ),
+  getPortfolioHoldings: (portfolioId = "autonomous_ai", status?: string) => {
+    const qs = new URLSearchParams();
+    qs.set("portfolio_id", portfolioId);
+    if (status) qs.set("status", status);
+    return fetchJSON<{ ok: boolean; holdings: any[]; count: number }>(
+      `/api/analyst-trader/portfolio-holdings?${qs.toString()}`,
+    );
+  },
+  getRecordedStrategies: () =>
+    fetchJSON<{ ok: boolean; strategies: any[]; count: number; statistics: any }>(
+      "/api/analyst-trader/strategies",
+    ),
 };
 
 /** Identity payload returned by ``GET /api/auth/me`` (Phase 7).

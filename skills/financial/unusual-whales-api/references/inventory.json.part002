@@ -1,0 +1,1678 @@
+this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Commodity Series",
+        "tags": [
+          "commodities"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/companies/listings",
+      "method": "GET",
+      "path": "/api/companies/listings",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** All US-traded securities, optionally filtered to delisted as of a given date.",
+        "operationId": "PublicApi.IntelController.listings",
+        "parameters": [
+          {
+            "description": "",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "active",
+              "enum": [
+                "active",
+                "delisted"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Only used when status=delisted. ISO date.",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "date": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "listings": {
+                          "items": {
+                            "properties": {
+                              "asset_type": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "delisting_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exchange": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "ipo_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "name": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "status": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "ticker": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "title": "Listing",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "title": "Listings Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Listings"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Active or Delisted Securities",
+        "tags": [
+          "intel"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/companies/{ticker}/dividends",
+      "method": "GET",
+      "path": "/api/companies/{ticker}/dividends",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Historical dividend events for a ticker (ex-date, declaration, record, payment, amount).",
+        "operationId": "PublicApi.CompaniesController.dividends",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "dividends": {
+                          "items": {
+                            "properties": {
+                              "amount": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "declaration_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "ex_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "payment_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "record_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "title": "Dividend Event",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ticker": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "title": "Dividends Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Dividends"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Company Dividends",
+        "tags": [
+          "companies"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/companies/{ticker}/earnings-estimates",
+      "method": "GET",
+      "path": "/api/companies/{ticker}/earnings-estimates",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Analyst-driven forward earnings estimates by quarter/year.",
+        "operationId": "PublicApi.CompaniesController.earnings_estimates",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "estimates": {
+                          "items": {
+                            "properties": {
+                              "date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "eps_estimate_analyst_count": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "eps_estimate_average": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "eps_estimate_high": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "eps_estimate_low": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "horizon": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "revenue_estimate_analyst_count": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "revenue_estimate_average": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "revenue_estimate_high": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "revenue_estimate_low": {
+                                "nullable": true,
+                                "type": "number"
+                              }
+                            },
+                            "title": "Earnings Estimate",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ticker": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "title": "Earnings Estimates Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Earnings Estimates"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Forward Earnings Estimates",
+        "tags": [
+          "companies"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/companies/{ticker}/profile",
+      "method": "GET",
+      "path": "/api/companies/{ticker}/profile",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Returns a normalized company profile (sector, industry, description, market cap, P/E, dividend yield, etc.).",
+        "operationId": "PublicApi.CompaniesController.profile",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "analyst_target_price": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "asset_type": {
+                          "example": "Common Stock",
+                          "type": "string"
+                        },
+                        "beta": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "cik": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "country": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "currency": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "description": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "dividend_yield": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "ebitda": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "eps": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "exchange": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "industry": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "market_cap": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "name": {
+                          "example": "Apple Inc",
+                          "type": "string"
+                        },
+                        "pe_ratio": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "peg_ratio": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "sector": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "shares_outstanding": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "ticker": {
+                          "example": "AAPL",
+                          "type": "string"
+                        },
+                        "week_52_high": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "week_52_low": {
+                          "nullable": true,
+                          "type": "number"
+                        }
+                      },
+                      "title": "Company Profile",
+                      "type": "object"
+                    }
+                  },
+                  "title": "Company Profile Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Company Profile"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Company Profile",
+        "tags": [
+          "companies"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/companies/{ticker}/splits",
+      "method": "GET",
+      "path": "/api/companies/{ticker}/splits",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Historical stock split events for a ticker.",
+        "operationId": "PublicApi.CompaniesController.splits",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "splits": {
+                          "items": {
+                            "properties": {
+                              "effective_date": {
+                                "format": "date",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "split_factor": {
+                                "nullable": true,
+                                "type": "number"
+                              }
+                            },
+                            "title": "Stock Split Event",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ticker": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "title": "Splits Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Splits"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path"

@@ -1,0 +1,1887 @@
+          "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum implied volatility percentage.",
+            "example": "0.19",
+            "in": "query",
+            "name": "min_iv_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum implied volatility percentage.",
+            "example": "0.45",
+            "in": "query",
+            "name": "max_iv_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum delta. Acceptable range: -1.00 to +1.00.",
+            "example": "-0.50",
+            "in": "query",
+            "name": "min_delta",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum delta. Acceptable range: -1.00 to +1.00.",
+            "example": "0.80",
+            "in": "query",
+            "name": "max_delta",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum gamma. Acceptable range: 0.00 to +inf.",
+            "example": "0.01",
+            "in": "query",
+            "name": "min_gamma",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum gamma. Acceptable range: 0.00 to +inf.",
+            "example": "0.15",
+            "in": "query",
+            "name": "max_gamma",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum theta. Acceptable range: -inf to 0.00.",
+            "example": "-0.10",
+            "in": "query",
+            "name": "min_theta",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum theta. Acceptable range: -inf to 0.00.",
+            "example": "-0.01",
+            "in": "query",
+            "name": "max_theta",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum vega. Acceptable range: 0.00 to +inf.",
+            "example": "0.05",
+            "in": "query",
+            "name": "min_vega",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum vega. Acceptable range: 0.00 to +inf.",
+            "example": "0.25",
+            "in": "query",
+            "name": "max_vega",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum return on capital percentage (ROC).",
+            "example": "0.19",
+            "in": "query",
+            "name": "min_return_on_capital_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum return on capital percentage (ROC).",
+            "example": "0.45",
+            "in": "query",
+            "name": "max_return_on_capital_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum open interest change percentage. Acceptable range: -1.00 to +inf.",
+            "example": "-0.25",
+            "in": "query",
+            "name": "min_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum open interest change percentage. Acceptable range: -1.00 to +inf.",
+            "example": "0.50",
+            "in": "query",
+            "name": "max_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum open interest change as an absolute change.",
+            "example": "-1000",
+            "in": "query",
+            "name": "min_oi_change",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum open interest change as an absolute change.",
+            "example": "5000",
+            "in": "query",
+            "name": "max_oi_change",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum ratio of contract volume to total option volume of the underlying. Acceptable range: 0.00 to 1.00.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_volume_ticker_vol_ratio",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of contract volume to total option volume of the underlying. Acceptable range: 0.00 to 1.00.",
+            "example": "0.85",
+            "in": "query",
+            "name": "max_volume_ticker_vol_ratio",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum sweep volume ratio. Acceptable range: 0.00 to 1.00.",
+            "example": "0.15",
+            "in": "query",
+            "name": "min_sweep_volume_ratio",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum sweep volume ratio. Acceptable range: 0.00 to 1.00.",
+            "example": "0.75",
+            "in": "query",
+            "name": "max_sweep_volume_ratio",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum percentage change of the current price from todays low. Acceptable range: -1.00 to +inf.",
+            "example": "0.19",
+            "in": "query",
+            "name": "min_from_low_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum percentage change of the current price from todays low. Acceptable range: -1.00 to +inf.",
+            "example": "0.45",
+            "in": "query",
+            "name": "max_from_low_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum percentage change of the current price from todays high. Acceptable range: -1.00 to +inf.",
+            "example": "0.19",
+            "in": "query",
+            "name": "min_from_high_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum percentage change of the current price from todays high. Acceptable range: -1.00 to +inf.",
+            "example": "0.45",
+            "in": "query",
+            "name": "max_from_high_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_earnings_dte",
+            "required": false,
+            "schema": {
+              "description": "The minimum days until the next earnings report.",
+              "example": 5,
+              "title": "Min Earnings DTE",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_earnings_dte",
+            "required": false,
+            "schema": {
+              "description": "The maximum days until the next earnings report.",
+              "example": 30,
+              "title": "Max Earnings DTE",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_days_between_expiry_and_earnings",
+            "required": false,
+            "schema": {
+              "description": "Minimum value of (contract_expiry_date - underlying_next_earnings_date) in days. Negative = contract expires BEFORE earnings; zero = same day; positive = AFTER earnings. Use together with `max_days_between_expiry_and_earnings` to target a window around the next earnings announcement. Examples: to exclude contracts that expire after the next earnings, set `max_days_between_expiry_and_earnings=-1`. To target contracts that expire the same week as (and after) earnings, set `min_days_between_expiry_and_earnings=1&max_days_between_expiry_and_earnings=6`. Contracts whose underlying has no known next earnings date are excluded whenever this filter is used.",
+              "example": 1,
+              "title": "MinDaysBetweenExpiryAndEarnings",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_days_between_expiry_and_earnings",
+            "required": false,
+            "schema": {
+              "description": "Maximum value of (contract_expiry_date - underlying_next_earnings_date) in days. Negative = contract expires BEFORE earnings; zero = same day; positive = AFTER earnings. Use together with `min_days_between_expiry_and_earnings` to target a window around the next earnings announcement. Examples: to exclude contracts that expire after the next earnings, set `max_days_between_expiry_and_earnings=-1`. To target contracts that expire the same week as (and after) earnings, set `min_days_between_expiry_and_earnings=1&max_days_between_expiry_and_earnings=6`. Contracts whose underlying has no known next earnings date are excluded whenever this filter is used.",
+              "example": 6,
+              "title": "MaxDaysBetweenExpiryAndEarnings",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum number of transactions.",
+            "example": "10",
+            "in": "query",
+            "name": "min_transactions",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of transactions.",
+            "example": "500",
+            "in": "query",
+            "name": "max_transactions",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum contract price (not underlying price).",
+            "example": "1.50",
+            "in": "query",
+            "name": "min_close",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum contract price (not underlying price).",
+            "example": "25.00",
+            "in": "query",
+            "name": "max_close",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "description": "The field to order by.",
+              "enum": [
+                "bid_ask_vol",
+                "bull_bear_vol",
+                "contract_pricing",
+                "daily_perc_change",
+                "diff",
+                "dte",
+                "earnings",
+                "expires",
+                "expiry",
+                "floor_volume",
+                "floor_volume_ratio",
+                "from_high",
+                "from_low",
+                "iv",
+                "multileg_volume",
+                "open_interest",
+                "premium",
+                "spread",
+                "stock_price",
+                "tape_time",
+                "ticker",
+                "total_multileg_volume_ratio",
+                "trades",
+                "volume",
+                "volume_oi_ratio",
+                "volume_ticker_vol_ratio"
+              ],
+              "example": "volume",
+              "title": "Screener contract order by field",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order_direction",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "description": "Whether to sort descending or ascending. Descending by default.",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "example": "asc",
+              "title": "OrderDirection",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "How many items to return. Default: 50. Max: 250. Min: 1.",
+              "example": 10,
+              "maximum": 250,
+              "minimum": 1,
+              "title": "Default 50, Max 250 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+              "example": "2024-01-18",
+              "title": "Optional Market Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return only new option contracts",
+            "example": "true",
+            "in": "query",
+            "name": "is_new",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Return only monthly option expirations",
+            "example": "true",
+            "in": "query",
+            "name": "opex_only",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "example": {
+                    "data": [
+                      {
+                        "ask_side_volume": 119403,
+                        "avg_price": "1.0465802437910297887119234370",
+                        "bid_side_volume": 122789,
+                        "chain_prev_close": "1.29",
+                        "close": "0.03",
+                        "cross_volume": 0,
+                        "er_time": "unknown",
+                        "expiry": "2023-09-08",
+                        "floor_volume": 142,
+                        "high": "2.95",
+                        "last_fill": "2023-09-08 17:45:32+00:00",
+                        "low": "0.02",
+                        "mid_volume": 22707,
+                        "multileg_volume": 7486,
+                        "next_earnings_date": "2023-10-18",
+                        "no_side_volume": 0,
+                        "open": "0.92",
+                        "open_interest": 18680,
+                        "option_symbol": "TSLA230908C00255000",
+                        "option_type": "call",
+                        "premium": "27723806.00",
+                        "sector": "Consumer Cyclical",
+                        "stock_multi_leg_volume": 52,
+                        "stock_price": "247.94",
+                        "strike": "255.0",
+                        "sweep_volume": 18260,
+                        "ticker_vol": 2546773,
+                        "total_ask_changes": 44343,
+                        "total_bid_changes": 43939,
+                        "trades": 39690,
+                        "volume": 264899
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "ask_side_volume": {
+                      "description": "The amount of volume that happened on the ask side.\n\nAsk side is defined as (ask + bid) / 2 < fill price.\n",
+                      "example": 119403,
+                      "title": "Option Contract Ask Volume",
+                      "type": "integer"
+                    },
+                    "avg_price": {
+                      "description": "The volume weighted average fill price of the contract.",
+                      "example": "1.0465802437910297887119234370",
+                      "title": "Option Contract Avg Price",
+                      "type": "string"
+                    },
+                    "bid_side_volume": {
+                      "description": "The amount of volume that happened on the bid side.\n\nBid side is defined as (ask + bid) / 2 > fill price.\n",
+                      "example": 122789,
+                      "title": "Option Contract Bid Volume",
+                      "type": "integer"
+                    },
+                    "chain_prev_close": {
+                      "description": "The previous trading day's contract price.",
+                      "example": "1.29",
+                      "title": "Option Contract Previous Close Price",
+                      "type": "string"
+                    },
+                    "close": {
+                      "description": "The last fill on the contract.",
+                      "example": "0.03",
+                      "title": "Option Contract Close",
+                      "type": "string"
+                    },
+                    "cross_volume": {
+                      "description": "The amount of cross volume.\nCross volume consists of all transaction that have the cross trade code.\n",
+                      "example": 0,
+                      "title": "Option Contract Cross Volume",
+                      "type": "integer"
+                    },
+                    "er_time": {
+                      "description": "The time when the earnings will be released.",
+                      "enum": [
+                        "unknown",
+                        "afterhours",
+                        "premarket"
+                      ],
+                      "example": "premarket",
+                      "title": "Stock Earnings time",
+                      "type": "string"
+                    },
+                    "expiry": {
+                      "description": "The contract expiry date in ISO format.",
+                      "example": "2023-12-22",
+                      "title": "Option Contract Expiry",
+                      "type": "string"
+                    },
+                    "floor_volume": {
+                      "description": "The amount of floor volume.\nFloor volume consists of all transaction that have the floor trade code.\n",
+                      "example": 142,
+                      "title": "Option Contract Floor Volume",
+                      "type": "integer"
+                    },
+                    "high": {
+                      "description": "The highest fill on that contract.",
+                      "example": "2.95",
+                      "title": "Option Contract High",
+                      "type": "string"
+                    },
+                    "last_fill": {
+                      "description": "The last time there was a transaction for the given contract as UTC timestamp.",
+                      "example": "2023-09-08 17:45:32+00:00",
+                      "title": "Option Contract Last Transaction Time",
+                      "type": "string"
+                    },
+                    "low": {
+                      "description": "The lowest fill on that contract.",
+                      "example": "0.02",
+                      "title": "Option Contract Low",
+                      "type": "string"
+                    },
+                    "mid_volume": {
+                      "description": "The amount of volume that happened in the middle of the ask and bid.\n\nMid is defined as (ask + bid) / 2 == fill price.\n",
+                      "example": 22707,
+                      "title": "Option Contract Mid Volume",
+                      "type": "integer"
+                    },
+                    "multileg_volume": {
+                      "description": "The amount of volume that happened as part of a multileg trade with another contract.\nThis can be spreads/rolls/condors/butterflies and more.\n",
+                      "example": 7486,
+                      "title": "Option Contract Multi Leg Volume",
+                      "type": "integer"
+                    },
+                    "next_earnings_date": {
+                      "description": "The next earnings date of the ticker. Null if either unknown as of now or if the ticker does not have any earnings such as an ETF",
+                      "example": "2023-10-26",
+                      "format": "date",
+                      "title": "Stock Next Earnings Date",
+                      "type": "string"
+                    },
+                    "no_side_volume": {
+                      "description": "The amount of volume that happened on no identifiable side.\nThis can be late, out of sequence and/or cross transactions.\n",
+                      "example": 0,
+                      "title": "Option Contract No Side Volume",
+                      "type": "integer"
+                    },
+                    "open": {
+                      "description": "The first fill on that contract.",
+                      "example": "0.92",
+                      "title": "Option Contract Open",
+                      "type": "string"
+                    },
+                    "open_interest": {
+                      "description": "The open interest for the contract.",
+                      "example": 18680,
+                      "title": "Option Contract Open interest",
+                      "type": "integer"
+                    },
+                    "option_symbol": {
+                      "description": "The option symbol of the contract.\n\nYou can use the following regex to extract underlying ticker, option type, expiry & strike:\n`^(?<symbol>[\\w]*)(?<expiry>(\\d{2})(\\d{2})(\\d{2}))(?<type>[PC])(?<strike>\\d{8})$`\n\nKeep in mind that the strike needs to be multiplied by 1,000.\n",
+                      "title": "Option Contract Symbol",
+                      "type": "string"
+                    },
+                    "option_type": {
+                      "description": "The option type of the contract.",
+                      "enum": [
+                        "call",
+                        "put"
+                      ],
+                      "example": "call",
+                      "title": "Option Contract Option Type",
+                      "type": "string"
+                    },
+                    "premium": {
+                      "description": "The total option premium.",
+                      "example": "27723806.00",
+                      "title": "Option Contract Premium",
+                      "type": "string"
+                    },
+                    "sector": {
+                      "description": "The financial sector of the ticker. Empty if unknown or not applicable such as ETF/Index.",
+                      "enum": [
+                        "Basic Materials",
+                        "Communication Services",
+                        "Consumer Cyclical",
+                        "Consumer Defensive",
+                        "Energy",
+                        "Financial Services",
+                        "Healthcare",
+                        "Industrials",
+                        "Real Estate",
+                        "Technology",
+                        "Utilities"
+                      ],
+                      "example": "Technology",
+                      "title": "Market General Sector",
+                      "type": "string"
+                    },
+                    "stock_multi_leg_volume": {
+                      "description": "The amount of volume that happened as part of a stock transaction and possibly other option contracts.\nThis can be covered calls and more.\n",
+                      "example": 52,
+                      "title": "Option Contract Stock Multi Leg Volume",
+                      "type": "integer"
+                    },
+                    "stock_price": {
+                      "description": "The close stock price of the ticker.",
+                      "example": "182.91",
+                      "title": "Stock Close Price",
+                      "type": "string"
+                    },
+                    "strike": {
+                      "description": "The contract strike.",
+                      "example": "375",
+                      "title": "Option Contract Strike",
+                      "type": "string"
+                    },
+                    "sweep_volume": {
+                      "description": "The amount of sweep volume.\nSweep volume consists of all transaction that have the sweep trade code.\n",
+                      "example": 18260,
+                      "title": "Option Contract Sweep Volume",
+                      "type": "integer"
+                    },
+                    "ticker_vol": {
+                      "description": "The total amount of options volume for the given ticker.",
+                      "title": "Stock Total Volume",
+                      "type": "integer"
+                    },
+                    "total_ask_changes": {
+                      "description": "The total count of changes to the NBBO ask during that day's trading session.",
+                      "example": 165,
+                      "title": "Option Contract Total Ask Changes",
+                      "type": "integer"
+                    },
+                    "total_bid_changes": {
+                      "description": "The total count of changes to the NBBO bid during that day's trading session.",
+                      "example": 28,
+                      "title": "Option Contract Total Bid Changes",
+                      "type": "integer"
+                    },
+                    "trades": {
+                      "description": "The amount of transaction for this contract.",
+                      "example": 39690,
+                      "title": "Option Contract Total Trades Count",
+                      "type": "integer"
+                    },
+                    "volume": {
+                      "description": "The contract volume.",
+                      "example": 264899,
+                      "title": "Option Contract Volume",
+                      "type": "integer"
+                    }
+                  },
+                  "title": "Option Contract Screener response.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Hottest Chains",
+        "tags": [
+          "screener"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/screener/stocks",
+      "method": "GET",
+      "path": "/api/screener/stocks",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "A complet stock market screener which can be used to screen for etfs in-/outflow,\ntickers by various volatility metrics such as steepness, IV rank, realized volatility, expected moves,\ncompanies where insiders bought shares over 3m, 6m,\ntickers by various option metrics (greek flow, options premium/volume, net call premium,\namount of new chains, total open interest, flex open interest, etc.) and live stock quotes,\nprices and volume.\n\nThe date defaults to the current or last market day. Earlier dates return stored snapshots as of regular market close.\nLive bid and ask quotes are null for historical snapshots.\n\nRows default to combined call and put volume in descending order.\n\nDecimal values are returned as strings. Fractional returns use 0.05 for 5 percent.\nUnavailable values are null.\n\n## Query language examples\n\nPass an expression in `query`. It is combined with the other filters. Get the grammar and current field reference from `/api/screener/stocks/dsl`.\n\nVolume based gamma exposure at least twice the magnitude of OI based gamma exposure:\n```text\nwhere abs(gex_gamma_per_one_percent_move_oi) > 0 and abs(gex_gamma_per_one_percent_move_vol) >= abs(gex_gamma_per_one_percent_move_oi) * 2\n```\n\nPrice at least two ATRs above the 20 day EMA:\n```text\nwhere atr_14 > 0 and price - ema_20 >= atr_14 * 2\n```\n\nCall volume at least twice put volume:\n```text\nwhere put_volume > 0 and call_volume >= put_volume * 2\n```\n\nCall to put volume ratio at least 10 or at most 0.1:\n```text\nwhere call_volume > 0 and put_volume > 0 and (call_volume / put_volume >= 10 or call_volume / put_volume <= 0.1)\n```\n\nRatio of 7 day IV to 30 day IV at least 1.5 or at most 1 / 1.5:\n```text\nwhere iv7d > 0 and iv30d > 0 and (iv7d / iv30d >= 1.5 or iv7d / iv30d <= 1 / 1.5)\n```\n\nPrice in the top 20% of its 52 week range on a logarithmic scale:\n```text\nwhere week_52_low > 0 and week_52_high > week_52_low and price > 0 and price <= week_52_high and log(price / week_52_low) / log(week_52_high / week_52_low) >= 0.8\n```\n\nThe logarithmic position is 0 at the low and 1 at the high. Equal steps represent equal proportional price moves.\n\nAbsolute log return since the previous close at least two approximate daily standard deviations using 30 day IV:\n```text\nwhere change > -1 and iv30d > 0 and abs(ln(1 + change)) >= 2 * iv30d * sqrt(1 / 251)\n```\n\nThe same daily return screen using 7 day IV:\n```text\nwhere change > -1 and iv7d > 0 and abs(ln(1 + change)) >= 2 * iv7d * sqrt(1 / 251)\n```\n\nDistance from the 20 day EMA at least the 7 day expected move:\n```text\nwhere implied_move_7 > 0 and abs(price - ema_20) >= implied_move_7\n```\n\nMomentum excluding the latest month above 10%, with RSI at or below 30:\n```text\nwhere one_year_close > 0 and ((one_month_close / one_year_close) - 1) > 0.10 and rsi_14 <= 30\n```\n\nThis combines a Gray and Vogel inspired momentum measure with an RSI pullback condition. See [How to Measure Momentum](https://alphaarchitect.com/how-to-measure-momentum/) for background.\n`one_month_close` and `one_year_close` are the latest regular closes on or before one calendar month and one calendar year before the row date. The formula measures the return between those reference closes.\nThe `one_year_close > 0` guard keeps the denominator positive. This filter is not the full Quantitative Momentum strategy.\n\n## Gamma-dominance flips\n\nAggregate gamma provides a view into trader sentiment over short timeframes because near-the-money gamma tends to be highest in the closest expiries.\n\nTo screen for bearish trade ideas based on a flip from call gamma-dominance to put gamma-dominance, use these query parameters:\n\n```json\n{\n  \"min_open_interest\": 50000,\n  \"max_gex_perc_change\": -1,\n  \"max_gex_net_change\": 0\n}\n```\n\nEquivalent `query` expression:\n\n```text\nwhere open_interest >= 50000 and gex_perc_change <= -1 and gex_net_change <= 0\n```\n\n- A minimum total open interest of 50,000 screens for relatively active names, using open interest as a liquidity proxy.\n- `gex_perc_change` is `(current net gamma - previous net gamma) / previous net gamma`. A value below -1 indicates a sign change in either direction, not necessarily a fall in net gamma. `max_gex_net_change: 0` selects the downward direction.\n- `gex_ratio` is absolute put gamma divided by absolute call gamma. A downward net gamma cross corresponds to this ratio crossing upward through 1 into put gamma-dominance, when call gamma is nonzero.\n\nTo screen for bullish trade ideas based on the opposite flip, from put gamma-dominance to call gamma-dominance, use these query parameters:\n\n```json\n{\n  \"min_open_interest\": 50000,\n  \"max_gex_perc_change\": -1,\n  \"min_gex_net_change\": 0\n}\n```\n\nEquivalent `query` expression:\n\n```text\nwhere open_interest >= 50000 and gex_perc_change <= -1 and gex_net_change >= 0\n```\n\n- The open interest and percentage-change thresholds are unchanged because the sign-change test is the same in both directions.\n- `min_gex_net_change: 0` selects the upward direction. Net gamma rising through zero corresponds to `gex_ratio` crossing downward through 1 into call gamma-dominance.\n\nThese thresholds are inclusive. A `gex_perc_change` of exactly -1 means net gamma reached zero, so both screens also include that boundary, where `gex_ratio` is 1 when defined. A strict flip has `gex_perc_change < -1`. Percentage change is null when previous net gamma is zero, and the ratio is null when call gamma is zero.\n",
+        "operationId": "PublicApi.ScreenerController.stock_screener",
+        "parameters": [
+          {
+            "description": "Query language expression combined with the other filters. Get supported fields, operators, and scopes from /api/screener/stocks/dsl.",
+            "example": "where price * 0.75 <= week_52_low and insider_buy_volume12m >= 10000 and insider_sell_volume12m <= 1000 and marketcap >= 1B",
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "ticker",
+            "required": false,
+            "schema": {
+              "description": "A comma separated list of tickers. To exclude certain tickers prefix the first ticker with a `-`.",
+              "example": "AAPL,INTC",
+              "title": "Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum full rows to return. Defaults to 50 and is capped at 500. Smaller explicit limits are honored.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Zero-based page number. The number of skipped rows is offset multiplied by the effective limit.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 500,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "issue_types[]",
+            "required": false,
+            "schema": {
+              "description": "An array of 1 or more issue types.",
+              "example": [
+                "Common Stock",
+                "Index"
+              ],
+              "items": {
+                "description": "A singular issue type.",
+                "enum": [
+                  "Common Stock",
+                  "ETF",
+                  "Index",
+                  "ADR"
+                ],
+                "example": "Common Stock",
+                "title": "Single issue type",
+                "type": "string"
+              },
+              "title": "Issue types",
+              "type": "array"
+            }
+          },
+          {
+            "description": "The minimum % change to the previous trading day.",
+            "example": "-0.45",
+            "in": "query",
+            "name": "min_change",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum % change to the previous trading day.",
+            "example": "0.2",
+            "in": "query",
+            "name": "max_change",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum stock price.",
+            "example": "5.23",
+            "in": "query",
+            "name": "min_underlying_price",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum stock price.",
+            "example": "10.53",
+            "in": "query",
+            "name": "max_underlying_price",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Boolean whether to only include stocks which are part of the S&P 500. Setting this to false has no effect.",
+            "in": "query",
+            "name": "is_s_p_500",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Boolean wheter to only include stocks which pay dividends. Setting this to false has no effect.",
+            "in": "query",
+            "name": "has_dividends",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "sectors[]",
+            "required": false,
+            "schema": {
+              "description": "An array of 1 or more sectors.",
+              "example": [
+                "Consumer Cyclical",
+                "Technology",
+                "Utilities"
+              ],
+              "items": {
+                "description": "A singular sector.",
+                "enum": [
+                  "Basic Materials",
+                  "Communication Services",
+                  "Consumer Cyclical",
+                  "Consumer Defensive",
+                  "Energy",
+                  "Financial Services",
+                  "Healthcare",
+                  "Industrials",
+                  "Real Estate",
+                  "Technology",
+                  "Utilities"
+                ],
+                "example": "Real Estate",
+                "title": "Single sector",
+                "type": "string"
+              },
+              "title": "Sectors",
+              "type": "array"
+            }
+          },
+          {
+            "description": "The minimum marketcap.",
+            "example": "1000000",
+            "in": "query",
+            "name": "min_marketcap",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum marketcap.",
+            "example": "250000000",
+            "in": "query",
+            "name": "max_marketcap",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum ratio of options volume vs 3 day avg options volume.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_perc_3_day_total",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of options volume vs 3 day avg options volume.",
+            "example": "1.72",
+            "in": "query",
+            "name": "max_perc_3_day_total",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum ratio of call options volume vs 3 day avg call options volume.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_perc_3_day_call",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of call options volume vs 3 day avg call options volume.",
+            "example": "1.72",
+            "in": "query",
+            "name": "max_perc_3_day_call",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum ratio of put options volume vs 3 day avg put options volume.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_perc_3_day_put",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of put options volume vs 3 day avg put options volume.",
+            "example": "1.72",
+            "in": "query",
+            "name": "max_perc_3_day_put",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum ratio of options volume vs 30 day avg options volume.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_perc_30_day_total",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of options volume vs 30 day avg options volume.",
+            "example": "1.72",
+            "in": "query",
+            "name": "max_perc_30_day_total",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum ratio of call options volume vs 30 day avg call options volume.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_perc_30_day_call",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of call options volume vs 30 day avg call options volume.",
+            "example": "1.72",
+            "in": "query",
+            "name": "max_perc_30_day_call",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum ratio of put options volume vs 30 day avg put options volume.",
+            "example": "0.25",
+            "in": "query",
+            "name": "min_perc_30_day_put",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum ratio of put options volume vs 30 day avg put options volume.",
+            "example": "1.72",
+            "in": "query",
+            "name": "max_perc_30_day_put",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum open interest change compared to the previous day.",
+            "example": "-0.45",
+            "in": "query",
+            "name": "min_total_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum open interest change compared to the previous day.",
+            "example": "0.2",
+            "in": "query",
+            "name": "max_total_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum open interest change of call contracts compared to the previous day.",
+            "example": "-0.45",
+            "in": "query",
+            "name": "min_call_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum open interest change of call contracts compared to the previous day.",
+            "example": "0.2",
+            "in": "query",
+            "name": "max_call_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum open interest change of put contracts compared to the previous day.",
+            "example": "-0.45",
+            "in": "query",
+            "name": "min_put_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum open interest change of put contracts compared to the previous day.",
+            "example": "0.2",
+            "in": "query",
+            "name": "max_put_oi_change_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum implied move.",
+            "example": "0.45",
+            "in": "query",
+            "name": "min_implied_move",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum implied move.",
+            "example": "1.4",
+            "in": "query",
+            "name": "max_implied_move",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum implied move perc.",
+            "example": "0.15",
+            "in": "query",
+            "name": "min_implied_move_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum implied move perc.",
+            "example": "0.6",
+            "in": "query",
+            "name": "max_implied_move_perc",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum volatility.",
+            "example": "0.15",
+            "in": "query",
+            "name": "min_volatility",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum volatility.",
+            "example": "0.6",
+            "in": "query",
+            "name": "max_volatility",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum iv rank.",
+            "example": "0.15",
+            "in": "query",
+            "name": "min_iv_rank",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum iv rank.",
+            "example": "22.6",
+            "in": "query",
+            "name": "max_iv_rank",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum options volume.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_volume",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum options volume.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_volume",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum call options volume.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_call_volume",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum call options volume.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_call_volume",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum put options volume.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_put_volume",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum put options volume.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_put_volume",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum options premium.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum options premium.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum call options premium.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_call_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum call options premium.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_call_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum put options premium.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_put_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum put options premium.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_put_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum net options premium.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_net_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum net options premium.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_net_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum net call options premium.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_net_call_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum net call options premium.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_net_call_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum net put options premium.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_net_put_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum net put options premium.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_net_put_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum open interest.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_oi",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum open interest.",
+            "example": "35000",
+            "in": "query",
+            "name": "max_oi",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The minimum open interest vs options volume ratio.",
+            "example": "0.5",
+            "in": "query",
+            "name": "min_oi_vs_vol",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum open interest vs options volume ratio.",
+            "example": "1.5",
+            "in": "query",
+            "name": "max_oi_vs_vol",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum put to call ratio.",
+            "example": "0.5",
+            "in": "query",
+            "name": "min_put_call_ratio",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum put to call ratio.",
+            "example": "1.5",
+            "in": "query",
+            "name": "max_put_call_ratio",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Sort by a screener field, such as ticker, marketcap, stock_volume, z_score, or steepness_180_30. The default volume is combined call and put contract volume. Quote fields support sorting only for current data. The added is_index and missing_periscope fields are not sortable.",
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "volume",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order_direction",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "description": "Whether to sort descending or ascending. Descending by default.",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "example": "asc",
+              "title": "OrderDirection",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The minimum stock volume vs average 30 day volume.",
+            "example": "1.2",
+            "in": "query",
+            "name": "min_stock_volume_vs_avg30_volume",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum stock volume vs average 30 day volume.",
+            "example": "10.0",
+            "in": "query",
+            "name": "max_avg30_volume",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+              "example": "2024-01-18",
+              "title": "Optional Market Date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Matching stock screener rows. Decimal values are JSON strings.",
+                  "example": {
+                    "data": [
+                      {
+                        "ask": "212.37",
+                        "ask_quantity": 200,
+                        "avg30_volume": "130548356.35",
+                        "avg_30_day_call_oi": "8051988.5",
+                        "avg_30_day_call_volume": "2249702.1667",
+                        "avg_30_day_put_oi": "6761847.1333",
+                        "avg_30_day_put_volume": "1233488.0333",
+                        "avg_3_day_call_volume": "1827235",
+                        "avg_3_day_put_volume": "1035420.3333",
+                        "avg_7_day_call_volume": "2072806.2857",
+                        "avg_7_day_put_volume": "1152390",
+                        "bearish_premium": "251292082.00",
+                        "bid": "212.22",
+                        "bid_quantity": 1,
+                        "bullish_premium": "263159651.00",
+                        "call_open_interest": 8264707,
+                        "call_premium": "386488449.00",
+                        "call_premium_mid_side": "39629161.00",
+                        "call_volume": 1154879,
+                        "call_volume_ask_side": 515816,
+                        "call_volume_bid_side": 559199,
+                        "call_volume_mid_side": 79840,
+                        "close": "212.32",
+                        "cum_dir_delta": -677914,
+                        "cum_dir_gamma": -259659,
+                        "cum_dir_vega": -743026,
+                        "date": "2026-09-15",
+                        "dividend_yield": "0.0024491333835719668425018839",
+                        "earnings_perc": "0.0126872078603453209958981208",
+                        "eps_growth_12q": "7.88000000000000017760",
+                        "eps_growth_16q": "68.37500000000000138750",
+                        "eps_growth_4q": "1.24242424242424242424",
+                        "eps_growth_8q": "2.41538461538461538462",
+                        "er_time": "unknown",
+                        "etf_share_flow": null,
+                        "five_year_perc": "8.504028648164726947179946285",
+                        "full_name": null,
+                        "gex_charm_per_one_percent_move_dir": "-4173772259.32",
+                        "gex_charm_per_one_percent_move_oi": "-178109539132.43",
+                        "gex_charm_per_one_percent_move_vol": "-86622472511.05",
+                        "gex_delta_per_one_percent_move_oi": "91551310557.8",
+                        "gex_delta_per_one_percent_move_vol": "6933889994.39",
+                        "gex_gamma_per_one_percent_move_dir": "60387043.67",
+                        "gex_gamma_per_one_percent_move_oi": "614273906.59",
+                        "gex_gamma_per_one_percent_move_vol": "1162736871.6",
+                        "gex_net_change": "1142737.0464",
+                        "gex_perc_change": "2.5576649791004452",
+                        "gex_ratio": "0.70511582545094547148",
+                        "gex_vanna_per_one_percent_move_dir": "1351888.72",
+                        "gex_vanna_per_one_percent_move_oi": "181215271.33",
+                        "gex_vanna_per_one_percent_move_vol": "23383778.47",
+                        "has_options": true,
+                        "high": "212.68",
+                        "implied_move": "13.995",
+                        "implied_move_1": "3.074",
+                        "implied_move_14": "9.284",
+                        "implied_move_180": "38.44",
+                        "implied_move_30": "13.995",
+                        "implied_move_365": "55.601",
+                        "implied_move_5": "5.711",
+                        "implied_move_60": "21.765",
+                        "implied_move_7": "6.568",
+                        "implied_move_90": "26.744",
+                        "implied_move_perc": "0.066",
+                        "implied_move_perc_1": "0.014",
+                        "implied_move_perc_14": "0.044",
+                        "implied_move_perc_180": "0.181",
+                        "implied_move_perc_30": "0.066",
+                        "implied_move_perc_365": "0.262",
+                        "implied_move_perc_5": "0.027",
+                        "implied_move_perc_60": "0.103",
+                        "implied_move_perc_7": "0.031",
+                        "implied_move_perc_90": "0.126",
+                        "industry_type": "Semiconductors",
+                        "insider_buy_volume_12m": 0,
+                        "insider_buy_volume_3m": 0,
+                        "insider_buy_volume_6m": 0,
+                        "insider_sell_volume_12m": 6468150,
+                        "insider_sell_volume_3m": 3755740,
+                        "insider_sell_volume_6m": 4992922,
+                        "intraday_change": "0.0008484962760441218063542943",
+                        "is_index": false,
+                        "issue_type": "Common Stock",
+                        "iv30d": "0.339",
+                        "iv30d_1d": "0.335",
+                        "iv30d_1m": "0.379",
+                        "iv30d_1w": "0.344",
+                        "iv_percentile_1m": "50",
+                        "iv_percentile_1y": "8.4",
+                        "iv_rank": "10.7619",
+                        "iv_rank_1m": "25.5102",
+                        "last_earnings_date": "2026-08-26",
+                        "latest_dividend": "0.25000000000000000000",
+                        "latest_dividend_date": "2026-09-10",
+                        "latest_dividend_payment_date": "2026-10-01",
+                        "low": "212.14",
+                        "marketcap": "5116912000000",
+                        "net_call_premium": "-1688824.00",
+                        "net_premium": "12448069.00",
+                        "net_put_premium": "-14136893.00",
+                        "next_dividend_date": "2026-09-10",
+                        "next_earnings_date": "2026-11-18",
+                        "one_day_perc": "0.0064467197572999620781190747",
+                        "one_month_perc": "-0.0570261147628353171078344289",
+                        "one_week_perc": "-0.0594072564568289549461746334",
+                        "one_year_perc": "0.1944866385372714486638537271",
+                        "open": "212.14",
+                        "prev_call_oi": 8045834,
+                        "prev_call_volume": 2013743,
+                        "prev_close": "210.96",
+                        "prev_put_oi": 7124369,
+                        "prev_put_volume": 1206385,
+                        "put_call_ratio": "0.4763910331731722544093363894",
+                        "put_open_interest": 7246905,
+                        "put_premium": "200197635.00",
+                        "put_premium_mid_side": "21803110.00",
+                        "put_volume": 550174,
+                        "put_volume_ask_side": 255999,
+                        "put_volume_bid_side": 243660,
+                        "put_volume_mid_side": 39512,
+                        "quote_time": 1789515606340,
+                        "realized_volatility": "0.442142",
+                        "relative_volume": "0.6741319344079202572051379182",
+                        "rv_1d_last_12q": "0.69530601632178044935",
+                        "sector": "Technology",
+                        "shares_outstanding": "24100000000",
+                        "shares_outstanding_growth_12q": "-0.02429149797570850202",
+                        "shares_outstanding_growth_4q": "-0.00823045267489711934",
+                        "shares_outstanding_growth_8q": "-0.01752955564614757440",
+                        "short_int": "0",
+                        "six_month_perc": "0.1779195561719833564493758669",
+                        "steepness_180_30": "1.1327433628318584070796460177",
+                        "stock_volume": 88006816,
+                        "three_month_perc": "-0.000611908684396328547893622",
+                        "ticker": "NVDA",
+                        "total_open_interest": 15511612,
+                        "ttm_dividend": "0.52000000000000000000",
+                        "variance_risk_premium": "-0.054142",
+                        "volatility": "0.339",
+                        "volatility_1": "0.406",
+                        "volatility_14": "0.328",
+                        "volatility_180": "0.384",
+                        "volatility_30": "0.339",
+                        "volatility_365": "0.39",
+                        "volatility_5": "0.339",
+                        "volatility_60": "0.374",
+                        "volatility_7": "0.329",
+                        "volatility_90": "0.375",
+                        "week_52_high": "236.54",
+                        "week_52_low": "164.27",
+                        "ytd_perc": "0.1384450402144772117962466488",
+                        "z_score": "0.3012839205652179291530506224"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "data": {
+                      "description": "Rows after filtering, sorting, and pagination. Empty when no rows match.",
+                      "items": {
+                        "properties": {
+                          "adx_14": {
+                            "description": "Average directional index over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                            "format": "double",
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "aroon_14_down": {
+                            "description": "Aroon down over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                            "format": "double",
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "aroon_14_up": {
+                            "description": "Aroon up over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                            "format": "double",
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "ask": {
+                            "description": "Latest best ask price, in the instrument's quoted price units. Null for historical snapshots.",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ask_quantity": {
+                            "description": "Shares available at the latest best ask. Null for historical snapshots.",
+                            "format": "int64",
+                            "nullable": true,
+                            "type": "integer"
+                          },
+                          "atr_14": {
+                            "description": "Average true range over 14 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                            "format": "double",
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "avg30_volume

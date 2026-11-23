@@ -1,0 +1,1765 @@
+     "example": "123.45",
+                      "title": "Insider Premium",
+                      "type": "string"
+                    },
+                    "transactions": {
+                      "description": "The number of transactions of the insider trade.",
+                      "example": 1,
+                      "title": "Insider Transactions",
+                      "type": "integer"
+                    },
+                    "uniq_insiders": {
+                      "description": "The number of unique insiders of the insider trade.",
+                      "example": 1,
+                      "title": "Insider Unique Insiders",
+                      "type": "integer"
+                    },
+                    "volume": {
+                      "description": "The volume of the insider trade.",
+                      "example": 1000,
+                      "title": "Insider Volume",
+                      "type": "integer"
+                    }
+                  },
+                  "title": "Insider Ticker Flow",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "summary": "Ticker Flow",
+        "tags": [
+          "insiders"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/institution/{name}/activity",
+      "method": "GET",
+      "path": "/api/institution/{name}/activity",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "The trading activities for a given institution.\n\nWARNING: Providing partial names e.g. \"VANGUARD\" might lead to unexpected results.\nTo ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.\n\nYou can use endpoint \"api/institutions\" with a partial name like \"VANGUARD\" to get all matching institutions with their CIKs.\n",
+        "operationId": "PublicApi.InstitutionController.activity",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "description": "A large entity that manages funds and investments for others. Queryable by name or cik.",
+              "example": "VANGUARD GROUP INC or 0000102909",
+              "title": "Institution",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "End date to filter institutional reporting data in the format YYYY-MM-DD.\n\nOnly data with dates on or before this date will be returned.\n",
+              "example": "2023-03-31",
+              "format": "date",
+              "title": "Institutional Reporting End Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+              "example": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Default 500 Max 500 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "units",
+              "description": "Optional columns to order the result by per report period end date.",
+              "enum": [
+                "units",
+                "units_change"
+              ],
+              "example": "units",
+              "title": "Institutional Activity Order By",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order_direction",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "description": "Whether to sort descending or ascending. Descending by default.",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "example": "asc",
+              "title": "OrderDirection",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "The trading activities for a given institution.",
+                  "example": {
+                    "data": [
+                      {
+                        "avg_price": "432.31",
+                        "buy_price": null,
+                        "close": "513.23",
+                        "filing_date": "2024-12-23",
+                        "price_on_filing": "510.34",
+                        "price_on_report": "495.95",
+                        "put_call": null,
+                        "report_date": "2024-09-30",
+                        "security_type": "Fund",
+                        "sell_price": null,
+                        "shares_outstanding": "148239423.0",
+                        "ticker": "SPLG",
+                        "units": 5000,
+                        "units_change": -500
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "avg_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Avg Price",
+                      "type": "string"
+                    },
+                    "buy_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Buy Price",
+                      "type": "string"
+                    },
+                    "close": {
+                      "description": "The close stock price of the ticker.",
+                      "example": "182.91",
+                      "title": "Stock Close Price",
+                      "type": "string"
+                    },
+                    "filing_date": {
+                      "description": "An ISO date.",
+                      "example": "2024-01-09",
+                      "title": "General ISO Date",
+                      "type": "string"
+                    },
+                    "price_on_filing": {
+                      "description": "The security price on the filing date.",
+                      "example": "23.49",
+                      "title": "Price On Filing",
+                      "type": "string"
+                    },
+                    "price_on_report": {
+                      "description": "The security price on the report date.",
+                      "example": "23.49",
+                      "title": "Price On Report",
+                      "type": "string"
+                    },
+                    "put_call": {
+                      "description": "Whether the holding is a put or a call (null if neither).",
+                      "example": "put",
+                      "title": "PutCall",
+                      "type": "string"
+                    },
+                    "report_date": {
+                      "description": "An ISO date.",
+                      "example": "2024-01-09",
+                      "title": "General ISO Date",
+                      "type": "string"
+                    },
+                    "security_type": {
+                      "description": "",
+                      "example": "Share",
+                      "title": "Security Type",
+                      "type": "string"
+                    },
+                    "sell_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Sell Price",
+                      "type": "string"
+                    },
+                    "shares_outstanding": {
+                      "description": "Total outstanding shares for the ticker.",
+                      "example": "424295343.0",
+                      "title": "Shares Outstanding",
+                      "type": "string"
+                    },
+                    "ticker": {
+                      "description": "",
+                      "example": "MSFT",
+                      "title": "Ticker Symbol",
+                      "type": "string"
+                    },
+                    "units": {
+                      "description": "",
+                      "example": 4103,
+                      "title": "Units",
+                      "type": "integer"
+                    },
+                    "units_change": {
+                      "description": "The change in units",
+                      "example": -320,
+                      "title": "Units Change",
+                      "type": "integer"
+                    }
+                  },
+                  "title": "Institutional Activity",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Institutional Activity (Deprecated)",
+        "tags": [
+          "institution"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/institution/{name}/activity/v2",
+      "method": "GET",
+      "path": "/api/institution/{name}/activity/v2",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "The trading activities for a given institution.\n\nIf the result contains multiple report periods, it will contain first the latest report period results ordered by the `order` and `order_direction`,\nthen the second latest report period ordered by the `order` and `order_direction` and so on, e.g. first all results for report period 2025-09-30, then\nall results for report period 2025-06-30 ...\n\nPer default the results per report period will be ordered by `units` descending.\n\nIf you provide the same date for `start_date` and `end_date` you will only get the results for filings with that date as the report period end date\ne.g. if you set `start_date` and `end_date` to 2025-09-30 you will only get the results for the report period ending on 2025-09-30.\n\nWARNING: Providing partial names e.g. \"VANGUARD\" might lead to unexpected results.\nTo ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.\n\nYou can use endpoint \"api/institutions\" with a partial name like \"VANGUARD\" to get all matching institutions with their CIKs.\n\nIf you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md\n",
+        "operationId": "PublicApi.InstitutionController.activity_v2",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "description": "A large entity that manages funds and investments for others. Queryable by name or cik.",
+              "example": "VANGUARD GROUP INC or 0000102909",
+              "title": "Institution",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "ticker_symbol",
+            "required": false,
+            "schema": {
+              "description": "A comma separated list of tickers. To exclude certain tickers prefix the first ticker with a `-`.",
+              "example": "AAPL,INTC",
+              "title": "Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "description": "Start date to filter institutional reporting data in the format YYYY-MM-DD.\n\nOnly data with dates on or after this date will be returned.\n",
+              "example": "2023-01-01",
+              "format": "date",
+              "title": "Institutional Reporting Start Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "description": "End date to filter institutional reporting data in the format YYYY-MM-DD.\n\nOnly data with dates on or before this date will be returned.\n",
+              "example": "2023-03-31",
+              "format": "date",
+              "title": "Institutional Reporting End Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+              "example": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Default 500 Max 500 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "units",
+              "description": "Optional columns to order the result by per report period end date.",
+              "enum": [
+                "units",
+                "units_change"
+              ],
+              "example": "units",
+              "title": "Institutional Activity Order By",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order_direction",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "description": "Whether to sort descending or ascending. Descending by default.",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "example": "asc",
+              "title": "OrderDirection",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "The trading activities for a given institution.",
+                  "example": {
+                    "data": [
+                      {
+                        "avg_price": "432.31",
+                        "buy_price": null,
+                        "close": "513.23",
+                        "filing_date": "2024-12-23",
+                        "price_on_filing": "510.34",
+                        "price_on_report": "495.95",
+                        "put_call": null,
+                        "report_date": "2024-09-30",
+                        "security_type": "Fund",
+                        "sell_price": null,
+                        "shares_outstanding": "148239423.0",
+                        "ticker": "SPLG",
+                        "units": 5000,
+                        "units_change": -500
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "avg_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Avg Price",
+                      "type": "string"
+                    },
+                    "buy_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Buy Price",
+                      "type": "string"
+                    },
+                    "close": {
+                      "description": "The close stock price of the ticker.",
+                      "example": "182.91",
+                      "title": "Stock Close Price",
+                      "type": "string"
+                    },
+                    "filing_date": {
+                      "description": "An ISO date.",
+                      "example": "2024-01-09",
+                      "title": "General ISO Date",
+                      "type": "string"
+                    },
+                    "price_on_filing": {
+                      "description": "The security price on the filing date.",
+                      "example": "23.49",
+                      "title": "Price On Filing",
+                      "type": "string"
+                    },
+                    "price_on_report": {
+                      "description": "The security price on the report date.",
+                      "example": "23.49",
+                      "title": "Price On Report",
+                      "type": "string"
+                    },
+                    "put_call": {
+                      "description": "Whether the holding is a put or a call (null if neither).",
+                      "example": "put",
+                      "title": "PutCall",
+                      "type": "string"
+                    },
+                    "report_date": {
+                      "description": "An ISO date.",
+                      "example": "2024-01-09",
+                      "title": "General ISO Date",
+                      "type": "string"
+                    },
+                    "security_type": {
+                      "description": "",
+                      "example": "Share",
+                      "title": "Security Type",
+                      "type": "string"
+                    },
+                    "sell_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Sell Price",
+                      "type": "string"
+                    },
+                    "shares_outstanding": {
+                      "description": "Total outstanding shares for the ticker.",
+                      "example": "424295343.0",
+                      "title": "Shares Outstanding",
+                      "type": "string"
+                    },
+                    "ticker": {
+                      "description": "",
+                      "example": "MSFT",
+                      "title": "Ticker Symbol",
+                      "type": "string"
+                    },
+                    "units": {
+                      "description": "",
+                      "example": 4103,
+                      "title": "Units",
+                      "type": "integer"
+                    },
+                    "units_change": {
+                      "description": "The change in units",
+                      "example": -320,
+                      "title": "Units Change",
+                      "type": "integer"
+                    }
+                  },
+                  "title": "Institutional Activity",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Institutional Activity",
+        "tags": [
+          "institution"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/institution/{name}/holdings",
+      "method": "GET",
+      "path": "/api/institution/{name}/holdings",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns the holdings for a given institution.\n\nWARNING: Providing partial names e.g. \"VANGUARD\" might lead to unexpected results.\nTo ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.\n\nYou can use endpoint \"api/institutions\" with a partial name like \"VANGUARD\" to get all matching institutions with their CIKs.\n\nIf you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md\n",
+        "operationId": "PublicApi.InstitutionController.holdings",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "description": "A large entity that manages funds and investments for others. Queryable by name or cik.",
+              "example": "VANGUARD GROUP INC or 0000102909",
+              "title": "Institution",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "ticker_symbol",
+            "required": false,
+            "schema": {
+              "description": "A comma separated list of tickers. To exclude certain tickers prefix the first ticker with a `-`.",
+              "example": "AAPL,INTC",
+              "title": "Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+              "example": "2024-01-18",
+              "title": "Optional Market Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "description": "A date in the format of YYYY-MM-DD, only institutional holdings with `report_date` values on or after this date will be returned.\n",
+              "example": "2023-01-01",
+              "format": "date",
+              "title": "Institutional Report Start Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "description": "A date in the format of YYYY-MM-DD, only institutional holdings with `report_date` values on or before this date will be returned.\n",
+              "example": "2023-03-31",
+              "format": "date",
+              "title": "Institutional Report End Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "security_types",
+            "required": false,
+            "schema": {
+              "description": "An array of security types",
+              "example": [
+                "Share"
+              ],
+              "items": {
+                "description": "",
+                "example": "Share",
+                "title": "Security Type",
+                "type": "string"
+              },
+              "title": "Security Types",
+              "type": "array"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+              "example": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Default 500 Max 500 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "description": "Optional columns to order the result by",
+              "enum": [
+                "date",
+                "ticker",
+                "security_type",
+                "put_call",
+                "first_buy",
+                "price_first_buy",
+                "units",
+                "units_change",
+                "historical_units",
+                "value",
+                "avg_price",
+                "close",
+                "shares_outstanding"
+              ],
+              "example": "ticker",
+              "title": "Institutional Holdings Order By",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "order_direction",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "description": "Whether to sort descending or ascending. Descending by default.",
+              "enum": [
+                "desc",
+                "asc"
+              ],
+              "example": "asc",
+              "title": "OrderDirection",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "The holdings for an institution.",
+                  "example": {
+                    "data": [
+                      {
+                        "avg_price": "156.53",
+                        "close": "419.23",
+                        "date": "2024-10-02",
+                        "first_buy": "2012-02-23",
+                        "full_name": "MICROSOFT CORP",
+                        "historical_units": [
+                          4103,
+                          4423
+                        ],
+                        "perc_of_share_value": 0.04,
+                        "perc_of_total": 0.002,
+                        "price_first_buy": "23.42",
+                        "put_call": null,
+                        "sector": "Technology",
+                        "security_type": "Share",
+                        "shares_outstanding": "71984388.0",
+                        "ticker": "MSFT",
+                        "units": 4103,
+                        "units_change": -320,
+                        "value": 1672230
+                      },
+                      {
+                        "avg_price": "359.21",
+                        "close": "568.23",
+                        "date": "2024-10-02",
+                        "first_buy": "2019-12-15",
+                        "full_name": "ADOBE INC",
+                        "historical_units": [
+                          500,
+                          0
+                        ],
+                        "perc_of_share_value": 0.04,
+                        "perc_of_total": 0.002,
+                        "price_first_buy": "239.33",
+                        "put_call": null,
+                        "sector": "Technology",
+                        "security_type": "Share",
+                        "shares_outstanding": "6714388.0",
+                        "ticker": "ADBE",
+                        "units": 500,
+                        "units_change": 500,
+                        "value": 250000
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "avg_price": {
+                      "description": "",
+                      "example": "23.49",
+                      "title": "Avg Price",
+                      "type": "string"
+                    },
+                    "close": {
+                      "description": "The close stock price of the ticker.",
+                      "example": "182.91",
+                      "title": "Stock Close Price",
+                      "type": "string"
+                    },
+                    "date": {
+                      "description": "An ISO date.",
+                      "example": "2024-01-09",
+                      "title": "General ISO Date",
+                      "type": "string"
+                    },
+                    "first_buy": {
+                      "description": "An ISO date.",
+                      "example": "2024-01-09",
+                      "title": "General ISO Date",
+                      "type": "string"
+                    },
+                    "full_name": {
+                      "description": "",
+                      "example": "MICROSOFT CORP",
+                      "title": "Full Name",
+                      "type": "string"
+                    },
+                    "historical_units": {
+                      "description": "Historical unit counts. Maximum length = 8.",
+                      "example": [
+                        4103,
+                        4423
+                      ],
+                      "items": {
+                        "type": "integer"
+                      },
+                      "title": "Historical Units",
+                      "type": "array"
+                    },
+                    "perc_of_share_value": {
+                      "description": "The percentage of the total share value of this institution that this holding represents. For example, if the sum of all the institution's holdings total $100 million and this holding has reported value $4 million, then the perc_of_share_value result will be 0.04.",
+                      "example": 0.04,
+                      "title": "Perc of Share Value",
+                      "type": "number"
+                    },
+                    "perc_of_total": {
+                      "description": "The percentage of the total outstanding shares owned by this institution. For example, if there are 500 million outstanding shares and this institution owns 1 million shares, then the perc_of_total result will be 0.002.",
+                      "example": 0.002,
+                      "title": "Perc of Total",
+                      "type": "number"
+                    },
+                    "price_first_buy": {
+                      "description": "The close price of the ticker on the first buy date.",
+                      "example": "42.39",
+                      "title": "Price First Buy",
+                      "type": "string"
+                    },
+                    "put_call": {
+                      "description": "Whether the holding is a put or a call (null if neither).",
+                      "example": "put",
+                      "title": "PutCall",
+                      "type": "string"
+                    },
+                    "sector": {
+                      "description": "A financial sector.",
+                      "enum": [
+                        "Basic Materials",
+                        "Communication Services",
+                        "Consumer Cyclical",
+                        "Consumer Defensive",
+                        "Energy",
+                        "Financial Services",
+                        "Healthcare",
+                        "Industrials",
+                        "Real Estate",
+                        "Technology",
+                        "Utilities"
+                      ],
+                      "example": "Technology",
+                      "title": "Sector",
+                      "type": "string"
+                    },
+                    "security_type": {
+                      "description": "",
+                      "example": "Share",
+                      "title": "Security Type",
+                      "type": "string"
+                    },
+                    "shares_outstanding": {
+                      "description": "Total outstanding shares for the ticker.",
+                      "example": "424295343.0",
+                      "title": "Shares Outstanding",
+                      "type": "string"
+                    },
+                    "ticker": {
+                      "description": "",
+                      "example": "MSFT",
+                      "title": "Ticker Symbol",
+                      "type": "string"
+                    },
+                    "units": {
+                      "description": "",
+                      "example": 4103,
+                      "title": "Units",
+                      "type": "integer"
+                    },
+                    "units_change": {
+                      "description": "The change in units",
+                      "example": -320,
+                      "title": "Units Change",
+                      "type": "integer"
+                    },
+                    "value": {
+                      "description": "The rounded total value on the reporting date.",
+                      "example": 2429329,
+                      "title": "Value",
+                      "type": "integer"
+                    }
+                  },
+                  "title": "An Institution's Holdings",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Institutional Holdings",
+        "tags": [
+          "institution"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/institution/{name}/sectors",
+      "method": "GET",
+      "path": "/api/institution/{name}/sectors",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "The sector exposure for a given institution.\n\nWARNING: Providing partial names e.g. \"VANGUARD\" might lead to unexpected results.\nTo ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.\n\nYou can use endpoint \"api/institutions\" with a partial name like \"VANGUARD\" to get all matching institutions with their CIKs.\n\nIf you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md\n",
+        "operationId": "PublicApi.InstitutionController.sectors",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "description": "A large entity that manages funds and investments for others. Queryable by name or cik.",
+              "example": "VANGUARD GROUP INC or 0000102909",
+              "title": "Institution",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A date in the format of YYYY-MM-DD, only institutional holdings with `report_date` values on or before this date will be returned.\n",
+              "example": "2023-03-31",
+              "format": "date",
+              "title": "Institutional Report End Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+              "example": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Default 500 Max 500 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "The sector exposure for an institution.",
+                  "example": {
+                    "data": [
+                      {
+                        "positions": 5,
+                        "positions_closed": 1,
+                        "positions_decreased": 1,
+                        "positions_increased": 2,
+                        "report_date": "2024-09-30",
+                        "sector": "Technology",
+                        "value": "1948023952"
+                      },
+                      {
+                        "positions": 7,
+                        "positions_closed": 4,
+                        "positions_decreased": 2,
+                        "positions_increased": 3,
+                        "report_date": "2024-09-30",
+                        "sector": "Basic Materials",
+                        "value": "43952"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "positions": {
+                      "description": "",
+                      "example": 5,
+                      "title": "Positions",
+                      "type": "integer"
+                    },
+                    "positions_closed": {
+                      "description": "",
+                      "example": 2,
+                      "title": "Positions Closed",
+                      "type": "integer"
+                    },
+                    "positions_decreased": {
+                      "description": "",
+                      "example": 2,
+                      "title": "Positions Decreased",
+                      "type": "integer"
+                    },
+                

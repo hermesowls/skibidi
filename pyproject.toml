@@ -674,3 +674,10 @@ select = ["PLW1514", "ASYNC210", "ASYNC220", "ASYNC221", "ASYNC251"]
 # Legacy blocking spawn sites in platform adapters, pending their own fixes.
 "plugins/platforms/whatsapp/adapter.py" = ["ASYNC220", "ASYNC221"]
 "plugins/platforms/photon/adapter.py" = ["ASYNC220"]
+
+[tool.pyright]
+venvPath = "."
+venv = "venv"
+
+[tool.pyrefly]
+python-interpreter-path = "venv/bin/python3"

@@ -1,0 +1,2475 @@
+---
+components:
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            type: object
+      description: ''
+  schemas:
+    Accession_Number:
+      description: SEC EDGAR accession number of the filing this row came from.
+      example: 0001127602-24-012345
+      title: Accession Number
+      type: string
+    Actual_EPS:
+      description: ''
+      example: '1.44'
+      title: Actual EPS
+      type: string
+    Alert:
+      description: An alert that triggered for a user
+      example:
+        data:
+          - created_at: 2024-12-11T14:00:00Z
+            id: fdc2cf91-d387-480f-a79e-28026447a6f5
+            meta:
+              alert_type: PayDate
+              date: 2024-11-21
+              div_yield: '0.0503'
+              dividend: '0.1275'
+              frequency: Quarterly
+              payment_date: 2024-12-11
+              prev_dividend: '0.125'
+            name: S&P 500 Dividends
+            noti_type: dividends
+            symbol: AMCR
+            symbol_type: stock
+            tape_time: 2024-12-11T14:00:00Z
+            user_noti_config_id: cb70c287-f10a-4e63-98ad-571b7dafc8e4
+          - created_at: 2024-12-11T14:00:01Z
+            id: 46a5cf8d-6b41-4a92-926d-80e21b729222
+            meta:
+              avg_vol_30: '431912.809523809524'
+              curr: '14.55'
+              curr_vol: 364977
+              prev: '22.88'
+              reason: ''
+              sector: Healthcare
+              state: trading
+            name: Trading halts
+            noti_type: trading_state
+            symbol: ANAB
+            symbol_type: stock
+            tape_time: 2024-12-11T14:00:00Z
+            user_noti_config_id: 5e476026-d01e-423b-9635-7ead39301665
+      properties:
+        created_at:
+          $ref: '#/components/schemas/The_creation_timestamp'
+        id:
+          $ref: '#/components/schemas/The_alert_id'
+        meta:
+          $ref: '#/components/schemas/The_raw_data_of_the_alert'
+        name:
+          $ref: '#/components/schemas/The_name_of_the_alert'
+        noti_type:
+          $ref: '#/components/schemas/The_type_of_the_alert'
+        symbol:
+          $ref: '#/components/schemas/The_stock_ticker_or_option_contract_of_the_alert'
+        tape_time:
+          $ref: '#/components/schemas/Alert_Tape_Time'
+        user_noti_config_id:
+          $ref: '#/components/schemas/The_alert_id'
+      title: Alert
+      type: object
+    Alert_DSL_grammar:
+      additionalProperties: true
+      description: 'Machine readable description of the alert DSL: available targets, syntax, fields, functions, operators, scopes and example expressions.'
+      title: Alert DSL grammar
+      type: object
+    Alert_Rule_Name:
+      description: The name of the alert rule.
+      example: RepeatedHits
+      title: Alert Rule Name
+      type: string
+    Alert_Tape_Time:
+      description: The alerts tape time.
+      example: 2023-09-07T20:06:00Z
+      title: Alert Tape Time
+      type: string
+    Alert_config:
+      description: An alert configuration
+      example:
+        data:
+          - config:
+              option_symbols:
+                - TGT241122C00177500
+              symbols: all
+            created_at: 2024-11-19T18:19:14Z
+            id: ebe24953-a0bf-4b4d-98be-14f721a1199a
+            name: 'Chain OI Chg: TGT241122C00177500'
+            noti_type: chain_oi_change
+            status: active
+          - config:
+              name_contains:
+                - berkshire
+              symbols: all
+            created_at: 2024-08-09T23:23:13Z
+            id: 4457d60e-e7e5-4950-82e6-0ea010586f25
+            name: Berkshire
+            noti_type: sec_filings
+            status: active
+      properties:
+        config:
+          $ref: '#/components/schemas/The_configuration_of_an_alert.'
+        created_at:
+          $ref: '#/components/schemas/The_creation_timestamp'
+        id:
+          $ref: '#/components/schemas/The_alert_id'
+        name:
+          $ref: '#/components/schemas/The_name_of_the_alert'
+        noti_type:
+          $ref: '#/components/schemas/The_type_of_the_alert'
+        status:
+          $ref: '#/components/schemas/The_status_of_the_alert'
+      title: Alert config
+      type: object
+    Alert_filters:
+      description: The available filters per alert type for creating alert configurations
+      example:
+        access:
+          flow_alerts: true
+          option_trade: true
+          politician_trades: false
+        data:
+          option_trade:
+            - accepted_values:
+                - all
+                - watchlist_only
+                - list
+              filter: symbols
+            - accepted_values: list
+              filter: option_contracts
+            - accepted_values: bool
+              description: Filter for options expiring on OpEx (monthly expiration) Friday
+              filter: opex_only
+            - accepted_values: bool
+              description: Filter for options expiring on a quarterly OpEx (3rd Friday of Mar/Jun/Sep/Dec)
+              filter: is_quarterly
+            - accepted_values:
+                - jan
+                - feb
+                - mar
+                - apr
+                - may
+                - jun
+                - jul
+                - aug
+                - sep
+                - oct
+                - nov
+                - dec
+              description: Filter for monthly opex expiries in any of these months
+              filter: expiry_months
+            - accepted_values: bool
+              filter: is_multi_leg
+            - accepted_values: bool
+              filter: is_otm
+            - accepted_values: bool
+              description: Trade size exceeds total open interest
+              filter: size_greater_oi
+            - accepted_values: bool
+              description: Daily volume exceeds total open interest
+              filter: volume_greater_oi
+            - accepted_values: bool
+              description: Filter for opening transactions only (new positions)
+              filter: opening
+            - accepted_values: bool
+              description: Exclude deep in-the-money contracts
+              filter: exclude_deep_itm
+            - accepted_values: bool
+              description: Include aggregated/block trades
+              filter: add_agg_trades
+            - accepted_values:
+                - ask_side
+                - bid_side
+                - mid_side
+                - no_side
+                - china
+                - volatility
+                - dividend
+                - index
+                - arbitrage
+              filter: excluded_tags
+            - accepted_values:
+                - ask_side
+                - bid_side
+                - mid_side
+                - no_side
+                - china
+                - volatility
+                - dividend
+                - index
+                - arbitrage
+              filter: tags
+            - accepted_values:
+                - Common Stock
+                - ETF
+                - ADR
+                - Index
+              filter: issue_types
+            - accepted_values: list
+              filter: industries
+            - accepted_values:
+                - Basic Materials
+                - Communication Services
+                - Consumer Cyclical
+                - Consumer Defensive
+                - Energy
+                - Financial Services
+                - Healthcare
+                - Industrials
+                - Real Estate
+                - Technology
+                - Utilities
+              filter: sectors
+            - accepted_values:
+                - GMNI
+                - XCBO
+                - BATO
+                - XBXO
+                - MPRL
+                - C2OX
+                - AMXO
+                - MCRY
+                - ARCO
+                - EDGO
+                - XISX
+                - XNDQ
+                - XMIO
+                - XPHO
+                - XBOX
+                - EMLD
+                - MXOP
+                - SPHR
+                - MXTO
+                - IEXO
+              filter: exchanges
+            - accepted_values:
+                - Canc
+                - Oseq
+                - Cncl
+                - Late
+                - Cnco
+                - Open
+                - Cnol
+                - Opnl
+                - Auto
+                - Reop
+                - Isoi
+                - Slan
+                - Slai
+                - Slcn
+                - Slci
+                - Slft
+                - Mlet
+                - Mlat
+                - Mlct
+                - Mlft
+                - Mesl
+                - Tlat
+                - Masl
+                - Mfsl
+                - Tlet
+                - Tlct
+                - Tlft
+                - Tesl
+                - Tasl
+                - Tfsl
+                - Cbmo
+                - Mctp
+                - Exht
+              filter: trade_codes
+            - accepted_values: list
+              filter: expiry_dates
+            - accepted_values:
+                - micro
+                - small
+                - mid
+                - large
+                - big
+              filter: marketcap_size
+            - accepted_values:
+                - opening
+                - closing
+                - reopening
+                - cross_trade
+                - extended_hours
+                - intermarket_sweep
+                - trade_through_exempt
+                - odd_lot
+                - official_price_report
+                - futures_floor
+                - summary
+                - printable
+                - normal
+              filter: report_flags
+            - accepted_values: decimal
+              description: Volume to open interest ratio (>1.0 = volume exceeds OI)
+              filter: min_volume_oi_ratio
+            - accepted_values: decimal
+              description: Volume to open interest ratio (>1.0 = volume exceeds OI)
+              filter: max_volume_oi_ratio
+            - accepted_values:
+                - call
+                - put
+              filter: type
+            - accepted_values:
+                - am
+                - pm
+                - asian
+                - cliquet
+              filter: settlement
+            - accepted_values:
+                arith_ops:
+                  - add
+                  - sub
+                  - mul
+                  - div
+                cmp_ops:
+                  - gt
+                  - gte
+                  - lt
+                  - lte
+                  - eq
+                  - neq
+                fields:
+                  - spot
+                  - strike
+                  - bid
+                  - ask
+                  - ewma_bid
+                  - ewma_ask
+                  - premium
+                  - price
+                  - size
+                  - volume
+                  - open_int
+                  - dte
+                  - delta
+                  - gamma
+                  - vega
+                  - theta
+                  - rho
+                  - theo
+                  - iv
+                  - marketcap
+                  - diff
+                  - spread
+                  - bid_perc
+                  - ask_perc
+                  - bull_perc
+                  - bear_perc
+                  - earnings_dte
+                  - days_between_expiry_and_earnings
+                  - vol_oi_ratio
+              description: Cross field comparison
+              filter: compare
+            - accepted_values: decimal
+              filter: min_underlying_price
+            - accepted_values: decimal
+              filter: max_underlying_price
+            - accepted_values: decimal
+              filter: min_strike
+            - accepted_values: decimal
+              filter: max_strike
+            - accepted_values: decimal
+              filter: min_premium
+            - accepted_values: decimal
+              filter: max_premium
+            - accepted_values: decimal
+              filter: min_price
+            - accepted_values: decimal
+              filter: max_price
+            - accepted_values: integer
+              filter: min_size
+            - accepted_values: integer
+              filter: max_size
+            - accepted_values: integer
+              filter: min_volume
+            - accepted_values: integer
+              filter: max_volume
+            - accepted_values: integer
+              filter: min_open_interest
+            - accepted_values: integer
+              filter: max_open_interest
+            - accepted_values: integer
+              filter: min_dte
+            - accepted_values: integer
+              filter: max_dte
+            - accepted_values: decimal_abs
+              filter: min_delta
+            - accepted_values: decimal_abs
+              filter: max_delta
+            - accepted_values: decimal_abs
+              filter: min_gamma
+            - accepted_values: decimal_abs
+              filter: max_gamma
+            - accepted_values: decimal_abs
+              filter: min_theta
+            - accepted_values: decimal_abs
+              filter: max_theta
+            - accepted_values: decimal_abs
+              description: 'Implied volatility of the contract (decimal: 0.5 = 50%)'
+              filter: min_iv
+            - accepted_values: decimal_abs
+              description: 'Implied volatility of the contract (decimal: 0.5 = 50%)'
+              filter: max_iv
+            - accepted_values: decimal
+              filter: min_marketcap
+            - accepted_values: decimal
+              filter: max_marketcap
+            - accepted_values: decimal_abs
+              description: 'Stock price percentage change (decimal: 0.1 = 10%)'
+              filter: min_diff
+            - accepted_values: decimal_abs
+              description: 'Stock price percentage change (decimal: 0.1 = 10%)'
+              filter: max_diff
+            - accepted_values: decimal
+              description: Bid-ask spread percentage
+              filter: min_spread
+            - accepted_values: decimal
+              description: Bid-ask spread percentage
+              filter: max_spread
+            - accepted_values: decimal_abs
+              description: Percentage of volume traded at the bid price
+              filter: min_bid_perc
+            - accepted_values: decimal_abs
+              description: Percentage of volume traded at the bid price
+              filter: max_bid_perc
+            - accepted_values: decimal_abs
+              description: Percentage of volume traded at the ask price
+              filter: min_ask_perc
+            - accepted_values: decimal_abs
+              description: Percentage of volume traded at the ask price
+              filter: max_ask_perc
+            - accepted_values: decimal_abs
+              description: Percentage of bullish flow (calls at ask + puts at bid)
+              filter: min_bull_perc
+            - accepted_values: decimal_abs
+              description: Percentage of bullish flow (calls at ask + puts at bid)
+              filter: max_bull_perc
+            - accepted_values: decimal_abs
+              description: Percentage of bearish flow (calls at bid + puts at ask)
+              filter: min_bear_perc
+            - accepted_values: decimal_abs
+              description: Percentage of bearish flow (calls at bid + puts at ask)
+              filter: max_bear_perc
+            - accepted_values: integer
+              description: Days until next earnings report
+              filter: min_earnings_dte
+            - accepted_values: integer
+              description: Days until next earnings report
+              filter: max_earnings_dte
+            - accepted_values: integer
+              description: Minimum (contract_expiry - next_earnings_date) in calendar days — signed
+              filter: min_days_between_expiry_and_earnings
+            - accepted_values: integer
+              description: Maximum (contract_expiry - next_earnings_date) in calendar days — signed
+              filter: max_days_between_expiry_and_earnings
+            - accepted_values: decimal_abs
+              description: Bull/bear skew ratio
+              filter: min_skew
+            - accepted_values: decimal_abs
+              description: Bull/bear skew ratio
+              filter: max_skew
+        filter_descriptions:
+          option_trade:
+            - opening: Filter for opening transactions only (new positions)
+            - min_iv: 'Implied volatility of the contract (decimal: 0.5 = 50%)'
+        noti_type_descriptions:
+          option_trade: Get notified about any new option trades that hit the flow
+        rate_limits:
+          flow_alerts: '500'
+          option_trade: '5000'
+      properties:
+        access:
+          description: Per alert type whether your account can create alerts of that type.
+          type: object
+        data:
+          description: |
+            Per alert type (`noti_type`) the list of filter fields that can be used in the `config` object, each with its accepted values.
+
+            `accepted_values` is either an array of allowed literal values, an object describing a nested structure, or one of these type tokens:
+            - `bool`: true or false
+            - `integer`: a whole number
+            - `decimal`: a decimal number
+            - `decimal_abs`: a decimal number that can optionally be wrapped as `abs(x)` or `|x|` to match on absolute value, e.g. `"min_delta": "abs(0.3)"` matches both delta 0.4 and delta -0.4
+            - `string`: a string
+            - `list`: an array of values such as symbols, option contracts or dates
+            - `object`: a nested object, see the filter's description
+          type: object
+        filter_descriptions:
+          description: Per alert type a description of each filter field.
+          type: object
+        noti_type_descriptions:
+          description: A description of each alert type.
+          type: object
+        rate_limits:
+          description: Per alert type the maximum amount of alerts that trigger per day.
+          type: object
+      title: Alert filters
+      type: object
+    Amended_Original_Accession_Number:
+      description: For /A amendments, the accession number of the filing being amended; null otherwise.
+      example: 0001127602-24-011111
+      nullable: true
+      title: Amended Original Accession Number
+      type: string
+    An_Institutions_Holdings:
+      description: The holdings for an institution.
+      example:
+        data:
+          - avg_price: '156.53'
+            close: '419.23'
+            date: 2024-10-02
+            first_buy: 2012-02-23
+            full_name: MICROSOFT CORP
+            historical_units:
+              - 4103
+              - 4423
+            perc_of_share_value: 0.04
+            perc_of_total: 0.002
+            price_first_buy: '23.42'
+            put_call:
+            sector: Technology
+            security_type: Share
+            shares_outstanding: '71984388.0'
+            ticker: MSFT
+            units: 4103
+            units_change: -320
+            value: 1672230
+          - avg_price: '359.21'
+            close: '568.23'
+            date: 2024-10-02
+            first_buy: 2019-12-15
+            full_name: ADOBE INC
+            historical_units:
+              - 500
+              - 0
+            perc_of_share_value: 0.04
+            perc_of_total: 0.002
+            price_first_buy: '239.33'
+            put_call:
+            sector: Technology
+            security_type: Share
+            shares_outstanding: '6714388.0'
+            ticker: ADBE
+            units: 500
+            units_change: 500
+            value: 250000
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/Avg_Price'
+        close:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        first_buy:
+          $ref: '#/components/schemas/General_ISO_Date'
+        full_name:
+          $ref: '#/components/schemas/Full_Name'
+        historical_units:
+          $ref: '#/components/schemas/Historical_Units'
+        perc_of_share_value:
+          $ref: '#/components/schemas/Perc_of_Share_Value'
+        perc_of_total:
+          $ref: '#/components/schemas/Perc_of_Total'
+        price_first_buy:
+          $ref: '#/components/schemas/Price_First_Buy'
+        put_call:
+          $ref: '#/components/schemas/PutCall'
+        sector:
+          $ref: '#/components/schemas/Sector'
+        security_type:
+          $ref: '#/components/schemas/Security_Type'
+        shares_outstanding:
+          $ref: '#/components/schemas/Shares_Outstanding'
+        ticker:
+          $ref: '#/components/schemas/Ticker_Symbol'
+        units:
+          $ref: '#/components/schemas/Units'
+        units_change:
+          $ref: '#/components/schemas/Units_Change'
+        value:
+          $ref: '#/components/schemas/Value'
+      title: An Institution's Holdings
+      type: object
+    An_Institutions_Sector_Exposure:
+      description: The sector exposure for an institution.
+      example:
+        data:
+          - positions: 5
+            positions_closed: 1
+            positions_decreased: 1
+            positions_increased: 2
+            report_date: 2024-09-30
+            sector: Technology
+            value: '1948023952'
+          - positions: 7
+            positions_closed: 4
+            positions_decreased: 2
+            positions_increased: 3
+            report_date: 2024-09-30
+            sector: Basic Materials
+            value: '43952'
+      properties:
+        positions:
+          $ref: '#/components/schemas/Positions'
+        positions_closed:
+          $ref: '#/components/schemas/Positions_Closed'
+        positions_decreased:
+          $ref: '#/components/schemas/Positions_Decreased'
+        positions_increased:
+          $ref: '#/components/schemas/Positions_Increased'
+        report_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        sector:
+          $ref: '#/components/schemas/Sector'
+        value:
+          $ref: '#/components/schemas/Value'
+      title: An Institution's Sector Exposure
+      type: object
+    Analyst_Action:
+      description: The action of the recommendation.
+      enum:
+        - initiated
+        - reiterated
+        - downgraded
+        - upgraded
+        - maintained
+      example: maintained
+      title: Analyst Action
+      type: string
+    Analyst_Field_Action:
+      description: The action of the recommendation.
+      enum:
+        - initiated
+        - reiterated
+        - downgraded
+        - upgraded
+        - maintained
+        - target raised
+        - target lowered
+      example: maintained
+      title: Analyst Field Action
+      type: string
+    Analyst_Field_Firm:
+      description: The firm the analyst is working for.
+      example: UBS
+      title: Analyst Field Firm
+      type: string
+    Analyst_Field_Name:
+      description: The name of the analyst.
+      example: David Vogt
+      title: Analyst Field Name
+      type: string
+    Analyst_Field_Recommendation:
+      description: The recommendation the analyst gave out.
+      enum:
+        - buy
+        - hold
+        - sell
+      example: hold
+      title: Analyst Field Recommendation
+      type: string
+    Analyst_Field_Target_Price:
+      description: The target price of the rating.
+      example: '190.0'
+      title: Analyst Field Target Price
+      type: string
+    Analyst_Field_Time:
+      description: The UTC timestamp, when the rating was released.
+      example: 2023-09-08T12:21:10Z
+      title: Analyst Field Time
+      type: string
+    Analyst_Rating:
+      description: A rating of an analyst.
+      example:
+        data:
+          - action: maintained
+            analyst_name: Tyler Radke
+            firm: Citi
+            recommendation: buy
+            sector: Technology
+            target: '420.0'
+            ticker: MSFT
+            timestamp: 2023-09-11T11:21:12Z
+          - action: maintained
+            analyst_name: Mark Rothschild
+            firm: Canaccord Genuity
+            recommendation: hold
+            sector: Conglomerates
+            target: '11.75'
+            ticker: DRETF
+            timestamp: 2023-09-11T11:11:32Z
+      properties:
+        action:
+          $ref: '#/components/schemas/Analyst_Field_Action'
+        analyst_name:
+          $ref: '#/components/schemas/Analyst_Field_Name'
+        firm:
+          $ref: '#/components/schemas/Analyst_Field_Firm'
+        recommendation:
+          $ref: '#/components/schemas/Analyst_Field_Recommendation'
+        sector:
+          $ref: '#/components/schemas/Market_General_Sector'
+        target:
+          $ref: '#/components/schemas/Analyst_Field_Target_Price'
+        ticker:
+          $ref: '#/components/schemas/Analyst_Sector'
+        timestamp:
+          $ref: '#/components/schemas/Analyst_Field_Time'
+      title: Analyst Rating
+      type: object
+    Analyst_Recommendation:
+      description: The recommendation the analyst gave out.
+      enum:
+        - buy
+        - hold
+        - sell
+      example: hold
+      title: Analyst Recommendation
+      type: string
+    Analyst_Sector:
+      description: A financial sector.
+      title: Analyst Sector
+    Analytics_Response:
+      properties:
+        data:
+          properties:
+            meta:
+              nullable: true
+              type: object
+            payload:
+              nullable: true
+              type: object
+          type: object
+      title: Analytics Response
+      type: object
+    Annual_Disclosure:
+      properties:
+        chamber:
+          description: The chamber (house, senate, executive).
+          enum:
+            - house
+            - senate
+            - executive
+          type: string
+        disclosure_year:
+          description: The year covered by the disclosure.
+          type: integer
+        filing_date:
+          description: The date the disclosure was filed.
+          format: date
+          type: string
+        id:
+          description: The file record ID.
+          format: uuid
+          type: string
+        name:
+          description: The filer name as it appears on the disclosure.
+          type: string
+        politician_id:
+          description: The politician's ID.
+          format: uuid
+          type: string
+        politician_name:
+          description: The politician's name.
+          type: string
+        url:
+          description: The URL to the disclosure PDF.
+          type: string
+        version:
+          description: The version number of the disclosure.
+          type: integer
+      title: Annual Disclosure
+      type: object
+    Annual_Disclosures_List:
+      example:
+        data:
+          - chamber: house
+            disclosure_year: 2024
+            filing_date: 2024-05-15
+            id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            name: Warren Davidson
+            politician_id: e138f347-ae92-4cfb-8f41-7036ff09a213
+            politician_name: Warren Davidson
+            url: https://disclosures-clerk.house.gov/public_disc/financial-pdfs/2024/10067467.pdf
+            version: 1
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Annual_Disclosure'
+          type: array
+      title: Annual Disclosures List
+      type: object
+    Authentication_Error:
+      description: Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.
+      example:
+        code: authentication_required
+        documentation_url: https://api.unusualwhales.com/docs
+        expected_format: uuid
+        message: The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.
+        reason: malformed_token
+        request_id: GNI_YTC1CRnw2LACGBvE
+        retryable: false
+        support_email: dev@unusualwhales.com
+        token_url: https://unusualwhales.com/dashboard/api
+      properties:
+        code:
+          description: Always `authentication_required`.
+          enum:
+            - authentication_required
+          type: string
+        documentation_url:
+          description: Where to read this API documentation.
+          type: string
+        expected_format:
+          description: Present only when `reason` is `malformed_token`. The format the token must take.
+          enum:
+            - uuid
+          type: string
+        message:
+          description: A plain description of the failure, written for a person.
+          type: string
+        reason:
+          description: Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.
+          enum:
+            - missing_token
+            - malformed_token
+            - unrecognized_token
+          type: string
+        request_id:
+          description: Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.
+          type: string
+        retryable:
+          description: Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.
+          enum:
+            - false
+          type: boolean
+        support_email:
+          description: Where to send questions about API access.
+          type: string
+        token_url:
+          description: Where to create and manage API tokens.
+          type: string
+      title: Authentication Error
+      type: object
+    Avg_Price:
+      description: ''
+      example: '23.49'
+      title: Avg Price
+      type: string
+    Balance_Sheet:
+      description: A single balance-sheet period. All monetary figures are numeric strings, null when not reported.
+      properties:
+        accumulated_depreciation_amortization_ppe:
+          example: '73448000000'
+          nullable: true
+          type: string
+        capital_lease_obligations:
+          example: '12430000000'
+          nullable: true
+          type: string
+        cash_and_cash_equivalents:
+          example: '29943000000'
+          nullable: true
+          type: string
+        cash_and_short_term_investments:
+          example: '65171000000'
+          nullable: true
+          type: string
+        common_stock:
+          example: '83276000000'
+          nullable: true
+          type: string
+        common_stock_shares_outstanding:
+          example: '15115823000'
+          nullable: true
+          type: string
+        current_accounts_payable:
+          example: '68960000000'
+          nullable: true
+          type: string
+        current_debt:
+          example: '21023000000'
+          nullable: true
+          type: string
+        current_long_term_debt:
+          example: '10912000000'
+          nullable: true
+          type: string
+        current_net_receivables:
+          example: '66243000000'
+          nullable: true
+          type: string
+        deferred_revenue:
+          example: '8249000000'
+          nullable: true
+          type: string
+        fiscal_date_ending:
+          example: 2024-09-30
+          format: date
+          type: string
+        goodwill:
+          example: '8000000000'
+          nullable: true
+          type: string
+        inserted_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+        intangible_assets:
+          example: '5000000000'
+          nullable: true
+          type: string
+        intangible_assets_excluding_goodwill:
+          example: '3000000000'
+          nullable: true
+          type: string
+        inventory:
+          example: '7286000000'
+          nullable: true
+          type: string
+        investments:
+          example: '254000000000'
+          nullable: true
+          type: string
+        long_term_debt:
+          example: '96700000000'
+          nullable: true
+          type: string
+        long_term_debt_noncurrent:
+          example: '85750000000'
+          nullable: true
+          type: string
+        long_term_investments:
+          example: '91479000000'
+          nullable: true
+          type: string
+        other_current_assets:
+          example: '14287000000'
+          nullable: true
+          type: string
+        other_current_liabilities:
+          example: '78304000000'
+          nullable: true
+          type: string
+        other_non_current_assets:
+          example: '74834000000'
+          nullable: true
+          type: string
+        other_non_current_liabilities:
+          example: '45888000000'
+          nullable: true
+          type: string
+        property_plant_equipment:
+          example: '45680000000'
+          nullable: true
+          type: string
+        report_type:
+          enum:
+            - annual
+            - quarterly
+          example: quarterly
+          type: string
+        reported_currency:
+          example: USD
+          nullable: true
+          type: string
+        retained_earnings:
+          example: '-19154000000'
+          nullable: true
+          type: string
+        short_long_term_debt_total:
+          example: '106629000000'
+          nullable: true
+          type: string
+        short_term_debt:
+          example: '9967000000'
+          nullable: true
+          type: string
+        short_term_investments:
+          example: '35228000000'
+          nullable: true
+          type: string
+        ticker:
+          example: AAPL
+          type: string
+        total_assets:
+          example: '364980000000'
+          nullable: true
+          type: string
+        total_current_assets:
+          example: '152987000000'
+          nullable: true
+          type: string
+        total_current_liabilities:
+          example: '176392000000'
+          nullable: true
+          type: string
+        total_liabilities:
+          example: '308030000000'
+          nullable: true
+          type: string
+        total_non_current_assets:
+          example: '211993000000'
+          nullable: true
+          type: string
+        total_non_current_liabilities:
+          example: '131638000000'
+          nullable: true
+          type: string
+        total_shareholder_equity:
+          example: '56950000000'
+          nullable: true
+          type: string
+        treasury_stock:
+          example: '0'
+          nullable: true
+          type: string
+        updated_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+      title: Balance Sheet
+      type: object
+    Balance_Sheets_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Balance_Sheet'
+          type: array
+      title: Balance Sheets Response
+      type: object
+    Buy_Price:
+      description: ''
+      example: '23.49'
+      title: Buy Price
+      type: string
+    Buy_Value:
+      description: The rounded total buy value in the institution's portfolio.
+      example: '2394292.0'
+      title: Buy Value
+      type: string
+    CEX_Per_One_Percent_Move_Directionalized_Volume:
+      description: |
+        The charm 1% move based on directionalized volume
+      example: '-5559678859.12'
+      title: CEX Per One Percent Move Directionalized Volume
+      type: string
+    CEX_Per_One_Percent_Move_OI:
+      description: |
+        The charm 1% move based on OI:
+        This is calculated as charm * open interest * 365
+      example: '5124108502049.17'
+      title: CEX Per One Percent Move OI
+      type: string
+    CEX_Per_One_Percent_Move_Volume:
+      description: |
+        The charm 1% move based on volume:
+        This is calculated as charm * volume * 365
+      example: '320909908341.10'
+      title: CEX Per One Percent Move Volume
+      type: string
+    CIK:
+      description: The institution's CIK.
+      example: '0000102909'
+      title: CIK
+      type: string
+    Call_Delta:
+      description: |
+          The total call delta obtained by multiplying the volume of all call options with their latest delta.
+      example: '-21257.36'
+      title: Call Delta
+      type: number
+    Call_Fill_Delta:
+      description: |
+          The total call delta obtained by summing up the size of each call trade multiplied by the delta at the time of the transaction.
+      example: '-21257.36'
+      title: Call Fill Delta
+      type: number
+    Call_Holding_Units:
+      description: The number of call units in the institution's portfolio.
+      example: '2394292.0'
+      title: Call Holding Units
+      type: string
+    Call_Value:
+      description: The rounded total call value in the institution's portfolio.
+      example: '2394292.0'
+      title: Call Value
+      type: string
+    Call_Volume:
+      description: |
+          The cumulative total volume of call options traded.
+      example: 12348
+      title: Call Volume
+      type: integer
+    Call_Wall:
+      description: Strike above spot with the largest positive net gamma exposure (resistance).
+      example: '600'
+      nullable: true
+      title: Call Wall
+      type: string
+    Canceled:
+      description: Whether the option trade was canceled.
+      example: false
+      title: Canceled
+      type: boolean
+    Candle_Close:
+      description: The closing price of the candle.
+      example: '56.79'
+      title: Candle Close
+      type: string
+    Candle_End_time:
+      description: The end time of the candle as UTC timestamp.
+      example: 2023-09-07T20:07:00Z
+      title: Candle End time
+      type: string
+    Candle_High:
+      description: The highest price of the candle.
+      example: '58.12'
+      title: Candle High
+      type: string
+    Candle_Low:
+      description: The lowest price of the candle.
+      example: '51.90'
+      title: Candle Low
+      type: string
+    Candle_Open:
+      description: The opening price of the candle.
+      example: '54.29'
+      title: Candle Open
+      type: string
+    Candle_Start_time:
+      description: The start time of the candle as UTC timestamp.
+      example: 2023-09-07T20:06:00Z
+      title: Candle Start time
+      type: string
+    Candle_Total_volume:
+      description: The total volume of the ticker for the full trading till now.
+      example: 13744676
+      title: Candle Total volume
+      type: integer
+    Candle_Volume:
+      description: The volume of the candle.
+      example: 10699
+      title: Candle Volume
+      type: integer
+    Candle_data:
+      description: The candle data for the requested timeframe.
+      example:
+        data:
+          - close: '56.79'
+            end_time: 2023-09-07T20:11:00Z
+            high: '56.79'
+            low: '56.79'
+            market_time: po
+            open: '56.79'
+            start_time: 2023-09-07T20:10:00Z
+            total_volume: 13774488
+            volume: 29812
+          - close: '56.79'
+            end_time: 2023-09-07T20:07:00Z
+            high: '56.79'
+            low: '56.79'
+            market_time: po
+            open: '56.79'
+            start_time: 2023-09-07T20:06:00Z
+            total_volume: 13744676
+            volume: 10699
+      properties:
+        close:
+          $ref: '#/components/schemas/Candle_Close'
+        end_time:
+          $ref: '#/components/schemas/Candle_End_time'
+        high:
+          $ref: '#/components/schemas/Candle_High'
+        low:
+          $ref: '#/components/schemas/Candle_Low'
+        market_time:
+          $ref: '#/components/schemas/Market_General_Market_Time'
+        open:
+          $ref: '#/components/schemas/Candle_Open'
+        start_time:
+          $ref: '#/components/schemas/Candle_Start_time'
+        total_volume:
+          $ref: '#/components/schemas/Candle_Total_volume'
+        volume:
+          $ref: '#/components/schemas/Candle_Volume'
+      title: Candle data
+      type: object
+    Cash_Flow_Statement:
+      description: A single cash-flow period. All monetary figures are numeric strings, null when not reported.
+      properties:
+        capital_expenditures:
+          example: '-9959000000'
+          nullable: true
+          type: string
+        cashflow_from_financing:
+          example: '-121983000000'
+          nullable: true
+          type: string
+        cashflow_from_investment:
+          example: '2935000000'
+          nullable: true
+          type: string
+        change_in_cash_and_cash_equivalents:
+          example: '-794000000'
+          nullable: true
+          type: string
+        change_in_exchange_rate:
+          example: '0'
+          nullable: true
+          type: string
+        change_in_inventory:
+          example: '-1046000000'
+          nullable: true
+          type: string
+        change_in_operating_assets:
+          example: '-5900000000'
+          nullable: true
+          type: string
+        change_in_operating_liabilities:
+          example: '21572000000'
+          nullable: true
+          type: string
+        change_in_receivables:
+          example: '-5100000000'
+          nullable: true
+          type: string
+        depreciation_depletion_and_amortization:
+          example: '11445000000'
+          nullable: true
+          type: string
+        dividend_payout:
+          example: '-15234000000'
+          nullable: true
+          type: string
+        dividend_payout_common_stock:
+          example: '-15234000000'
+          nullable: true
+          type: string
+        dividend_payout_preferred_stock:
+          example: '0'
+          nullable: true
+          type: string
+        fiscal_date_ending:
+          example: 2024-09-30
+          format: date
+          type: string
+        inserted_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+        net_income:
+          example: '93736000000'
+          nullable: true
+          type: string
+        operating_cashflow:
+          example: '118254000000'
+          nullable: true
+          type: string
+        payments_for_operating_activities:
+          example: '12000000000'
+          nullable: true
+          type: string
+        payments_for_repurchase_of_common_stock:
+          example: '-94949000000'
+          nullable: true
+          type: string
+        payments_for_repurchase_of_equity:
+          example: '-94949000000'
+          nullable: true
+          type: string
+        payments_for_repurchase_of_preferred_stock:
+          example: '0'
+          nullable: true
+          type: string
+        proceeds_from_issuance_of_common_stock:
+          example: '0'
+          nullable: true
+          type: string
+        proceeds_from_issuance_of_long_term_debt:
+          example: '0'
+          nullable: true
+          type: string
+        proceeds_from_issuance_of_preferred_stock:
+          example: '0'
+          nullable: true
+          type: string
+        proceeds_from_operating_activities:
+          example: '0'
+          nullable: true
+          type: string
+        proceeds_from_repayments_of_short_term_debt:
+          example: '-1367000000'
+          nullable: true
+          type: string
+        proceeds_from_repurchase_of_equity:
+          example: '-94949000000'
+          nullable: true
+          type: string
+        proceeds_from_sale_of_treasury_stock:
+          example: '0'
+          nullable: true
+          type: string
+        profit_loss:
+          example: '93736000000'
+          nullable: true
+          type: string
+        report_type:
+          enum:
+            - annual
+            - quarterly
+          example: quarterly
+          type: string
+        reported_currency:
+          example: USD
+          nullable: true
+          type: string
+        stock_based_compensation:
+          example: '11688000000'
+          nullable: true
+          type: string
+        ticker:
+          example: AAPL
+          type: string
+        updated_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+      title: Cash Flow Statement
+      type: object
+    Cash_Flows_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Cash_Flow_Statement'
+          type: array
+      title: Cash Flows Response
+      type: object
+    Charm:
+      description: ''
+      example: '9.2'
+      title: Charm
+      type: string
+    Company_Market_Cap:
+      description: The company's market capitalization in USD
+      example: '1000000000'
+      nullable: true
+      title: Company Market Cap
+      type: string
+    Company_Politics_Candidates:
+      additionalProperties: true
+      description: Federal candidates ranked by company-linked money received in a cycle. company_linked_total covers only contributions attributed to public companies, not the candidate's overall receipts.
+      example:
+        cycle: 2026
+        data:
+          - candidate_id: 18342
+            company_count: 47
+            company_linked_total: '412500.00'
+            district: '09'
+            employee_total_estimated: '14500.00'
+            fec_candidate_id: H8MI09068
+            incumbent_challenge: incumbent
+            name: DOE, JANE A.
+            office: house
+            pac_total: '398000.00'
+            party: REP
+            politician_id: 1ccb3a38-6243-4c2f-bbcb-5986db785122
+            politician_slug: jane-doe
+            state: MI
+        limit: 50
+        page: 1
+      title: Company Politics Candidates
+      type: object
+    Company_Politics_Companies:
+      additionalProperties: true
+      description: Public companies with tracked political activity for a cycle. PAC-tier totals come from confirmed corporate PAC mappings; employee-tier totals are estimates from self-reported donor employers and are kept separate.
+      example:
+        cycle: 2026
+        data:
+          - company_name: HONEYWELL INTERNATIONAL INC
+            cycle: 2026
+            employee_contribution_count: 12
+            employee_dem_total: '3280.00'
+            employee_rep_total: '0.00'
+            employee_total_estimated: '3280.00'
+            lobbying_total: '5230000.00'
+            other_total: '7000.00'
+            pac_contribution_count: 915
+            pac_count: 1
+            pac_dem_total: '821220.00'
+            pac_rep_total: '953280.00'
+            pac_total: '1781500.00'
+            ticker: HON
+        limit: 50
+        page: 1
+      title: Company Politics Companies
+      type: object
+    Company_Politics_Contribution_Rows:
+      additionalProperties: true
+      description: 'The aggregated=false response shape: individual contributions for one tier. Pass next_cursor back as cursor to fetch the following page; next_cursor is null on the final page.'
+      example:
+        aggregated: false
+        data:
+          - amount: '2500.00'
+            candidate_id: 18342
+            candidate_name: DOE, JANE A.
+            committee_name: THE HOME DEPOT, INC. POLITICAL ACTION COMMITTEE
+            company_name: HOME DEPOT INC
+            contribution_id: 218764531
+            date: 2026-06-02
+            party: REP
+            pdf_url: https://docquery.fec.gov/cgi-bin/fecimg/?202607159876543210
+            report_year: 2026
+            ticker: HD
+            tier: pac
+        limit: 50
+        next_cursor: MjAyNjoyMTg3NjQ1MzE
+        tier: pac
+      title: Company Politics Contribution Rows
+      type: object
+    Company_Politics_Contributions:
+      additionalProperties: true
+      description: With aggregated=true (default), rows are company x candidate x cycle x tier with offset paging. With aggregated=false, rows are individual contributions for one tier, keyset-paginated via next_cursor.
+      example:
+        aggregated: true
+        data:
+          - candidate_id: 18342
+            candidate_name: DOE, JANE A.
+            company_name: HOME DEPOT INC
+            contribution_count: 4
+            cycle: 2026
+            first_date: 2025-03-14
+            last_date: 2026-06-02
+            office: house
+            party: REP
+            politician_id: 1ccb3a38-6243-4c2f-bbcb-5986db785122
+            politician_slug: jane-doe
+            state: MI
+            ticker: HD
+            tier: pac
+            total: '12500.00'
+        limit: 50
+        page: 1
+        totals:
+          contribution_count: 513
+          employee_total_estimated: '0'
+          pac_total: '1611500.00'
+          total: '1611500.00'
+      title: Company Politics Contributions
+      type: object
+    Company_Politics_Lobbying:
+      additionalProperties: true
+      description: Quarterly lobbying spend from Senate LDA filings. in_house_expenses are self-reported totals from the company's own filings; outside_income is what hired lobbying firms reported earning from the company - two separate series, not summable without double counting.
+      example:
+        company_name: HOME DEPOT INC
+        filings:
+          - client_name: THE HOME DEPOT
+            dt_posted: 2026-07-20T18:04:11Z
+            expenses: '1140000.00'
+            filing_period: second_quarter
+            filing_type: Q2
+            filing_uuid: f3a1c9d2-7b44-4e0e-9a1c-2f5d8b6e4a10
+            filing_year: 2026
+            income:
+            registrant_name: THE HOME DEPOT
+        limit: 50
+        page: 1
+        periods:
+          - filings_count: 9
+            in_house_expenses: '1140000.00'
+            outside_income: '380000.00'
+            quarter: 2
+            top_issue_codes:
+              - TAX
+              - TRD
+              - LBR
+              - CPT
+              - HCR
+            year: 2026
+          - filings_count: 8
+            in_house_expenses: '1080000.00'
+            outside_income: '350000.00'
+            quarter: 1
+            top_issue_codes:
+              - TAX
+              - TRD
+              - LBR
+            year: 2026
+        ticker: HD
+      title: Company Politics Lobbying
+      type: object
+    Company_Politics_People:
+      additionalProperties: true
+      description: 'The people around a public company: candidates funded by its PAC and employees, politicians who traded the stock, and company insiders.'
+      example:
+        candidates_funded:
+          - candidate_id: 18342
+            employee_total_estimated: '0'
+            name: DOE, JANE A.
+            office: house
+            pac_total: '12500.00'
+            party: REP
+            politician_id: 1ccb3a38-6243-4c2f-bbcb-5986db785122
+            politician_slug: jane-doe
+            state: MI
+            total: '12500.00'
+        company_name: HOME DEPOT INC
+        cycle: 2026
+        insiders:
+          - insider_id: 10343
+            is_person: true
+            name: DECKER EDWARD P
+            slug: decker-edward-p
+        politician_traders:
+          - chamber: house
+            last_filing_date: 2026-07-18
+            name: John Smith
+            party: Democrat
+            politician_id: 8b1f6c1e-93cf-4f52-a2b0-06c83f11d1a1
+            slug: john-smith
+            trade_count: 14
+        ticker: HD
+      title: Company Politics People
+      type: object
+    Company_Profile:
+      properties:
+        analyst_target_price:
+          nullable: true
+          type: number
+        asset_type:
+          example: Common Stock
+          type: string
+        beta:
+          nullable: true
+          type: number
+        cik:
+          nullable: true
+          type: string
+        country:
+          nullable: true
+          type: string
+        currency:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        dividend_yield:
+          nullable: true
+          type: number
+        ebitda:
+          nullable: true
+          type: number
+        eps:
+          nullable: true
+          type: number
+        exchange:
+          nullable: true
+          type: string
+        industry:
+          nullable: true
+          type: string
+        market_cap:
+          nullable: true
+          type: number
+        name:
+          example: Apple Inc
+          type: string
+        pe_ratio:
+          nullable: true
+          type: number
+        peg_ratio:
+          nullable: true
+          type: number
+        sector:
+          nullable: true
+          type: string
+        shares_outstanding:
+          nullable: true
+          type: number
+        ticker:
+          example: AAPL
+          type: string
+        week_52_high:
+          nullable: true
+          type: number
+        week_52_low:
+          nullable: true
+          type: number
+      title: Company Profile
+      type: object
+    Company_Profile_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Company_Profile'
+      title: Company Profile Response
+      type: object
+    Configration_IDs:
+      description: A list of alert ids to filter by.
+      example:
+        - ded2bee3-68fe-4aff-8316-f6ddbcf7ea67
+        - c170e1cb-38c8-4cc9-91a0-e9b249ef7e00
+      items:
+        type: string
+      title: Configration IDs
+      type: array
+    Congress_Member:
+      default: Nancy Pelosi
+      description: |
+        The full name of a congress member. Cannot contain digits/numbers.
+        Spaces and characters may need to be URI encoded, e.g. Adam Kinzinger -> Adam%20Kinzinger.
+      example: Adam Kinzinger
+      title: Congress Member
+      type: string
+    Congress_trade_order_by_field:
+      default: filed_at_date
+      description: The field to order the congress trades by. Defaults to filed_at_date.
+      enum:
+        - filed_at_date
+        - transaction_date
+        - low_value
+        - mid_value
+        - high_value
+      example: transaction_date
+      title: Congress trade order by field
+      type: string
+    Continent:
+      description: ''
+      example: North America
+      title: Continent
+      type: string
+    Correlation:
+      description: |
+        A list of correlations
+      example:
+        data:
+          - correlation: 0.27936797861890483
+            fst: AAPL
+            max_date: 2024-07-11
+            min_date: 2023-07-11
+            rows: 253
+            snd: SPY
+          - correlation: 0.279367978618901
+            fst: SPY
+            max_date: 2024-07-11
+            min_date: 2023-07-11
+            rows: 253
+            snd: AAPL
+      properties:
+        correlation:
+          $ref: '#/components/schemas/Correlation'
+        fst:
+          $ref: '#/components/schemas/Stock_Ticker'
+        max_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        min_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        rows:
+          $ref: '#/components/schemas/Count_of_data_points'
+        snd:
+          $ref: '#/components/schemas/Stock_Ticker'
+      title: Correlation
+      type: object
+    Correlation_End_Date:
+      description: |
+        A date in the format of YYYY-MM-DD to end the correlation calculation.
+        This is optional and defaults to the current date when start_date is provided.
+        Works alongside start_date to define a specific time range.
+        Can be used as an alternative to the interval parameter.
+      example: 2023-12-31
+      format: date
+      title: Correlation End Date
+      type: string
+    Correlation_Start_Date:
+      description: |
+        A date in the format of YYYY-MM-DD to start the correlation calculation from.
+        This is optional and works alongside end_date to define a specific time range.
+        Can be used as an alternative to the interval parameter.
+      example: 2023-01-01
+      format: date
+      title: Correlation Start Date
+      type: string
+    Count_of_data_points:
+      description: The amount of data points considered.
+      example: '100'
+      title: Count of data points
+      type: integer
+    Country_Code:
+      description: ''
+      example: US
+      title: Country Code
+      type: string
+    Country_Name:
+      description: ''
+      example: UNITED STATES
+      title: Country Name
+      type: string
+    Country_and_Sector_exposure:
+      description: ''
+      example:
+        country:
+          - country: Ireland
+            weight: '0.0164'
+          - country: Other
+            weight: '0.0059'
+          - country: Switzerland
+            weight: '0.0043'
+          - country: Netherlands
+            weight: '0.0015'
+          - country: Canada
+            weight: '0.0014'
+          - country: Bermuda
+            weight: '0.0011'
+          - country: Israel
+            weight: '0.0001'
+          - country: United States
+            weight: '0.9693'
+        sector:
+          - sector: Basic Materials
+            weight: '0.022'
+          - sector: Communication Services
+            weight: '0.0861'
+          - sector: Consumer Cyclical
+            weight: '0.1091'
+          - sector: Consumer Defensive
+            weight: '0.0626'
+          - sector: Energy
+            weight: '0.041'
+          - sector: Financial Services
+            weight: '0.125'
+          - sector: Healthcare
+            weight: '0.1272'
+          - sector: Industrials
+            weight: '0.0816'
+          - sector: Other
+            weight: '0.00009999999999990905'
+          - sector: Real Estate
+            weight: '0.0243'
+          - sector: Technology
+            weight: '0.2971'
+          - sector: Utilities
+            weight: '0.0239'
+      properties:
+        country:
+          $ref: '#/components/schemas/Etf_Countries'
+        sector:
+          $ref: '#/components/schemas/Etf_Sectors'
+      title: Country & Sector exposure
+      type: object
+    Create_alert_config_request:
+      description: |
+        Creates a new alert configuration, or updates an existing one when `id` is given.
+
+        The alert filters can be given in one of two ways, but never both:
+        - `config`: a structured filter object for the given `noti_type`. Fetch the available filter fields per alert type from `GET /api/alerts/filters`.
+        - `input`: a DSL expression such as `add @energy where calls and volume > 100`. Fetch the DSL grammar from `GET /api/alerts/query/grammar`. The `noti_type` field is required for DSL expressions.
+      example:
+        input: add @energy where calls and volume > 100
+        name: Energy call sweeps
+        noti_type: flow_alerts
+      oneOf:
+        - required:
+            - name
+            - noti_type
+            - config
+        - required:
+            - name
+            - noti_type
+            - input
+      properties:
+        config:
+          $ref: '#/components/schemas/The_configuration_of_an_alert.'
+        id:
+          description: When given, updates the existing alert configuration with this id instead of creating a new one.
+          format: uuid
+          type: string
+        input:
+          description: A DSL expression describing the alert filters. Use instead of `config` for complex filter expressions. See the DSL grammar endpoint for the syntax.
+          example: where calls and volume > 100 and premium > 10000
+          type: string
+        name:
+          $ref: '#/components/schemas/The_name_of_the_alert'
+        noti_type:
+          $ref: '#/components/schemas/The_type_of_the_alert'
+        status:
+          $ref: '#/components/schemas/The_status_of_the_alert'
+      title: Create alert config request
+      type: object
+    Created_alert_config:
+      description: The created or updated alert configuration
+      example:
+        data:
+          config:
+            expression:
+              op: and
+              terms:
+                - sectors:
+                    - Energy
+                - op: and
+                  terms:
+                    - is_call: true
+                    - compare:
+                        lhs:
+                          field: volume
+                        op: gt
+                        rhs:
+                          literal: '100'
+            symbols: all
+          created_at: 2025-07-01T14:00:00Z
+          dsl: '@Energy where calls and volume > 100'
+          id: ebe24953-a0bf-4b4d-98be-14f721a1199a
+          name: Energy call sweeps
+          noti_type: flow_alerts
+          status: active
+      properties:
+        data:
+          properties:
+            config:
+              $ref: '#/components/schemas/The_configuration_of_an_alert.'
+            created_at:
+              $ref: '#/components/schemas/The_creation_timestamp'
+            dsl:
+              description: The canonical DSL representation when the configuration was created or updated using `input`.
+              type: string
+            id:
+              $ref: '#/components/schemas/The_alert_id'
+            name:
+              $ref: '#/components/schemas/The_name_of_the_alert'
+            noti_type:
+              $ref: '#/components/schemas/The_type_of_the_alert'
+            status:
+              $ref: '#/components/schemas/The_status_of_the_alert'
+          type: object
+      required:
+        - data
+      title: Created alert config
+      type: object
+    CryptoApiNumberArg:
+      example: 1000000000
+      nullable: true
+      title: CryptoApiNumberArg
+      type: number
+    CryptoDateTime:
+      description: RFC 3339 datetime.
+      example: 2024-01-25T18:30:00Z
+      title: CryptoDateTime
+      type: string
+    Crypto_API_OHLC_Candle:
+      description: A single OHLC candle for a crypto pair. Prices and volume are numeric strings.
+      properties:
+        bucket_start:
+          example: 2026-07-29T12:34:00Z
+          format: date-time
+          type: string
+        close:
+          example: '93210.00'
+          type: string
+        high:
+          example: '94321.00'
+          type: string
+        low:
+          example: '89000.00'
+          type: string
+        open:
+          example: '90000.00'
+          type: string
+        trades:
+          example: 12345
+          type: number
+        volume:
+          example: '12345.67'
+          type: string
+      title: Crypto API OHLC Candle
+      type: object
+    Crypto_API_OHLC_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Crypto_API_OHLC_Candle'
+          type: array
+        next_token:
+          example: QEREAFDFEEE=
+          type: string
+      title: Crypto API OHLC Response
+      type: object
+    Crypto_API_Token_Metadata:
+      description: Metadata for a single crypto token. Prices and volume are numeric strings.
+      properties:
+        address:
+          example: So11111111111111111111111111111111111111112
+          type: string
+        circulating_supply:
+          example: '94321.00'
+          type: string
+        decimals:
+          example: 9
+          type: integer
+        fdv:
+          example: '94321.00'
+          type: string
+        holder:
+          example: 93210
+          type: integer
+        liquidity:
+          example: '12345.67'
+          type: string
+        logo_uri:
+          example: http://foo.com
+          type: string
+        market_cap:
+          example: '12345.67'
+          type: string
+        name:
+          example: Prisma Staked SOL
+          type: string
+        symbol:
+          example: SOLANA
+          type: string
+        total_supply:
+          example: '12345.67'
+          type: string
+      title: Crypto API Token Metadata
+      type: object
+    Crypto_API_Transaction:
+      description: A single transaction for a crypto pair. Prices and volume are numeric strings.
+      properties:
+        block_number:
+          example: 91232828
+          type: integer
+        block_time:
+          example: 2024-01-05T00:30:00Z
+          type: string
+        from_amount:
+          example: '94321.00'
+          type: string
+        from_price:
+          example: '94321.00'
+          type: string
+        from_token:
+          example: So11111111111111111111111111111111111111112
+          type: string
+        interacted_program_id:
+          example: LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo
+          type: string
+        owner:
+          example: 5sENFdd4BUfxKF3MLYCzVNxK83n7DTwogVJxzkzuL53F
+          type: string
+        pool_id:
+          example: 5nDXsFEYKTunuujq5Tmjs25PTyhuzJzxU6ZubvJpdvvd
+          type: string
+        signers:
+          items:
+            type: string
+          type: array
+        source:
+          example: meteora_dlmm
+          type: string
+        to_amount:
+          example: '94321.00'
+          type: string
+        to_price:
+          example: '94321.00'
+          type: string
+        to_token:
+          example: So11111111111111111111111111111111111111112
+          type: string
+        tx_hash:
+          example: 2PPNNGLt8zkrQVr8NQ4Tdo98aET5QxbmchyBmTgRkTUGuymKYmubavgWD6jhrkCgV49RA4Cnivxo2ZNhLWpNLHFy
+          type: string
+        tx_type:
+          example: swap
+          type: string
+        volume:
+          example: '12345.67'
+          type: string
+        volume_usd:
+          example: '12345.67'
+          type: string
+      title: Crypto API Transaction
+      type: object
+    Crypto_Holding:
+      description: A cryptocurrency holding in a portfolio
+      properties:
+        max_amount:
+          description: The maximum cryptocurrency amount.
+          example: 0.1339285714285714
+          format: float
+          type: number
+        mid_amount:
+          description: The midpoint cryptocurrency amount.
+          example: 0.0714330357142857
+          format: float
+          type: number
+        min_amount:
+          description: The minimum cryptocurrency amount.
+          example: 0.0089375
+          format: float
+          type: number
+        symbol:
+          description: The cryptocurrency symbol.
+          example: BTC-USD
+          type: string
+        type:
+          description: The holding type.
+          example: crypto
+          type: string
+      title: Crypto Holding
+      type: object
+    Crypto_OHLC_Candle:
+      description: A single OHLC candle for a crypto pair. Prices and volume are numeric strings.
+      properties:
+        close:
+          example: '93210.00'
+          type: string
+        high:
+          example: '94321.00'
+          type: string
+        low:
+          example: '89000.00'
+          type: string
+        open:
+          example: '90000.00'
+          type: string
+        pair:
+          example: BTC-USD
+          type: string
+        start_time:
+          example: 2026-07-29T12:34:00Z
+          format: date-time
+          type: string
+        timestamp:
+          example: 2026-07-29T12:35:00Z
+          format: date-time
+          type: string
+        volume:
+          example: '12345.67'
+          type: string
+      title: Crypto OHLC Candle
+      type: object
+    Crypto_OHLC_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Crypto_OHLC_Candle'
+          type: array
+      title: Crypto OHLC Response
+      type: object
+    Crypto_Pair_State:
+      description: Rolling 24-hour state for a crypto pair. Prices and volume are numeric strings.
+      properties:
+        close_24h:
+          example: '93210.00'
+          type: string
+        date:
+          example: 2026-07-29
+          format: date
+          type: string
+        high_24h:
+          example: '94321.00'
+          type: string
+        low_24h:
+          example: '89000.00'
+          type: string
+        open_24h:
+          example: '90000.00'
+          type: string
+        pair:
+          example: BTC-USD
+          type: string
+        timestamp:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+        volume_24h:
+          example: '12345.67'
+          type: string
+      title: Crypto Pair State
+      type: object
+    Crypto_Pair_State_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Crypto_Pair_State'
+          description: Null when no state is recorded for the pair.
+          nullable: true
+      title: Crypto Pair State Response
+      type: object
+    Crypto_Recent_Whales_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Crypto_Whale_Trade'
+          type: array
+      title: Crypto Recent Whales Response
+      type: object
+    Crypto_Tokens_List_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Crypto_API_Token_Metadata'
+          type: array
+        next_token:
+          example: QEREAFDFEEE=
+          type: string
+      title: Crypto Tokens List Response
+      type: object
+    Crypto_Transactions_List_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Crypto_API_Transaction'
+          type: array
+        next_token:
+          example: QEREAFDFEEE=
+          type: string
+      title: Crypto Transactions List Response
+      type: object
+    Crypto_Whale_Trade:
+      description: A large ('whale') crypto trade. Price, size, and total are numeric strings.
+      properties:
+        exchange:
+          example: Coinbase
+          type: string
+        id:
+          format: uuid
+          type: string
+        pair:
+          example: BTC-USD
+          type: string
+        price:
+          example: '93210.00'
+          type: string
+        side:
+          enum:
+            - buy
+            - sell
+          example: buy
+          type: string
+        size:
+          example: '88.88'
+          type: string
+        symbol:
+          example: BTC
+          type: string
+        total:
+          example: '8282828.00'
+          type: string
+        whaled_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+      title: Crypto Whale Trade
+      type: object
+    Crypto_Whale_Transaction:
+      description: A large on-chain crypto transaction. Amounts are numeric strings.
+      properties:
+        amount_formatted:
+          example: '9999.00'
+          type: string
+        blockchain:
+          enum:
+            - arbitrum
+            - avalanche
+            - binance_smart_chain
+            - bitcoin
+            - cardano
+            - dogecoin
+            - ethereum
+            - fantom
+            - optimism
+            - polkadot
+            - polygon
+            - ripple
+            - solana
+            - tron
+          example: ethereum
+          type: string
+        from_address:
+          example: '0x1234567890abcdef1234567890abcdef12345678'
+          type: string
+        id:
+          example: 1
+          type: integer
+        timestamp:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+        to_address:
+          example: '0xabcdef1234567890abcdef1234567890abcdef12'
+          nullable: true
+          type: string
+        token_name:
+          example: Ethereum
+          nullable: true
+          type: string
+        token_symbol:
+          example: ETH
+          nullable: true
+          type: string
+        transaction_hash:
+          example: '0x5c8f1e2d3a4b5c6d7e8f90a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d'
+          type: string
+        transaction_type:
+          enum:
+            - transfer
+            - swap
+            - mint
+            - burn
+            - stake
+            - unstake
+            - nft_purchase
+            - nft_sale
+            - defi_interaction
+          example: transfer
+          type: string
+        usd_value:
+          example: '33330000.00'
+          nullable: true
+          type: string
+        whale_score:
+          example: '87.50'
+          nullable: true
+          type: string
+      title: Crypto Whale Transaction
+      type: object
+    Crypto_Whale_Transactions_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Crypto_Whale_Transaction'
+          type: array
+      title: Crypto Whale Transactions Response
+      type: object
+    Cumulative_Volume:
+      description: The cumulative stock volume through the trading day.
+      example: 23132119
+      title: Cumulative Volume
+      type: integer
+    DTE:
+      description: The number of days until the option expires.
+      example: 5
+      title: DTE
+      type: integer
+    Daily_Market_Report:
+      description: |
+        A curated daily market report: the biggest up-moves in volatility and biggest moves in skew over
+        the liquid options universe (liquidity- and outlier-adjusted via the anomaly universe), the top
+        net-premium flow, the market tide, and the day's catalysts. One call for the whole digest.
+      example:
+        data:
+          catalysts:
+            counts_by_type: {}
+            data: []
+            types: []
+          date: 2026-09-02
+          flow:
+            bearish:
+              - net_premium: -1.8e6
+                ticker: TSLA
+            bullish:
+              - net_premium: 2.5e6
+                ticker: AAPL
+          skew:
+            - components:
+                skew_percentile:
+                  value: 0.88
+              score: 78.2
+              ticker: XYZ
+          tide:
+            data: []
+            date: 2026-09-02
+          vol:
+            cheapest:
+              - components:
+                  iv_percentile:
+                    value: 0.04
+                direction: long_vol
+                sample_size: 5
+                score: -71.4
+                ticker: ABC
+            richest:
+              - components:
+                  iv_percentile:
+                    value: 0.96
+                  skew_percentile:
+                    value: 0.88
+                direction: short_vol
+                sample_size: 5
+                score: 78.2
+                ticker: XYZ
+      properties:
+        catalysts:
+          description: The day's high-signal catalysts — macro (econ/FOMC/CPI, market/OPEX) first, then FDA decisions, then optionable ≥$1B earnings ranked by expected move (blended with size), plus guidance, investor days, splits, IPOs and halts. Each entry carries an `impact` string (earnings expected move `±X%`, FDA decision, econ forecast). Low-signal ex-dividends and analyst notes are excluded.
+          type: object
+        date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        flow:
+          description: 'Top net-premium tickers for the day: `bullish` and `bearish`.'
+          type: object
+        skew:
+          description: Biggest skew moves — the same universe ranked by the 25-delta risk-reversal component.
+          items:
+            type: string
+          type: array
+        stock_movers:
+          description: Stocks with the biggest volume spike vs their 30-day average, liquidity-filtered.
+          items:
+            type: string
+          type: array
+        tide:
+          description: Market-wide net premium (market tide) for the day.
+          type: object
+        unusual_options:
+          description: "The day's biggest unusual option contracts (the Hottest Chains unusual preset: volume>OI, OTM, ask-side, premium≥$10k)."
+          items:
+            type: string
+          type: array
+        vol:
+          description: 'Biggest volatility moves: `richest` (IV expensive / vol elevated) and `cheapest` (vol crushed), ranked by the anomaly score, each row carrying the full component fields (iv_percentile, skew_percentile, vrp_z, vov_percentile, regime_score).'
+          type: object
+      title: Daily Market Report
+      type: object
+    Daily_Market_Tide:
+      description: ''
+      example:
+        data:
+          - date: 2023-09-08
+            net_call_premium: '660338.0000'
+            net_put_premium: '-547564.0000'
+            net_volume: 23558
+            timestamp: 2023-09-08T09:30:00-04:00
+          - date: 2023-09-08
+            net_call_premium: '4907138.0000'
+            net_put_premium: '-1709539.0000'
+            net_volume: 64312
+            timestamp: 2023-09-08T09:31:00-04:00
+          - date: 2023-09-08
+            net_call_premium: '4839265.0000'
+            net_put_premium: '-2731793.0000'
+            net_volume: 80029
+            timestamp: 2023-09-08T09:32:00-04:00
+      properties:
+        net_call_premium:
+          $ref: '#/components/schemas/Market_General_Net_Call_Premium'
+        net_put_premium:
+          $ref: '#/components/schemas/Market_General_Net_Put_Premium'
+        net_volume:
+          $ref: '#/components/schemas/Market_General_Net_Volume'
+        timestamp:
+          $ref: '#/components/schemas/General_Tick_time'
+      title: Daily Market Tide
+      type: object
+    Darkpool_Price_Level:
+      properties:
+        dark_pool_volume:
+          description: Stock volume executed off exchange.
+          type: integer
+        price:
+          $ref: '#/components/schemas/Stock_Price_Level'
+        regular_volume:
+          description: Stock volume executed on lit exchanges.
+          type: integer
+      title: Darkpool Price Level
+      type: object
+    Darkpool_Price_Levels:
+      example:
+        data:
+          - dark_pool_volume: 12000
+            price: '123.25'
+            regular_volume: 35000
+        date: 2026-08-03
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Darkpool_Price_Level'
+          type: array
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+      title: Darkpool Price Levels
+      type: object
+    Darkpool_Trade:
+      description: A darkpool trade.
+      example:
+        data:
+          - canceled: false
+            executed_at: 2025-05-02T13:42:12Z
+            ext_hour_sold_codes: extended_hours_trade
+            market_center: L
+            nbbo_ask: '19'
+            nbbo_ask_quantity: 6600
+            nbbo_bid: '18.99'
+            nbbo_bid_quantity: 29100
+            premium: '121538.56'
+            price: '18.9904'
+            sale_cond_codes:
+            size: 6400
+            ticker: QID
+            tracking_id: 71984388012245
+            trade_code:
+            trade_settlement: regular_settlement
+            trf_executed_at: 2025-05-02T13:42:11Z
+            volume: 9946819
+          - canceled: false
+            executed_at: 2023-02-16T00:59:44Z
+            ext_hour_sold_codes: extended_hours_trade
+            market_center: L
+            nbbo_ask: '19'
+            nbbo_ask_quantity: 6600
+            nbbo_bid: '18.99'
+            nbbo_bid_quantity: 29100
+            premium: '353214'
+            price: '18.99'
+            sale_cond_codes:
+            size: 18600
+            ticker: QID
+            tracking_id: 71984384768588
+            trade_code:
+            trade_settlement: regular_settlement
+            trf_executed_at:
+            volume: 9940419
+      properties:
+        canceled:
+          $ref: '#/components/schemas/Single_Trade_Is_Trade_Cancelled'
+        executed_at:
+          $ref: '#/components/schemas/Single_Trade_Execution_Time'
+        ext_hour_sold_codes:
+          $ref: '#/components/schemas/Single_Trade_External_Hour_Sold_Code'
+        market_center:
+          $ref: '#/components/schemas/Single_Trade_Market_Center'
+        nbbo_ask:
+          $ref: '#/components/schemas/ToBeDone'
+        nbbo_ask_quantity:
+          $ref: '#/components/schemas/ToBeDone'
+        nbbo_bid:
+          $ref: '#/components/schemas/ToBeDone'
+        nbbo_bid_quantity:
+          $ref: '#/components/schemas/ToBeDone'
+        premium:
+          $ref: '#/components/schemas/Option_Contract_Premium'
+        price:
+          $ref: '#/components/schemas/Single_Trade_Price'
+        sale_cond_codes:
+          $ref: '#/components/schemas/Single_Trade_Sale_Cond_Code'
+        size:
+          $ref: '#/components/schemas/Single_Trade_Size'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        tracking_id:
+          $ref: '#/components/schemas/Single_Trade_Tracking_ID'
+        trade_code:
+          $ref: '#/components/schemas/Single_Trade_Trade_Code'
+        trade_settlement:
+          $ref: '#/components/schemas/Single_Trade_Settlement'
+        trf_executed_at:
+          $ref: '#/components/schemas/Single_Trade_TRF_Execution_Time'
+        volume:
+          $ref: '#/components/schemas/Stock_Day_Stock_Volume'
+      title: Darkpool Trade
+      type: object
+    Darkpool_order_by_field:
+     

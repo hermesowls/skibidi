@@ -1,0 +1,11 @@
+{
+  "logical_path": "references/categories/websocket.md",
+  "parts": [
+    "references/categories/websocket.md.part000",
+    "references/categories/websocket.md.part001",
+    "references/categories/websocket.md.part002"
+  ],
+  "sha256": "ad3f152941a7d6e81e1a604a588eeda9d2400474f716a655bbd86a9c3ab96999",
+  "bytes": 204321,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

@@ -51,9 +51,13 @@ from hermes_cli._subprocess_compat import windows_detach_flags, windows_hide_fla
 from hermes_cli.install_identity import get_install_id as _shared_get_install_id
 import urllib.request
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple
 
-import yaml
+if TYPE_CHECKING:
+    import uvicorn
+    from tools.mcp_dashboard_oauth import DashboardOAuthFlow
+
+import yaml  # type: ignore[import-untyped]
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 if str(PROJECT_ROOT) not in sys.path:
@@ -316,7 +320,7 @@ def _start_desktop_cron_ticker(stop_event: "threading.Event", interval: int = 60
                 )
                 from hermes_logging import enable_profile_log_routing
 
-                enable_profile_log_routing(profile_homes)
+                enable_profile_log_routing([home for _name, home in profile_homes])
                 _log.info(
                     "Desktop cron scheduler will tick %d profile(s): %s",
                     len(profile_homes),
@@ -1682,7 +1686,7 @@ def _custom_provider_options(
     backend schema (web dashboard) and the desktop client agree on which
     names are offered.
     """
-    names = [str(n) for n in builtin_names]
+    names = list(builtin_names)
     seen = {n.strip().lower() for n in names}
 
     # Guard against the RUNTIME built-in sets, not the display shortlist
@@ -2203,7 +2207,7 @@ def _count_status_active_sessions() -> int:
         return sum(
             1 for s in sessions
             if s.get("ended_at") is None
-            and (now - s.get("last_active", s.get("started_at", 0))) < 300
+            and (now - float(s.get("last_active") or s.get("started_at") or 0.0)) < 300
         )
     finally:
         db.close()
@@ -2429,7 +2433,7 @@ _FS_MIME_TYPES = {
 
 
 def _fs_path(raw_path: str) -> Path:
-    raw = str(raw_path or "").strip()
+    raw = (raw_path or "").strip()
     if not raw:
         raise HTTPException(status_code=400, detail="Path is required")
     if "\0" in raw:
@@ -2612,7 +2616,7 @@ def _path_is_under(root: Path, target: Path) -> bool:
 
 
 def _path_text(raw_path: str | None) -> str:
-    text = str(raw_path or "").strip()
+    text = (raw_path or "").strip()
     if "\x00" in text:
         raise HTTPException(status_code=400, detail="Invalid path")
     return text
@@ -2798,7 +2802,7 @@ _CHAT_IMAGE_MAGIC: tuple[tuple[bytes, str], ...] = (
 
 
 def _sanitize_chat_image_filename(filename: str | None) -> str:
-    candidate = Path(str(filename or "").strip()).name
+    candidate = Path((filename or "").strip()).name
     candidate = re.sub(r"[\x00-\x1f]+", "_", candidate)
     candidate = candidate.strip().strip(".")
     return candidate or "pasted-image"
@@ -2823,7 +2827,7 @@ def _decode_chat_image_upload(payload: ChatImageUpload) -> tuple[bytes, str, str
         raise HTTPException(status_code=413, detail=f"Image is too large; cap is {mb} MB")
 
     ext = _chat_image_extension(data)
-    if ext not in _CHAT_IMAGE_ALLOWED_EXTENSIONS:
+    if not ext or ext not in _CHAT_IMAGE_ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=400, detail="Unsupported image type")
     return data, mime_type, ext
 
@@ -3184,7 +3188,7 @@ async def fs_list(path: str):
                     "path": str(target / entry.name),
                     "isDirectory": entry.is_dir(follow_symlinks=False),
                 })
-        entries.sort(key=lambda item: (not item["isDirectory"], item["name"].lower(), item["name"]))
+        entries.sort(key=lambda item: (not item["isDirectory"], str(item["name"]).lower(), str(item["name"])))
         return {"entries": entries}
     except FileNotFoundError:
         return {"entries": [], "error": "ENOENT"}
@@ -3467,7 +3471,11 @@ def _profile_platform_ports(profile_home: Path, runtime: Optional[dict]) -> Dict
         port_key, default_port = _PORT_BINDING_PLATFORM_PORTS[name]
         block = blocks.get(name) or {}
         extra = block.get("extra") if isinstance(block.get("extra"), dict) else {}
-        raw = block.get(port_key, (extra or {}).get(port_key, default_port))
+        raw = block.get(port_key)
+        if raw is None and isinstance(extra, dict):
+            raw = extra.get(port_key)
+        if raw is None:
+            raw = default_port
         try:
             ports[name] = int(raw)
         except (TypeError, ValueError):
@@ -4392,8 +4400,8 @@ async def get_curator_status():
 async def set_curator_paused(body: CuratorPause):
     from agent import curator
 
-    curator.set_paused(bool(body.paused))
-    return {"ok": True, "paused": bool(body.paused)}
+    curator.set_paused(body.paused)
+    return {"ok": True, "paused": body.paused}
 
 
 @app.post("/api/curator/run")
@@ -4589,8 +4597,8 @@ async def run_debug_share_endpoint(body: DebugShareRequest | None = None):
     try:
         result = await asyncio.to_thread(
             build_debug_share,
-            log_lines=max(1, min(int(req.lines), 5000)),
-            redact=bool(req.redact),
+            log_lines=max(1, min(req.lines, 5000)),
+            redact=req.redact,
         )
     except RuntimeError as exc:
         # Required summary-report upload failed (offline / paste service down).
@@ -5230,7 +5238,7 @@ def _recent_upstream_commits(n: int = 20) -> List[Dict[str, Any]]:
                 "log",
                 "--format=%H%x1f%s%x1f%an%x1f%ct",
                 "HEAD..origin/main",
-                f"-n{int(n)}",
+                f"-n{n}",
             ],
             capture_output=True,
             text=True,
@@ -6539,7 +6547,7 @@ def _dependency_importable(dep: str) -> bool:
 
 
 def _trim_setup_output(value: Optional[str], limit: int = 4000) -> str:
-    text = str(value or "")
+    text = value or ""
     if len(text) <= limit:
         return text
     return f"{text[:limit]}\n... truncated ..."
@@ -6954,7 +6962,7 @@ def _env_lookup(env_key: Optional[str]) -> str:
     if not env_key:
         return ""
     env_on_disk = load_env()
-    return str(env_on_disk.get(env_key) or os.environ.get(env_key) or "")
+    return env_on_disk.get(env_key) or os.environ.get(env_key) or ""
 
 
 def _coerce_bool(value: Any, *, default: bool = False) -> bool:
@@ -7144,10 +7152,10 @@ def _discover_memory_provider_statuses() -> List[Dict[str, Any]]:
         from plugins.memory import discover_memory_providers
 
         for name, description, available in discover_memory_providers():
-            discovered[str(name)] = {
-                "name": str(name),
-                "description": str(description or ""),
-                "available": bool(available),
+            discovered[name] = {
+                "name": name,
+                "description": description or "",
+                "available": available,
                 "missing": False,
             }
     except Exception:
@@ -7600,9 +7608,9 @@ async def get_model_options(
             with _config_profile_scope(profile):
                 return build_model_options_payload(
                     load_picker_context(),
-                    explicit_only=bool(explicit_only),
-                    include_unconfigured=bool(include_unconfigured),
-                    refresh=bool(refresh),
+                    explicit_only=explicit_only,
+                    include_unconfigured=include_unconfigured,
+                    refresh=refresh,
                 )
 
         return await run_in_threadpool(_build_payload_scoped)
@@ -7680,7 +7688,7 @@ def get_recommended_default_model(provider: str = ""):
                 )
 
             model = pick_silent_default_model(model_ids, provider="nous")
-            return {"provider": "nous", "model": model, "free_tier": bool(free_tier)}
+            return {"provider": "nous", "model": model, "free_tier": free_tier}
         except Exception:
             _log.exception("GET /api/model/recommended-default (nous) failed")
             return {"provider": "nous", "model": "", "free_tier": None}
@@ -7778,8 +7786,8 @@ def set_moa_models(body: MoaConfigPayload, profile: Optional[str] = None):
         from hermes_cli.moa_config import normalize_moa_config, validate_moa_payload
 
         def _slot_dict(slot: MoaModelSlot) -> dict:
-            # Drop unset optionals so saved slots stay minimal ({provider, model}).
-            return {k: v for k, v in slot.dict().items() if v is not None}
+            data = slot.model_dump() if hasattr(slot, "model_dump") else getattr(slot, "dict")()
+            return {k: v for k, v in data.items() if v is not None}
 
         def _preset_dict(preset: MoaPresetPayload) -> dict:
             return {
@@ -8343,7 +8351,11 @@ def _approval_mode_of(config: Dict[str, Any]) -> str:
     from tools.approval import _normalize_approval_mode
 
     approvals = config.get("approvals")
-    default_mode = (DEFAULT_CONFIG.get("approvals") or {}).get("mode", "manual")
+    default_mode = "manual"
+    if isinstance(DEFAULT_CONFIG, dict):
+        approvals_default = DEFAULT_CONFIG.get("approvals")
+        if isinstance(approvals_default, dict):
+            default_mode = str(approvals_default.get("mode") or "manual")
     mode = approvals.get("mode", default_mode) if isinstance(approvals, dict) else default_mode
     return _normalize_approval_mode(mode)
 
@@ -8774,7 +8786,7 @@ def _write_custom_endpoint(cfg: Dict[str, Any], body: CustomEndpointUpdate) -> T
         "name": name,
         "base_url": base_url,
         "model": model,
-        "discover_models": bool(body.discover_models),
+        "discover_models": body.discover_models,
     })
     # Same for the model map: merge rather than replace, so existing models
     # keep their context lengths. ``body.models`` is the catalogue the panel's
@@ -8785,15 +8797,15 @@ def _write_custom_endpoint(cfg: Dict[str, Any], body: CustomEndpointUpdate) -> T
     existing_models = entry.get("models")
     models_map: Dict[str, Any] = dict(existing_models) if isinstance(existing_models, dict) else {}
     for candidate in (*(body.models or ()), model):
-        model_id = str(candidate).strip()
+        model_id = candidate.strip()
         if not model_id:
             continue
         current = models_map.get(model_id)
         models_map[model_id] = dict(current) if isinstance(current, dict) else {}
     entry["models"] = models_map
     if body.context_length and body.context_length > 0:
-        entry["context_length"] = int(body.context_length)
-        entry["models"][model]["context_length"] = int(body.context_length)
+        entry["context_length"] = body.context_length
+        entry["models"][model]["context_length"] = body.context_length
 
     # API keys never belong in config.yaml (#69449). Write to .env and
     # reference it via ``key_env`` — the same indirection built-in providers
@@ -11023,7 +11035,7 @@ def _truncate_token(value: Optional[str], visible: int = 6) -> str:
     if callable(value) and not isinstance(value, str):
         # Entra ID bearer provider — never reveal a minted token in the UI.
         return "<entra-id-bearer>"
-    s = str(value)
+    s = value
     if "." in s and s.count(".") >= 2:
         # Looks like a JWT — show the trailing piece of the signature only.
         s = s.rsplit(".", 1)[-1]
@@ -11585,7 +11597,7 @@ async def disconnect_oauth_provider(
                 except Exception:
                     pass
                 _log.info("oauth/disconnect: %s", provider_id)
-                return {"ok": bool(cleared), "provider": provider_id}
+                return {"ok": cleared, "provider": provider_id}
 
             try:
                 from hermes_cli.auth import clear_provider_auth, invalidate_nous_auth_status_cache
@@ -11593,7 +11605,7 @@ async def disconnect_oauth_provider(
                 if provider_id == "nous":
                     invalidate_nous_auth_status_cache()
                 _log.info("oauth/disconnect: %s (cleared=%s)", provider_id, cleared)
-                return {"ok": bool(cleared), "provider": provider_id}
+                return {"ok": cleared, "provider": provider_id}
             except Exception as e:
                 _log.exception("disconnect %s failed", provider_id)
                 raise HTTPException(status_code=500, detail=str(e))
@@ -12806,7 +12818,7 @@ def _prune_sessions(body: SessionPrune):
     profile_home = _cron_profile_home(body.profile)[1] if body.profile else get_hermes_home()
     db = _open_session_db_for_profile(body.profile, read_only=False)
     try:
-        filters = dict(
+        filters: dict[str, Any] = dict(
             older_than_days=_effective_older_than,
             source=(body.source or None),
             started_before=body.started_before,
@@ -13236,8 +13248,9 @@ def _find_cron_job_profile(job_id: str) -> Optional[str]:
         if not name:
             continue
         jobs = _call_cron_for_profile(name, "list_jobs", True)
-        if any(j.get("id") == job_id or j.get("name") == job_id for j in jobs):
-            return name
+        if isinstance(jobs, list):
+            if any(isinstance(j, dict) and (j.get("id") == job_id or j.get("name") == job_id) for j in jobs):
+                return name
     return None
 
 
@@ -13252,7 +13265,9 @@ def _list_cron_jobs_sync(profile: str = "all"):
         if not name:
             continue
         try:
-            jobs.extend(_call_cron_for_profile(name, "list_jobs", True))
+            cron_res = _call_cron_for_profile(name, "list_jobs", True)
+            if isinstance(cron_res, list):
+                jobs.extend(cron_res)
         except Exception:
             _log.exception("Failed to list cron jobs for profile %s", name)
     return jobs
@@ -13333,11 +13348,11 @@ def _list_cron_job_runs_sync(job_id: str, profile: Optional[str] = None, limit: 
     canonical = job_id
     if selected:
         job = _call_cron_for_profile(selected, "get_job", job_id)
-        if job and job.get("id"):
+        if isinstance(job, dict) and job.get("id"):
             canonical = str(job["id"])
 
     try:
-        limit_n = max(1, min(int(limit), 100))
+        limit_n = max(1, min(limit, 100))
     except (TypeError, ValueError):
         limit_n = 20
 
@@ -13348,7 +13363,7 @@ def _list_cron_job_runs_sync(job_id: str, profile: Optional[str] = None, limit: 
         for s in runs:
             s["is_active"] = (
                 s.get("ended_at") is None
-                and (now - s.get("last_active", s.get("started_at", 0))) < 300
+                and (now - float(s.get("last_active") or s.get("started_at") or 0.0)) < 300
             )
             s["archived"] = bool(s.get("archived"))
             if selected:
@@ -13367,7 +13382,7 @@ def _create_cron_job_sync(body: CronJobCreate, profile: Optional[str] = None):
         skills = _cron_string_list(body.skills)
         context_from = _cron_string_list(body.context_from)
         _validate_dashboard_cron_context_from(context_from, profile_name)
-        no_agent = bool(body.no_agent)
+        no_agent = body.no_agent
         _validate_dashboard_cron_effective_job({
             "prompt": body.prompt,
             "skills": skills,
@@ -13410,7 +13425,7 @@ def _update_cron_job_sync(job_id: str, body: CronJobUpdate, profile: Optional[st
     try:
         profile_name, profile_home = _cron_profile_home(selected)
         existing = _call_cron_for_profile(profile_name, "get_job", job_id)
-        if not existing:
+        if not existing or not isinstance(existing, dict):
             raise HTTPException(status_code=404, detail="Job not found")
         updates = _normalize_dashboard_cron_updates(
             body.updates,
@@ -13423,7 +13438,7 @@ def _update_cron_job_sync(job_id: str, body: CronJobUpdate, profile: Optional[st
             )
         execution_fields = {"prompt", "skill", "skills", "script", "no_agent"}
         if execution_fields.intersection(updates):
-            effective = {**existing, **updates}
+            effective: dict[str, Any] = {**existing, **updates}
             if "skills" in updates and "skill" not in updates:
                 effective["skill"] = None
             _validate_dashboard_cron_effective_job(effective)
@@ -13468,7 +13483,7 @@ def _trigger_cron_job_sync(job_id: str, profile: Optional[str] = None):
     if not selected:
         raise HTTPException(status_code=404, detail="Job not found")
     job = _call_cron_for_profile(selected, "resolve_job_ref", job_id)
-    if not job:
+    if not job or not isinstance(job, dict):
         raise HTTPException(status_code=404, detail="Job not found")
     # Do not expose the job as due before claiming it: the built-in ticker and
     # external/manual fire paths share the same durable claim, so only one can
@@ -13478,7 +13493,7 @@ def _trigger_cron_job_sync(job_id: str, profile: Optional[str] = None):
     force = not job.get("enabled", True) or job.get("state") == "paused"
     ran = _fire_cron_job_for_profile(selected, job["id"], force=force)
     refreshed = _call_cron_for_profile(selected, "get_job", job["id"])
-    if refreshed and refreshed.get("last_run_at") != job.get("last_run_at"):
+    if isinstance(refreshed, dict) and refreshed.get("last_run_at") != job.get("last_run_at"):
         return refreshed
     if not ran:
         raise HTTPException(
@@ -13558,10 +13573,8 @@ def _fire_cron_job_for_profile(
                             "does not support atomic forced firing of paused jobs"
                         ),
                     )
-                return bool(
-                    provider.fire_due(job_id, adapters=None, loop=None, force=True)
-                )
-            return bool(provider.fire_due(job_id, adapters=None, loop=None))
+                return provider.fire_due(job_id, adapters=None, loop=None, force=True)
+            return provider.fire_due(job_id, adapters=None, loop=None)
     finally:
         reset_hermes_home_override(token)
 
@@ -13856,9 +13869,9 @@ def _redact_mcp_env(env: Dict[str, Any]) -> Dict[str, str]:
     out: Dict[str, str] = {}
     for k, v in (env or {}).items():
         try:
-            out[str(k)] = redact_key(str(v)) if v else ""
+            out[k] = redact_key(str(v)) if v else ""
         except Exception:
-            out[str(k)] = "***"
+            out[k] = "***"
     return out
 
 
@@ -14313,9 +14326,9 @@ async def set_webhook_enabled(name: str, body: WebhookEnabledToggle):
     subs = wh._load_subscriptions()
     if key not in subs:
         raise HTTPException(status_code=404, detail=f"No subscription named '{key}'")
-    subs[key]["enabled"] = bool(body.enabled)
+    subs[key]["enabled"] = body.enabled
     wh._save_subscriptions(subs)
-    return {"ok": True, "name": key, "enabled": bool(body.enabled)}
+    return {"ok": True, "name": key, "enabled": body.enabled}
 
 
 # ---------------------------------------------------------------------------
@@ -14911,7 +14924,7 @@ async def create_hook(body: HookCreate):
             if body.matcher:
                 new_entry["matcher"] = body.matcher
             if body.timeout is not None:
-                new_entry["timeout"] = int(body.timeout)
+                new_entry["timeout"] = body.timeout
             entries.append(new_entry)
             save_config(cfg)
 
@@ -15984,18 +15997,19 @@ def _merge_aux_into_by_model(
                 "api_calls": 0,
             }
             merged[model] = target
-        target["input_tokens"] = (target.get("input_tokens") or 0) + (aux.get("input_tokens") or 0)
-        target["output_tokens"] = (target.get("output_tokens") or 0) + (aux.get("output_tokens") or 0)
-        target["estimated_cost"] = (target.get("estimated_cost") or 0) + (aux.get("estimated_cost") or 0)
-        target["api_calls"] = (target.get("api_calls") or 0) + (aux.get("api_calls") or 0)
+        target["input_tokens"] = int(target.get("input_tokens") or 0) + int(aux.get("input_tokens") or 0)
+        target["output_tokens"] = int(target.get("output_tokens") or 0) + int(aux.get("output_tokens") or 0)
+        target["estimated_cost"] = float(target.get("estimated_cost") or 0.0) + float(aux.get("estimated_cost") or 0.0)
+        target["api_calls"] = int(target.get("api_calls") or 0) + int(aux.get("api_calls") or 0)
         tasks = target.setdefault("aux_tasks", [])
-        tasks.append({
-            "task": aux.get("task") or "",
-            "input_tokens": aux.get("input_tokens") or 0,
-            "output_tokens": aux.get("output_tokens") or 0,
-            "estimated_cost": aux.get("estimated_cost") or 0,
-            "api_calls": aux.get("api_calls") or 0,
-        })
+        if isinstance(tasks, list):
+            tasks.append({
+                "task": aux.get("task") or "",
+                "input_tokens": int(aux.get("input_tokens") or 0),
+                "output_tokens": int(aux.get("output_tokens") or 0),
+                "estimated_cost": float(aux.get("estimated_cost") or 0.0),
+                "api_calls": int(aux.get("api_calls") or 0),
+            })
     result = list(merged.values())
     result.sort(
         key=lambda r: (r.get("input_tokens") or 0) + (r.get("output_tokens") or 0),
@@ -16037,8 +16051,11 @@ def _get_usage_analytics(days: int = 30, profile: Optional[str] = None):
 
     db = _open_session_db_for_profile(profile, read_only=True)
     try:
+        if db._conn is None:
+            return {"daily": [], "by_model": [], "by_task": [], "totals": {}, "period_days": days, "skills": [], "tools": []}
+        conn = db._conn
         cutoff = time.time() - (days * 86400)
-        cur = db._conn.execute("""
+        cur = conn.execute("""
             SELECT date(started_at, 'unixepoch') as day,
                    SUM(input_tokens) as input_tokens,
                    SUM(output_tokens) as output_tokens,
@@ -16053,7 +16070,7 @@ def _get_usage_analytics(days: int = 30, profile: Optional[str] = None):
         """, (cutoff,))
         daily = [dict(r) for r in cur.fetchall()]
 
-        cur2 = db._conn.execute("""
+        cur2 = conn.execute("""
             SELECT model,
                    SUM(input_tokens) as input_tokens,
                    SUM(output_tokens) as output_tokens,
@@ -16073,7 +16090,7 @@ def _get_usage_analytics(days: int = 30, profile: Optional[str] = None):
         aux_rows = _aux_usage_rows(db, cutoff)
         by_model = _merge_aux_into_by_model(by_model, aux_rows)
 
-        cur3 = db._conn.execute("""
+        cur3 = conn.execute("""
             SELECT SUM(input_tokens) as total_input,
                    SUM(output_tokens) as total_output,
                    SUM(cache_read_tokens) as total_cache_read,
@@ -16124,9 +16141,12 @@ def _get_models_analytics(days: int = 30, profile: Optional[str] = None):
     """
     db = _open_session_db_for_profile(profile, read_only=True)
     try:
+        if db._conn is None:
+            return {"models": [], "totals": {}, "period_days": days}
+        conn = db._conn
         cutoff = time.time() - (days * 86400)
 
-        cur = db._conn.execute("""
+        cur = conn.execute("""
             SELECT model,
                    billing_provider,
                    SUM(input_tokens) as input_tokens,
@@ -16269,7 +16289,7 @@ def _get_models_analytics(days: int = 30, profile: Optional[str] = None):
                 "capabilities": caps,
             })
 
-        totals_cur = db._conn.execute("""
+        totals_cur = conn.execute("""
             SELECT COUNT(DISTINCT model) as distinct_models,
                    SUM(input_tokens) as total_input,
                    SUM(output_tokens) as total_output,
@@ -16604,7 +16624,7 @@ _GATEWAY_WS_TICKET_PROTOCOL_PREFIX = "hermes-gateway-ticket."
 
 def _gateway_ws_ticket_from_subprotocol(ws: "WebSocket") -> tuple[str, str]:
     """Return ``(ticket, reason)`` from an unambiguous gateway protocol set."""
-    raw = str(ws.headers.get("sec-websocket-protocol", "") or "")
+    raw = ws.headers.get("sec-websocket-protocol", "") or ""
     protocols = [value.strip() for value in raw.split(",") if value.strip()]
     ticket_protocols = [
         value for value in protocols
@@ -16673,10 +16693,10 @@ def _ws_auth_reason(ws: "WebSocket") -> tuple[Optional[str], str]:
                 # impersonated by RPC params. Internal peers are marked
                 # ``server-internal`` and are excluded from privileged
                 # controller registration downstream.
-                ws._hermes_auth_identity = {
+                setattr(ws, "_hermes_auth_identity", {
                     "user_id": info.get("user_id"),
                     "provider": info.get("provider"),
-                }
+                })
                 return None, "internal"
             except TicketInvalid as exc:
                 audit_log(
@@ -16703,15 +16723,15 @@ def _ws_auth_reason(ws: "WebSocket") -> tuple[Optional[str], str]:
             # spoof this value through RPC params. Only the two identity
             # fields are carried — bookkeeping (e.g. ``minted_at``) is not
             # part of the identity contract.
-            ws._hermes_auth_identity = {
+            setattr(ws, "_hermes_auth_identity", {
                 "user_id": info.get("user_id"),
                 "provider": info.get("provider"),
-            }
+            })
             if protocol_ticket:
                 # Select only the stable public protocol during accept. The
                 # ticket-bearing protocol is a credential and must never be
                 # reflected back to the browser or retained after admission.
-                ws._hermes_ws_subprotocol = _GATEWAY_WS_PROTOCOL
+                setattr(ws, "_hermes_ws_subprotocol", _GATEWAY_WS_PROTOCOL)
                 return None, "ticket-subprotocol"
             return None, "ticket"
         except TicketInvalid as exc:
@@ -16856,7 +16876,8 @@ def _resolve_chat_argv(
             _resume_db.close()
         if latest_resume:
             resume = latest_resume
-        env["HERMES_TUI_RESUME"] = resume
+        if resume:
+            env["HERMES_TUI_RESUME"] = resume
 
     if sidecar_url:
         env["HERMES_TUI_SIDECAR_URL"] = sidecar_url
@@ -17342,11 +17363,11 @@ async def console_ws(ws: WebSocket) -> None:
             send_lock,
             {
                 "type": "error",
-                "message": str(exc.detail),
+                "message": exc.detail,
                 "prompt": "",
             },
         )
-        await ws.close(code=4400, reason=_ws_close_reason(str(exc.detail)))
+        await ws.close(code=4400, reason=_ws_close_reason(exc.detail))
         return
     except Exception as exc:
         _log.exception("console failed to initialize")
@@ -17755,6 +17776,8 @@ async def pty_ws(ws: WebSocket) -> None:
         attach_token = f"{attach_token}\0{profile or ''}\0{registry_resume or ''}"
 
     def _spawn():
+        if PtyBridge is None:
+            raise PtyUnavailableError("PTY bridge is not available on this platform")
         return PtyBridge.spawn(argv, cwd=cwd, env=env)
 
     if attach_token is None:
@@ -18000,7 +18023,7 @@ def _render_active_theme_bootstrap_css() -> str:
             # hex/font strings, but this keeps the helper safe if it is
             # later extended to ship user-authored CSS literals.
             def _esc(s: str) -> str:
-                return str(s).replace("</", "<\\/")
+                return s.replace("</", "<\\/")
             # Variable names MUST match what the bundle actually consumes:
             #   - ``--background-base`` / ``--midground-base`` come from
             #     ``layerVars()`` in ``web/src/themes/context.tsx``.
@@ -19410,6 +19433,370 @@ def _mount_plugin_api_routes():
 # Mount plugin API routes before the SPA catch-all.
 _mount_plugin_api_routes()
 
+
+# ── Analyst Trader fallback API ─────────────────────────────────────────────
+# Some local Amar/Kian dashboards ship the React analyst/flow pages without the
+# old plugin API module present on disk. The SQLite data is still present under
+# ~/.hermes/data/analyst_trading.db, so expose a minimal read/write-compatible
+# route set before the SPA catch-all. This keeps the dashboard from rendering
+# blank tabs when /api/analyst-trader/* would otherwise fall through to the SPA
+# 404 handler.
+def _analyst_db_path() -> Path:
+    hermes_home = get_hermes_home()
+    data_dir = hermes_home / "data"
+    new_db = data_dir / "analyst_trading.db"
+    old_db = hermes_home / "analyst_trading.db"
+    if new_db.exists():
+        return new_db
+    return old_db
+
+
+def _sqlite_rows(db_path: Path, query: str, params: tuple[Any, ...] = ()) -> list[dict[str, Any]]:
+    import sqlite3
+    if not db_path.exists():
+        return []
+    conn = sqlite3.connect(str(db_path), timeout=5.0)
+    conn.row_factory = sqlite3.Row
+    try:
+        cur = conn.execute(query, params)
+        return [dict(r) for r in cur.fetchall()]
+    finally:
+        conn.close()
+
+
+@app.get("/api/analyst-trader/research-watchlist")
+async def api_research_watchlist():
+    """Read-only dedicated research DB; never initialize AnalystDatabase."""
+    from plugins.analyst_trader.research_watchlist import read_watchlist, canonical_path
+    path = canonical_path(get_hermes_home())
+    if not path.exists():
+        raise HTTPException(status_code=404, detail='Research watchlist not seeded')
+    return read_watchlist(path)
+
+
+@app.get("/api/analyst-trader/research-profiles")
+async def api_research_profiles(version_id: str | None = None):
+    """Authenticated TEST configuration only; no scan or publication side effects."""
+    from plugins.analyst_trader.db import AnalystDatabase
+    from plugins.analyst_trader import research_profiles
+    db = AnalystDatabase(_analyst_db_path())
+    try:
+        return research_profiles.select(db, version_id) if version_id else {
+            'profiles': research_profiles.list_profiles(db), 'default_policy': research_profiles.default_policy()}
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.post("/api/analyst-trader/research-profiles")
+async def api_create_research_profile(request: Request):
+    from plugins.analyst_trader.db import AnalystDatabase
+    from plugins.analyst_trader import research_profiles
+    try:
+        payload = await request.json()
+        if not isinstance(payload, dict) or payload.keys() - {'name','changes','base_version'}:
+            raise ValueError('Only named research configuration is accepted')
+        if 'changes' in payload and not isinstance(payload['changes'], dict):
+            raise ValueError('changes must be an object')
+        if 'base_version' in payload and (not isinstance(payload['base_version'], str) or not payload['base_version'].strip()):
+            raise ValueError('base_version must be a nonempty version identifier')
+        return research_profiles.create(AnalystDatabase(_analyst_db_path()), payload.get('name'),
+            payload.get('changes'), base_version=payload.get('base_version'))
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.post("/api/analyst-trader/research-profiles/preview")
+async def api_preview_research_profile(request: Request):
+    from plugins.analyst_trader import research_profiles
+    import sqlite3
+    try:
+        # Bound streamed body too; Content-Length alone is not trusted.
+        body = bytearray()
+        async for chunk in request.stream():
+            body.extend(chunk)
+            if len(body) > 8192:
+                raise ValueError('TEST preview body too large')
+        payload = json.loads(body)
+        return research_profiles.preview(_analyst_db_path(), payload)
+    except (ValueError, TypeError, KeyError, sqlite3.Error) as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.get("/api/analyst-trader/notable-flow")
+async def api_analyst_trader_notable_flow(
+    limit: int = Query(100, ge=1, le=1000),
+    ticker: str | None = None,
+    asset_type: str | None = None,
+    call_put: str | None = None,
+    min_premium: float | None = None,
+):
+    where = ["1=1"]
+    params: list[Any] = []
+    if ticker:
+        where.append("UPPER(ticker) = ?")
+        params.append(ticker.upper().strip())
+    if asset_type:
+        where.append("LOWER(asset_type) = ?")
+        params.append(asset_type.lower().strip())
+    if call_put:
+        where.append("UPPER(call_put) LIKE ?")
+        params.append(f"%{call_put.upper().strip()}%")
+    if min_premium is not None and min_premium > 0:
+        where.append("premium_usd >= ?")
+        params.append(min_premium)
+    params.append(limit)
+    rows = await run_in_threadpool(
+        _sqlite_rows,
+        _analyst_db_path(),
+        f"""
+        SELECT * FROM (
+          SELECT *, ROW_NUMBER() OVER (
+            PARTITION BY ticker, strike, call_put, expiration
+            ORDER BY trade_timestamp DESC, created_at DESC
+          ) AS rn
+          FROM notable_flow
+          WHERE {' AND '.join(where)}
+        ) WHERE rn = 1
+        ORDER BY trade_timestamp DESC, created_at DESC
+        LIMIT ?
+        """,
+        tuple(params),
+    )
+    # Bounded, deterministic history for visible sources, not all operational history.
+    candidates_by_source: dict[str, list[dict[str, Any]]] = {}
+    history_counts: dict[str, int] = {}
+    examined: dict[str, int] = {}
+    if rows and await run_in_threadpool(_sqlite_rows, _analyst_db_path(),
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='kian_research_candidates'", ()):
+        ids = tuple(row['flow_id'] for row in rows)
+        placeholders = ','.join('?' for _ in ids)
+        counts = await run_in_threadpool(_sqlite_rows, _analyst_db_path(),
+            'SELECT source_id,COUNT(*) AS n FROM kian_research_candidates WHERE source_id IN ('
+            + placeholders + ') GROUP BY source_id', ids)
+        history_counts = {r['source_id']: r['n'] for r in counts}
+        saved = await run_in_threadpool(_sqlite_rows, _analyst_db_path(),
+            'SELECT decision_id,source_id,payload_json FROM ('
+            'SELECT decision_id,source_id,payload_json,ROW_NUMBER() OVER '
+            '(PARTITION BY source_id ORDER BY decision_id) AS history_rank '
+            'FROM kian_research_candidates WHERE source_id IN (' + placeholders + ')) '
+            'WHERE history_rank<=? ORDER BY source_id,decision_id LIMIT ?', ids + (10, 100))
+        for record in saved:
+            examined[record['source_id']] = examined.get(record['source_id'], 0) + 1
+            try:
+                candidate = json.loads(record['payload_json'])
+            except (TypeError, ValueError):
+                continue
+            if (isinstance(candidate, dict) and candidate.get('source_id') == record['source_id']
+                    and candidate.get('decision_id') == record['decision_id']):
+                from plugins.analyst_trader.recorded_research import display_candidate
+                candidates_by_source.setdefault(record['source_id'], []).append(display_candidate(candidate))
+    for row in rows:
+        row.pop("rn", None)
+        row['research_candidates'] = candidates_by_source.get(row['flow_id'], [])
+        total = history_counts.get(row['flow_id'], 0)
+        scanned = examined.get(row['flow_id'], 0)
+        row['research_history'] = dict(scope='visible source only', total=total,
+            shown=len(row['research_candidates']), omitted=total-scanned,
+            invalid=scanned-len(row['research_candidates']), truncated=total>scanned,
+            per_source_limit=10, total_limit=100)
+    return {"ok": True, "flows": rows, "count": len(rows), "db": str(_analyst_db_path())}
+
+
+@app.get("/api/analyst-trader/analysts")
+async def api_analyst_trader_analysts(limit: int = Query(100, ge=1, le=1000)):
+    rows = await run_in_threadpool(
+        _sqlite_rows,
+        _analyst_db_path(),
+        "SELECT * FROM analysts ORDER BY updated_at DESC LIMIT ?",
+        (limit,),
+    )
+    return {"ok": True, "analysts": rows, "count": len(rows)}
+
+
+@app.get("/api/analyst-trader/positions")
+async def api_analyst_trader_positions(limit: int = Query(200, ge=1, le=1000)):
+    rows = await run_in_threadpool(
+        _sqlite_rows,
+        _analyst_db_path(),
+        "SELECT * FROM positions ORDER BY entry_time DESC LIMIT ?",
+        (limit,),
+    )
+    return {"ok": True, "positions": rows, "count": len(rows)}
+
+
+@app.get("/api/analyst-trader/analyst-styles")
+async def api_analyst_trader_analyst_styles():
+    rows = await run_in_threadpool(
+        _sqlite_rows,
+        _analyst_db_path(),
+        "SELECT * FROM analyst_styles ORDER BY win_rate DESC",
+        (),
+    )
+    for r in rows:
+        if r.get("preferred_tickers") and isinstance(r["preferred_tickers"], str):
+            try:
+                r["preferred_tickers"] = json.loads(r["preferred_tickers"])
+            except Exception:
+                pass
+        if r.get("rules_json") and isinstance(r["rules_json"], str):
+            try:
+                r["rules_json"] = json.loads(r["rules_json"])
+            except Exception:
+                pass
+    return {"ok": True, "styles": rows, "count": len(rows)}
+
+
+@app.get("/api/analyst-trader/flow-candidates")
+async def api_analyst_trader_flow_candidates(
+    ticker: Optional[str] = None,
+    limit: int = Query(100, ge=1, le=1000),
+):
+    if ticker:
+        query = "SELECT * FROM flow_candidate_analytics WHERE ticker = ? ORDER BY updated_at DESC LIMIT ?"
+        params = (ticker.upper(), limit)
+    else:
+        query = "SELECT * FROM flow_candidate_analytics ORDER BY updated_at DESC LIMIT ?"
+        params = (limit,)
+
+    rows = await run_in_threadpool(
+        _sqlite_rows,
+        _analyst_db_path(),
+        query,
+        params,
+    )
+    for r in rows:
+        if r.get("correlations_json") and isinstance(r["correlations_json"], str):
+            try:
+                r["correlations_json"] = json.loads(r["correlations_json"])
+            except Exception:
+                pass
+    return {"ok": True, "candidates": rows, "count": len(rows)}
+
+
+@app.get("/api/analyst-trader/live-quotes")
+async def api_analyst_trader_live_quotes(tickers: str = "", live: bool = False):
+    ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    from plugins.analyst_trader.holding_statistics import finite
+    if not live:
+        return {'ok': True, 'quotes': {t: {'price': None, 'change_pct': None, 'status': 'unavailable', 'source': None, 'as_of': None} for t in ticker_list}}
+    try:
+        from plugins.analyst_trader.finviz_fetcher import FinvizFetcher
+        raw = await run_in_threadpool(FinvizFetcher().fetch_live_quotes, ticker_list)
+        quotes = {}
+        for ticker in ticker_list:
+            q = raw.get(ticker) or {}
+            has_provenance = bool(q.get('source') and q.get('as_of'))
+            price = q.get('price')
+            # The legacy provider inserts zero on failure. Without explicit quote
+            # provenance it is not an observed zero, nor a timestamped live quote.
+            valid = finite(price) and (price > 0 or price == 0 and has_provenance)
+            quotes[ticker] = dict(price=price if valid else None,
+                change_pct=q.get('change_pct') if finite(q.get('change_pct')) and valid else None,
+                source=q.get('source') or ('yahoo_fallback' if valid else None), as_of=q.get('as_of'),
+                status='observed' if valid and has_provenance else 'unknown_asof' if valid else 'unavailable',
+                is_extended_hours=q.get('is_extended_hours'), execution_authorized=False)
+        return {'ok': True, 'quotes': quotes}
+    except Exception as e:
+        _log.warning('Error fetching quotes: %s', e)
+        raise HTTPException(status_code=502, detail='Quote provider unavailable')
+
+
+@app.post("/api/analyst-trader/notable-flow/backfill")
+async def api_analyst_trader_notable_flow_backfill(limit: int = Query(100, ge=1, le=500)):
+    script = get_hermes_home() / "scripts" / "flowseeker_unified_ingestion.py"
+    if not script.exists():
+        return {"ok": False, "error": "ingestion script not found"}
+    try:
+        proc = await run_in_threadpool(
+            subprocess.run,
+            [sys.executable, str(script), "--force", "--skip-flowseeker", "--verbose"],
+            capture_output=True,
+            text=True,
+            timeout=180,
+        )
+        return {
+            "ok": proc.returncode == 0,
+            "stats": {"total_processed": limit, "new_flows_saved": 0},
+            "stdout": proc.stdout[-4000:],
+            "stderr": proc.stderr[-2000:],
+        }
+    except Exception as exc:
+        return {"ok": False, "error": str(exc)}
+
+
+@app.get("/api/analyst-trader/flow-chart/{flow_id}")
+async def api_analyst_trader_flow_chart(flow_id: str):
+    rows = await run_in_threadpool(
+        _sqlite_rows,
+        _analyst_db_path(),
+        "SELECT local_chart_path, chart_url FROM notable_flow WHERE flow_id = ? LIMIT 1",
+        (flow_id,),
+    )
+    if not rows:
+        raise HTTPException(status_code=404, detail="Chart not found")
+    local_path = rows[0].get("local_chart_path")
+    if not local_path:
+        raise HTTPException(status_code=404, detail="Chart file not available")
+    p = Path(str(local_path)).expanduser().resolve()
+    hermes_home = get_hermes_home().resolve()
+    charts_dir = (hermes_home / "charts").resolve()
+    flow_charts_dir = (hermes_home / "flow_charts").resolve()
+    external_charts_dir = Path("/Volumes/Macintosh 1 TB HD/hermes_storage/charts").resolve()
+    storage_dirs = [charts_dir, flow_charts_dir, external_charts_dir]
+    is_safe = any(p == s or s in p.parents for s in storage_dirs if s.exists())
+    if not is_safe:
+        raise HTTPException(status_code=403, detail="Access denied: outside charts directory")
+    if not p.exists() or not p.is_file():
+        raise HTTPException(status_code=404, detail="Chart file not found")
+    return FileResponse(str(p))
+
+
+@app.get("/api/analyst-trader/portfolio")
+async def api_analyst_trader_portfolio():
+    def _get():
+        from plugins.analyst_trader.db import AnalystDatabase
+        from plugins.analyst_trader.portfolio_engine import DualPortfolioEngine
+        db = AnalystDatabase(_analyst_db_path())
+        engine = DualPortfolioEngine(db)
+        return engine.get_portfolio_summary()
+    try:
+        summary = await run_in_threadpool(_get)
+        return {"ok": True, "portfolios": summary}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load portfolio: {e}")
+
+
+@app.get("/api/analyst-trader/portfolio-holdings")
+async def api_analyst_trader_portfolio_holdings(
+    portfolio_id: str = "autonomous_ai",
+    status: Optional[str] = None,
+):
+    def _get():
+        from plugins.analyst_trader.db import AnalystDatabase
+        db = AnalystDatabase(_analyst_db_path())
+        return db.list_portfolio_holdings(portfolio_id=portfolio_id, status=status)
+    try:
+        holdings = await run_in_threadpool(_get)
+        return {"ok": True, "holdings": holdings, "count": len(holdings)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load holdings: {e}")
+
+
+@app.get("/api/analyst-trader/strategies")
+async def api_analyst_trader_strategies(limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
+    def _get():
+        from plugins.analyst_trader.db import AnalystDatabase
+        db = AnalystDatabase(_analyst_db_path())
+        from plugins.analyst_trader.holding_statistics import statistics
+        rows = db.list_recorded_strategies(limit=limit + 1, offset=offset)
+        return {'ok': True, 'strategies': rows[:limit], 'count': len(rows[:limit]),
+                'pagination': {'limit': limit, 'offset': offset, 'has_more': len(rows) > limit},
+                'statistics': statistics(db)}
+    try:
+        return await run_in_threadpool(_get)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load strategies: {e}")
+
 # Mount the dashboard auth routes (/login, /auth/*, /api/auth/*) before the
 # SPA catch-all so /{full_path:path} doesn't swallow them.  These are
 # always mounted — the gate middleware decides whether to enforce auth,
@@ -19445,11 +19832,11 @@ def _write_dashboard_ready_file(actual_port: int) -> None:
     if not target:
         return
 
-    tmp_name = ""
+    tmp_name: Optional[str] = None
     try:
         path = Path(target)
         path.parent.mkdir(parents=True, exist_ok=True)
-        payload = json.dumps({"port": int(actual_port)}, separators=(",", ":"))
+        payload = json.dumps({"port": actual_port}, separators=(",", ":"))
         with tempfile.NamedTemporaryFile(
             "w",
             encoding="utf-8",
@@ -19464,7 +19851,7 @@ def _write_dashboard_ready_file(actual_port: int) -> None:
             tmp_name = fh.name
         os.replace(tmp_name, path)
     except Exception as exc:
-        if tmp_name:
+        if tmp_name is not None:
             try:
                 Path(tmp_name).unlink(missing_ok=True)
             except Exception:
@@ -19539,14 +19926,14 @@ def _is_serve_orphaned(
         if expected_start_marker is not None:
             probe = process_start_marker or _process_start_marker
             return not _parent_start_markers_match(
-                probe(int(desktop_pid)), expected_start_marker
+                probe(desktop_pid), expected_start_marker
             )
 
         if pid_exists is None:
             from gateway.status import _pid_exists
 
             pid_exists = _pid_exists
-        return not bool(pid_exists(int(desktop_pid)))
+        return not bool(pid_exists(desktop_pid))
     except ProcessLookupError:
         return True
     except Exception:
@@ -20294,9 +20681,11 @@ def start_server(
         _runner = None
         _loop_factory = None
         try:
-            asyncio.set_event_loop_policy(
-                asyncio.WindowsSelectorEventLoopPolicy()  # type: ignore[attr-defined]
-            )
+            _set_policy = getattr(asyncio, "set_event_loop_policy", None)
+            if _set_policy is not None:
+                _set_policy(
+                    asyncio.WindowsSelectorEventLoopPolicy()  # type: ignore[attr-defined]
+                )
         except Exception:
             pass
 

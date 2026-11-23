@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/option-contract.md",
+  "parts": [
+    "references/categories/option-contract.md.part000",
+    "references/categories/option-contract.md.part001"
+  ],
+  "sha256": "33e19d501ecdaf75ad16b97e19a14e98f29527de9e985d728ffc71c8294e74c8",
+  "bytes": 149947,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

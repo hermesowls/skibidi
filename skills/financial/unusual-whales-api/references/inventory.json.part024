@@ -1,0 +1,1712 @@
+ics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Annual Disclosures List",
+        "tags": [
+          "politician_portfolios"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/politician-portfolios/holders/{ticker}",
+      "method": "GET",
+      "path": "/api/politician-portfolios/holders/{ticker}",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns all politician portfolio owner names, ID, and holdings for the specified ticker.\n\nThis is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.\n",
+        "operationId": "PublicApi.PoliticianPortfoliosController.holds_ticker",
+        "parameters": [
+          {
+            "description": "Stock ticker symbol (e.g., AAPL, TSLA)",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "If true, aggregates all of a politicians portfolios into a single portfolio named 'aggregated'. Default is false. Note that this does not aggregate holdings within a portfolio, only across portfolios.",
+            "in": "query",
+            "name": "aggregate_all_portfolios",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      {
+                        "full_name": "Zoe Lofgren",
+                        "id": "5fbe81ac-1157-4bc8-9d76-c77e6164fe25",
+                        "max_amount": 143,
+                        "mid_amount": 76,
+                        "min_amount": 9,
+                        "owner": "self"
+                      },
+                      {
+                        "full_name": "Zoe Lofgren",
+                        "id": "9d28365f-7559-417b-ba26-102cefde89eb",
+                        "max_amount": 2386,
+                        "mid_amount": 1670,
+                        "min_amount": 954,
+                        "owner": "spouse"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "full_name": {
+                            "description": "The politician's name.",
+                            "example": "Zoe Lofgren",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "The portfolio ID.",
+                            "example": "5fbe81ac-1157-4bc8-9d76-c77e6164fe25",
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "max_amount": {
+                            "description": "The portfolio's maximum share quantity.",
+                            "example": 143,
+                            "type": "number"
+                          },
+                          "mid_amount": {
+                            "description": "The portfolio's midpoint share quantity.",
+                            "example": 76,
+                            "type": "number"
+                          },
+                          "min_amount": {
+                            "description": "The portfolio's minimum share quantity.",
+                            "example": 9,
+                            "type": "number"
+                          },
+                          "owner": {
+                            "description": "The portfolio owner's name.",
+                            "enum": [
+                              "self",
+                              "spouse",
+                              "joint",
+                              "child"
+                            ],
+                            "example": "self",
+                            "type": "string"
+                          }
+                        },
+                        "title": "Portfolio Holder",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "title": "Portfolio Holders",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Portfolio Holders"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Politician Portfolio Holders by Ticker",
+        "tags": [
+          "politician_portfolios"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/politician-portfolios/people",
+      "method": "GET",
+      "path": "/api/politician-portfolios/people",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns all politician names and IDs.\n\nThis is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.\n",
+        "operationId": "PublicApi.PoliticianPortfoliosController.people",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      {
+                        "id": "e138f347-ae92-4cfb-8f41-7036ff09a213",
+                        "name": "Zoe Lofgren"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "The politician's ID.",
+                            "example": "e138f347-ae92-4cfb-8f41-7036ff09a213",
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "name": {
+                            "description": "The politician's name.",
+                            "example": "Zoe Lofgren",
+                            "type": "string"
+                          }
+                        },
+                        "title": "Politician",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "title": "Politicians List",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Politicians List"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Politicians List",
+        "tags": [
+          "politician_portfolios"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/politician-portfolios/recent_trades",
+      "method": "GET",
+      "path": "/api/politician-portfolios/recent_trades",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns the latest transacted trades by congress members.\nIf a date is given, will only return reports, which's transaction date is <= the given input date.\n\nThis is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.\n",
+        "operationId": "PublicApi.PoliticianPortfoliosController.recent_trades",
+        "parameters": [
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+              "example": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Default 500 Max 500 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+              "example": "2024-01-18",
+              "title": "Optional Market Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "ticker",
+            "required": false,
+            "schema": {
+              "description": "Optional ticker symbol to filter results",
+              "example": "IOVA",
+              "nullable": true,
+              "title": "Optional Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "politician_id",
+            "required": false,
+            "schema": {
+              "description": "The Politician's ID that you'd like to filter by.",
+              "example": "18f9fc95-4661-444e-99f5-99d3778e0c31",
+              "title": "Politician ID",
+              "type": "string"
+            }
+          },
+          {
+            "description": "If true, will filter out any trades with a transaction date after the input date.",
+            "in": "query",
+            "name": "filter_late_reports",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "Only return trades reported more than 45 days after the transaction date.",
+              "example": true,
+              "title": "Filter Late Reports Only",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "The page number for the data being requested (default is 1).",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "If provided, will only return trades with a disclosure date >= this date.",
+            "in": "query",
+            "name": "disclosure_newer_than",
+            "required": false,
+            "schema": {
+              "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+              "example": 1715083417,
+              "title": "NewerThan",
+              "type": "string"
+            }
+          },
+          {
+            "description": "If provided, will only return trades with a disclosure date <= this date.",
+            "in": "query",
+            "name": "disclosure_older_than",
+            "required": false,
+            "schema": {
+              "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+              "example": 1715083417,
+              "title": "OlderThan",
+              "type": "string"
+            }
+          },
+          {
+            "description": "If provided, will only return trades with a transaction date >= this date.",
+            "in": "query",
+            "name": "transaction_newer_than",
+            "required": false,
+            "schema": {
+              "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+              "example": 1715083417,
+              "title": "NewerThan",
+              "type": "string"
+            }
+          },
+          {
+            "description": "If provided, will only return trades with a transaction date <= this date.",
+            "in": "query",
+            "name": "transaction_older_than",
+            "required": false,
+            "schema": {
+              "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+              "example": 1715083417,
+              "title": "OlderThan",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A senate stock",
+                  "example": {
+                    "data": [
+                      {
+                        "amounts": "$15,001 - $50,000",
+                        "filed_at_date": "2023-02-13",
+                        "is_active": true,
+                        "issuer": "not-disclosed",
+                        "member_type": "house",
+                        "name": "Stephen Cohen",
+                        "notes": "Subholding Of: Stephens Advantage Account Description: FT UNIT 10479 PFD mutual-fund 32500",
+                        "politician_id": "18f9fc95-4661-444e-99f5-99d3778e0c31",
+                        "reporter": "Stephen C.",
+                        "ticker": "FHWVOX",
+                        "transaction_date": "2023-02-06",
+                        "txn_type": "Buy"
+                      },
+                      {
+                        "amounts": "$1,000 - $15,000",
+                        "filed_at_date": "2023-02-13",
+                        "is_active": false,
+                        "issuer": "joint",
+                        "member_type": "house",
+                        "name": "Deborah Ross",
+                        "notes": "Subholding Of: Fidelity Brokerage Account stock 8000",
+                        "politician_id": "5b1e3f4a-2d3c-4e5f-8a6b-7c8d9e0f1a2b",
+                        "reporter": "Debby Ross",
+                        "ticker": "MSFT",
+                        "transaction_date": "2023-02-01",
+                        "txn_type": "Sell"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "amounts": {
+                      "description": "The reported amount range of the transaction.",
+                      "example": "$1,000 - $15,000",
+                      "title": "Insider Trades Amount Range",
+                      "type": "string"
+                    },
+                    "filed_at_date": {
+                      "description": "The filing date as ISO date.",
+                      "example": "2023-12-13",
+                      "title": "Insider Trades Filing Date",
+                      "type": "string"
+                    },
+                    "is_active": {
+                      "description": "Is the politician an active member.",
+                      "example": "G000585",
+                      "title": "Is Active",
+                      "type": "string"
+                    },
+                    "issuer": {
+                      "description": "The person who executed the transaction.",
+                      "example": "spouse",
+                      "title": "Insider Trades Issuer",
+                      "type": "string"
+                    },
+                    "member_type": {
+                      "description": "The type of person who executed the transaction.",
+                      "example": true,
+                      "title": "Insider Trades Member Type",
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "description": "The Standardized name of the reporter (if found).",
+                      "example": "Stephen Cohen",
+                      "title": "Insider Trades Reporter's Standard Name",
+                      "type": "string"
+                    },
+                    "notes": {
+                      "description": "Notes of the filing.",
+                      "example": "Subholding Of: Stephens Advantage Account Description: FT UNIT 10479 PFD mutual-fund 32500",
+                      "title": "Insider Trades Filing Notes",
+                      "type": "string"
+                    },
+                    "politician_id": {
+                      "description": "The Politician's ID that you'd like to filter by.",
+                      "example": "18f9fc95-4661-444e-99f5-99d3778e0c31",
+                      "title": "Politician ID",
+                      "type": "string"
+                    },
+                    "reporter": {
+                      "description": "The person who reported the transaction (as written in filling).",
+                      "example": "Stephen Cohen",
+                      "title": "Insider Trades Reporter",
+                      "type": "string"
+                    },
+                    "ticker": {
+                      "description": "The stock ticker.",
+                      "example": "AAPL",
+                      "title": "Stock Ticker",
+                      "type": "string"
+                    },
+                    "transaction_date": {
+                      "description": "The transaction date as ISO date.",
+                      "example": "2023-12-06",
+                      "title": "Insider Trades Transaction Date",
+                      "type": "string"
+                    },
+                    "txn_type": {
+                      "description": "The transaction type.",
+                      "enum": [
+                        "Buy",
+                        "Sell (partial)",
+                        "Purchase",
+                        "Sale (Partial)",
+                        "Receive",
+                        "Sale (Full)",
+                        "Sell (PARTIAL)",
+                        "Sell",
+                        "Exchange"
+                      ],
+                      "example": "Sell",
+                      "title": "Insider Trades Transaction Type",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Senate Stock",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Politician Trades",
+        "tags": [
+          "politician_portfolios"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/politician-portfolios/{politician_id}",
+      "method": "GET",
+      "path": "/api/politician-portfolios/{politician_id}",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns all portfolios and holdings for a politician.\n\nThis is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.\n",
+        "operationId": "PublicApi.PoliticianPortfoliosController.portfolios",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "politician_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "If true, aggregates all portfolios into a single portfolio named 'aggregated'. Default is false. Note that this does not aggregate holdings within a portfolio, only across portfolios.",
+            "in": "query",
+            "name": "aggregate_all_portfolios",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      {
+                        "crypto_holdings": [],
+                        "id": "6361b0d9-ad41-424a-9c42-afa5f3393e69",
+                        "last_annual_disclosure": 2023,
+                        "option_holdings": [],
+                        "owner": "self",
+                        "stock_holdings": [
+                          {
+                            "max_amount": 15,
+                            "mid_amount": 7,
+                            "min_amount": 1,
+                            "ticker": "XYZ",
+                            "type": "stock"
+                          },
+                          {
+                            "max_amount": 505,
+                            "mid_amount": 328,
+                            "min_amount": 151,
+                            "ticker": "RHP",
+                            "type": "stock"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "crypto_holdings": {
+                            "description": "The portfolio crypto holdings.",
+                            "items": {
+                              "description": "A cryptocurrency holding in a portfolio",
+                              "properties": {
+                                "max_amount": {
+                                  "description": "The maximum cryptocurrency amount.",
+                                  "example": 0.1339285714285714,
+                                  "format": "float",
+                                  "type": "number"
+                                },
+                                "mid_amount": {
+                                  "description": "The midpoint cryptocurrency amount.",
+                                  "example": 0.0714330357142857,
+                                  "format": "float",
+                                  "type": "number"
+                                },
+                                "min_amount": {
+                                  "description": "The minimum cryptocurrency amount.",
+                                  "example": 0.0089375,
+                                  "format": "float",
+                                  "type": "number"
+                                },
+                                "symbol": {
+                                  "description": "The cryptocurrency symbol.",
+                                  "example": "BTC-USD",
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "description": "The holding type.",
+                                  "example": "crypto",
+                                  "type": "string"
+                                }
+                              },
+                              "title": "Crypto Holding",
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "id": {
+                            "description": "The portfolio ID.",
+                            "example": "5fbe81ac-1157-4bc8-9d76-c77e6164fe25",
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "last_annual_disclosure": {
+                            "description": "The year of this portfolio's latest annual disclosure.",
+                            "example": 2023,
+                            "type": "integer"
+                          },
+                          "option_holdings": {
+                            "description": "The portfolio option holdings.",
+                            "items": {
+                              "description": "An option holding in a portfolio",
+                              "properties": {
+                                "max_amount": {
+                                  "description": "The maximum option quantity.",
+                                  "example": 0,
+                                  "type": "number"
+                                },
+                                "mid_amount": {
+                                  "description": "The midpoint option quantity.",
+                                  "example": 0,
+                                  "type": "number"
+                                },
+                                "min_amount": {
+                                  "description": "The minimum option quantity.",
+                                  "example": 0,
+                                  "type": "number"
+                                },
+                                "option_symbol": {
+                                  "description": "The option symbol.",
+                                  "example": "CLF250117C00020000",
+                                  "type": "string"
+                                },
+                                "ticker": {
+                                  "description": "The underlying stock ticker symbol.",
+                                  "example": "CLF",
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "description": "The holding type.",
+                                  "example": "option",
+                                  "type": "string"
+                                }
+                              },
+                              "title": "Option Holding",
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "owner": {
+                            "description": "The portfolio owner's name. Is \"aggregated\" when aggregate_all_portfolios is true.",
+                            "enum": [
+                              "self",
+                              "spouse",
+                              "joint",
+                              "child",
+                              "aggregated"
+                            ],
+                            "example": "self",
+                            "type": "string"
+                          },
+                          "stock_holdings": {
+                            "description": "The portfolio stock and ETF holdings.",
+                            "items": {
+                              "description": "A stock or ETF holding in a portfolio",
+                              "properties": {
+                                "max_amount": {
+                                  "description": "The maximum share quantity.",
+                                  "example": 15,
+                                  "type": "number"
+                                },
+                                "mid_amount": {
+                                  "description": "The midpoint share quantity.",
+                                  "example": 7,
+                                  "type": "number"
+                                },
+                                "min_amount": {
+                                  "description": "The minimum share quantity.",
+                                  "example": 1,
+                                  "type": "number"
+                                },
+                                "ticker": {
+                                  "description": "The stock ticker symbol.",
+                                  "example": "XYZ",
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "description": "The holding type.",
+                                  "example": "stock",
+                                  "type": "string"
+                                }
+                              },
+                              "title": "Stock Holding",
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "title": "Politician Portfolio",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "title": "Politician Portfolios",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Politician Portfolios"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Politician Portfolios",
+        "tags": [
+          "politician_portfolios"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/politics/fec/candidates",
+      "method": "GET",
+      "path": "/api/politics/fec/candidates",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Federal candidates ranked by company-linked money received in a cycle: PAC-tier totals,\nemployee-tier estimates, number of distinct companies, and basic candidate info with the\nlinked politician where known.\n\nThis is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.\n",
+        "operationId": "PublicApi.PoliticsFecController.candidates",
+        "parameters": [
+          {
+            "description": "Two-year election cycle, e.g. 2026. Defaults to the current cycle.",
+            "in": "query",
+            "name": "cycle",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "house | senate | president",
+            "in": "query",
+            "name": "office",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Two-letter state code.",
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Party code, e.g. DEM, REP.",
+            "in": "query",
+            "name": "party",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number (default 1).",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Rows per page (default 50, max 200).",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Federal candidates ranked by company-linked money received in a cycle. company_linked_total covers only contributions attributed to public companies, not the candidate's overall receipts.",
+                  "example": {
+                    "cycle": 2026,
+                    "data": [
+                      {
+                        "candidate_id": 18342,
+                        "company_count": 47,
+                    

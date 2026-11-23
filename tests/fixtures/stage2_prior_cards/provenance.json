@@ -1,0 +1,7 @@
+{
+  "description": "Genuine preserved pre-card evaluator and alert producer; byte-verified against operational-stage2-profiles-cards-1790198386/before/plugins/analyst_trader and independent review copies. Loaded only by isolated tests, never production.",
+  "sha256": {
+    "old_research.py": "9183a4d672dfaf36ffa7eb59a4aeb88ac37f8fe488c70b921533bc711acc83f9",
+    "old_alert.py": "5175a684769769dd6bbfc4282c516df9c9c66551e29420d80bd656fe723113f8"
+  }
+}

@@ -1,0 +1,2622 @@
+l_trades: 3370
+            contracts: 38633
+            exchange: AMXO
+            premium: 5454330
+            put_trades: 3434
+            trade_code: slan
+            trade_count: 6804
+            underlying_symbol: AAPL
+      properties:
+        call_trades:
+          description: The number of call prints in this group.
+          example: 3370
+          type: integer
+        contracts:
+          description: The total number of contracts traded in this group.
+          example: 38633
+          type: integer
+        exchange:
+          $ref: '#/components/schemas/Exchange'
+        premium:
+          description: The total premium of this group, computed as sum(price × size × 100).
+          example: 5454330
+          type: number
+        put_trades:
+          description: The number of put prints in this group.
+          example: 3434
+          type: integer
+        trade_code:
+          $ref: '#/components/schemas/Upstream_Condition_Detail'
+        trade_count:
+          description: The number of option prints in this group.
+          example: 6804
+          type: integer
+        underlying_symbol:
+          $ref: '#/components/schemas/Option_Contract_Underlying_Symbol'
+      title: Option Trade Exchange Breakdown
+      type: object
+    Option_Trade_ID:
+      description: The ID of the option trade.
+      example: 8ef90a2d-d881-41de-98c9-c1de4318dcb5
+      title: Option Trade ID
+      type: string
+    Option_Trade_Size:
+      description: The size of the option trade.
+      example: 1
+      title: Option Trade Size
+      type: integer
+    Option_Trade_Volume:
+      description: The amount of contracts traded till this point.
+      example: 33
+      title: Option Trade Volume
+      type: integer
+    Option_Trades_Error_Response:
+      properties:
+        error:
+          properties:
+            code:
+              example: historical_data_not_supported
+              type: string
+            message:
+              example: This endpoint only returns data for the latest trading day. Use /api/option-trades/full-tape/:date to download the full market file for a historical trading day.
+              type: string
+          type: object
+      title: Option Trades Error Response
+      type: object
+    Option_Trades_Response:
+      example:
+        data:
+          - ask_vol: 2
+            bid_vol: 1
+            canceled: false
+            delta: '0.610546281537814'
+            er_time: postmarket
+            ewma_nbbo_ask: '21.60'
+            ewma_nbbo_bid: '21.45'
+            exchange: MXOP
+            executed_at: 2024-08-21T13:50:52.278302Z
+            expiry: 2025-01-17
+            flow_alert_id:
+            full_name: NVIDIA CORP
+            gamma: '0.00775013889662635'
+            id: 8ef90a2d-d881-41de-98c9-c1de4318dcb5
+            implied_volatility: '0.604347250962543'
+            industry_type: Semiconductors
+            marketcap: '3130350000000.00'
+            mid_vol: 30
+            multi_vol: 30
+            nbbo_ask: '21.60'
+            nbbo_ask_size: 24
+            nbbo_ask_time: 2024-08-21T13:50:52.274302Z
+            nbbo_bid: '21.45'
+            nbbo_bid_size: 17
+            nbbo_bid_time: 2024-08-21T13:50:52.271302Z
+            next_earnings_date: 2024-08-28
+            no_side_vol: 0
+            open_interest: 6016
+            option_chain_id: NVDA250117C00124000
+            option_type: call
+            premium: '2150.00'
+            price: '21.50'
+            report_flags: []
+            rho: '0.2316546330093438'
+            rule_id:
+            sector: Technology
+            size: 1
+            stock_multi_vol: 0
+            strike: '124.0000000000'
+            tags:
+              - bid_side
+              - bearish
+              - earnings_next_week
+            theo: '21.49999999999999'
+            theta: '-0.0640155364004474'
+            underlying_price: '128.16'
+            underlying_symbol: NVDA
+            upstream_condition_detail: auto
+            vega: '0.3140468475903719'
+            volume: 33
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Option_Trade'
+          type: array
+      title: Option Trades Response
+      type: object
+    Option_contract:
+      description: ''
+      example:
+        chains:
+          - ask_volume: 1766
+            avg_price: '0.01360828625235404896'
+            bid_volume: 887
+            cross_volume: 0
+            date: 2023-05-26
+            floor_volume: 0
+            high_price: '0.03'
+            implied_volatility: '0.310502942482285'
+            iv_high: '0.675815680048166'
+            iv_low: '0.310502942482285'
+            last_price: '0.01'
+            last_tape_time: 2023-05-26T21:30:29.000000Z
+            low_price: '0.01'
+            mid_volume: 0
+            multi_leg_volume: 393
+            nbbo_ask: '0.45'
+            nbbo_bid: '0.30'
+            neutral_volume: 2
+            open_interest: 15907
+            open_price: '0.02'
+            stock_multi_leg_volume: 0
+            sweep_volume: 752
+            total_ask_changes: 165
+            total_bid_changes: 28
+            total_premium: '3613.00'
+            trades: 244
+            volume: 2655
+      properties:
+        ask_volume:
+          $ref: '#/components/schemas/Option_Contract_Ask_Volume'
+        avg_price:
+          $ref: '#/components/schemas/Option_Contract_Avg_Price'
+        bid_volume:
+          $ref: '#/components/schemas/Option_Contract_Bid_Volume'
+        cross_volume:
+          $ref: '#/components/schemas/Option_Contract_Cross_Volume'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        floor_volume:
+          $ref: '#/components/schemas/Option_Contract_Floor_Volume'
+        high_price:
+          $ref: '#/components/schemas/Option_Contract_High'
+        implied_volatility:
+          $ref: '#/components/schemas/Option_Contract_Last_Transaction_IV'
+        iv_high:
+          $ref: '#/components/schemas/Option_Contract_IV_High'
+        iv_low:
+          $ref: '#/components/schemas/Option_Contract_IV_Low'
+        last_price:
+          $ref: '#/components/schemas/Option_Contract_Close'
+        last_tape_time:
+          $ref: '#/components/schemas/Option_Contract_Last_Transaction_Time'
+        low_price:
+          $ref: '#/components/schemas/Option_Contract_Low'
+        mid_volume:
+          $ref: '#/components/schemas/Option_Contract_Mid_Volume'
+        multi_leg_volume:
+          $ref: '#/components/schemas/Option_Contract_Multi_Leg_Volume'
+        nbbo_ask:
+          $ref: '#/components/schemas/Last_NBBO_Ask'
+        nbbo_bid:
+          $ref: '#/components/schemas/Last_NBBO_Bid'
+        no_side_volume:
+          $ref: '#/components/schemas/Option_Contract_No_Side_Volume'
+        open_interest:
+          $ref: '#/components/schemas/Option_Contract_Open_interest'
+        open_price:
+          $ref: '#/components/schemas/Option_Contract_Open'
+        stock_multi_leg_volume:
+          $ref: '#/components/schemas/Option_Contract_Stock_Multi_Leg_Volume'
+        sweep_volume:
+          $ref: '#/components/schemas/Option_Contract_Sweep_Volume'
+        total_ask_changes:
+          $ref: '#/components/schemas/Option_Contract_Total_Ask_Changes'
+        total_bid_changes:
+          $ref: '#/components/schemas/Option_Contract_Total_Bid_Changes'
+        total_premium:
+          $ref: '#/components/schemas/Option_Contract_Premium'
+        trades:
+          $ref: '#/components/schemas/Option_Contract_Total_Trades_Count'
+        volume:
+          $ref: '#/components/schemas/Option_Contract_Volume'
+      title: Option contract
+      type: object
+    Option_contracts:
+      description: All option contracts for a ticker
+      example:
+        data:
+          - ask_volume: 56916
+            avg_price: '0.77927817593516586531'
+            bid_volume: 68967
+            delta: '-0.187'
+            floor_volume: 1815
+            gamma: '0.021'
+            high_price: '5.75'
+            implied_volatility: '0.542805337797143'
+            last_price: '0.01'
+            last_tape_time: 2024-02-01T20:59:58Z
+            low_price: '0.01'
+            mid_volume: 6393
+            multi_leg_volume: 9871
+            nbbo_ask: '0.01'
+            nbbo_bid: '0'
+            no_side_volume: 6393
+            open_interest: 22868
+            option_symbol: AAPL240202P00185000
+            prev_oi: 20217
+            rho: '-0.015'
+            stock_multi_leg_volume: 13
+            sweep_volume: 12893
+            theta: '-0.043'
+            total_premium: '10307980.00'
+            vega: '0.089'
+            volume: 132276
+          - ask_volume: 54820
+            avg_price: '0.19195350495251190385'
+            bid_volume: 60784
+            floor_volume: 0
+            high_price: '0.80'
+            implied_volatility: '0.462957019859562'
+            last_price: '0.01'
+            low_price: '0.01'
+            mid_volume: 2215
+            multi_leg_volume: 5301
+            nbbo_ask: '0.01'
+            nbbo_bid: '0'
+            no_side_volume: 2215
+            open_interest: 19352
+            option_symbol: AAPL240202C00187500
+            prev_oi: 18135
+            stock_multi_leg_volume: 9
+            sweep_volume: 11152
+            total_premium: '2261577.00'
+            volume: 117819
+      properties:
+        ask_volume:
+          $ref: '#/components/schemas/Option_Contract_Ask_Volume'
+        avg_price:
+          $ref: '#/components/schemas/Option_Contract_Avg_Price'
+        bid_volume:
+          $ref: '#/components/schemas/Option_Contract_Bid_Volume'
+        cross_volume:
+          $ref: '#/components/schemas/Option_Contract_Cross_Volume'
+        delta:
+          description: 'First-order greek: delta.'
+          example: '0.42'
+          nullable: true
+          type: string
+        floor_volume:
+          $ref: '#/components/schemas/Option_Contract_Floor_Volume'
+        gamma:
+          description: 'First-order greek: gamma.'
+          example: '0.031'
+          nullable: true
+          type: string
+        high_price:
+          $ref: '#/components/schemas/Option_Contract_High'
+        implied_volatility:
+          $ref: '#/components/schemas/Option_Contract_Last_Transaction_IV'
+        last_price:
+          $ref: '#/components/schemas/Option_Contract_Close'
+        last_tape_time:
+          description: As-of timestamp anchoring row freshness — the contract's last trade (tape) time. Approximate for NBBO freshness (it is trade time, not a dedicated quote timestamp).
+          format: date-time
+          nullable: true
+          type: string
+        low_price:
+          $ref: '#/components/schemas/Option_Contract_Low'
+        mid_volume:
+          $ref: '#/components/schemas/Option_Contract_Mid_Volume'
+        multi_leg_volume:
+          $ref: '#/components/schemas/Option_Contract_Multi_Leg_Volume'
+        nbbo_ask:
+          $ref: '#/components/schemas/NBBO_Ask'
+        nbbo_bid:
+          $ref: '#/components/schemas/NBBO_Bid'
+        no_side_volume:
+          $ref: '#/components/schemas/Option_Contract_No_Side_Volume'
+        open_interest:
+          $ref: '#/components/schemas/Option_Contract_Open_interest'
+        option_symbol:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        prev_oi:
+          $ref: '#/components/schemas/Option_Contract_Previous_Open_Interest'
+        rho:
+          description: 'First-order greek: rho.'
+          example: '0.027'
+          nullable: true
+          type: string
+        stock_multi_leg_volume:
+          $ref: '#/components/schemas/Option_Contract_Stock_Multi_Leg_Volume'
+        sweep_volume:
+          $ref: '#/components/schemas/Option_Contract_Sweep_Volume'
+        theta:
+          description: 'First-order greek: theta.'
+          example: '-0.058'
+          nullable: true
+          type: string
+        total_premium:
+          $ref: '#/components/schemas/Option_Contract_Premium'
+        vega:
+          description: 'First-order greek: vega.'
+          example: '0.112'
+          nullable: true
+          type: string
+        volume:
+          $ref: '#/components/schemas/Option_Contract_Volume'
+      title: Option contracts
+      type: object
+    Optionable_Tickers:
+      description: |
+        Without a `ticker` query param, `data` is an alphabetically sorted array of every underlying symbol
+        that currently has listed options.
+
+        With `?ticker=SYMBOL`, `data` is instead an object `{ "ticker": ..., "has_options": true|false }`
+        reporting whether that one symbol has listed options.
+      example:
+        data:
+          - A
+          - AA
+          - AAA
+          - AAAU
+          - AACB
+          - AACG
+          - AACT
+          - AADI
+          - AAL
+          - AAOI
+      items:
+        example: AAPL
+        type: string
+      title: Optionable Tickers
+      type: array
+    OptionalTimespan:
+      description: "Optional timespan parameter that can be used to specify a date range. Accepts values like '1y', '6m', '3m', '1m', '1w' or an ISO date (example: 2024-01-25)."
+      example: 1y
+      title: OptionalTimespan
+      type: string
+    Optional_Market_Date:
+      description: |
+        A trading date in the format of YYYY-MM-DD.
+        This is optional and by default the last trading date.
+      example: 2024-01-18
+      title: Optional Market Date
+      type: string
+    Optional_POTUS_Schedule_Date:
+      description: |
+        A date in the format of YYYY-MM-DD.
+        This is optional and by default returns the most recent scheduled date.
+      example: 2026-07-09
+      title: Optional POTUS Schedule Date
+      type: string
+    Optional_Ticker:
+      description: Optional ticker symbol to filter results
+      example: IOVA
+      nullable: true
+      title: Optional Ticker
+      type: string
+    OrderDirection:
+      default: desc
+      description: Whether to sort descending or ascending. Descending by default.
+      enum:
+        - desc
+        - asc
+      example: asc
+      title: OrderDirection
+      type: string
+    Ownership:
+      description: ''
+      example:
+        data:
+          - cik: ''
+            entity_type: other
+            name: OTHER
+            ownership: '0.5778598057824398968559314757'
+            ownership_perc: '57.79'
+            units: 1258514670
+          - cik: '0001548760'
+            entity_type: insider
+            name: ZUCKERBERG MARK
+            ownership: '0.1573567903006183552668030525'
+            ownership_perc: '15.74'
+            units: 342705665
+          - cik: '0000102909'
+            entity_type: institution
+            name: VANGUARD GROUP INC
+            ownership: '0.08849226346961719659402940931'
+            ownership_perc: '8.85'
+            units: 192726351
+          - cik: '0002012383'
+            entity_type: institution
+            name: BLACKROCK, INC.
+            ownership: '0.07690733150859746487873438344'
+            ownership_perc: '7.69'
+            units: 167495652
+          - cik: '0000315066'
+            entity_type: institution
+            name: FMR LLC
+            ownership: '0.05969144108951482234425757667'
+            ownership_perc: '5.97'
+            units: 130001349
+          - cik: '0000093751'
+            entity_type: institution
+            name: STATE STREET CORP
+            ownership: '0.03969236784921226406024410234'
+            ownership_perc: '3.97'
+            units: 86445582
+      properties:
+        cik:
+          $ref: '#/components/schemas/Ownership_CIK'
+        entity_type:
+          $ref: '#/components/schemas/Ownership_Entity_Type'
+        name:
+          $ref: '#/components/schemas/Ownership_Name'
+        ownership:
+          $ref: '#/components/schemas/Ownership_Relative'
+        ownership_perc:
+          $ref: '#/components/schemas/Ownership_Percentage'
+        units:
+          $ref: '#/components/schemas/Ownership_Units'
+      title: Ownership
+      type: object
+    Ownership_CIK:
+      description: The cik of the institution or insider trader owning the shares. Politicians don't have a CIK, so the field is empty for those.
+      example: '0001548760'
+      title: Ownership CIK
+      type: string
+    Ownership_Entity_Type:
+      description: The type of entity owning the ticker shares.
+      enum:
+        - institution
+        - insider
+        - politician
+        - other
+      title: Ownership Entity Type
+      type: string
+    Ownership_Name:
+      description: The name of the institution, insider trader or politician owning the shares.
+      example: MARK ZUCKERBERG
+      title: Ownership Name
+      type: string
+    Ownership_Percentage:
+      description: The percentage of ticker shares owned by the institution, insider trader or politician.
+      title: Ownership Percentage
+      type: string
+    Ownership_Relative:
+      description: The relative amount of ticker shares owned by the institution, insider trader or politician.
+      title: Ownership Relative
+      type: string
+    Ownership_Units:
+      description: The absolute amount of ticker shares owned by the institution, insider trader or politician.
+      title: Ownership Units
+      type: integer
+    POTUS_Post:
+      description: A short-form social media post from the President.
+      example:
+        data:
+          - post: Best fireworks show, EVER! President DJT
+            timestamp: 1783561144000
+          - post: Tariffs are working. America First!
+            timestamp: 1783550000000
+      properties:
+        post:
+          description: The full text of the post.
+          example: Best fireworks show, EVER! President DJT
+          type: string
+        timestamp:
+          description: The post's publish time as a Unix epoch timestamp in milliseconds (UTC).
+          example: 1783561144000
+          type: integer
+      required:
+        - timestamp
+        - post
+      title: POTUS Post
+      type: object
+    POTUS_Post_Search_Term:
+      description: Optional search term to filter posts by their text content.
+      example: Walmart
+      title: POTUS Post Search Term
+      type: string
+    POTUS_Schedule_Entry:
+      description: An entry from the President's public schedule.
+      example:
+        data:
+          - coverage: Closed Press
+            date: 2026-07-09
+            details: The President participates in a Policy Meeting
+            location: Oval Office
+            time: 2026-07-09T21:00:00Z
+            type: President Schedule
+            url:
+            video_url:
+      properties:
+        coverage:
+          description: The press coverage designation for the event.
+          example: Closed Press
+          nullable: true
+          type: string
+        date:
+          description: The calendar date of the entry in YYYY-MM-DD format.
+          example: 2026-07-09
+          type: string
+        details:
+          description: A human-readable description of the event.
+          example: The President participates in a Policy Meeting
+          nullable: true
+          type: string
+        location:
+          description: Where the event takes place.
+          example: Oval Office
+          nullable: true
+          type: string
+        time:
+          description: The start time of the entry as an ISO 8601 UTC timestamp.
+          example: 2026-07-09T21:00:00Z
+          nullable: true
+          type: string
+        type:
+          description: The kind of schedule entry.
+          example: President Schedule
+          type: string
+        url:
+          description: An optional link associated with the event.
+          nullable: true
+          type: string
+        video_url:
+          description: An optional video link associated with the event.
+          nullable: true
+          type: string
+      required:
+        - type
+        - date
+      title: POTUS Schedule Entry
+      type: object
+    Page:
+      description: Page number (use with limit). Starts on page 0.
+      example: 1
+      title: Page
+      type: integer
+    People:
+      description: Persons of interest in the institution.
+      example:
+        - Paul Singer
+      items:
+        type: string
+      title: People
+      type: array
+    Perc_of_Share_Value:
+      description: The percentage of the total share value of this institution that this holding represents. For example, if the sum of all the institution's holdings total $100 million and this holding has reported value $4 million, then the perc_of_share_value result will be 0.04.
+      example: 0.04
+      title: Perc of Share Value
+      type: number
+    Perc_of_Total:
+      description: The percentage of the total outstanding shares owned by this institution. For example, if there are 500 million outstanding shares and this institution owns 1 million shares, then the perc_of_total result will be 0.002.
+      example: 0.002
+      title: Perc of Total
+      type: number
+    Politician:
+      properties:
+        id:
+          description: The politician's ID.
+          example: e138f347-ae92-4cfb-8f41-7036ff09a213
+          format: uuid
+          type: string
+        name:
+          description: The politician's name.
+          example: Zoe Lofgren
+          type: string
+      title: Politician
+      type: object
+    Politician_ID:
+      description: The Politician's ID that you'd like to filter by.
+      example: 18f9fc95-4661-444e-99f5-99d3778e0c31
+      title: Politician ID
+      type: string
+    Politician_Portfolio:
+      properties:
+        crypto_holdings:
+          description: The portfolio crypto holdings.
+          items:
+            $ref: '#/components/schemas/Crypto_Holding'
+          type: array
+        id:
+          description: The portfolio ID.
+          example: 5fbe81ac-1157-4bc8-9d76-c77e6164fe25
+          format: uuid
+          type: string
+        last_annual_disclosure:
+          description: The year of this portfolio's latest annual disclosure.
+          example: 2023
+          type: integer
+        option_holdings:
+          description: The portfolio option holdings.
+          items:
+            $ref: '#/components/schemas/Option_Holding'
+          type: array
+        owner:
+          description: The portfolio owner's name. Is "aggregated" when aggregate_all_portfolios is true.
+          enum:
+            - self
+            - spouse
+            - joint
+            - child
+            - aggregated
+          example: self
+          type: string
+        stock_holdings:
+          description: The portfolio stock and ETF holdings.
+          items:
+            $ref: '#/components/schemas/Stock_Holding'
+          type: array
+      title: Politician Portfolio
+      type: object
+    Politician_Portfolios:
+      example:
+        data:
+          - crypto_holdings: []
+            id: 6361b0d9-ad41-424a-9c42-afa5f3393e69
+            last_annual_disclosure: 2023
+            option_holdings: []
+            owner: self
+            stock_holdings:
+              - max_amount: 15
+                mid_amount: 7
+                min_amount: 1
+                ticker: XYZ
+                type: stock
+              - max_amount: 505
+                mid_amount: 328
+                min_amount: 151
+                ticker: RHP
+                type: stock
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Politician_Portfolio'
+          type: array
+      title: Politician Portfolios
+      type: object
+    Politician_Trades:
+      additionalProperties: true
+      description: Trades reported by members of congress, with the linked politician where known.
+      example:
+        data:
+          - asset: NVIDIA Corporation - Common Stock
+            asset_type: stock
+            filed_at_date: 2026-07-15
+            high_value: '5000000'
+            id: b3f1c2d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d
+            is_amendment: false
+            is_etf: false
+            low_value: '1000001'
+            mid_value: '3000000'
+            name: Nancy Pelosi
+            politician_id: 18f9fc95-4661-444e-99f5-99d3778e0c31
+            ticker: NVDA
+            transaction_date: 2026-06-20
+            transaction_type: Buy
+      title: Politician Trades
+      type: object
+    Politicians_List:
+      example:
+        data:
+          - id: e138f347-ae92-4cfb-8f41-7036ff09a213
+            name: Zoe Lofgren
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Politician'
+          type: array
+      title: Politicians List
+      type: object
+    Portfolio_Holder:
+      properties:
+        full_name:
+          description: The politician's name.
+          example: Zoe Lofgren
+          type: string
+        id:
+          description: The portfolio ID.
+          example: 5fbe81ac-1157-4bc8-9d76-c77e6164fe25
+          format: uuid
+          type: string
+        max_amount:
+          description: The portfolio's maximum share quantity.
+          example: 143
+          type: number
+        mid_amount:
+          description: The portfolio's midpoint share quantity.
+          example: 76
+          type: number
+        min_amount:
+          description: The portfolio's minimum share quantity.
+          example: 9
+          type: number
+        owner:
+          description: The portfolio owner's name.
+          enum:
+            - self
+            - spouse
+            - joint
+            - child
+          example: self
+          type: string
+      title: Portfolio Holder
+      type: object
+    Portfolio_Holders:
+      example:
+        data:
+          - full_name: Zoe Lofgren
+            id: 5fbe81ac-1157-4bc8-9d76-c77e6164fe25
+            max_amount: 143
+            mid_amount: 76
+            min_amount: 9
+            owner: self
+          - full_name: Zoe Lofgren
+            id: 9d28365f-7559-417b-ba26-102cefde89eb
+            max_amount: 2386
+            mid_amount: 1670
+            min_amount: 954
+            owner: spouse
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Portfolio_Holder'
+          type: array
+      title: Portfolio Holders
+      type: object
+    Positions:
+      description: ''
+      example: 5
+      title: Positions
+      type: integer
+    Positions_Closed:
+      description: ''
+      example: 2
+      title: Positions Closed
+      type: integer
+    Positions_Decreased:
+      description: ''
+      example: 2
+      title: Positions Decreased
+      type: integer
+    Positions_Increased:
+      description: ''
+      example: 2
+      title: Positions Increased
+      type: integer
+    Post_Earnings_Move_13Day:
+      description: The 3 day % move after the earnings report.
+      example: '0.08'
+      title: Post Earnings Move 13Day
+      type: string
+    Post_Earnings_Move_1_Day:
+      description: The 1 day % move after the earnings report.
+      example: '0.08'
+      title: Post Earnings Move 1 Day
+      type: string
+    Post_Earnings_Move_1_Week:
+      description: The 1 week % move after the earnings report.
+      example: '0.08'
+      title: Post Earnings Move 1 Week
+      type: string
+    Post_Earnings_Move_2_Week:
+      description: The 2 week % move after the earnings report.
+      example: '0.08'
+      title: Post Earnings Move 2 Week
+      type: string
+    Pre_Earnings_Move_13Day:
+      description: The 3 day % move up to the earnings report.
+      example: '0.08'
+      title: Pre Earnings Move 13Day
+      type: string
+    Pre_Earnings_Move_1_Day:
+      description: The 1 day % move up to the earnings report.
+      example: '0.08'
+      title: Pre Earnings Move 1 Day
+      type: string
+    Pre_Earnings_Move_1_Week:
+      description: The 1 week % move up to the earnings report.
+      example: '0.08'
+      title: Pre Earnings Move 1 Week
+      type: string
+    Pre_Earnings_Move_2_Week:
+      description: The 2 week % move up to the earnings report.
+      example: '0.08'
+      title: Pre Earnings Move 2 Week
+      type: string
+    Prediction_Asset_Insider:
+      properties:
+        avg_price:
+          example: '0.41'
+          type: string
+        created_at:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+        days_since_first_trade:
+          example: 12
+          type: integer
+        first_trade_at:
+          example: 2026-07-17T09:15:00Z
+          format: date-time
+          nullable: true
+          type: string
+        invested_zscore:
+          example: '8.0'
+          type: string
+        n_positions:
+          example: 3
+          type: integer
+        pnl_percent:
+          example: '48.2'
+          type: string
+        total_invested_usd:
+          example: '25000'
+          type: string
+        user_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+      title: Prediction Asset Insider
+      type: object
+    Prediction_Asset_Liquidity_Summary:
+      properties:
+        ask_liquidity:
+          example: '12500'
+          type: string
+        best_ask:
+          example: '0.63'
+          nullable: true
+          type: string
+        best_bid:
+          example: '0.61'
+          nullable: true
+          type: string
+        bid_liquidity:
+          example: '15000'
+          type: string
+        mid_price:
+          example: '0.62'
+          nullable: true
+          type: string
+        spread:
+          example: '0.02'
+          nullable: true
+          type: string
+        total_liquidity:
+          example: '27500'
+          type: string
+      title: Prediction Asset Liquidity Summary
+      type: object
+    Prediction_Asset_Tag_Score:
+      properties:
+        normalized:
+          example: '10.5'
+          type: string
+        tag:
+          enum:
+            - contrarian_whales
+            - momentum
+            - closing_soon
+            - insider_trades
+            - smart_money
+          example: smart_money
+          type: string
+        value:
+          example: '25'
+          type: string
+        weighted:
+          example: '3.15'
+          type: string
+      title: Prediction Asset Tag Score
+      type: object
+    Prediction_Insider_Detail:
+      properties:
+        avg_price:
+          example: '0.41'
+          type: string
+        first_trade_at:
+          example: 2026-07-17T09:15:00Z
+          format: date-time
+          nullable: true
+          type: string
+        total_invested_usd:
+          example: '25000'
+          type: string
+        user_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+      title: Prediction Insider Detail
+      type: object
+    Prediction_Market_Detail:
+      properties:
+        active:
+          example: true
+          type: boolean
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        category:
+          example: Sports
+          nullable: true
+          type: string
+        closed:
+          example: false
+          type: boolean
+        contrarian_whale_trades:
+          items:
+            $ref: '#/components/schemas/Prediction_Trade'
+          type: array
+        description:
+          example: Resolves YES if the Los Angeles Lakers win the 2026 NBA Finals.
+          nullable: true
+          type: string
+        end_date:
+          example: 2026-08-15T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        insiders:
+          items:
+            $ref: '#/components/schemas/Prediction_Asset_Insider'
+          type: array
+        liquidity:
+          $ref: '#/components/schemas/Prediction_Asset_Liquidity_Summary'
+          nullable: true
+        mci:
+          $ref: '#/components/schemas/Market_Certainty_Index'
+          nullable: true
+        outcome_assets:
+          items:
+            $ref: '#/components/schemas/Prediction_Outcome_Asset'
+          type: array
+        outcome_index:
+          description: Zero-based index of this outcome within the market.
+          example: 0
+          type: integer
+        outcomes:
+          example:
+            - Yes
+            - No
+          items:
+            type: string
+          type: array
+        question:
+          example: Will the Lakers win the 2026 NBA Championship?
+          type: string
+        question_type:
+          example: yes_no
+          type: string
+        smart_trades:
+          items:
+            $ref: '#/components/schemas/Prediction_Trade'
+          type: array
+        tag_info:
+          items:
+            $ref: '#/components/schemas/Prediction_Tag_Info'
+          type: array
+        tag_scores:
+          items:
+            $ref: '#/components/schemas/Prediction_Asset_Tag_Score'
+          type: array
+        tags:
+          example:
+            - smart_money
+            - momentum
+          items:
+            enum:
+              - contrarian_whales
+              - momentum
+              - closing_soon
+              - insider_trades
+              - smart_money
+            type: string
+          type: array
+        tags_score:
+          example: '1.00'
+          type: string
+        trades:
+          items:
+            $ref: '#/components/schemas/Prediction_Trade'
+          type: array
+        volume:
+          example: '1250000.50'
+          type: string
+        winning_outcome:
+          description: Zero-based index of the winning outcome once the market resolves.
+          nullable: true
+          type: integer
+      title: Prediction Market Detail
+      type: object
+    Prediction_Market_Detail_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Prediction_Market_Detail'
+      title: Prediction Market Detail Response
+      type: object
+    Prediction_Market_Insider:
+      properties:
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        avg_price:
+          example: '0.41'
+          type: string
+        category:
+          example: Sports
+          nullable: true
+          type: string
+        created_at:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+        current_price:
+          example: '0.68'
+          type: string
+        days_since_first_trade:
+          example: 12
+          nullable: true
+          type: integer
+        days_since_first_trade_overall:
+          example: 45
+          type: integer
+        first_trade_at:
+          example: 2026-07-17T09:15:00Z
+          format: date-time
+          nullable: true
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        invested_zscore:
+          example: '8.0'
+          type: string
+        n_positions:
+          example: 3
+          type: integer
+        outcome:
+          example: Yes
+          nullable: true
+          type: string
+        pnl_percent:
+          example: '48.2'
+          type: string
+        question:
+          example: Will the Lakers win the 2026 NBA Championship?
+          nullable: true
+          type: string
+        resolves:
+          example: 2026-08-15T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        tags:
+          example:
+            - insider_trades
+            - smart_money
+          items:
+            enum:
+              - contrarian_whales
+              - momentum
+              - closing_soon
+              - insider_trades
+              - smart_money
+            type: string
+          type: array
+        tags_score:
+          example: '1.00'
+          type: string
+        total_invested_usd:
+          example: '25000'
+          type: string
+        user_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+      title: Prediction Market Insider
+      type: object
+    Prediction_Market_Insiders_Data:
+      properties:
+        categories:
+          example:
+            - Crypto
+            - Culture
+            - Finance
+            - Games
+            - Mentions
+            - Other
+            - Politics
+            - Sports
+            - Weather
+          items:
+            type: string
+          type: array
+        data:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_Insider'
+          type: array
+        tag_info:
+          items:
+            $ref: '#/components/schemas/Prediction_Tag_Info'
+          type: array
+      title: Prediction Market Insiders Data
+      type: object
+    Prediction_Market_Insiders_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Prediction_Market_Insiders_Data'
+      title: Prediction Market Insiders Response
+      type: object
+    Prediction_Market_Liquidity:
+      properties:
+        ask_liquidity:
+          example: '12500'
+          type: string
+        asks:
+          items:
+            $ref: '#/components/schemas/Prediction_Order_Book_Level'
+          type: array
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        best_ask:
+          example: '0.63'
+          nullable: true
+          type: string
+        best_bid:
+          example: '0.61'
+          nullable: true
+          type: string
+        bid_liquidity:
+          example: '15000'
+          type: string
+        bids:
+          items:
+            $ref: '#/components/schemas/Prediction_Order_Book_Level'
+          type: array
+        mid_price:
+          example: '0.62'
+          nullable: true
+          type: string
+        spread:
+          example: '0.02'
+          nullable: true
+          type: string
+        timestamp:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+        total_liquidity:
+          example: '27500'
+          type: string
+      title: Prediction Market Liquidity
+      type: object
+    Prediction_Market_Liquidity_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Prediction_Market_Liquidity'
+      title: Prediction Market Liquidity Response
+      type: object
+    Prediction_Market_Position:
+      properties:
+        amount:
+          example: '5000'
+          type: string
+        avg_price:
+          example: '0.42'
+          type: string
+        category_num_markets:
+          example: 24
+          nullable: true
+          type: integer
+        category_score:
+          example: '8.1'
+          nullable: true
+          type: string
+        category_sum_invested:
+          example: '42000'
+          nullable: true
+          type: string
+        category_sum_pnl:
+          example: '18500.75'
+          nullable: true
+          type: string
+        category_win_rate:
+          example: '0.65'
+          nullable: true
+          type: string
+        invested_usd:
+          example: '2100'
+          type: string
+        position_start_at:
+          example: 2026-07-10T14:05:00Z
+          format: date-time
+          nullable: true
+          type: string
+        realized_pnl:
+          example: '350.25'
+          type: string
+        smart_score:
+          example: '12.5'
+          nullable: true
+          type: string
+        tags:
+          example: []
+          items:
+            enum:
+              - bot
+              - polymarket_smart_contract
+            type: string
+          type: array
+        total_bought:
+          example: '6000'
+          type: string
+        total_invested_usd:
+          example: '2520'
+          type: string
+        updated_at:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+        user_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+      title: Prediction Market Position
+      type: object
+    Prediction_Market_Positions_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_Position'
+          type: array
+      title: Prediction Market Positions Response
+      type: object
+    Prediction_Market_User:
+      properties:
+        address_tags:
+          example: []
+          items:
+            enum:
+              - bot
+              - polymarket_smart_contract
+            type: string
+          type: array
+        categories:
+          example:
+            - Crypto
+            - Culture
+            - Finance
+            - Games
+            - Mentions
+            - Other
+            - Politics
+            - Sports
+            - Weather
+          items:
+            type: string
+          type: array
+        category_scores:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_User_Category_Score'
+          type: array
+        positions:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_User_Position'
+          type: array
+        score:
+          $ref: '#/components/schemas/Prediction_Market_User_Score'
+          description: Aggregate score across all categories, or null if not yet scored.
+          nullable: true
+        tag_info:
+          items:
+            $ref: '#/components/schemas/Prediction_Tag_Info'
+          type: array
+        total_trades:
+          example: 128
+          type: integer
+        trades:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_User_Trade'
+          type: array
+        user_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+        user_name:
+          example: whale_watcher
+          nullable: true
+          type: string
+      title: Prediction Market User
+      type: object
+    Prediction_Market_User_Category_Score:
+      properties:
+        category:
+          example: Politics
+          type: string
+        num_markets:
+          example: 5
+          type: integer
+        smart_score:
+          example: '7.5'
+          type: string
+        sum_pnl:
+          example: '9200.00'
+          type: string
+        win_rate:
+          example: '0.80'
+          type: string
+      title: Prediction Market User Category Score
+      type: object
+    Prediction_Market_User_Position:
+      properties:
+        amount:
+          example: '5000'
+          type: string
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        avg_price:
+          example: '0.42'
+          type: string
+        category:
+          example: Sports
+          type: string
+        current_price:
+          example: '0.68'
+          nullable: true
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        invested_usd:
+          example: '2100'
+          type: string
+        outcome:
+          example: Yes
+          type: string
+        overall_pnl:
+          example: '1650.25'
+          nullable: true
+          type: string
+        overall_pnl_pct:
+          example: '65.5'
+          nullable: true
+          type: string
+        position_value:
+          example: '3400'
+          nullable: true
+          type: string
+        question:
+          example: Will the Lakers win the 2026 NBA Championship?
+          type: string
+        realized_pnl:
+          example: '350.25'
+          type: string
+        status:
+          enum:
+            - active
+            - finished
+          example: active
+          type: string
+        tags:
+          example:
+            - smart_money
+          items:
+            enum:
+              - contrarian_whales
+              - momentum
+              - closing_soon
+              - insider_trades
+              - smart_money
+            type: string
+          type: array
+        tags_score:
+          example: '1.00'
+          type: string
+        total_bought:
+          example: '6000'
+          type: string
+        total_invested_usd:
+          example: '2520'
+          type: string
+        unrealized_pnl:
+          example: '1300'
+          nullable: true
+          type: string
+        updated_at:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+      title: Prediction Market User Position
+      type: object
+    Prediction_Market_User_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Prediction_Market_User'
+      title: Prediction Market User Response
+      type: object
+    Prediction_Market_User_Score:
+      properties:
+        is_smart:
+          description: True when smart_score >= 5 and num_markets >= 10.
+          example: false
+          type: boolean
+        num_markets:
+          example: 10
+          type: integer
+        smart_score:
+          example: '4.525'
+          type: string
+        sum_pnl:
+          example: '18500.75'
+          type: string
+        win_rate:
+          example: '0.65'
+          type: string
+      title: Prediction Market User Score
+      type: object
+    Prediction_Market_User_Search_Hit:
+      properties:
+        address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+        name:
+          description: Display name, or an empty string when matched purely by address.
+          example: whale_watcher
+          type: string
+      title: Prediction Market User Search Hit
+      type: object
+    Prediction_Market_User_Trade:
+      properties:
+        amount_filled:
+          example: '1000'
+          type: string
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        counterparty_address:
+          example: '0x8b3f2c1d0e9a7b6c5d4e3f2a1b0c9d8e7f6a5b4c'
+          type: string
+        executed_at:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+        fee:
+          example: '0.50'
+          type: string
+        id:
+          example: trade-1a2b3c
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        question:
+          example: Will the Lakers win the 2026 NBA Championship?
+          type: string
+        side:
+          enum:
+            - buyer
+            - seller
+          example: buyer
+          type: string
+        transaction_hash:
+          example: '0x5c8f1e2d3a4b5c6d7e8f90a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d'
+          type: string
+      title: Prediction Market User Trade
+      type: object
+    Prediction_Market_Whale_Position:
+      properties:
+        amount:
+          example: '16000'
+          type: string
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        avg_price:
+          example: '0.62'
+          type: string
+        category:
+          example: Sports
+          nullable: true
+          type: string
+        current_price:
+          example: '0.68'
+          nullable: true
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        invested_usd:
+          example: '10000'
+          type: string
+        outcome:
+          example: Yes
+          nullable: true
+          type: string
+        prices:
+          items:
+            $ref: '#/components/schemas/Prediction_Price_Point'
+          type: array
+        purchased_at:
+          example: 2026-07-20T11:47:00Z
+          format: date-time
+          nullable: true
+          type: string
+        question:
+          example: Will the Lakers win the 2026 NBA Championship?
+          nullable: true
+          type: string
+        realized_pnl:
+          example: '0'
+          type: string
+        resolves:
+          example: 2026-08-15T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        tags:
+          items:
+            $ref: '#/components/schemas/Prediction_Asset_Tag_Score'
+          type: array
+        unusual_score:
+          example: '6.8'
+          type: string
+        user_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          nullable: true
+          type: string
+        wallet_age_days:
+          example: 420
+          nullable: true
+          type: integer
+      title: Prediction Market Whale Position
+      type: object
+    Prediction_Market_Whales_Data:
+      properties:
+        categories:
+          example:
+            - Crypto
+            - Culture
+            - Finance
+            - Games
+            - Mentions
+            - Other
+            - Politics
+            - Sports
+            - Weather
+          items:
+            type: string
+          type: array
+        data:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_Whale_Position'
+          type: array
+      title: Prediction Market Whales Data
+      type: object
+    Prediction_Market_Whales_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Prediction_Market_Whales_Data'
+      title: Prediction Market Whales Response
+      type: object
+    Prediction_Order_Book_Level:
+      properties:
+        price:
+          example: '0.55'
+          type: string
+        size:
+          example: '1200'
+          type: string
+      title: Prediction Order Book Level
+      type: object
+    Prediction_Outcome_Asset:
+      properties:
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        label:
+          example: Yes
+          type: string
+        prices:
+          items:
+            $ref: '#/components/schemas/Prediction_Price_Point'
+          type: array
+      title: Prediction Outcome Asset
+      type: object
+    Prediction_Price_Point:
+      description: A single day's closing price for an outcome, quoted 0-1 as a numeric string.
+      properties:
+        date:
+          example: 2026-07-27
+          format: date
+          type: string
+        price:
+          example: '0.62'
+          type: string
+      title: Prediction Price Point
+      type: object
+    Prediction_Smart_Money_Data:
+      properties:
+        categories:
+          example:
+            - Crypto
+            - Culture
+            - Finance
+            - Games
+            - Mentions
+            - Other
+            - Politics
+            - Sports
+            - Weather
+          items:
+            type: string
+          type: array
+        data:
+          items:
+            $ref: '#/components/schemas/Smart_Money_Market'
+          type: array
+      title: Prediction Smart Money Data
+      type: object
+    Prediction_Smart_Money_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Prediction_Smart_Money_Data'
+      title: Prediction Smart Money Response
+      type: object
+    Prediction_Tag_Info:
+      description: Weight of each tag used when scoring a market. Always includes all five tags.
+      properties:
+        score:
+          example: '0.35'
+          type: string
+        tag:
+          enum:
+            - contrarian_whales
+            - momentum
+            - closing_soon
+            - insider_trades
+            - smart_money
+          example: insider_trades
+          type: string
+      title: Prediction Tag Info
+      type: object
+    Prediction_Trade:
+      properties:
+        executed_at:
+          example: 2026-07-29T18:32:11Z
+          format: date-time
+          type: string
+        fee:
+          example: '0.50'
+          type: string
+        id:
+          example: trade-1a2b3c
+          type: string
+        maker_address:
+          example: '0x5140e6529f2108469c9386ad5acd7acb8cddae0c'
+          type: string
+        maker_amount_filled:
+          example: '1000'
+          type: string
+        maker_side:
+          enum:
+            - buyer
+            - seller
+          example: seller
+          type: string
+        taker_address:
+          example: '0x8b3f2c1d0e9a7b6c5d4e3f2a1b0c9d8e7f6a5b4c'
+          type: string
+        taker_amount_filled:
+          example: '620'
+          type: string
+        taker_side:
+          enum:
+            - buyer
+            - seller
+          example: buyer
+          type: string
+        transaction_hash:
+          example: '0x5c8f1e2d3a4b5c6d7e8f90a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d'
+          type: string
+      title: Prediction Trade
+      type: object
+    Preferred_Share_Holding_Units:
+      description: The number of preferred share units in the institution's portfolio.
+      example: '2394292.0'
+      title: Preferred Share Holding Units
+      type: string
+    Preferred_Share_Value:
+      description: The rounded total preferred share value in the institution's portfolio.
+      example: '2394292.0'
+      title: Preferred Share Value
+      type: string
+    Premium:
+      description: The premium of the option trade.
+      example: '2150.00'
+      title: Premium
+      type: string
+    Price_First_Buy:
+      description: The close price of the ticker on the first buy date.
+      example: '42.39'
+      title: Price First Buy
+      type: string
+    Price_On_Filing:
+      description: The security price on the filing date.
+      example: '23.49'
+      title: Price On Filing
+      type: string
+    Price_On_Report:
+      description: The security price on the report date.
+      example: '23.49'
+      title: Price On Report
+      type: string
+    Private_Markets_Companies:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Private_Markets_Company'
+          type: array
+      title: Private Markets Companies
+      type: object
+    Private_Markets_Company:
+      properties:
+        description:
+          nullable: true
+          type: string
+        doing_business_as:
+          nullable: true
+          type: string
+        headquarters:
+          example: San Francisco, CA
+          nullable: true
+          type: string
+        id:
+          format: uuid
+          type: string
+        marketing_url:
+          example: https://openai.com
+          nullable: true
+          type: string
+        name:
+          example: OpenAI
+          type: string
+        npm_ticker:
+          description: Nasdaq Private Markets ticker for the company.
+          example: OPENAI
+          type: string
+        sector:
+          example: Technology
+          nullable: true
+          type: string
+        sub_sectors:
+          items:
+            type: string
+          nullable: true
+          type: array
+        year_founded:
+          example: 2015
+          nullable: true
+          type: integer
+      title: Private Markets Company
+      type: object
+    Private_Markets_Company_Profile:
+      properties:
+        company:
+          $ref: '#/components/schemas/Private_Markets_Company'
+        investor_count:
+          description: Number of distinct disclosed investors.
+          type: integer
+        latest_price:
+          $ref: '#/components/schemas/Private_Markets_Pricing_Tick'
+          description: Most recent recorded pricing tick for the company.
+          nullable: true
+        total_funding:
+          description: Sum of all known funding-round investment amounts.
+          nullable: true
+          type: number
+      title: Private Markets Company Profile
+      type: object
+    Private_Markets_Company_Profile_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Private_Markets_Company_Profile'
+      title: Private Markets Company Profile Response
+      type: object
+    Private_Markets_Funding_Round:
+      properties:
+        financing_round:
+          example: Series E
+          nullable: true
+          type: string
+        id:
+          format: uuid
+          type: string
+        investment_amount:
+          example: 6600000000
+          nullable: true
+          type: number
+        investment_date:
+          format: date
+          nullable: true
+          type: string
+        npm_ticker:
+          example: OPENAI
+          type: string
+      title: Private Markets Funding Round
+      type: object
+    Private_Markets_Funding_Rounds:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Private_Markets_Funding_Round'
+          type: array
+      title: Private Markets Funding Rounds
+      type: object
+    Private_Markets_Investor:
+      properties:
+        id:
+          format: uuid
+          type: string
+        name:
+          example: Microsoft
+          type: string
+        npm_ticker:
+          example: OPENAI
+          type: string
+      title: Private Markets Investor
+      type: object
+    Private_Markets_Investor_Profile:
+      properties:
+        companies:
+          items:
+            $ref: '#/components/schemas/Private_Markets_Company'
+          type: array
+        name:
+          example: Sequoia Capital
+          type: string
+      title: Private Markets Investor Profile
+      type: object
+    Private_Markets_Investor_Profile_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Private_Markets_Investor_Profile'
+      title: Private Markets Investor Profile Response
+      type: object
+    Private_Markets_Investors:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Private_Markets_Investor'
+          type: array
+      title: Private Markets Investors
+      type: object
+    Private_Markets_Management:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Private_Markets_Management_Member'
+          type: array
+      title: Private Markets Management
+      type: object
+    Private_Markets_Management_Member:
+      properties:
+        first_name:
+          example: Sam
+          nullable: true
+          type: string
+        id:
+          format: uuid
+          type: string
+        last_name:
+          example: Altman
+          nullable: true
+          type: string
+        npm_ticker:
+          example: OPENAI
+          type: string
+        title:
+          example: CEO
+          nullable: true
+          type: string
+      title: Private Markets Management Member
+      type: object
+    Private_Markets_Pricing_History:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Private_Markets_Pricing_Tick'
+          type: array
+      title: Private Markets Pricing History
+      type: object
+    Private_Markets_Pricing_Tick:
+      properties:
+        date:
+          format: date
+          type: string
+        id:
+          format: uuid
+          type: string
+        npm_ticker:
+          example: OPENAI
+          type: string
+        price:
+          description: Implied per-share price for the company on this date.
+          type: number
+      title: Private Markets Pricing Tick
+      type: object
+    Private_Markets_Search:
+      properties:
+        data:
+          properties:
+            companies:
+              items:
+                $ref: '#/components/schemas/Private_Markets_Search_Hit_Company'
+              type: array
+            investors:
+              items:
+                $ref: '#/components/schemas/Private_Markets_Search_Hit_Investor'
+              type: array
+          type: object
+      title: Private Markets Search
+      type: object
+    Private_Markets_Search_Hit_Company:
+      properties:
+        headquarters:
+          nullable: true
+          type: string
+        name:
+          example: OpenAI
+          type: string
+        npm_ticker:
+          example: OPENAI
+          type: string
+        sector:
+          nullable: true
+          type: string
+      title: Private Markets Search Hit (Company)
+      type: object
+    Private_Markets_Search_Hit_Investor:
+      properties:
+        company_count:
+          example: 14
+          type: integer
+        name:
+          example: Sequoia Capital
+          type: string
+      title: Private Markets Search Hit (Investor)
+      type: object
+    PutCall:
+      description: Whether the holding is a put or a call (null if neither).
+      example: put
+      title: PutCall
+      type: string
+    Put_Delta:
+      description: |
+          The total put delta obtained by multiplying the volume of all put options with their latest delta.
+      example: '-43593.96'
+      title: Put Delta
+      type: number
+    Put_Fill_Delta:
+      description: |
+          The total put delta obtained by summing up the size of each put trade multiplied by the delta at the time of the transaction.
+      example: '-43593.96'
+      title: Put Fill Delta
+      type: number
+    Put_Holding_Units:
+      description: The number of put units in the institution's portfolio.
+      example: '2394292.0'
+      title: Put Holding Units
+      type: string
+    Put_Value:
+      description: The rounded total put value in the institution's portfolio.
+      example: '2394292.0'
+      title: Put Value
+      type: string
+    Put_Volume:
+      description: |
+          The cumulative total volume of put options traded.
+      example: 12348
+      title: Put Volume
+      type: integer
+    Put_Wall:
+      description: Strike below spot with the largest positive net gamma exposure (support).
+      example: '550'
+      nullable: true
+      title: Put Wall
+      type: string
+    Reaction:
+      description: The 1D % stock move after the earnings report.
+      example: '0.15'
+      title: Reaction
+      type: string
+    RealizedVolatilityDays:
+      default: 21
+      description: Select the realized volatility horizon in trading days.
+      enum:
+        - 1
+        - 3
+        - 5
+        - 10
+        - 21
+        - 42
+        - 63
+        - 126
+        - 251
+      example: 21
+      title: RealizedVolatilityDays
+      type: integer
+    Realized_Stock_Volatility:
+      description: Annualized realized volatility over the selected number of trading days.
+      example: '0.18338055163621902'
+      title: Realized Stock Volatility
+      type: string
+    Realized_Volatility:
+      description: ''
+      example:
+        data:
+          - date: 2023-04-11
+            implied_volatility: '0.23'
+            implied_volatility_days: 30
+            price: '150.15'
+            realized_volatility: '0.19'
+            realized_volatility_days: 21
+            unshifted_rv_date: 2024-05-02
+          - date: 2023-04-12
+            implied_volatility: '0.22'
+            implied_volatility_days: 30
+            price: '148.29'
+            realized_volatility: '0.20'
+            realized_volatility_days: 21
+            unshifted_rv_date: 2024-05-03
+      properties:
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        implied_volatility:
+          description: Annualized implied volatility for the mapped calendar day horizon.
+          example: '0.23'
+          type: string
+        implied_volatility_days:
+          example: 30
+          type: integer
+        price:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        realized_volatility:
+          $ref: '#/components/schemas/Realized_Stock_Volatility'
+        realized_volatility_days:
+          example: 21
+          type: integer
+        unshifted_rv_date:
+          $ref: '#/components/schemas/Unshifted_RV_Date'
+      title: Realized Volatility
+      type: object
+    Realized_Volatility_Window:
+      description: A realized volatility value calculated over a fixed number of trading days.
+      properties:
+        date:
+          example: 2026-09-08
+          format: date
+          type: string
+        days:
+          example: 21
+          type: integer
+        realized_volatility:
+          example: '0.213456'
+          type: string
+        start_date:
+          example: 2026-08-10
+          format: date
+          type: string
+        ticker:
+          example: AAPL
+          type: string
+      title: Realized Volatility Window
+      type: object
+    Report_Date:
+      description: |
+        The report date in the format of YYYY-MM-DD.
+      example: 2024-01-18
+      format: date
+      title: Report Date
+      type: string
+    Report_Flags:
+      description: The report flags of the option trade.
+      example: cross_trade
+      items:
+        type: string
+      title: Report Flags
+      type: array
+    Report_Period_End_Date:
+      description: The end date of the report period in ISO format.
+      example: 2024-10-02
+      title: Report Period End Date
+      type: string
+    Report_Time:
+      description: 'The earnings report time. Possible values include: premarket, postmarket and unknown'
+      example: postmarket
+      title: Report Time
+      type: string
+    Reporter_CIK:
+      description: SEC Central Index Key of the reporting owner. Stable across issuers and over time, so use it rather than owner_name to tie one insider's filings together.
+      example: '0001548760'
+      title: Reporter CIK
+      type: string
+    Revenue_Breakdown_Row:
+      description: A revenue figure split by product or geography.
+      properties:
+        axis:
+          example:
+            - ProductOrServiceAxis
+          items:
+            type: string
+          type: array
+        field:
+          example: RevenueFromContractWithCustomerExcludingAssessedTax
+          type: string
+        members:
+          example:
+            - iPhone
+          items:
+            type: string
+          type: array
+        report_date:
+          example: 2024-09-30
+          format: date
+          type: string
+        rev_group:
+          enum:
+            - revenue
+            - rewards
+            - locations
+            - memberships
+            - product
+          example: product
+          type: string
+        value:
+          example: '69138000000'
+          type: string
+      title: Revenue Breakdown Row
+      type: object
+    Rho:
+      description: The rho of the option trade.
+      example: '0.2316546330093438'
+      title: Rho
+      type: string
+    Risk_Reversal:
+      description: The difference between the iv of a put and a call with similar absolute deltas.
+      example: '-0.021'
+      title: Risk Reversal
+      type: string
+    Risk_Reversal_Delta:
+      description: ''
+      example: 10
+      title: Risk Reversal Delta
+      type: integer
+    Rule_ID:
+      description: |
+        The rule ID of the option trade that represents the rule that made up the flow alert
+      title: Rule ID
+      type: string
+    Rule_Name:
+      description: An array of 1 or more rule name.
+      example:
+        - RepeatedHits
+        - RepeatedHitsAscendingFill
+      items:
+        $ref: '#/components/schemas/Flow_alert_rule'
+      title: Rule Name
+      type: array
+    SPY_Daily_Close:
+      properties:
+        close:
+          type: number
+        date:
+          format: date
+          type: string
+      title: SPY Daily Close
+      type: object
+    SandP_500_Nasdaq_Only:
+      default: false
+      description: Only return tickers, that are in the S&P 500 index or the Nasdaq 100 index.
+      example: true
+      title: S&P 500/Nasdaq Only
+      type: boolean
+    Screener_contract_order_by_field:
+      description: The field to order by.
+      enum:
+        - bid_ask_vol
+        - bull_bear_vol
+        - contract_pricing
+        - daily_perc_change
+        - diff
+        - dte
+        - earnings
+        - expires
+        - expiry
+        - floor_volume
+        - floor_volume_ratio
+        - from_high
+        - from_low
+        - iv
+        - multileg_volume
+        - open_interest
+        - premium
+        - spread
+        - stock_price
+        - tape_time
+        - ticker
+        - total_multileg_volume_ratio
+        - trades
+        - volume
+        - volume_oi_ratio
+        - volume_ticker_vol_ratio
+      example: volume
+      title: Screener contract order by field
+      type: string
+    Search_Prediction_Market_Users_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Prediction_Market_User_Search_Hit'
+          type: array
+      title: Search Prediction Market Users Response
+      type: object
+    Seasonality_Average_Change:
+      description: The average relative price change per day for the month.
+      example: 0.09494354167379757
+      title: Seasonality Average Change
+      type: number
+    Seasonality_Change:
+      description: The relative price change for the month.
+      example: 0.09494354167379757
+      title: Seasonality Change
+      type: number
+    Seasonality_Close_Price:
+      description: The closing stock price of the ticker for the month.
+      example: '182.91'
+      title: Seasonality Close Price
+      type: string
+    Seasonality_Market:
+      description: |
+        The price change for the ticker over the given count of years.
+      example:
+        data:
+          - avg_change: '-0.0068'
+            max_change: '0.0642'
+            median_change: '-0.0041'
+            min_change: '-0.0913'
+            month: 6
+            positive_closes: 7
+            positive_months_perc: '0.4375'
+            ticker: SPY
+            years: 16
+          - avg_change: '0.0038'
+            max_change: '0.0666'
+            median_change: '0.0115'
+            min_change: '-0.0838'
+            month: 5
+            positive_closes: 13
+            positive_months_perc: '0.8125'
+            ticker: SPY
+            years: 16
+          - avg_change: '0.0092'
+            max_change: '0.0791'
+            median_change: '0.0367'
+            min_change: '-0.1614'
+            month: 3
+            positive_closes: 5
+            positive_months_perc: '0.7142'
+            ticker: XLRE
+            years: 7
+          - avg_change: '0.0044'
+            max_change: '0.0697'
+            median_change: '-0.0032'
+            min_change: '-0.0651'
+            month: 2
+            positive_closes: 8
+            positive_months_perc: '0.4705'
+            ticker: QQQ
+            years: 17
+          - avg_change: '0.0201'
+            max_change: '0.1459'
+            median_change: '-0.0034'
+            min_change: '-0.0401'
+            month: 4
+            positive_closes: 3
+            positive_months_perc: '0.4285'
+            ticker: XLRE
+            years: 7
+      properties:
+        avg_change:
+          $ref: '#/components/schemas/Seasonality_Average_Change'
+        max_change:
+          $ref: '#/components/schemas/Seasonality_Max_Change'
+        median_change:
+          $ref: '#/components/schemas/Seasonality_Median_Change'
+        min_change:
+          $ref: '#/components/schemas/Seasonality_Min_Change'
+        month:
+          $ref: '#/components/schemas/Seasonality_Month_Number'
+        positive_closes:
+          $ref: '#/components/schemas/Seasonality_Positive_Closes_Count'
+        positive_months_perc:
+          $ref: '#/components/schemas/Seasonality_Positive_Months_Percent'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        years:
+          $ref: '#/components/schemas/Seasonality_Year_Count'
+      title: Seasonality Market
+      type: object
+    Seasonality_Max_Change:
+      description: The maximum relative price change per day for the month.
+      example: 0.14970489711277724
+      title: Seasonality Max Change
+      type: number
+    Seasonality_Median_Change:
+      description: The median relative price change per day for the month.
+      example: 0.09494354167379757
+      title: Seasonality Median Change
+      type: number
+    Seasonality_Min_Change:
+      description: The minimum relative price change per day for the month.
+      example: 0.0401821862348179
+      title: Seasonality Min Change
+      type: number
+    Seasonality_Month_Number:
+      description: The number indicating the month the data applies for. e.g. 1 -> January, 2 -> February, ...
+      example: 5
+      title: Seasonality Month Number
+      type: integer
+    Seasonality_Monthly:
+      description: |
+        The price change for the ticker in the month over the given count of years.
+      example:
+        data:
+          - avg_change: 0.0034
+            max_change: 0.0635
+            median_change: 0.0195
+            min_change: -0.0727
+            month: 1
+            positive_closes: 2
+            positive_months_perc: 0.6667
+            years: 3
+          - avg_change: 0.0006
+            max_change: 0.0334
+            median_change: 0.0057
+            min_change: -0.0374
+            month: 2
+            positive_closes: 2
+            positive_months_perc: 0.6667
+            years: 3
+          - avg_change: 0.0949
+            max_change: 0.1497
+            median_change: 0.0949
+            min_change: 0.0402
+            month: 3
+            positive_closes: 2
+            positive_months_perc: 1
+            years: 2
+          - avg_change: -0.0153
+            max_change: 0.0724
+            median_change: -0.0153
+            min_change: -0.1029
+            month: 4
+            positive_closes: 1
+            positive_months_perc: 0.5
+            years: 2
+      properties:
+        avg_change:
+          $ref: '#/components/schemas/Seasonality_Average_Change'
+        max_change:
+          $ref: '#/components/schemas/Seasonality_Max_Change'
+        median_change:
+          $ref: '#/components/schemas/Seasonality_Median_Change'
+        min_change:
+          $ref: '#/components/schemas/Seasonality_Min_Change'
+        month:
+          $ref: '#/components/schemas/Seasonality_Month_Number'
+        positive_closes:
+          $ref: '#/components/schemas/Seasonality_Positive_Closes_Count'
+        positive_months_perc:
+          $ref: '#/components/schemas/Seasonality_Positive_Months_Percent'
+        years:
+          $ref: '#/components/schemas/Seasonality_Year_Count'
+      title: Seasonality Monthly
+      type: object
+    Seasonality_Open_Price:
+      description: The opening stock price of the ticker for the month.
+      example: '182.91'
+      title: Seasonality Open Price
+      type: string
+    Seasonality_Performance_Order_By:
+      description: Optional columns to order the result by
+      enum:
+        - month
+        - positive_closes
+        - years
+        - positive_months_perc
+        - median_change
+        - avg_change
+        - max_change
+        - min_change
+      example: ticker
+      title: Seasonality Performance Order By
+      type: string
+    Seasonality_Performers:
+      description: |
+        The price change for the ticker over the given count of years.
+      example:
+        data:
+          - avg_change: '0.0592'
+            marketcap: '19427901578'
+            max_change: '0.1104'
+            median_change: '0.0639'
+            min_change: '0.0091'
+            month: 5
+            positive_closes: 11
+            positive_months_perc: '1.1'
+            sector: Healthcare
+            ticker: ICLR
+            years: 10
+          - avg_change: '0.0577'
+            marketcap: '1927713687'
+            max_change: '0.2301'
+            median_change: '0.0417'
+            min_change: '-0.2485'
+            month: 5
+            positive_closes: 10
+            positive_months_perc: '1'
+            sector: Technology
+            ticker: AMBA
+            years: 10
+          - avg_change: '0.0664'
+            marketcap: '60982620879'
+            max_change: '0.1791'
+            median_change: '0.07291'
+            min_change: '-0.0878'
+            month: 5
+            positive_closes: 15
+            positive_months_perc: '0.9375'
+            sector: Healthcare
+            ticker: MCK
+            years: 16
+          - avg_change: '0.0674'
+            marketcap: '24233152429'
+            max_change: '0.2167'
+            median_change: '0.0723'
+            min_change: '-0.1812'
+            month: 5
+            positive_closes: 15
+            positive_months_perc: '0.9375'
+            sector: Communication Services
+            ticker: TTWO
+            years: 16
+      properties:
+        avg_change:
+          $ref: '#/components/schemas/Seasonality_Average_Change'
+        marketcap:
+          $ref: '#/components/schemas/Stock_Marketcap_AUM'
+        max_change:
+          $ref: '#/components/schemas/Seasonality_Max_Change'
+        median_change:
+          $ref: '#/components/schemas/Seasonality_Median_Change'
+        min_change:
+          $ref: '#/components/schemas/Seasonality_Min_Change'
+        month:
+          $ref: '#/components/schemas/Seasonality_Month_Number'
+        positive_closes:
+          $ref: '#/components/schemas/Seasonality_Positive_Closes_Count'
+        positive_months_perc:
+          $ref: '#/components/schemas/Seasonality_Positive_Months_Percent'
+        sector:
+          $ref: '#/components/schemas/Market_General_Sector'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        years:
+          $ref: '#/components/schemas/Seasonality_Year_Count'
+      title: Seasonality Performers
+      type: object
+    Seasonality_Performers_Limit:
+      default: 50
+      description: 'How many items to return. Default: 50. Min: 1.'
+      example: 10
+      minimum: 1
+      title: Seasonality Performers Limit
+      type: integer
+    Seasonality_Positive_Closes_Count:
+      description: The number of years, the month had a positive close.
+      example: 2
+      title: Seasonality Positive Closes Count
+      type: integer
+    Seasonality_Positive_Months_Percent:
+      description: The relative amount of times, the month had a positive close. Multiply with 100 to get the amount in percent.
+      example: 0.6667
+      title: Seasonality Positive Months Percent
+      type: number
+    Seasonality_Year:
+      description: The Year.
+      example: 5
+      title: Seasonality Year
+      type: integer
+    Seasonality_Year_Count:
+      description: The number of years used to calculate the data.
+      example: 3
+      title: Seasonality Year Count
+      type: number
+    Seasonality_Year_Month:
+      description: |
+        The price change for the ticker in the month in the year.
+      example:
+        data:
+          - change: '-0.0469'
+            close: 315.75
+            month: 9
+            open: 331.31
+            year: 2023
+          - change: '0.0690'
+            close: 338.11
+            month: 10
+            open: 316.28
+            year: 2023
+          - change: '0.1151'
+            close: 378.91
+            month: 11
+            open: 339.79
+            year: 2023
+          - change: '-0.0019'
+            close: 376.04
+            month: 12
+            open: 376.76
+            year: 2023
+          - change: '0.0634'
+            close: 397.58
+            month: 1
+            open: 373.86
+            year: 2024
+      properties:
+        change:
+          $ref: '#/components/schemas/Seasonality_Change'
+        close:
+          $ref: '#/components/schemas/Seasonality_Close_Price'
+        month:
+          $ref: '#/components/schemas/Seasonality_Month_Number'
+        open:
+          $ref: '#/components/schemas/Seasonality_Open_Price'
+        year:
+          $ref: '#/components/schemas/Seasonality_Year'
+      title: Seasonality Year Month
+      type: object
+    Sector:
+      description: A financial sector.
+      enum:
+        - Basic Materials
+        - Communication Services
+        - Consumer Cyclical
+        - Consumer Defensive
+        - Energy
+        - Financial Services
+        - Healthcare
+        - Industrials
+        - Real Estate
+        - Technology
+        - Utilities
+      example: Technology
+      title: Sector
+      type: string
+    Sector_ETF:
+      description: ''
+      example:
+        data:
+          - avg30_call_volume: '3636459.000000000000'
+            avg30_put_volume: '4796289.166666666667'
+            avg30_stock_volume: '74402355'
+            avg_30_day_call_volume: '3636459.000000000000'
+            avg_30_day_put_volume: '4796289.166666666667'
+            avg_7_day_call_volume: '3343061.285714285714'
+            avg_7_day_put_volume: '4521616.428571428571'
+            bearish_premium: '258905527'
+            bullish_premium: '238729761'
+            call_premium: '293824502'
+            call_volume: 1844830
+            full_name: S&P 500 Index
+            high: '447.11'
+            last: '446.15'
+            low: '444.8'
+            marketcap: '406517275500'
+            open:

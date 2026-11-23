@@ -1,0 +1,2039 @@
+ration.** `rsi_14` is the relative strength
+  index over 14 periods, `bb_20_2` is Bollinger bands over 20 periods at 2 standard
+  deviations, `macd_12_26_9` is MACD with fast period 12, slow period 26 and signal
+  period 9, and `stoch_5_3_3` is the stochastic oscillator with fast K 5, slow K 3 and
+  slow D 3.
+- **Read `obv` as a relative series, never as a level.** On-balance volume accumulates
+  from wherever the calculation started, so the absolute number is not comparable across
+  restarts. Its direction and its crossovers carry the meaning.
+
+Payload format:
+
+```
+[
+  "ta_1d_live:AAPL",
+  {
+    "ticker": "AAPL",
+    "adx_14": 23.45,
+    "aroon_14": {"down": 21.43, "up": 78.57},
+    "atr_14": 3.25,
+    "bb_14_2": {"upper": 236.5, "middle": 230.0, "lower": 223.5},
+    "bb_20_2": {"upper": 238.0, "middle": 229.5, "lower": 221.0},
+    "cci_14": 88.1,
+    "ema_9": 231.2,
+    "ema_14": 230.4,
+    "ema_20": 229.8,
+    "ema_21": 229.7,
+    "ema_50": 225.1,
+    "macd_12_26_9": {"macd": 1.75, "signal": 1.25, "histogram": 0.5},
+    "mfi_14": 61.3,
+    "obv": 1234567890.0,
+    "rsi_14": 57.8,
+    "sma_10": 231.0,
+    "sma_14": 230.2,
+    "sma_20": 229.5,
+    "sma_50": 224.9,
+    "sma_200": 210.3,
+    "stoch_5_3_3": {"k": 72.5, "d": 68.1},
+    "willr_14": -27.5
+  }
+]
+```
+
+### Field reference
+
+Every indicator field is a JSON number or `null`. The values are TA-Lib outputs passed
+through unchanged, so each indicator's scale is the one TA-Lib defines for it. Prices
+are in dollars, matching the daily closes the indicators are computed from.
+
+| Field | Type | Description |
+|---|---|---|
+| `ticker` | string | Underlying ticker. Same as the `:` suffix on the channel name. |
+| `adx_14` | number | Average directional index over 14 periods, from 0 to 100. |
+| `aroon_14` | object | Aroon over 14 periods, as `down` and `up`, each from 0 to 100. `up` reports how recently the period high was set and `down` how recently the period low was set. |
+| `atr_14` | number | Average true range over 14 periods. |
+| `bb_14_2` | object | Bollinger bands over 14 periods at 2 standard deviations, as `upper`, `middle` and `lower`. `middle` is the simple moving average the bands are built around, and the outer bands sit 2 standard deviations either side of it. |
+| `bb_20_2` | object | Bollinger bands over 20 periods at 2 standard deviations, same shape as `bb_14_2`. |
+| `cci_14` | number | Commodity channel index over 14 periods. |
+| `ema_9` | number | Exponential moving average of the close over 9 periods. |
+| `ema_14` | number | Exponential moving average of the close over 14 periods. |
+| `ema_20` | number | Exponential moving average of the close over 20 periods. |
+| `ema_21` | number | Exponential moving average of the close over 21 periods. |
+| `ema_50` | number | Exponential moving average of the close over 50 periods. |
+| `macd_12_26_9` | object | MACD with fast period 12, slow period 26 and signal period 9, as `macd`, `signal` and `histogram`. `macd` is the fast EMA minus the slow EMA, `signal` is an EMA of `macd`, and `histogram` is `macd` minus `signal`. |
+| `mfi_14` | number | Money flow index over 14 periods, from 0 to 100. |
+| `obv` | number | On-balance volume. Cumulative from wherever the calculation started, so compare direction and crossovers rather than the level. |
+| `rsi_14` | number | Relative strength index over 14 periods, from 0 to 100. |
+| `sma_10` | number | Simple moving average of the close over 10 periods. |
+| `sma_14` | number | Simple moving average of the close over 14 periods. |
+| `sma_20` | number | Simple moving average of the close over 20 periods. |
+| `sma_50` | number | Simple moving average of the close over 50 periods. |
+| `sma_200` | number | Simple moving average of the close over 200 periods. |
+| `stoch_5_3_3` | object | Stochastic oscillator with fast K 5, slow K 3 and slow D 3, as `k` and `d`, each from 0 to 100. `k` is the faster line and `d` is a moving average of it. |
+| `willr_14` | number | Williams %R over 14 periods, from -100 to 0. |
+
+
+```json
+[]
+
+```
+
+## GET /api/socket/trading_halts
+
+**NOTE:**
+This is the documentation for websocket channel `trading_halts`.
+Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+You can find fully-functional examples that stream data from many channels here:
+
+- Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+- Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+Connect to the websocket URI:
+
+`wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+then `join` the channel you wish to stream: `trading_halts` for live trading-state changes (halts, resumes, LULD pauses, etc.) sourced from UTP/CTA.
+
+Payload format:
+
+```
+[
+  "trading_halts",
+  {
+    "ticker": "GME",
+    "state": "halted",
+    "reason": "LUDP",
+    "time": "2026-04-27T14:31:02Z"
+  }
+]
+```
+
+### Field reference
+
+| Field | Type | Description |
+|---|---|---|
+| `ticker` | string | Ticker whose trading state changed. |
+| `state` | string | New trading state, e.g. `"halted"`, `"resumed"`, `"paused"`. Values are passed through from the upstream feed. |
+| `reason` | string | Reason code from the upstream feed (e.g. `"LUDP"` for LULD volatility pause, `"T1"` for news pending, `""` if no reason was provided). |
+| `time` | ISO 8601 string | When the state change occurred, UTC. |
+
+
+```json
+[]
+
+```
+
+## GET /api/stock-directory/ticker-exchanges
+
+Returns a mapping of all tickers to their exchanges.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{sector}/tickers
+
+Returns a list of tickers which are in the given sector.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/atm-chains
+
+Returns the ATM chains for the given expirations
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/balance-sheets
+
+Returns balance sheet data including assets, liabilities, equity, debt structure,
+intangibles, goodwill, receivables, inventory, and shares outstanding.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/cash-flows
+
+Returns cash flow data including operating, investing, and financing cashflows,
+capital expenditures, dividend payouts, stock buybacks, and stock-based compensation.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/earnings
+
+Returns earnings data including reported EPS, estimated EPS, surprise amount,
+surprise percentage, and report timing (pre/post market).
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/expiry-breakdown
+
+Returns all expirations for the given trading day for a ticker.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/financials
+
+Returns full financial data for the given ticker, including
+income statements, balance sheets, cash flows, and earnings.
+Supports both annual and quarterly data.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/flow-alerts
+
+Deprecated. Use `/api/option-trades/flow-alerts`, which supports the full filter set:
+[https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.flow_alerts](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.flow_alerts)
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 100,
+      "description": "How many items to return. Default: 100. Max: 200. Min: 1.",
+      "example": 10,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Default 100 Max 200 Min 1",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/flow-per-expiry
+
+Returns the option flow per expiry for the last trading day
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/flow-per-strike
+
+Returns the option flow per strike for a given trading day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/flow-per-strike-intraday
+
+Returns the options flow for a given date in one minute intervals (the one minute intervals are not aggregated with each other).
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/flow-recent
+
+Returns the latest flows for the given ticker. Optionally a min premium and a side can be supplied in the query for further filtering.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "default": 0,
+      "description": "The minimum premium requested trades should have.",
+      "example": 50000,
+      "minimum": 0,
+      "title": "StockTradesMinPremium",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/fundamental-breakdown
+
+Returns the fundamental financial data for the given ticker, including earnings per share,
+revenue, dividends, share counts, RSU data, and revenue breakdowns by product and geography.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/gex-levels
+
+The key gamma-exposure (GEX) price levels for a ticker on a given market date, derived from
+per-strike net gamma exposure evaluated relative to spot:
+
+- `call_wall`: strike above spot with the largest positive net gamma (resistance)
+- `put_wall`: strike below spot with the largest positive net gamma (support)
+- `gamma_magnet`: strike with the largest-magnitude net gamma (the strongest pin)
+- `gamma_flip`: interpolated price where net dealer gamma crosses zero (between the two
+  strikes).
+
+The levels are built from **directionalized volume** by default. This is the exposure dealers took on from
+the day's ask/bid sided flow, updated through the session. Pass `source` to derive them from another
+basis instead:
+
+- `vol`: directionalized volume (default)
+- `oi`: open interest
+
+`nearby_flips` lists every zero-gamma crossing near spot, ordered by distance from it and capped at
+five, with `gamma_flip` as its first entry. On chains with many strikes the crossings often cluster
+within a dollar or two, which means no single level is decisive. The list makes that visible.
+
+The response echoes the `source` used, along with `date`, the market date the levels describe, and
+`time`, when the exposure snapshot behind them was calculated.
+
+Any level may be `null` when there is no data for the date (or, for `gamma_flip`, when net gamma
+does not change sign across the strike range).
+
+To determine the gamma regime, use the sign of net gamma from
+`/api/stock/{ticker}/greek-exposure` (`call_gamma + put_gamma`). Positive net gamma means price is
+above the flip and hedging tends to dampen volatility. Negative net gamma means price is below the flip
+and hedging tends to amplify volatility. `gamma_flip` is a cumulative zero-crossing that can be `null`
+or far from spot, so do not use it for regime detection.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greek-exposure
+
+Greek Exposure is the assumed greek exposure that market makers are exposed to.
+
+The most popular greek exposure is gamma exposure (GEX).
+
+Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+If a market maker has one contract open with a gamma value of 0.05, then that market maker is exposed to 0.05 * [100 shares] of gamma. The total market maker exposure is calculated by summing up the exposure values of all open contracts determined by the daily open interest.
+
+Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+This data updates once per day at market open.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "timeframe",
+    "required": false,
+    "schema": {
+      "default": "1Y",
+      "description": "The timeframe of the data to return.\nCan be one of the following formats:\n- YTD\n- 1D, 2D, etc.\n- 1W, 2W, etc.\n- 1M, 2M, etc.\n- 1Y, 2Y, etc.\n",
+      "example": "2M",
+      "title": "Time frame",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greek-exposure/expiry
+
+The greek exposure of a ticker grouped by expiry dates across all contracts on a given market date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greek-exposure/strike
+
+The greek exposure of a ticker grouped by strike price across all contracts on a given market date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greek-exposure/strike-expiry
+
+The greek exposure of a ticker grouped by strike price for a specific expiry date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greek-flow
+
+Returns the tickers greek flow (delta & vega flow) for the given market day broken down per minute.
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greek-flow/{expiry}
+
+Returns the tickers greek flow (delta & vega flow) for the given market day broken down per minute & expiry.
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/greeks
+
+Returns the greeks for each strike for a single expiry date.
+
+`expiry` is required. Without it, the endpoint returns an empty array rather than an error.
+
+Open interest is not included. For open interest and the full contract set, use
+`/api/stock/{ticker}/option-contracts`. That endpoint also returns per-contract delta, gamma, theta,
+vega and rho. Charm and vanna remain available here. Join `call_option_symbol` or `put_option_symbol`
+to the option contracts response's `option_symbol`.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/historical-risk-reversal-skew
+
+Returns the historical risk reversal skew (the difference between put and call volatility) at a delta of 25 or 10 (colloquial for 0.25 or 0.1) for a given expiry date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "timeframe",
+    "required": false,
+    "schema": {
+      "default": "1Y",
+      "description": "The timeframe of the data to return.\nCan be one of the following formats:\n- YTD\n- 1D, 2D, etc.\n- 1W, 2W, etc.\n- 1M, 2M, etc.\n- 1Y, 2Y, etc.\n",
+      "example": "2M",
+      "title": "Time frame",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/income-statements
+
+Returns income statement data including revenue, gross profit, operating income,
+EBIT, EBITDA, net income, R&D, SG&A, depreciation, interest, and tax expenses.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/info
+
+Returns a information about the given ticker.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/insider-buy-sells
+
+Returns the total amount of purchases & sells as well as notional values for insider transactions
+for the given ticker
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/interpolated-iv
+
+Returns the Interpolated IV for a given trading day. If there is no expiration then the data is calcualted via linear interpolation
+with the next 2 closest expirations
+
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/interpolated-iv/distribution
+
+Returns one row per fixed maturity with the range of its interpolated implied volatility over the
+365 calendar days ending on `date`. Each row holds the minimum, first quartile, median, third quartile
+and maximum of the daily values, the value on `date`, and the share of daily values at or below it.
+
+The response covers the 7, 30, 60, 90, 180 and 365 day maturities. Daily values at or below zero are
+ignored, and a maturity without a positive value on `date` is omitted. Rows are ordered by maturity
+from shortest to longest. `date` defaults to the last trading day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/iv-rank
+
+Returns the IV rank data for a ticker over a period of time.
+IV rank is a measure of where current implied volatility stands relative to its historical range.
+
+Rows are returned oldest first, so the latest value is the last element. Sort by date or read the last
+row before using the current value.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "timespan",
+    "required": false,
+    "schema": {
+      "description": "Optional timespan parameter that can be used to specify a date range. Accepts values like '1y', '6m', '3m', '1m', '1w' or an ISO date (example: 2024-01-25).",
+      "example": "1y",
+      "title": "OptionalTimespan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/max-pain
+
+Returns the max pain for all expirations for the given ticker for the last 120 days
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/net-prem-ticks
+
+Returns the net premium ticks for a given ticker which can be used to build the following chart:
+![Net Prem chart](https://i.imgur.com/Rom1kcB.png)
+
+----
+Each tick is resembling the data for a single minute tick. To build a daily chart
+you would have to add the previous data to the current tick:
+```javascript
+const url =
+  'https://api.unusualwhales.com/api/stock/AAPL/net-prem-ticks';
+const options = {
+  method: 'GET',
+  headers: {
+    Accept: 'application/json',
+    Authorization: 'Bearer YOUR_TOKEN'
+  }
+};
+
+fetch(url, options)
+.then(r => r.json())
+.then(r => {
+  const {data} = r.data;
+  const fieldsToSum = [
+    "net_call_premium",
+    "net_call_volume",
+    "net_put_premium",
+    "net_put_volume"
+  ];
+
+  let result = [];
+  data.forEach((e, idx) => {
+    e.net_call_premium = parseFloat(e.net_call_premium);
+    e.net_put_premium = parseFloat(e.net_put_premium);
+    if (idx !== 0) {
+      fieldsToSum.forEach((field) => {
+        e[field] = e[field] + result[idx-1][field];
+      })
+    }
+    result.push(e);
+  })
+
+  return result;
+});
+
+```
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/nope
+
+Returns the tickers NOPE for the given market day broken down per minute.
+
+NOPE is the Net Options Pricing Effect, which tracks the intraday net delta of any ticker, but most research has been done on indexes.
+It functions under 2 assumptions:
+1) MM's take short side of any call or put traded during the day
+2) MM's try to minimize risk by dynamically hedging their delta-gamma exposure, and do so by buying/shorting the underlying stock in proportion to the total net delta being tradedBased on these assumptions, options trading in large amounts (re: very liquid tickers) can potentially drive the price of the underlying, to a certain extent. Large movements might exacerbate this real time hedging, and drive price movements further in respective directions.
+
+In short, NOPE represents a best-estimate of expected number of shares to be hedged at any given time, and will show a general expected direction on the underlying
+
+The original NOPE calculation was based on the following formula:
+`NOPE = (Call Delta - Put Delta) / Stock Volume`
+where call/put delta is obtained by multiplying each chains volume with its latest delta and then summing those values up.
+
+`NOPE fill` on the other hand is based on the delta at the time of the transaction
+
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/ohlc/{candle_size}
+
+Returns the Open High Low Close (OHLC) candle data for a given ticker.
+
+Results are limited to 2,500 elements even if there are more available.
+
+Row order depends on `candle_size`: intraday candles are newest first, while daily candles are oldest
+first. The most recent intraday candle is still forming, and its `start_time` is the start of the current
+bucket. Select the latest bar by the maximum `start_time`, not by array position.
+
+Note: If you select 1d or 1w as a candle_size then the candles won't have a start & end time. For 1w, the `date` field is the Monday of the ISO week.
+
+Note: Suppose you enter end_date value 2024-11-25 which was a Monday. Your response will include 1-2 hours of data from Tuesday 2024-11-26 due to UTC date rollover.
+Rest-assured, the response data covers the full trading day (based on Eastern time) according to your entered end_date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "timeframe",
+    "required": false,
+    "schema": {
+      "default": "1Y",
+      "description": "The timeframe of the data to return.\nCan be one of the following formats:\n- YTD\n- 1D, 2D, etc.\n- 1W, 2W, etc.\n- 1M, 2M, etc.\n- 1Y, 2Y, etc.\n",
+      "example": "2M",
+      "title": "Time frame",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "end_date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\n\nThis is the end date for the given timeframe. If you set the timeframe to 1 minute ticks and have an end_date of 2024-01-18 then it\nwould start searching backwards from 2024-01-18\n",
+      "example": "2024-01-18",
+      "format": "date",
+      "title": "OHLC End Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\n",
+      "example": "2024-01-18",
+      "format": "date",
+      "title": "Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "description": "How many items to return. Max: 2500. Min: 1.",
+      "example": 10,
+      "maximum": 2500,
+      "minimum": 1,
+      "title": "Max 2500 Min 1",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/oi-change
+
+Returns the tickers contracts' OI change data ordered by absolute OI change (default: descending).
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "description": "How many items to return. If no limit is given, returns all matching data. Min: 1.",
+      "example": 10,
+      "minimum": 1,
+      "title": "Min Limit 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/oi-per-expiry
+
+Returns the total open interest for calls and puts for a specific expiry date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/oi-per-strike
+
+Returns the total open interest for calls and puts for a specific strike.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/option-chains
+
+Returns all option symbols for the given ticker that were present at the given day.
+
+If no date is given, returns data for the current/last market day.
+
+You can use the following regex to extract underlying ticker, option type, expiry & strike:
+`^(?<symbol>[\w]*)(?<expiry>(\d{2})(\d{2})(\d{2}))(?<type>[PC])(?<strike>\d{8})$`
+
+Keep in mind that the strike needs to be divided by 1,000.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/option-contracts
+
+Returns all option contracts for the given ticker.
+
+Each row includes the NBBO bid and ask, implied volatility and per-contract delta, gamma, theta, vega
+and rho, so quotes and greeks are available in one call. Charm and vanna are not included. Use
+`/api/stock/{ticker}/greeks` and join this response's `option_symbol` to `call_option_symbol` or
+`put_option_symbol` for those values.
+
+
+```json
+[
+  {
+    "description": "Wether to only return chains where volume > open interest",
+    "example": true,
+    "in": "query",
+    "name": "vol_greater_oi",
+    "required": false,
+    "schema": {
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "Wether to only return chains which do not expire on the same day",
+    "example": true,
+    "in": "query",
+    "name": "exclude_zero_dte",
+    "required": false,
+    "schema": {
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "Minimum days to expiration (expiry at least this many days from today).",
+    "in": "query",
+    "name": "min_dte",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Maximum days to expiration (expiry at most this many days from today).",
+    "in": "query",
+    "name": "max_dte",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 500,
+      "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 500 Max 500 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/option-stance
+
+Ranks a ticker's option contracts by how well their mechanics fit a chosen trade **stance**, across all
+recent expiries and strikes. Returns a 0–5 `fit_score` plus named 0–1 sub-scores (`iv_regime`, `greeks_fit`,
+`dte_fit`, `liquidity`, `earnings_timing`) and a plain-language `explanation` for each contract, alongside a
+`context` header (stock price, IV rank, IV percentile).
+
+This is **descriptive** analysis of greeks / IV context / liquidity mechanics — not trade advice or a
+recommendation to buy or sell. Every response carries a `disclaimer`.
+
+`stance` is one of: `sell_premium`, `sell_vega`, `directional`, `leaps`, `cheapies`. Any stance threshold can
+be overridden by passing the corresponding screener filter (e.g. `max_dte`, `min_premium`, `type`).
+
+Pass `option_symbol` to score a **single specific contract** for the stance instead of ranking the chain. The
+response's `data` then holds exactly that one scored contract (with the same `fit_score`, sub-scores and
+`explanation`), even when it falls outside the stance's usual candidate profile.
+
+
+```json
+[
+  {
+    "description": "Max contracts to return. Default 25, max 100.",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Optional historical date (YYYY-MM-DD).",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/option/stock-price-levels
+
+Returns the call and put volume per price level for the given ticker.
+
+----
+Can be used to build a chart such as following:
+![Option Price Level chart](https://i.imgur.com/y6BZ4sG.png)
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/option/volume-oi-expiry
+
+Returns the total volume and open interest per expiry for the given ticker.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/options-pulse
+
+The Nasdaq Options Pulse sentiment for a single ticker: the latest intraday snapshot plus the
+full intraday series (`hr_min` buckets) for the trade date. `sntm_score` is the running daily
+sentiment, `intvl_sntm_score` the per-bucket sentiment, and `put_txn`/`call_txn` the opening-buy
+transaction counts.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/options-volume
+
+Returns the options volume & premium for all trade executions
+that happened on a given trading date for the given ticker.
+
+----
+This can be used to build a ticker options overview such as:
+
+![Table](https://i.imgur.com/7FHyuqc.png)
+
+----
+
+![Line](https://i.imgur.com/UnVryDK.png)
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 1,
+      "description": "How many items to return. Default: 1. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 1 Max 500 Min 1",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/ownership
+
+Returns the institutions, insider trades and politicians with the most shares.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 20,
+      "description": "How many items to return. Default: 20. Max: 100. Min: 1.",
+      "example": 20,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Default 20 Max 100 Min 1",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/quote
+
+Returns the latest trade, national best bid and ask, derived quote values, and quote change statistics for each market session.
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/spot-exposures
+
+Returns the spot GEX exposures for the given ticker per minute.
+
+Spot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.
+
+Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+If a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.
+
+Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+This data updates about once per minute during the cash session.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/spot-exposures/expiry-strike
+
+Returns the most recent spot GEX exposures across all strikes for the given ticker & expiration on a given date. Calculated either with open interest or with volume.
+
+Data is available since 2025-01-16.
+
+[Click here for the spot docs](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike)
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 500,
+      "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 500 Max 500 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_dte",
+    "required": false,
+    "schema": {
+      "description": "The minimum days to expiry. Min: 0.",
+      "example": 1,
+      "minimum": 0,
+      "title": "Min DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_dte",
+    "required": false,
+    "schema": {
+      "description": "The maximum days to expiry. Min: 0.",
+      "example": 3,
+      "minimum": 0,
+      "title": "Max DTE",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/spot-exposures/strike
+
+Returns the most recent spot GEX exposures across all strikes for the given ticker on a given date. Calculated either with open interest or with volume.
+
+Spot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.
+
+Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+If a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.
+
+Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+In the case of directionalized volume, the bid/ask spread is used when calculating the exposures. When a trade is made closer to the ask, the Market Maker would be selling the contract and when a trade is closer to the bid then the Market Maker would be buying the contract.
+
+For example, the gamma exposure for directional volume is call_gamma_ask, and the value will be negative since a trade made at the ask means the market makers are selling/short the call.
+
+To get the full directionalized exposure, just sum up the call ask, call bid, put ask and put bid of a greek and strike.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 500,
+      "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 500 Max 500 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/spot-exposures/{expiry}/strike
+
+This endpoint has been deprecated and will be removed, please migrate to the new [endpoint](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry_v2)
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/stock-state
+
+Returns the last stock state for the given ticker.
+
+This is the easiest way to retreive the open, close, high, low and volume of the last trading day.
+
+For the latest trade and national best bid and ask use `/api/stock/{ticker}/quote`. It also returns the quote age,
+midpoint, spread, spread in basis points, top of book size imbalance and size-weighted midpoint.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/stock-volume-price-levels
+
+Returns the lit & off lit stock volume per price level for the given ticker.
+
+----
+Important: The volume does **NOT** represent the full market dialy volume. It
+only represents the volume of executed trades on exchanges operated by Nasdaq
+and FINRA off lit exchanges.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/technical-indicator/{function}
+
+Returns any technical indicator time series for a ticker. Supports international stocks and OTC.
+
+**Supported functions:** SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3, MACD, MACDEXT, STOCH, STOCHF, RSI, STOCHRSI, WILLR, ADX, ADXR, APO, PPO, MOM, BOP, CCI, CMO, ROC, ROCR, AROON, AROONOSC, MFI, TRIX, ULTOSC, DX, MINUS_DI, PLUS_DI, MINUS_DM, PLUS_DM, BBANDS, MIDPOINT, MIDPRICE, SAR, TRANGE, ATR, NATR, AD, ADOSC, OBV, HT_TRENDLINE, HT_SINE, HT_TRENDMODE, HT_DCPERIOD, HT_DCPHASE, HT_PHASOR, VWAP.
+
+Not all parameters apply to every function. For example, STOCH and BOP only use `interval`, while RSI uses all three (`interval`, `time_period`, `series_type`).
+
+The `month` parameter is only relevant for intraday intervals (1min, 5min, 15min, 30min, 60min). For daily/weekly/monthly intervals, full history is returned and `month` is ignored.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "time_period",
+    "required": false,
+    "schema": {
+      "default": 14,
+      "description": "Number of data points used to calculate the indicator (e.g. 14 for RSI, 20 for SMA)",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/unusualness
+
+How unusual the ticker's volume is today vs its own trailing ~90 trading days, as a percentile (0-100)
+and decile (1-10) for both regular-session stock volume and total (call + put) option volume. This is
+outlier-robust and comparable across names, unlike a raw volume-vs-average ratio. A metric is null when
+fewer than 30 trailing days of history are available. Defaults to the last market day.
+
+
+```json
+[]
+
+```
+
+## GET /api/stock/{ticker}/volatility/anomaly
+
+The volatility anomaly score (and recent history) for a ticker — a composite signal flagging
+unusually rich/cheap volatility.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/character
+
+The volatility character (Hurst exponent / mean-reversion half-life / entropy) and history for a
+ticker.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/option-sentiment
+
+Per-ticker options positioning sentiment (and recent history): VWKS (volume-weighted strike-spot
+"center of volume mass") and AVAR (call vs put IV asymmetry), blended into a bullish/bearish score.
+Positive = bullish positioning (volume above spot, calls bid up); negative = bearish.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/realized
+
+Returns implied and realized volatility history for a ticker. `days` selects the realized volatility
+horizon in trading days. Each realized horizon uses its mapped implied volatility horizon. The default
+is 21 trading days of realized volatility paired with 30 calendar days of implied volatility.
+
+A row's `date` is the implied volatility observation date. `unshifted_rv_date` is the date when the
+realized volatility window ends. Recent rows can have a `null` realized value until that window ends.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "timeframe",
+    "required": false,
+    "schema": {
+      "default": "1Y",
+      "description": "The timeframe of the data to return.\nCan be one of the following formats:\n- YTD\n- 1D, 2D, etc.\n- 1W, 2W, etc.\n- 1M, 2M, etc.\n- 1Y, 2Y, etc.\n",
+      "example": "2M",
+      "title": "Time frame",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/realized/windows
+
+Returns every realized volatility horizon with a completion date in the requested calendar lookback.
+`history_days` defaults to 365 and cannot exceed 365. Rows are ordered by completion date from newest to oldest.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/stats
+
+Returns comprehensive volatility statistics for a ticker on a specific date, including
+implied volatility data, realized volatility data, and their respective high/low values
+for the past year.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/term-structure
+
+The average of the latest volatilities for the at the money call and put contracts for every expiry date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/term-structure/distribution
+
+Returns one row per expiry with the range of that expiry's at the money implied volatility over the
+365 calendar days ending on `date`. Each row holds the minimum, first quartile, median, third quartile
+and maximum of the daily values, the value on `date`, and the share of daily values at or below it.
+
+The response covers expiries after `date` and at most 365 days after it. An expiry without a value on
+`date` is omitted. Expiries listed recently have few daily values, so check `samples` before comparing
+ranges. Rows are ordered by expiry from nearest to furthest. `date` defaults to the last trading day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/variance-risk-premium
+
+Returns variance risk premium history for a ticker. `days` selects the realized volatility horizon in
+trading days. The default is 21 trading days paired with 30 calendar days of implied volatility.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/stock/{ticker}/volatility/variance-risk-premium/windows
+
+Returns every variance risk premium horizon with an implied volatility observation date in the requested
+calendar lookback. `history_days` defaults to 365 and cannot exceed 365. Rows are ordered by observation
+date from newest to oldest. Each row includes the realized volatility completion date.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/volatility/anomaly/top
+
+Screener of the top volatility anomalies on a date, by `direction` (`short_vol` or `long_vol`).
+Supports the same filters as the website screener.
+
+This is a point-in-time screen queryable by date and includes the full component fields. History is
+limited to roughly the last three to four weeks.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "Max rows (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/volatility/character/top
+
+Screener of tickers by volatility character (mean-reverting / persistent / moderate) on a date.
+
+This is a point-in-time screen queryable by date and includes the full component fields. History is
+limited to roughly the last three to four weeks.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "Max rows (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/volatility/option-sentiment/top
+
+Screener of the most bullish/bearish tickers by options positioning (VWKS + AVAR) on a date.
+Optional `direction` (`bullish`, `bearish`, `neutral`) and filters (`min_score`/`max_score`,
+`min_vwks`/`max_vwks`, `min_avar`/`max_avar`, `min_sample_size`, `ticker_search`). Falls back to
+the latest computed date on/before `date`.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "Max rows (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/volatility/vix-term-structure
+
+The latest VIX futures term structure plus history. Requires the `volatility` API add-on.
+
+
+```json
+[]
+
+```

@@ -1,0 +1,11 @@
+{
+  "logical_path": "references/categories/predictions.md",
+  "parts": [
+    "references/categories/predictions.md.part000",
+    "references/categories/predictions.md.part001",
+    "references/categories/predictions.md.part002"
+  ],
+  "sha256": "69e4d4ecebc9618e15828d46ba86d0903659c1292b26089de6b93f3ded4db46a",
+  "bytes": 167203,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

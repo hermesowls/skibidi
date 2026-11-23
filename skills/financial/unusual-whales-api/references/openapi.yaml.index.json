@@ -1,0 +1,24 @@
+{
+  "logical_path": "references/openapi.yaml",
+  "parts": [
+    "references/openapi.yaml.part000",
+    "references/openapi.yaml.part001",
+    "references/openapi.yaml.part002",
+    "references/openapi.yaml.part003",
+    "references/openapi.yaml.part004",
+    "references/openapi.yaml.part005",
+    "references/openapi.yaml.part006",
+    "references/openapi.yaml.part007",
+    "references/openapi.yaml.part008",
+    "references/openapi.yaml.part009",
+    "references/openapi.yaml.part010",
+    "references/openapi.yaml.part011",
+    "references/openapi.yaml.part012",
+    "references/openapi.yaml.part013",
+    "references/openapi.yaml.part014",
+    "references/openapi.yaml.part015"
+  ],
+  "sha256": "5658176579d67e3b9c4b73377a4fa93308342f727d1a40200ccc29e946edd75b",
+  "bytes": 1239253,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

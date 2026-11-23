@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/private-markets.md",
+  "parts": [
+    "references/categories/private-markets.md.part000",
+    "references/categories/private-markets.md.part001"
+  ],
+  "sha256": "22ab6eb974bdb6d5ae9a040f30347eed7e2a2407ab8f60245471a5b51f69584b",
+  "bytes": 123602,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

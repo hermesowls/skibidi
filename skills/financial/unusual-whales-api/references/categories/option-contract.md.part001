@@ -1,0 +1,1664 @@
+nt",
+                  "type": "integer"
+                },
+                "volume": {
+                  "description": "The contract volume.",
+                  "example": 264899,
+                  "title": "Option Contract Volume",
+                  "type": "integer"
+                }
+              },
+              "title": "Option Contract Price Level Volume",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Volume Profile",
+    "tags": [
+      "option-contract"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/expiry-breakdown
+
+Expiry Breakdown
+
+Returns all expirations for the given trading day for a ticker.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/expiry-breakdown",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/expiry-breakdown",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns all expirations for the given trading day for a ticker.\n",
+    "operationId": "PublicApi.OptionContractController.expiry_breakdown",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "date",
+        "required": false,
+        "schema": {
+          "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+          "example": "2024-01-18",
+          "title": "Optional Market Date",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "All expirations for a ticker",
+              "example": {
+                "data": [
+                  {
+                    "chains": 5000,
+                    "expiry": "2023-09-07",
+                    "open_interest": 554,
+                    "volume": 1566232
+                  },
+                  {
+                    "chains": 50,
+                    "expiry": "2023-10-20",
+                    "open_interest": 0,
+                    "volume": 1532
+                  },
+                  {
+                    "chains": 20,
+                    "expiry": "2023-11-30",
+                    "open_interest": 33112,
+                    "volume": 931
+                  }
+                ]
+              },
+              "properties": {
+                "chains": {
+                  "description": "The total amount of chains for that expiry",
+                  "example": 12223,
+                  "type": "integer"
+                },
+                "expiry": {
+                  "description": "The contract expiry date in ISO format.",
+                  "example": "2023-12-22",
+                  "title": "Option Contract Expiry",
+                  "type": "string"
+                },
+                "open_interest": {
+                  "description": "The total open interest for that expiry",
+                  "example": 12223,
+                  "type": "integer"
+                },
+                "volume": {
+                  "description": "The total volume for that expiry",
+                  "example": 12223,
+                  "type": "integer"
+                }
+              },
+              "title": "Expiry breakdown",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Expiry Breakdown",
+    "tags": [
+      "option-contract"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/option-contracts
+
+Option contracts
+
+Returns all option contracts for the given ticker.
+
+Each row includes the NBBO bid and ask, implied volatility and per-contract delta, gamma, theta, vega
+and rho, so quotes and greeks are available in one call. Charm and vanna are not included. Use
+`/api/stock/{ticker}/greeks` and join this response's `option_symbol` to `call_option_symbol` or
+`put_option_symbol` for those values.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/option-contracts",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/option-contracts",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns all option contracts for the given ticker.\n\nEach row includes the NBBO bid and ask, implied volatility and per-contract delta, gamma, theta, vega\nand rho, so quotes and greeks are available in one call. Charm and vanna are not included. Use\n`/api/stock/{ticker}/greeks` and join this response's `option_symbol` to `call_option_symbol` or\n`put_option_symbol` for those values.\n",
+    "operationId": "PublicApi.OptionContractController.option_contracts",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "expiry",
+        "required": false,
+        "schema": {
+          "description": "A single expiry date in ISO date format.",
+          "example": "2024-02-02",
+          "title": "Single expiry date",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "option_type",
+        "required": false,
+        "schema": {
+          "description": "The option type to filter by if specified.",
+          "enum": [
+            "call",
+            "Call",
+            "put",
+            "Put"
+          ],
+          "title": "OptionType",
+          "type": "string"
+        }
+      },
+      {
+        "description": "Wether to only return chains where volume > open interest",
+        "example": true,
+        "in": "query",
+        "name": "vol_greater_oi",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "Wether to only return chains where volume > 0",
+        "example": true,
+        "in": "query",
+        "name": "exclude_zero_vol_chains",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "Wether to only return chains which do not expire on the same day",
+        "example": true,
+        "in": "query",
+        "name": "exclude_zero_dte",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "Wether to only return chains where open interest > 0",
+        "example": true,
+        "in": "query",
+        "name": "exclude_zero_oi_chains",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "Wether to only return chains which are out of the money",
+        "example": true,
+        "in": "query",
+        "name": "maybe_otm_only",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "Minimum days to expiration (expiry at least this many days from today).",
+        "in": "query",
+        "name": "min_dte",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "description": "Maximum days to expiration (expiry at most this many days from today).",
+        "in": "query",
+        "name": "max_dte",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "description": "Options symbols to filter by",
+        "in": "query",
+        "name": "option_symbol[]",
+        "required": false,
+        "schema": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "default": 500,
+          "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+          "example": 10,
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Default 500 Max 500 Min 1",
+          "type": "integer"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "page",
+        "required": false,
+        "schema": {
+          "description": "Page number (use with limit). Starts on page 0.",
+          "example": 1,
+          "title": "Page",
+          "type": "integer"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "All option contracts for a ticker",
+              "example": {
+                "data": [
+                  {
+                    "ask_volume": 56916,
+                    "avg_price": "0.77927817593516586531",
+                    "bid_volume": 68967,
+                    "delta": "-0.187",
+                    "floor_volume": 1815,
+                    "gamma": "0.021",
+                    "high_price": "5.75",
+                    "implied_volatility": "0.542805337797143",
+                    "last_price": "0.01",
+                    "last_tape_time": "2024-02-01 20:59:58+00:00",
+                    "low_price": "0.01",
+                    "mid_volume": 6393,
+                    "multi_leg_volume": 9871,
+                    "nbbo_ask": "0.01",
+                    "nbbo_bid": "0",
+                    "no_side_volume": 6393,
+                    "open_interest": 22868,
+                    "option_symbol": "AAPL240202P00185000",
+                    "prev_oi": 20217,
+                    "rho": "-0.015",
+                    "stock_multi_leg_volume": 13,
+                    "sweep_volume": 12893,
+                    "theta": "-0.043",
+                    "total_premium": "10307980.00",
+                    "vega": "0.089",
+                    "volume": 132276
+                  },
+                  {
+                    "ask_volume": 54820,
+                    "avg_price": "0.19195350495251190385",
+                    "bid_volume": 60784,
+                    "floor_volume": 0,
+                    "high_price": "0.80",
+                    "implied_volatility": "0.462957019859562",
+                    "last_price": "0.01",
+                    "low_price": "0.01",
+                    "mid_volume": 2215,
+                    "multi_leg_volume": 5301,
+                    "nbbo_ask": "0.01",
+                    "nbbo_bid": "0",
+                    "no_side_volume": 2215,
+                    "open_interest": 19352,
+                    "option_symbol": "AAPL240202C00187500",
+                    "prev_oi": 18135,
+                    "stock_multi_leg_volume": 9,
+                    "sweep_volume": 11152,
+                    "total_premium": "2261577.00",
+                    "volume": 117819
+                  }
+                ]
+              },
+              "properties": {
+                "ask_volume": {
+                  "description": "The amount of volume that happened on the ask side.\n\nAsk side is defined as (ask + bid) / 2 < fill price.\n",
+                  "example": 119403,
+                  "title": "Option Contract Ask Volume",
+                  "type": "integer"
+                },
+                "avg_price": {
+                  "description": "The volume weighted average fill price of the contract.",
+                  "example": "1.0465802437910297887119234370",
+                  "title": "Option Contract Avg Price",
+                  "type": "string"
+                },
+                "bid_volume": {
+                  "description": "The amount of volume that happened on the bid side.\n\nBid side is defined as (ask + bid) / 2 > fill price.\n",
+                  "example": 122789,
+                  "title": "Option Contract Bid Volume",
+                  "type": "integer"
+                },
+                "cross_volume": {
+                  "description": "The amount of cross volume.\nCross volume consists of all transaction that have the cross trade code.\n",
+                  "example": 0,
+                  "title": "Option Contract Cross Volume",
+                  "type": "integer"
+                },
+                "delta": {
+                  "description": "First-order greek: delta.",
+                  "example": "0.42",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "floor_volume": {
+                  "description": "The amount of floor volume.\nFloor volume consists of all transaction that have the floor trade code.\n",
+                  "example": 142,
+                  "title": "Option Contract Floor Volume",
+                  "type": "integer"
+                },
+                "gamma": {
+                  "description": "First-order greek: gamma.",
+                  "example": "0.031",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "high_price": {
+                  "description": "The highest fill on that contract.",
+                  "example": "2.95",
+                  "title": "Option Contract High",
+                  "type": "string"
+                },
+                "implied_volatility": {
+                  "description": "The implied volatility for the last transaction.",
+                  "example": "0.675815680048166",
+                  "title": "Option Contract Last Transaction IV",
+                  "type": "string"
+                },
+                "last_price": {
+                  "description": "The last fill on the contract.",
+                  "example": "0.03",
+                  "title": "Option Contract Close",
+                  "type": "string"
+                },
+                "last_tape_time": {
+                  "description": "As-of timestamp anchoring row freshness — the contract's last trade (tape) time. Approximate for NBBO freshness (it is trade time, not a dedicated quote timestamp).",
+                  "format": "date-time",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "low_price": {
+                  "description": "The lowest fill on that contract.",
+                  "example": "0.02",
+                  "title": "Option Contract Low",
+                  "type": "string"
+                },
+                "mid_volume": {
+                  "description": "The amount of volume that happened in the middle of the ask and bid.\n\nMid is defined as (ask + bid) / 2 == fill price.\n",
+                  "example": 22707,
+                  "title": "Option Contract Mid Volume",
+                  "type": "integer"
+                },
+                "multi_leg_volume": {
+                  "description": "The amount of volume that happened as part of a multileg trade with another contract.\nThis can be spreads/rolls/condors/butterflies and more.\n",
+                  "example": 7486,
+                  "title": "Option Contract Multi Leg Volume",
+                  "type": "integer"
+                },
+                "nbbo_ask": {
+                  "description": "The National Best Bid and Offer (NBBO) ask price.",
+                  "example": "0.03",
+                  "title": "NBBO Ask",
+                  "type": "string"
+                },
+                "nbbo_bid": {
+                  "description": "The National Best Bid and Offer (NBBO) bid price.",
+                  "example": "0.03",
+                  "title": "NBBO Bid",
+                  "type": "string"
+                },
+                "no_side_volume": {
+                  "description": "The amount of volume that happened on no identifiable side.\nThis can be late, out of sequence and/or cross transactions.\n",
+                  "example": 0,
+                  "title": "Option Contract No Side Volume",
+                  "type": "integer"
+                },
+                "open_interest": {
+                  "description": "The open interest for the contract.",
+                  "example": 18680,
+                  "title": "Option Contract Open interest",
+                  "type": "integer"
+                },
+                "option_symbol": {
+                  "description": "The option symbol of the contract.\n\nYou can use the following regex to extract underlying ticker, option type, expiry & strike:\n`^(?<symbol>[\\w]*)(?<expiry>(\\d{2})(\\d{2})(\\d{2}))(?<type>[PC])(?<strike>\\d{8})$`\n\nKeep in mind that the strike needs to be multiplied by 1,000.\n",
+                  "title": "Option Contract Symbol",
+                  "type": "string"
+                },
+                "prev_oi": {
+                  "description": "The previous trading day's open interest.",
+                  "example": 18680,
+                  "title": "Option Contract Previous Open Interest",
+                  "type": "integer"
+                },
+                "rho": {
+                  "description": "First-order greek: rho.",
+                  "example": "0.027",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "stock_multi_leg_volume": {
+                  "description": "The amount of volume that happened as part of a stock transaction and possibly other option contracts.\nThis can be covered calls and more.\n",
+                  "example": 52,
+                  "title": "Option Contract Stock Multi Leg Volume",
+                  "type": "integer"
+                },
+                "sweep_volume": {
+                  "description": "The amount of sweep volume.\nSweep volume consists of all transaction that have the sweep trade code.\n",
+                  "example": 18260,
+                  "title": "Option Contract Sweep Volume",
+                  "type": "integer"
+                },
+                "theta": {
+                  "description": "First-order greek: theta.",
+                  "example": "-0.058",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "total_premium": {
+                  "description": "The total option premium.",
+                  "example": "27723806.00",
+                  "title": "Option Contract Premium",
+                  "type": "string"
+                },
+                "vega": {
+                  "description": "First-order greek: vega.",
+                  "example": "0.112",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "volume": {
+                  "description": "The contract volume.",
+                  "example": 264899,
+                  "title": "Option Contract Volume",
+                  "type": "integer"
+                }
+              },
+              "title": "Option contracts",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Option contracts",
+    "tags": [
+      "option-contract"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/option-stance
+
+Option Trade-Stance Ranking
+
+Ranks a ticker's option contracts by how well their mechanics fit a chosen trade **stance**, across all
+recent expiries and strikes. Returns a 0–5 `fit_score` plus named 0–1 sub-scores (`iv_regime`, `greeks_fit`,
+`dte_fit`, `liquidity`, `earnings_timing`) and a plain-language `explanation` for each contract, alongside a
+`context` header (stock price, IV rank, IV percentile).
+
+This is **descriptive** analysis of greeks / IV context / liquidity mechanics — not trade advice or a
+recommendation to buy or sell. Every response carries a `disclaimer`.
+
+`stance` is one of: `sell_premium`, `sell_vega`, `directional`, `leaps`, `cheapies`. Any stance threshold can
+be overridden by passing the corresponding screener filter (e.g. `max_dte`, `min_premium`, `type`).
+
+Pass `option_symbol` to score a **single specific contract** for the stance instead of ranking the chain. The
+response's `data` then holds exactly that one scored contract (with the same `fit_score`, sub-scores and
+`explanation`), even when it falls outside the stance's usual candidate profile.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/option-stance",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/option-stance",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Ranks a ticker's option contracts by how well their mechanics fit a chosen trade **stance**, across all\nrecent expiries and strikes. Returns a 0–5 `fit_score` plus named 0–1 sub-scores (`iv_regime`, `greeks_fit`,\n`dte_fit`, `liquidity`, `earnings_timing`) and a plain-language `explanation` for each contract, alongside a\n`context` header (stock price, IV rank, IV percentile).\n\nThis is **descriptive** analysis of greeks / IV context / liquidity mechanics — not trade advice or a\nrecommendation to buy or sell. Every response carries a `disclaimer`.\n\n`stance` is one of: `sell_premium`, `sell_vega`, `directional`, `leaps`, `cheapies`. Any stance threshold can\nbe overridden by passing the corresponding screener filter (e.g. `max_dte`, `min_premium`, `type`).\n\nPass `option_symbol` to score a **single specific contract** for the stance instead of ranking the chain. The\nresponse's `data` then holds exactly that one scored contract (with the same `fit_score`, sub-scores and\n`explanation`), even when it falls outside the stance's usual candidate profile.\n",
+    "operationId": "PublicApi.OptionContractController.option_stance",
+    "parameters": [
+      {
+        "description": "Ticker symbol, e.g. RBLX.",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "description": "Trade stance to rank by.",
+        "in": "query",
+        "name": "stance",
+        "required": true,
+        "schema": {
+          "enum": [
+            "sell_premium",
+            "sell_vega",
+            "directional",
+            "leaps",
+            "cheapies"
+          ],
+          "type": "string"
+        }
+      },
+      {
+        "description": "Max contracts to return. Default 25, max 100.",
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      {
+        "description": "Restrict to Calls or Puts.",
+        "in": "query",
+        "name": "type",
+        "required": false,
+        "schema": {
+          "enum": [
+            "Calls",
+            "Puts"
+          ],
+          "type": "string"
+        }
+      },
+      {
+        "description": "Score a single specific contract (OCC option symbol, e.g. NVDA270115P00275000) instead of ranking the chain. `data` returns just that one scored contract.",
+        "in": "query",
+        "name": "option_symbol",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "description": "Optional historical date (YYYY-MM-DD).",
+        "in": "query",
+        "name": "date",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Descriptive, ranked contracts that fit a chosen trade stance. Not investment advice — see `disclaimer`.",
+              "properties": {
+                "as_of_date": {
+                  "example": "2026-07-14",
+                  "format": "date",
+                  "type": "string"
+                },
+                "context": {
+                  "properties": {
+                    "iv_30d": {
+                      "type": "number"
+                    },
+                    "iv_percentile": {
+                      "description": "1-year IV percentile, 0–100.",
+                      "type": "number"
+                    },
+                    "iv_rank": {
+                      "description": "1-year IV rank, 0–100.",
+                      "type": "number"
+                    },
+                    "stock_price": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "data": {
+                  "items": {
+                    "properties": {
+                      "avg_price": {
+                        "type": "number"
+                      },
+                      "components": {
+                        "description": "Named 0–1 sub-scores behind fit_score.",
+                        "properties": {
+                          "dte_fit": {
+                            "type": "number"
+                          },
+                          "earnings_timing": {
+                            "type": "number"
+                          },
+                          "greeks_fit": {
+                            "type": "number"
+                          },
+                          "iv_regime": {
+                            "type": "number"
+                          },
+                          "liquidity": {
+                            "type": "number"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "delta": {
+                        "type": "number"
+                      },
+                      "dte": {
+                        "type": "integer"
+                      },
+                      "earnings_before_expiry": {
+                        "type": "boolean"
+                      },
+                      "expires": {
+                        "format": "date",
+                        "type": "string"
+                      },
+                      "explanation": {
+                        "description": "Plain-language mechanics behind the fit — descriptive only.",
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "fit_score": {
+                        "description": "Stance fit, 0–5. Descriptive, not a rating.",
+                        "type": "number"
+                      },
+                      "gamma": {
+                        "type": "number"
+                      },
+                      "iv": {
+                        "type": "number"
+                      },
+                      "next_earnings_date": {
+                        "format": "date",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "open_interest": {
+                        "type": "integer"
+                      },
+                      "option_symbol": {
+                        "example": "RBLX260815C00070000",
+                        "type": "string"
+                      },
+                      "option_type": {
+                        "enum": [
+                          "call",
+                          "put"
+                        ],
+                        "type": "string"
+                      },
+                      "pop": {
+                        "description": "Theoretical probability of finishing OTM ≈ 1−|Δ|.",
+                        "type": "number"
+                      },
+                      "premium": {
+                        "type": "number"
+                      },
+                      "rank_metric": {
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "roc": {
+                        "description": "Return on capital, when available.",
+                        "type": "number"
+                      },
+                      "strike": {
+                        "type": "number"
+                      },
+                      "theta": {
+                        "type": "number"
+                      },
+                      "vega": {
+                        "type": "number"
+                      },
+                      "volume": {
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "disclaimer": {
+                  "type": "string"
+                },
+                "stance": {
+                  "example": "sell_premium",
+                  "type": "string"
+                },
+                "ticker": {
+                  "example": "RBLX",
+                  "type": "string"
+                }
+              },
+              "title": "Option Trade-Stance Ranking response.",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Option Trade-Stance Ranking",
+    "tags": [
+      "option-contract"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```

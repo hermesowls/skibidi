@@ -1,0 +1,9 @@
+[
+ {"label":"Approved default individual tape template; rows still require evidence checks","baseline":true,"operation":"GET /api/option-trades","local_policy":{"max_otm_fraction":null,"dte_basis":"current_analysis_date_America/New_York"},"query":{"min_premium":"50000","min_size":500,"volume_greater_oi":true,"min_dte":1,"max_dte":14,"is_otm":true,"include_agg_trades":false,"limit":20}},
+ {"label":"Generic aggregated activity example: separately authorized different cohort, NOT baseline or market data","baseline":false,"operation":"GET /api/option-trades","query":{"min_premium":"50000","min_volume":500,"volume_greater_oi":true,"min_dte":1,"max_dte":14,"is_otm":true,"include_agg_trades":true,"limit":500}},
+ {"label":"Generic rule-based aggregated alerts: separately authorized different cohort, NOT baseline; volume 500 is neither size 500 nor 500 prints","baseline":false,"operation":"GET /api/option-trades/flow-alerts","query":{"min_premium":50000,"min_volume":500,"vol_greater_oi":true,"min_dte":1,"max_dte":14,"is_otm":true,"limit":200}},
+ {"label":"Historical archive template, documentation date only","operation":"GET /api/option-trades/full-tape/{date}","path":{"date":"2025-07-25"}},
+ {"label":"Contract quote chain template","operation":"GET /api/stock/{ticker}/option-contracts","path":{"ticker":"AAPL"},"query":{"min_dte":1,"max_dte":14,"limit":500,"page":0}},
+ {"label":"Historical chain symbols template","operation":"GET /api/stock/{ticker}/option-chains","path":{"ticker":"AAPL"},"query":{"date":"2025-07-25"}},
+ {"label":"Latest underlying quote template","operation":"GET /api/stock/{ticker}/quote","path":{"ticker":"AAPL"}}
+]

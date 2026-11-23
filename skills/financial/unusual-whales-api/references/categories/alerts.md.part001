@@ -1,0 +1,624 @@
+ token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Query grammar",
+    "tags": [
+      "alerts"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## POST /api/alerts/configuration
+
+Create alert configuration
+
+Creates a new alert configuration, or updates an existing one when `id` is given.
+
+The alert filters can be given in one of two ways, but never both:
+- `config`: a structured filter object for the given `noti_type`, the same configuration as returned by the alert configurations endpoint.
+- `input`: a Query language expression. Use the Query language for complex filter expressions.
+
+Before creating an alert fetch the available filters:
+- `GET /api/alerts/filters` lists per alert type (`noti_type`) the filter fields that can be used in `config`, their accepted values, and whether your account can create alerts of that type.
+- `GET /api/alerts/query/grammar` returns the Query language syntax. `GET /api/alerts/query/grammar?target=option_trade` the full field reference for one target.
+
+Example with a structured `config`:
+```json
+{
+  "name": "FED news",
+  "noti_type": "news",
+  "config": {"symbols": "all", "contains": ["FED"]}
+}
+```
+
+Example with a Query language `input`:
+```json
+{
+  "name": "Energy sector calls",
+  "noti_type": "flow_alerts",
+  "input": "add @energy where calls and volume > 100 and (dte > 10 or (dte = 0 and ticker = 'XOM'))"
+}
+```
+
+The created alerts are delivered like the alerts created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)
+and their triggers can be fetched from the alerts endpoint or streamed over the `custom_alerts` websocket channel.
+
+The alerts and usage of the websocket are the easiest way to setup and get notified on anything that matches your filter configs.
+The query language is a powerful tool to create complex configurations in a SQL like language.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "POST /api/alerts/configuration",
+  "method": "POST",
+  "path": "/api/alerts/configuration",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Creates a new alert configuration, or updates an existing one when `id` is given.\n\nThe alert filters can be given in one of two ways, but never both:\n- `config`: a structured filter object for the given `noti_type`, the same configuration as returned by the alert configurations endpoint.\n- `input`: a Query language expression. Use the Query language for complex filter expressions.\n\nBefore creating an alert fetch the available filters:\n- `GET /api/alerts/filters` lists per alert type (`noti_type`) the filter fields that can be used in `config`, their accepted values, and whether your account can create alerts of that type.\n- `GET /api/alerts/query/grammar` returns the Query language syntax. `GET /api/alerts/query/grammar?target=option_trade` the full field reference for one target.\n\nExample with a structured `config`:\n```json\n{\n  \"name\": \"FED news\",\n  \"noti_type\": \"news\",\n  \"config\": {\"symbols\": \"all\", \"contains\": [\"FED\"]}\n}\n```\n\nExample with a Query language `input`:\n```json\n{\n  \"name\": \"Energy sector calls\",\n  \"noti_type\": \"flow_alerts\",\n  \"input\": \"add @energy where calls and volume > 100 and (dte > 10 or (dte = 0 and ticker = 'XOM'))\"\n}\n```\n\nThe created alerts are delivered like the alerts created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)\nand their triggers can be fetched from the alerts endpoint or streamed over the `custom_alerts` websocket channel.\n\nThe alerts and usage of the websocket are the easiest way to setup and get notified on anything that matches your filter configs.\nThe query language is a powerful tool to create complex configurations in a SQL like language.\n",
+    "operationId": "PublicApi.AlertsController.create_config",
+    "parameters": [],
+    "requestBody": {
+      "content": {
+        "application/json": {
+          "schema": {
+            "description": "Creates a new alert configuration, or updates an existing one when `id` is given.\n\nThe alert filters can be given in one of two ways, but never both:\n- `config`: a structured filter object for the given `noti_type`. Fetch the available filter fields per alert type from `GET /api/alerts/filters`.\n- `input`: a DSL expression such as `add @energy where calls and volume > 100`. Fetch the DSL grammar from `GET /api/alerts/query/grammar`. The `noti_type` field is required for DSL expressions.\n",
+            "example": {
+              "input": "add @energy where calls and volume > 100",
+              "name": "Energy call sweeps",
+              "noti_type": "flow_alerts"
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "name",
+                  "noti_type",
+                  "config"
+                ]
+              },
+              {
+                "required": [
+                  "name",
+                  "noti_type",
+                  "input"
+                ]
+              }
+            ],
+            "properties": {
+              "config": {
+                "description": "An alert configuration, there is no fixed schema for this as each alert will have a different configuration.",
+                "example": {
+                  "config": {
+                    "option_symbols": [
+                      "TGT241122C00177500"
+                    ],
+                    "symbols": "all"
+                  }
+                },
+                "title": "The configuration of an alert.",
+                "type": "object"
+              },
+              "id": {
+                "description": "When given, updates the existing alert configuration with this id instead of creating a new one.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "input": {
+                "description": "A DSL expression describing the alert filters. Use instead of `config` for complex filter expressions. See the DSL grammar endpoint for the syntax.",
+                "example": "where calls and volume > 100 and premium > 10000",
+                "type": "string"
+              },
+              "name": {
+                "description": "",
+                "example": "Chain OI Chg: TGT241122C00177500",
+                "title": "The name of the alert",
+                "type": "string"
+              },
+              "noti_type": {
+                "description": "",
+                "example": "chain_oi_change",
+                "title": "The type of the alert",
+                "type": "string"
+              },
+              "status": {
+                "description": "",
+                "enum": [
+                  "active",
+                  "rate_limit",
+                  "paused"
+                ],
+                "example": "active",
+                "title": "The status of the alert",
+                "type": "string"
+              }
+            },
+            "title": "Create alert config request",
+            "type": "object"
+          }
+        }
+      },
+      "description": "Alert configuration",
+      "required": false
+    },
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "The created or updated alert configuration",
+              "example": {
+                "data": {
+                  "config": {
+                    "expression": {
+                      "op": "and",
+                      "terms": [
+                        {
+                          "sectors": [
+                            "Energy"
+                          ]
+                        },
+                        {
+                          "op": "and",
+                          "terms": [
+                            {
+                              "is_call": true
+                            },
+                            {
+                              "compare": {
+                                "lhs": {
+                                  "field": "volume"
+                                },
+                                "op": "gt",
+                                "rhs": {
+                                  "literal": "100"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "symbols": "all"
+                  },
+                  "created_at": "2025-07-01 14:00:00+00:00",
+                  "dsl": "@Energy where calls and volume > 100",
+                  "id": "ebe24953-a0bf-4b4d-98be-14f721a1199a",
+                  "name": "Energy call sweeps",
+                  "noti_type": "flow_alerts",
+                  "status": "active"
+                }
+              },
+              "properties": {
+                "data": {
+                  "properties": {
+                    "config": {
+                      "description": "An alert configuration, there is no fixed schema for this as each alert will have a different configuration.",
+                      "example": {
+                        "config": {
+                          "option_symbols": [
+                            "TGT241122C00177500"
+                          ],
+                          "symbols": "all"
+                        }
+                      },
+                      "title": "The configuration of an alert.",
+                      "type": "object"
+                    },
+                    "created_at": {
+                      "description": "",
+                      "example": "2024-11-19 18:19:14+00:00",
+                      "title": "The creation timestamp",
+                      "type": "string"
+                    },
+                    "dsl": {
+                      "description": "The canonical DSL representation when the configuration was created or updated using `input`.",
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "",
+                      "example": "ebe24953-a0bf-4b4d-98be-14f721a1199a",
+                      "title": "The alert id",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "",
+                      "example": "Chain OI Chg: TGT241122C00177500",
+                      "title": "The name of the alert",
+                      "type": "string"
+                    },
+                    "noti_type": {
+                      "description": "",
+                      "example": "chain_oi_change",
+                      "title": "The type of the alert",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "",
+                      "enum": [
+                        "active",
+                        "rate_limit",
+                        "paused"
+                      ],
+                      "example": "active",
+                      "title": "The status of the alert",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "data"
+              ],
+              "title": "Created alert config",
+              "type": "object"
+            }
+          }
+        },
+        "description": "The created or updated alert configuration"
+      },
+      "400": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Invalid alert configuration"
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "404": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "User or alert configuration not found"
+      },
+      "500": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Create alert configuration",
+    "tags": [
+      "alerts"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```

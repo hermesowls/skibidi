@@ -1,0 +1,2375 @@
+ /api/institution/{name}/sectors:
+    get:
+      callbacks: {}
+      description: |
+        The sector exposure for a given institution.
+
+        WARNING: Providing partial names e.g. "VANGUARD" might lead to unexpected results.
+        To ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.
+
+        You can use endpoint "api/institutions" with a partial name like "VANGUARD" to get all matching institutions with their CIKs.
+
+        If you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md
+      operationId: PublicApi.InstitutionController.sectors
+      parameters:
+        - description: ''
+          in: path
+          name: name
+          required: true
+          schema:
+            $ref: '#/components/schemas/Institution'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Report_End_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/An_Institutions_Sector_Exposure'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Sector Exposure
+      tags:
+        - institution
+  /api/institution/{ticker}/ownership:
+    get:
+      callbacks: {}
+      description: |
+        The institutional ownership of a given ticker.
+
+        If you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md
+      operationId: PublicApi.InstitutionController.ownership
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Report_Date'
+        - description: ''
+          in: query
+          name: start_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Report_Start_Date'
+        - description: ''
+          in: query
+          name: end_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Report_End_Date'
+        - description: ''
+          in: query
+          name: tags[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institution_Tags'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Ownership_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institutional_Ownership'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Institutional Ownership
+      tags:
+        - institution
+  /api/institutions:
+    get:
+      callbacks: {}
+      description: |
+        Returns a list of institutions.
+
+        WARNING: An institution's 13F reporting can move to a different CIK. Check the `succession` field of each row before you request holdings, sectors or activity for an institution. Those endpoints return the data filed under one CIK and do not include quarters reported under a predecessor's or successor's CIK.
+
+        If you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md
+
+        **Succession**
+
+        A succession is recorded when a filer that previously filed 13F holdings reports files a 13F notice (form 13F-NT) naming exactly one other manager, and that manager filed a 13F holdings report for the same quarter. From that quarter on, the other manager reports the filer's holdings. `effective_report_date` is the end date of that quarter in ISO format.
+
+        - `succeeded_by` is the institution that took over this institution's reporting. Request its CIK for quarters on or after `succeeded_by.effective_report_date`. It is `null` if this institution's reporting has not moved.
+        - `current_holder` is the last institution in the chain of successors. It is set only when the reporting moved again after `succeeded_by` took over, and it is `null` otherwise. It has no `effective_report_date`.
+        - `predecessors` lists the institutions whose reporting this institution took over directly, oldest `effective_report_date` first. Request a predecessor's CIK for quarters before its `effective_report_date`. The array is empty when there are none.
+        - `succession` is `null` when the institution has neither a successor nor predecessors.
+
+        The field has one of five shapes.
+
+        **A. No succession**
+
+        ```json
+        { "succession": null }
+        ```
+
+        **B. Succeeded.** Starting with the quarter ending 2026-06-30, PERSHING SQUARE INC. reports the holdings of PERSHING SQUARE CAPITAL MANAGEMENT, L.P. This is the row of PERSHING SQUARE CAPITAL MANAGEMENT, L.P.
+
+        ```json
+        {
+          "succession": {
+            "succeeded_by": {
+              "name": "PERSHING SQUARE INC.",
+              "cik": "0002026053",
+              "effective_report_date": "2026-06-30"
+            },
+            "current_holder": null,
+            "predecessors": []
+          }
+        }
+        ```
+
+        **C. Succeeded, and the holdings moved again.** Starting with the quarter ending 2017-06-30, BTG PACTUAL GLOBAL ASSET MANAGEMENT LTD reported this institution's holdings. They later moved to BTG PACTUAL ASSET MANAGEMENT US LLC, the last institution in the chain. Request `current_holder.cik` for the latest quarters.
+
+        ```json
+        {
+          "succession": {
+            "succeeded_by": {
+              "name": "BTG PACTUAL GLOBAL ASSET MANAGEMENT LTD",
+              "cik": "0001567992",
+              "effective_report_date": "2017-06-30"
+            },
+            "current_holder": {
+              "name": "BTG PACTUAL ASSET MANAGEMENT US LLC",
+              "cik": "0001569579"
+            },
+            "predecessors": []
+          }
+        }
+        ```
+
+        **D. Took over another filer.** This is the row of PERSHING SQUARE INC. It reports the holdings of PERSHING SQUARE CAPITAL MANAGEMENT, L.P. starting with the quarter ending 2026-06-30. Holdings for earlier quarters are filed under CIK 0001336528.
+
+        ```json
+        {
+          "succession": {
+            "succeeded_by": null,
+            "current_holder": null,
+            "predecessors": [
+              {
+                "name": "PERSHING SQUARE CAPITAL MANAGEMENT, L.P.",
+                "cik": "0001336528",
+                "effective_report_date": "2026-06-30"
+              }
+            ]
+          }
+        }
+        ```
+
+        **E. Both sides at once.** This institution took over the reporting of BTG PACTUAL ASSET MANAGEMENT S.A. DTVM starting with the quarter ending 2017-06-30, and handed its own reporting to BTG PACTUAL ASSET MANAGEMENT US LLC starting with the quarter ending 2024-06-30. `current_holder` is `null` because BTG PACTUAL ASSET MANAGEMENT US LLC has not handed its reporting on.
+
+        ```json
+        {
+          "succession": {
+            "succeeded_by": {
+              "name": "BTG PACTUAL ASSET MANAGEMENT US LLC",
+              "cik": "0001569579",
+              "effective_report_date": "2024-06-30"
+            },
+            "current_holder": null,
+            "predecessors": [
+              {
+                "name": "BTG PACTUAL ASSET MANAGEMENT S.A. DTVM",
+                "cik": "0001569785",
+                "effective_report_date": "2017-06-30"
+              }
+            ]
+          }
+        }
+        ```
+      operationId: PublicApi.InstitutionController.list
+      parameters:
+        - description: ''
+          in: query
+          name: name
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institution'
+        - description: ''
+          in: query
+          name: min_total_value
+          required: false
+          schema:
+            $ref: '#/components/schemas/MinValue'
+        - description: ''
+          in: query
+          name: max_total_value
+          required: false
+          schema:
+            $ref: '#/components/schemas/MaxValue'
+        - description: ''
+          in: query
+          name: min_share_value
+          required: false
+          schema:
+            $ref: '#/components/schemas/MinValue'
+        - description: ''
+          in: query
+          name: max_share_value
+          required: false
+          schema:
+            $ref: '#/components/schemas/MaxValue'
+        - description: ''
+          in: query
+          name: tags[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institution_Tags'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_List_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution_Summary'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: List of Institutions
+      tags:
+        - institution
+  /api/institutions/latest_filings:
+    get:
+      callbacks: {}
+      description: |
+        The latest institutional filings.
+
+        If you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md
+      operationId: PublicApi.InstitutionController.latest_filings
+      parameters:
+        - description: ''
+          in: query
+          name: name
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institution'
+        - description: Date in format YYYY-MM-DD
+          in: query
+          name: date
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Latest_Institutional_Filings_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Latest_Institutional_Filings'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Latest Filings
+      tags:
+        - institution
+  /api/lit-flow/recent:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest lit exchange trades.
+      operationId: PublicApi.LitFlowController.lit_flow_recent
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinPremium'
+        - description: ''
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxPremium'
+        - description: ''
+          in: query
+          name: min_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinSize'
+        - description: ''
+          in: query
+          name: max_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxSize'
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinVol'
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxVol'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lit_Trade'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Recent Lit Flow Trades
+      tags:
+        - lit-flow
+  /api/lit-flow/{ticker}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the lit exchange trades for the given ticker on a given day.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.LitFlowController.lit_flow_ticker
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinPremium'
+        - description: ''
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxPremium'
+        - description: ''
+          in: query
+          name: min_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinSize'
+        - description: ''
+          in: query
+          name: max_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxSize'
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinVol'
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxVol'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lit_Trade'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Ticker Lit Flow Trades
+      tags:
+        - lit-flow
+  /api/market/correlations:
+    get:
+      callbacks: {}
+      description: |
+        Returns the correlations between a list of tickers.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+        You can filter the time period either by:
+        1. Using the `interval` parameter (e.g. "1y", "6m", "3m", "1m")
+        2. Using `start_date` and optionally `end_date` (if `end_date` is not provided, it defaults to the current date)
+
+        If you send `interval` alongside `start_date`, `interval` filter will take priority.
+      operationId: PublicApi.MarketController.correlations
+      parameters:
+        - description: ''
+          in: query
+          name: tickers
+          required: true
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            $ref: '#/components/schemas/Time_frame'
+        - description: ''
+          in: query
+          name: start_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Correlation_Start_Date'
+        - description: ''
+          in: query
+          name: end_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Correlation_End_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Correlation'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Correlations
+      tags:
+        - market
+  /api/market/daily-report:
+    get:
+      callbacks: {}
+      description: |
+        A curated daily report: today's biggest up-moves in volatility and biggest moves in skew over the
+        liquid options universe (reliably adjusted and cleaned for liquidity and outliers via the anomaly
+        universe), plus the top net-premium flow, the market tide, and the day's catalysts. One call for
+        the whole digest. Defaults to the last market day; pass `date` for a point-in-time report.
+      operationId: PublicApi.MarketReportController.daily_report
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Max rows per section (default 25, max 100).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Daily_Market_Report'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Daily Market Report
+      tags:
+        - market
+  /api/market/economic-calendar:
+    get:
+      callbacks: {}
+      description: |
+        Returns the economic calendar.
+      operationId: PublicApi.MarketController.events
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Economic_calendar'
+          description: Economic Calendar response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Economic calendar
+      tags:
+        - market
+  /api/market/fda-calendar:
+    get:
+      callbacks: {}
+      description: |
+        Returns FDA calendar data with filtering options.
+
+        The FDA calendar contains information about:
+        - PDUFA (Prescription Drug User Fee Act) dates
+        - Advisory Committee Meetings
+        - FDA Decisions
+        - Clinical Trial Results
+        - New Drug Applications
+        - Biologics License Applications
+
+        ## Date Format Support
+        The target_date parameters support various FDA-specific date formats:
+        - Quarters: YYYY-Q[1-4] (e.g. 2024-Q1)
+        - Half years: YYYY-H[1-2] (e.g. 2024-H1)
+        - Mid-year: YYYY-MID (e.g. 2024-MID)
+        - Late-year: YYYY-LATE (e.g. 2024-LATE)
+        - Standard dates: YYYY-MM-DD
+      operationId: PublicApi.MarketController.fda_calendar
+      parameters:
+        - description: Minimum announced date (YYYY-MM-DD)
+          in: query
+          name: announced_date_min
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Maximum announced date (YYYY-MM-DD)
+          in: query
+          name: announced_date_max
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Minimum target date (supports Q1-Q4, H1-H2, MID, LATE formats)
+          in: query
+          name: target_date_min
+          required: false
+          schema:
+            $ref: '#/components/schemas/FDA_Target_Date'
+        - description: Maximum target date (supports Q1-Q4, H1-H2, MID, LATE formats)
+          in: query
+          name: target_date_max
+          required: false
+          schema:
+            $ref: '#/components/schemas/FDA_Target_Date'
+        - description: Filter by drug name (partial match)
+          in: query
+          name: drug
+          required: false
+          schema:
+            $ref: '#/components/schemas/Drug_Name'
+        - description: Filter by ticker symbol
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: Maximum number of results to return
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FDA_Calendar'
+          description: FDA Calendar response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: FDA Calendar
+      tags:
+        - market
+  /api/market/insider-buy-sells:
+    get:
+      callbacks: {}
+      description: |
+        Returns the total amount of purchases & sells as well as notional values for insider transactions
+        across the market
+      operationId: PublicApi.MarketController.insider_buy_sells
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Limit_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insider_statistics'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Total Insider Buy & Sells
+      tags:
+        - market
+  /api/market/market-tide:
+    get:
+      callbacks: {}
+      description: |
+        Market Tide is a proprietary tool that can be viewed from the Market Overview page. The Market Tide chart provides real time data based on a proprietary formula that examines market wide options activity and filters out 'noise'.
+
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+        Per default data are returned in 1 minute intervals. Use `interval_5m=true` to have this return data in 5 minute intervals instead.
+
+
+        For example:
+        - $15,000 in calls transacted at the ask has the effect of increasing the daily net call premium by $15,000.
+        - $10,000 in calls transacted at the bid has the effect of decreasing the daily net call premium by $10,000.
+
+        The resulting net premium from both of these trades would be $5000 (+ $15,000 - $10,000).
+
+        Transactions taking place at the mid are not accounted for.
+
+        In theory:
+
+        The sentiment in the options market becomes increasingly bullish if:
+        1. The aggregated CALL PREMIUM is increasing at a faster rate.
+        2. The aggregated PUT PREMIUM is decreasing at a faster rate.
+
+        The sentiment in the options market becomes increasingly bearish if:
+        1. The aggregated CALL PREMIUM is decreasing at a faster rate.
+        2. The aggregated PUT PREMIUM is increasing at a faster rate.
+
+        If you are interested in which tickers are influencing the market tide the most
+        you can check [https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.top_net_impact](https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.top_net_impact).
+
+        If you are looking for a market tide but for specific sectors check out: [https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.sec_indst](https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.sec_indst)
+
+        For a market tide for ETF holdings check out [https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.etf_tide](https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.etf_tide).
+
+        For real time streaming market tide data, subscribe to the `market_tide` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.channels](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.channels).
+
+        ----
+        This can be used to build a market overview such as:
+
+        ![market tide](https://i.imgur.com/tuwTCDc.png)
+
+        Data goes back to 2022-09-28
+      operationId: PublicApi.MarketController.market_tide
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: otm_only
+          required: false
+          schema:
+            $ref: '#/components/schemas/UseOtmOnly'
+        - description: ''
+          in: query
+          name: interval_5m
+          required: false
+          schema:
+            $ref: '#/components/schemas/Use5mCandles'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Daily_Market_Tide'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Market Tide
+      tags:
+        - market
+  /api/market/movers:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Top gainers, top losers, and most actively traded US tickers for the latest session.'
+      operationId: PublicApi.IntelController.movers
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movers_Response'
+          description: Movers
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Top Movers
+      tags:
+        - intel
+  /api/market/oi-change:
+    get:
+      callbacks: {}
+      description: |
+        Returns the non-Index/non-ETF contracts and OI (open interest) change data with the highest OI change (default: descending).
+
+        The data updates once on trading days at around 6:45am EST in the premarket. This endpoint is heavily used to confirm how much
+        of volume has been translated into actual open contracts.
+
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.MarketController.oi_change
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OI_Change'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: OI Change
+      tags:
+        - market
+  /api/market/sector-etfs:
+    get:
+      callbacks: {}
+      description: |
+        Returns the current trading days statistics for the SPDR sector etfs.
+
+        If you are interested in building some sort of market dashboard and want to quickly
+        retrieve which sectors are up/down today this endpoint returns all required data to build
+        such dashboard/view.
+
+        ----
+        This can be used to build a market overview such as:
+
+        ![sectors etf](https://i.imgur.com/yQ5o6rR.png)
+      operationId: PublicApi.MarketController.sector_etfs
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector_ETF'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Sector Etfs
+      tags:
+        - market
+  /api/market/top-net-impact:
+    get:
+      callbacks: {}
+      description: |
+        Returns the top tickers by net premium (half bullish, half bearish). Defaults to last market day.
+
+        These tickers are representing the tickers which had the most influence in the [market tide](https://api.unusualwhales.com/docs/operations/PublicApi.MarketController.market_tide).
+      operationId: PublicApi.MarketController.top_net_impact
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: issue_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Issue_types'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_20_Max_100_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top_Net_Impact'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Top Net Impact
+      tags:
+        - market
+  /api/market/total-options-volume:
+    get:
+      callbacks: {}
+      description: |
+        Returns the total options volume and premium for all trade executions
+        that happened on a given trading date.
+
+        ----
+        This can be used to build a market options overview such as:
+
+        ![Market State](https://i.imgur.com/IioJyq9.png)
+      operationId: PublicApi.MarketController.total_options_volume
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_1_Max_500_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Market_Options_Volume'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Total Options Volume
+      tags:
+        - market
+  /api/market/{sector}/sector-tide:
+    get:
+      callbacks: {}
+      description: |
+        The Sector tide is similar to the Market Tide. While the market tide is based on options activity of the whole market
+        the sector tide is only based on the options activity of companies which are in that specific sector
+      operationId: PublicApi.MarketController.sec_indst
+      parameters:
+        - description: ''
+          in: path
+          name: sector
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_sector'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Daily_Market_Tide'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Sector Tide
+      tags:
+        - market
+  /api/market/{ticker}/etf-tide:
+    get:
+      callbacks: {}
+      description: |
+        The ETF tide is similar to the Market Tide. While the market tide is based on options activity of the whole market
+        the ETF tide is only based on the options activity of the holdings of the specified ETF.
+      operationId: PublicApi.MarketController.etf_tide
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Daily_Market_Tide'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: ETF Tide
+      tags:
+        - market
+  /api/net-flow/expiry:
+    get:
+      callbacks: {}
+      description: |
+        Returns net premium flow by `tide_type` category, `moneyness` category, and `expiration` category, allowing you to create chart variations like [https://unusualwhales.com/zero-dte](https://unusualwhales.com/zero-dte):
+
+        ![zero dte](https://storage.googleapis.com/uwassets/img/zero-dte-type-charts.png)
+
+        About the query parameters:
+
+        - **`tide_type`**: For example, setting `tide_type` to "equity_only" will filter out ETFs and indexes, leaving only net premium from single-name equities.
+
+        - **`moneyness`**: For example, setting `moneyness` to "otm" will filter out any contract that was not out of the money ("OTM") at the time of the transaction, leaving only net premium from contracts that were OTM at the time of the transaction.
+
+        - **`expiration`**: For example, setting `expiration` to "zero_dte" will filter out any contract not expiring this session, leaving only net premium from contracts expiring at 4PM eastern time today.
+      operationId: PublicApi.NetFlowController.expiry
+      parameters:
+        - description: Market date to get data for (defaults to last market day)
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Moneyness filter (defaults to 'all')
+          in: query
+          name: moneyness
+          required: false
+          schema:
+            description: Moneyness filter to apply (can specify multiple)
+            items:
+              description: Filter results by moneyness (all, itm, otm, atm)
+              enum:
+                - all
+                - itm
+                - otm
+                - atm
+              example: all
+              title: Moneyness
+              type: string
+            type: array
+        - description: Tide type filter (defaults to 'all')
+          in: query
+          name: tide_type
+          required: false
+          schema:
+            description: Tide type filter to apply (can specify multiple)
+            items:
+              description: Filter results by tide type (all, equity_only, etf_only, index_only)
+              enum:
+                - all
+                - equity_only
+                - etf_only
+                - index_only
+              example: all
+              title: Tide Type
+              type: string
+            type: array
+        - description: Expiration filter (defaults to ['weekly', 'zero_dte'])
+          in: query
+          name: expiration
+          required: false
+          schema:
+            description: Expiration type filter to apply (can specify multiple)
+            items:
+              description: Filter results by expiration type (weekly, zero_dte)
+              enum:
+                - weekly
+                - zero_dte
+              example: weekly
+              title: Expiration Type
+              type: string
+            type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expiry_Tide_Response'
+          description: Net Flow Expiry Response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Net Flow Expiry
+      tags:
+        - market
+  /api/news/headlines:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest news headlines for financial markets.
+
+        This endpoint provides access to news headlines that may impact the markets, including company-specific
+        news, sector news, and market-wide events. Headlines can be filtered by source, content, ticker, and significance.
+
+        Use the `search_term` parameter to filter by headline content, or the `ticker` parameter to filter
+        by related ticker symbols. The data includes the headline text, source, related tickers, sentiment,
+        and whether it's considered a major news item.
+      operationId: PublicApi.NewsController.headlines
+      parameters:
+        - description: ''
+          in: query
+          name: sources
+          required: false
+          schema:
+            $ref: '#/components/schemas/News_Sources'
+        - description: ''
+          in: query
+          name: search_term
+          required: false
+          schema:
+            $ref: '#/components/schemas/News_Search_Term'
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/News_Ticker'
+        - description: ''
+          in: query
+          name: major_only
+          required: false
+          schema:
+            $ref: '#/components/schemas/Major_News_Only'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_50_Max_100_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Headline_News'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: News Headlines
+      tags:
+        - news
+  /api/option-activity/unusual:
+    get:
+      callbacks: {}
+      description: |
+        Returns option contracts flagged as unusual — the API equivalent of the [live options flow](https://unusualwhales.com/live-options-flow) "unusual" view.
+
+        This is the [Hottest Chains](https://api.unusualwhales.com/docs/operations/PublicApi.ScreenerController.contract_screener) screener with the `unusual` preset applied by default: the contract-expressible subset of the live-options-flow criteria — volume > OI, out-of-the-money, DTE ≤ 60, ask-side ≥ 50%, premium ≥ $10k, issue types ADR/Common Stock/ETF.
+
+        Every Hottest Chains filter is accepted here and overrides the preset (e.g. `?min_premium=25000&max_dte=30`); pass `unusual=false` to return the full screen. For the complete list of filters and the response shape see the [Hottest Chains endpoint](https://api.unusualwhales.com/docs/operations/PublicApi.ScreenerController.contract_screener).
+
+        For real time streaming of the same data, subscribe to the `contract_screener` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.contract_screener](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.contract_screener).
+
+        NOTE: Contracts with a volume of less than 200 are not being returned
+      operationId: PublicApi.ScreenerController.unusual_activity
+      parameters:
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: sectors[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Sectors'
+        - description: Whether to apply the unusual preset (volume>OI, OTM, DTE≤60, ask-side≥50%, premium≥$10k). Defaults to true for this endpoint; pass false to return the full screen.
+          example: 'true'
+          in: query
+          name: unusual
+          required: false
+          schema:
+            type: boolean
+        - description: The minimum total premium on the contract.
+          example: '25000'
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            type: integer
+        - description: The maximum days to expiry.
+          example: '30'
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: issue_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Issue_types'
+        - description: The field to order the results by.
+          example: premium
+          in: query
+          name: order
+          required: false
+          schema:
+            type: string
+        - description: Whether to sort ascending or descending. Defaults to descending.
+          example: desc
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            type: string
+        - description: How many items to return. Defaults to 100. Max 200.
+          example: '100'
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Contract_Screener_response.'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Unusual Options Activity
+      tags:
+        - screener
+  /api/option-contract/{id}/flow:
+    get:
+      callbacks: {}
+      description: |
+        Returns the last 50 option trades for the given option chain. Optionally a min premium and a side can be supplied in the query for further filtering.
+        If no date is specified data for the last trading day is being returned.
+      operationId: PublicApi.OptionContractController.flow
+      parameters:
+        - description: ''
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/OptionContract'
+        - description: ''
+          in: query
+          name: side
+          required: false
+          schema:
+            $ref: '#/components/schemas/Side'
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinPremium'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Limit_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Trade'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Flow Data
+      tags:
+        - option-contract
+  /api/option-contract/{id}/historic:
+    get:
+      callbacks: {}
+      description: |
+        Returns for every trading day historic data for the given option contract.
+
+        Data includes open, high, low, close of the contract of fills.
+        The percentage of the volume which was part of a multi leg trade, stock multi leg trade, sweep, floor
+        and cross. The high and low of the implied volatility is included as well as the volume distributed per sides:
+        Ask, bid, mid and neutral. Neutral is volume that is either a cross trade or from trades that came in late.
+
+        You can use this endpoint to retrieve for a given chains historical details about how much volume has been traded
+        in the past, when the OI did start to build and much more.
+
+        Rows are returned under the `chains` key, not `data`.
+      operationId: PublicApi.OptionContractController.history
+      parameters:
+        - description: ''
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/OptionContract'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Limit_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_contract'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Historic Data
+      tags:
+        - option-contract
+  /api/option-contract/{id}/intraday:
+    get:
+      callbacks: {}
+      description: |
+        Returns 1 minute interval intraday data for the given option contract.
+
+        You can use this to build volume profile charts for contracts to see when
+        volume can in, and which side dominated the volume. The volume and premium
+        is segmented into bid, ask, mid and neutral.
+
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.OptionContractController.intraday
+      parameters:
+        - description: ''
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/OptionContract'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Contract_Minute_Ticks'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Intraday Data
+      tags:
+        - option-contract
+  /api/option-contract/{id}/volume-profile:
+    get:
+      callbacks: {}
+      description: |
+        Returns the volume profile (volume - sweep, floor, cross, ask, bid, etc. - per fill price) for an option symbol on a given trading day.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.OptionContractController.volume_profile
+      parameters:
+        - description: ''
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/OptionContract'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Contract_Price_Level_Volume'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Volume Profile
+      tags:
+        - option-contract
+  /api/option-trades:
+    get:
+      callbacks: {}
+      description: |
+        Filter the full option trades tape.
+
+        This endpoint returns the same data and supports the same filter params as on the unusualwhales website [https://unusualwhales.com/live-options-flow](https://unusualwhales.com/live-options-flow).
+
+        This endpoint only returns data for the latest trading day. To retrieve historical option trades,
+        use the `/api/option-trades/full-tape/:date` endpoint to download the full market file for a trading day.
+
+        List parameters may be supplied using repeated bracket notation, for example
+        `tags[]=ask_side&tags[]=bid_side`. Unix timestamps may be supplied in seconds or milliseconds.
+
+        Pagination uses the `older_than` and `newer_than` cursors, which accept Unix seconds, Unix milliseconds
+        or ISO 8601 values. `page` and `offset` are not supported. `limit` defaults to 50 and has a maximum of
+        500. A cursor earlier than the latest trading day returns HTTP 400. Use
+        `/api/option-trades/full-tape/{date}` for older history.
+
+        The side-volume fields (`ask_vol`, `bid_vol`, `mid_vol` and `no_side_vol`) sum to `volume`.
+        `multi_vol` and `stock_multi_vol` are overlapping subsets of `volume`, not separate amounts to subtract.
+
+        On this REST endpoint, `executed_at`, `nbbo_bid_time` and `nbbo_ask_time` are ISO 8601 timestamps in UTC.
+        On the WebSocket `option_trades` channel, the same fields are Unix epoch timestamps in milliseconds.
+      operationId: PublicApi.OptionTradeController.index
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_50_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: option_contracts[]
+          required: false
+          schema:
+            description: Option contracts to include.
+            example:
+              - AAPL250117C00200000
+            items:
+              $ref: '#/components/schemas/OptionContract'
+            type: array
+        - description: ''
+          in: query
+          name: chain[]
+          required: false
+          schema:
+            description: Alias for `option_contracts[]`.
+            example:
+              - AAPL250117C00200000
+            items:
+              $ref: '#/components/schemas/OptionContract'
+            type: array
+        - description: ''
+          in: query
+          name: strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Strike'
+        - description: ''
+          in: query
+          name: type
+          required: false
+          schema:
+            $ref: '#/components/schemas/OptionType'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: ''
+          in: query
+          name: canceled
+          required: false
+          schema:
+            $ref: '#/components/schemas/Canceled'
+        - description: ''
+          in: query
+          name: is_multi_leg
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Is_Multi_Leg'
+        - description: ''
+          in: query
+          name: volume_greater_oi
+          required: false
+          schema:
+            $ref: '#/components/schemas/Volume_Greater_Than_Open_Interest_Contract'
+        - description: ''
+          in: query
+          name: exclude_deep_itm
+          required: false
+          schema:
+            description: Exclude deep in-the-money contracts.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: force_15_min_delay
+          required: false
+          schema:
+            description: Only return trades that are at least 15 minutes old.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: hide_expired
+          required: false
+          schema:
+            description: Exclude expired option contracts.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: include_agg_trades
+          required: false
+          schema:
+            description: Whether to roll up related option transactions executed at the same time into a single transaction in the response. This allows filters to apply to their combined premium and size. For example, if one $25,000 order is reported as ten $2,500 transactions, it will only match `min_premium=20000` when `include_agg_trades=true`.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: intraday_only
+          required: false
+          schema:
+            description: Only return trades from the current trading day.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: is_otm
+          required: false
+          schema:
+            description: Filter out-of-the-money or in-the-money trades.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: opening
+          required: false
+          schema:
+            description: Filter opening or non-opening transactions.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: opex_only
+          required: false
+          schema:
+            description: Filter contracts by whether they expire on monthly OpEx Friday.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: size_greater_oi
+          required: false
+          schema:
+            description: Filter by whether trade size exceeds open interest.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: exchanges[]
+          required: false
+          schema:
+            description: Options exchanges to include.
+            example:
+              - AMXO
+              - MXOP
+            items:
+              enum:
+                - AMXO
+                - ARCO
+                - BATO
+                - C2OX
+                - EDGO
+                - EMLD
+                - GMNI
+                - MCRY
+                - MPRL
+                - XBOX
+                - XBXO
+                - XCBO
+                - XISX
+                - XMIO
+                - XNDQ
+                - XPHO
+                - MXOP
+                - SPHR
+                - MXTO
+                - IEXO
+              type: string
+            type: array
+        - description: ''
+          in: query
+          name: excluded_tags[]
+          required: false
+          schema:
+            description: Exclude trades containing any of these tags.
+            example:
+              - bid_side
+            items:
+              enum:
+                - ask_side
+                - bid_side
+                - mid_side
+                - no_side
+                - china
+                - volatility
+                - dividend
+                - index
+                - arbitrage
+              type: string
+            type: array
+        - description: ''
+          in: query
+          name: expiry_dates[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Expiry_dates'
+        - description: ''
+          in: query
+          name: industries[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Industries'
+        - description: ''
+          in: query
+          name: issue_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Issue_types'
+        - description: ''
+          in: query
+          name: marketcap_size[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Market_cap_sizes'
+        - description: ''
+          in: query
+          name: report_flag[]
+          required: false
+          schema:
+            description: Trade report flags to include.
+            example:
+              - intermarket_sweep
+            items:
+              enum:
+                - opening
+                - closing
+                - reopening
+                - cross_trade
+                - extended_hours
+                - intermarket_sweep
+                - trade_through_exempt
+                - odd_lot
+                - official_price_report
+                - futures_floor
+                - summary
+                - printable
+                - normal
+              type: string
+            type: array
+        - description: ''
+          in: query
+          name: sectors[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Sectors'
+        - description: ''
+          in: query
+          name: tags[]
+          required: false
+          schema:
+            description: Include trades containing any of these tags.
+            example:
+              - ask_side
+            items:
+              enum:
+                - ask_side
+                - bid_side
+                - mid_side
+                - no_side
+                - china
+                - volatility
+                - dividend
+                - index
+                - arbitrage
+              type: string
+            type: array
+        - description: ''
+          in: query
+          name: trade_codes[]
+          required: false
+          schema:
+            description: OPRA trade code of the executed transaction.
+            example:
+              - auto
+              - slan
+            items:
+              enum:
+                - mlet
+                - mlat
+                - mlct
+                - mlft
+                - mesl
+                - masl
+                - mfsl
+                - cbmo
+                - tlet
+                - tlct
+                - tlft
+                - tesl
+                - tasl
+                - tfsl
+                - tlat
+                - auto
+                - isoi
+                - late
+                - mctp
+                - open
+                - opnl
+                - oseq
+                - reop
+                - slai
+                - slan
+                - slci
+                - slcn
+                - slft
+              type: string
+            type: array
+        - description: ''
+          in: query
+          name: min_ask_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Ask_Percentage'
+        - description: ''
+          in: query
+          name: max_ask_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Ask_Percentage'
+        - description: ''
+          in: query
+          name: min_bear_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Bear_Percentage'
+        - description: ''
+          in: query
+          name: max_bear_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Bear_Percentage'
+        - description: ''
+          in: query
+          name: min_bid_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Bid_Percentage'
+        - description: ''
+          in: query
+          name: max_bid_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Bid_Percentage'
+        - description: ''
+          in: query
+          name: min_bull_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Bull_Percentage'
+        - description: ''
+          in: query
+          name: max_bull_perc
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Bull_Percentage'
+        - description: ''
+          in: query
+          name: min_skew
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Min_Skew'
+        - description: ''
+          in: query
+          name: max_skew
+          required: false
+          schema:
+            $ref: '#/components/schemas/Flow_Alerts_Max_Skew'
+        - description: ''
+          in: query
+          name: min_days_between_expiry_and_earnings
+          required: false
+          schema:
+            $ref: '#/components/schemas/MinDaysBetweenExpiryAndEarnings'
+        - description: ''
+          in: query
+          name: max_days_between_expiry_and_earnings
+          required: false
+          schema:
+            $ref: '#/components/schemas/MaxDaysBetweenExpiryAndEarnings'
+        - description: ''
+          in: query
+          name: min_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_DTE'
+        - description: ''
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_DTE'
+        - description: ''
+          in: query
+          name: min_

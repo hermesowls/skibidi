@@ -1,0 +1,2329 @@
+der.
+      enum:
+        - name
+        - short_name
+        - cik
+      example: name
+      title: Latest Institutional Filings Order By
+      type: string
+    Latest_Stock_Trade:
+      properties:
+        price:
+          description: Last eligible trade price in US dollars.
+          example: '775.645'
+          type: string
+        time:
+          description: Trade execution time as a Unix timestamp in milliseconds.
+          example: 1786636349747
+          format: int64
+          type: integer
+        vol:
+          description: Consolidated trading volume reported with the trade.
+          example: 13548986
+          format: int64
+          type: integer
+      required:
+        - price
+        - time
+        - vol
+      title: Latest Stock Trade
+      type: object
+    Listing:
+      properties:
+        asset_type:
+          nullable: true
+          type: string
+        delisting_date:
+          format: date
+          nullable: true
+          type: string
+        exchange:
+          nullable: true
+          type: string
+        ipo_date:
+          format: date
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        status:
+          nullable: true
+          type: string
+        ticker:
+          nullable: true
+          type: string
+      title: Listing
+      type: object
+    Listings_Response:
+      properties:
+        data:
+          properties:
+            date:
+              nullable: true
+              type: string
+            listings:
+              items:
+                $ref: '#/components/schemas/Listing'
+              type: array
+            status:
+              type: string
+          type: object
+      title: Listings Response
+      type: object
+    Lit_Trade:
+      description: A lit exchange trade.
+      example:
+        data:
+          - canceled: false
+            executed_at: 2023-02-16T14:30:44Z
+            ext_hour_sold_codes:
+            market_center: Q
+            nbbo_ask: '185.50'
+            nbbo_ask_quantity: 400
+            nbbo_bid: '185.45'
+            nbbo_bid_quantity: 800
+            premium: '1854500.00'
+            price: '185.45'
+            sale_cond_codes: regular_sale
+            size: 10000
+            ticker: AAPL
+            tracking_id: 71984388012245
+            trade_code:
+            trade_settlement: regular_settlement
+            volume: 15946819
+          - canceled: false
+            executed_at: 2023-02-16T14:30:42Z
+            ext_hour_sold_codes:
+            market_center: N
+            nbbo_ask: '185.52'
+            nbbo_ask_quantity: 300
+            nbbo_bid: '185.48'
+            nbbo_bid_quantity: 600
+            premium: '927400.00'
+            price: '185.48'
+            sale_cond_codes: regular_sale
+            size: 5000
+            ticker: AAPL
+            tracking_id: 71984384768588
+            trade_code:
+            trade_settlement: regular_settlement
+            volume: 15936819
+      properties:
+        canceled:
+          $ref: '#/components/schemas/Single_Trade_Is_Trade_Cancelled'
+        executed_at:
+          $ref: '#/components/schemas/Single_Trade_Execution_Time'
+        ext_hour_sold_codes:
+          $ref: '#/components/schemas/Single_Trade_External_Hour_Sold_Code'
+        market_center:
+          $ref: '#/components/schemas/Single_Trade_Market_Center'
+        nbbo_ask:
+          $ref: '#/components/schemas/ToBeDone'
+        nbbo_ask_quantity:
+          $ref: '#/components/schemas/ToBeDone'
+        nbbo_bid:
+          $ref: '#/components/schemas/ToBeDone'
+        nbbo_bid_quantity:
+          $ref: '#/components/schemas/ToBeDone'
+        premium:
+          $ref: '#/components/schemas/Option_Contract_Premium'
+        price:
+          $ref: '#/components/schemas/Single_Trade_Price'
+        sale_cond_codes:
+          $ref: '#/components/schemas/Single_Trade_Sale_Cond_Code'
+        size:
+          $ref: '#/components/schemas/Single_Trade_Size'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        tracking_id:
+          $ref: '#/components/schemas/Single_Trade_Tracking_ID'
+        trade_code:
+          $ref: '#/components/schemas/Single_Trade_Trade_Code'
+        trade_settlement:
+          $ref: '#/components/schemas/Single_Trade_Settlement'
+        volume:
+          $ref: '#/components/schemas/Stock_Day_Stock_Volume'
+      title: Lit Trade
+      type: object
+    Logo:
+      description: A link to a logo
+      title: Logo
+      type: string
+    Logo_URL:
+      description: The URL to the institution's logo.
+      example: https://storage.googleapis.com/uwassets/institution-img/ELLIOTT%20INVESTMENT%20MANAGEMENT%20L.P.%20logo.webp
+      title: Logo URL
+      type: string
+    Long_Straddle_1_Day:
+      description: The 1 day % returns for the closest expiry long ATM straddle. The straddle expiry is equal to or greater than 1 day after earnings.
+      example: '0.3421'
+      title: Long Straddle 1 Day
+      type: string
+    Long_Straddle_1_Week:
+      description: The 1 week % returns for the closest expiry long ATM straddle. The straddle expiry is equal to or greater than 1 week after earnings.
+      example: '0.3421'
+      title: Long Straddle 1 Week
+      type: string
+    Macro_Series:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Series_Point'
+          type: array
+        interval:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        unit:
+          nullable: true
+          type: string
+      title: Macro Series
+      type: object
+    Macro_Series_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Macro_Series'
+      title: Macro Series Response
+      type: object
+    Major_News_Only:
+      default: false
+      description: When set to true, only returns major/significant news.
+      example: true
+      title: Major News Only
+      type: boolean
+    Market_Certainty_Index:
+      properties:
+        delta:
+          example: '0.05'
+          nullable: true
+          type: string
+        value:
+          example: '0.74'
+          type: string
+      title: Market Certainty Index
+      type: object
+    Market_Date:
+      description: |
+        A trading date in the format of YYYY-MM-DD.
+      example: 2024-01-18
+      format: date
+      title: Market Date
+      type: string
+    Market_General_Avg_30_Day_Call_Volume:
+      description: Avg 30 day call volume.
+      example: '679430.000000000000'
+      title: Market General Avg 30 Day Call Volume
+      type: string
+    Market_General_Avg_30_Day_Put_Volume:
+      description: Avg 30 day put volume.
+      example: '401961.285714285714'
+      title: Market General Avg 30 Day Put Volume
+      type: string
+    Market_General_Avg_30_Day_Stock_Volume:
+      description: Avg 30 day stock volume.
+      example: '74402355'
+      title: Market General Avg 30 Day Stock Volume
+      type: string
+    Market_General_Avg_3_Day_Call_Volume:
+      description: Avg 3 day call volume.
+      example: '606258.533333333333'
+      title: Market General Avg 3 Day Call Volume
+      type: string
+    Market_General_Avg_3_Day_Put_Volume:
+      description: Avg 3 day put volume.
+      example: '436126.833333333333'
+      title: Market General Avg 3 Day Put Volume
+      type: string
+    Market_General_Avg_7_Day_Call_Volume:
+      description: Avg 7 day call volume.
+      example: '679145.333333333333'
+      title: Market General Avg 7 Day Call Volume
+      type: string
+    Market_General_Avg_7_Day_Put_Volume:
+      description: Avg 7 day put volume.
+      example: '388676.000000000000'
+      title: Market General Avg 7 Day Put Volume
+      type: string
+    Market_General_Bearish_Premium:
+      description: The bearish premium is defined as (call premium bid side) + (put premium ask side).
+      example: '143198625'
+      title: Market General Bearish Premium
+      type: string
+    Market_General_Bullish_Premium:
+      description: The bullish premium is defined as (call premium ask side) + (put premium bid side).
+      example: '196261414'
+      title: Market General Bullish Premium
+      type: string
+    Market_General_Call_OTM_Premium:
+      description: The sum of the premium of all the out the money (OTM) call transactions that executed.
+      example: '9908777.0'
+      title: Market General Call OTM Premium
+      type: string
+    Market_General_Call_OTM_Trades:
+      description: The amount of out the money (OTM) call transactions that executed.
+      example: 6338
+      title: Market General Call OTM Trades
+      type: integer
+    Market_General_Call_OTM_Volume:
+      description: The sum of the size of all the out the money (OTM) call transactions that executed.
+      example: 40385
+      title: Market General Call OTM Volume
+      type: integer
+    Market_General_Call_Open_Interest:
+      description: The sum of open interest of all the call options.
+      example: 3975333
+      title: Market General Call Open Interest
+      type: integer
+    Market_General_Call_Premium:
+      description: The sum of the premium of all the call transactions that executed.
+      example: '9908777.0'
+      title: Market General Call Premium
+      type: string
+    Market_General_Call_Premium_Ask_Side:
+      description: The sum of the premium of all the call transactions that executed on the ask side.
+      example: '5037703.0'
+      title: Market General Call Premium Ask Side
+      type: string
+    Market_General_Call_Premium_Bid_Side:
+      description: The sum of the premium of all the call transactions that executed on the bid side.
+      example: '4055973.0'
+      title: Market General Call Premium Bid Side
+      type: string
+    Market_General_Call_Trades:
+      description: The amount of call transactions that executed.
+      example: 6338
+      title: Market General Call Trades
+      type: integer
+    Market_General_Call_Volume:
+      description: The sum of the size of all the call transactions that executed.
+      example: 990943
+      title: Market General Call Volume
+      type: integer
+    Market_General_Call_Volume_Ask_Side:
+      description: The sum of the size of all the call transactions that executed on the ask side.
+      example: 417251
+      title: Market General Call Volume Ask Side
+      type: integer
+    Market_General_Call_Volume_Bid_Side:
+      description: The sum of the size of all the call transactions that executed on the bid side.
+      example: 498271
+      title: Market General Call Volume Bid Side
+      type: integer
+    Market_General_IV_Rank:
+      description: The IV rank value, which represents where current implied volatility stands relative to its historical range.
+      example: '0.65'
+      title: Market General IV Rank
+      type: string
+    Market_General_Market_Time:
+      description: |
+        The market time:
+        - pr = premarket
+        - r  = regular
+        - po = postmarket
+      enum:
+        - r
+        - po
+        - pr
+      example: pr
+      title: Market General Market Time
+      type: string
+    Market_General_Net_Call_Premium:
+      description: Defined as (call premium ask side) - (call premium bid side).
+      example: '-29138464'
+      title: Market General Net Call Premium
+      type: string
+    Market_General_Net_Call_Volume:
+      description: Defined as (call volume ask side) - (call volume bid side).
+      example: 1049
+      title: Market General Net Call Volume
+      type: integer
+    Market_General_Net_Put_Premium:
+      description: Defined as (put premium ask side) - (put premium bid side).
+      example: '23924325'
+      title: Market General Net Put Premium
+      type: string
+    Market_General_Net_Put_Volume:
+      description: Defined as (put volume ask side) - (put volume bid side).
+      example: 1313
+      title: Market General Net Put Volume
+      type: integer
+    Market_General_Net_Volume:
+      description: Defined as (call volume ask side) - (call volume bid side) - ((put volume ask side) - (put volume bid side)).
+      example: 64312
+      title: Market General Net Volume
+      type: integer
+    Market_General_Previous_Trading_Day:
+      description: The date of the previous trading day in ISO format.
+      example: 2023-09-07
+      title: Market General Previous Trading Day
+      type: string
+    Market_General_Put_OTM_Premium:
+      description: The sum of the premium of all the out the money (OTM) put transactions that executed.
+      example: '1204570.0'
+      title: Market General Put OTM Premium
+      type: string
+    Market_General_Put_OTM_Trades:
+      description: The amount of out the money (OTM) put transactions that executed.
+      example: 4270
+      title: Market General Put OTM Trades
+      type: integer
+    Market_General_Put_OTM_Volume:
+      description: The sum of the size of all the out the money (OTM) put transactions that executed.
+      example: 12638
+      title: Market General Put OTM Volume
+      type: integer
+    Market_General_Put_Open_Interest:
+      description: The sum of the open interest of all the put options.
+      example: 3564153
+      title: Market General Put Open Interest
+      type: integer
+    Market_General_Put_Premium:
+      description: The sum of the premium of all the put transactions that executed.
+      example: '163537151'
+      title: Market General Put Premium
+      type: string
+    Market_General_Put_Premium_Ask_Side:
+      description: The sum of the premium of all the put transactions that executed on the ask side.
+      example: '799873.0'
+      title: Market General Put Premium Ask Side
+      type: string
+    Market_General_Put_Premium_Bid_Side:
+      description: The sum of the premium of all the put transactions that executed on the bid side.
+      example: '4055973.0'
+      title: Market General Put Premium Bid Side
+      type: string
+    Market_General_Put_Trades:
+      description: The amount of put transactions that executed.
+      example: 841
+      title: Market General Put Trades
+      type: integer
+    Market_General_Put_Volume:
+      description: The sum of the size of all the put transactions that executed.
+      example: 808326
+      title: Market General Put Volume
+      type: integer
+    Market_General_Put_Volume_Ask_Side:
+      description: The sum of the size of all the put transactions that executed on the ask side.
+      example: 431791
+      title: Market General Put Volume Ask Side
+      type: integer
+    Market_General_Put_Volume_Bid_Side:
+      description: The sum of the size of all the put transactions that executed on the bid side.
+      example: 314160
+      title: Market General Put Volume Bid Side
+      type: integer
+    Market_General_Sector:
+      description: The financial sector of the ticker. Empty if unknown or not applicable such as ETF/Index.
+      enum:
+        - Basic Materials
+        - Communication Services
+        - Consumer Cyclical
+        - Consumer Defensive
+        - Energy
+        - Financial Services
+        - Healthcare
+        - Industrials
+        - Real Estate
+        - Technology
+        - Utilities
+      example: Technology
+      title: Market General Sector
+      type: string
+    Market_General_Trading_day:
+      description: |
+        A trading date in ISO format.
+      example: 2023-09-08
+      title: Market General Trading day
+      type: string
+    Market_General_Volatility:
+      description: The implied volatility value.
+      example: '0.25'
+      title: Market General Volatility
+      type: string
+    Market_Options_Volume:
+      description: ''
+      example:
+        data:
+          - call_premium: '7306144788.68'
+            call_volume: 22074116
+            date: 2023-09-08
+            put_premium: '8413594929.65'
+            put_volume: 19941285
+      properties:
+        call_premium:
+          $ref: '#/components/schemas/Market_General_Call_Premium'
+        call_volume:
+          $ref: '#/components/schemas/Market_General_Call_Volume'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        put_premium:
+          $ref: '#/components/schemas/Market_General_Put_Premium'
+        put_volume:
+          $ref: '#/components/schemas/Market_General_Put_Volume'
+      title: Market Options Volume
+      type: object
+    Market_Sector_Tickers:
+      description: List of tickers which are in the sector.
+      example:
+        data:
+          - AMD
+          - INTC
+          - NVDA
+      items:
+        type: string
+      title: Market Sector Tickers
+      type: array
+    Market_Time:
+      description: The market time of the data
+      enum:
+        - regular
+        - premarket
+        - postmarket
+      example: regular
+      title: Market Time
+      type: string
+    Market_cap_sizes:
+      description: An array of one or more market capitalization size categories.
+      example:
+        - large
+        - big
+      items:
+        $ref: '#/components/schemas/Single_market_cap_size'
+      title: Market cap sizes
+      type: array
+    Marketcap:
+      description: ''
+      example: '152983052'
+      title: Marketcap
+      type: string
+    MaxDaysBetweenExpiryAndEarnings:
+      description: 'Maximum value of (contract_expiry_date - underlying_next_earnings_date) in days. Negative = contract expires BEFORE earnings; zero = same day; positive = AFTER earnings. Use together with `min_days_between_expiry_and_earnings` to target a window around the next earnings announcement. Examples: to exclude contracts that expire after the next earnings, set `max_days_between_expiry_and_earnings=-1`. To target contracts that expire the same week as (and after) earnings, set `min_days_between_expiry_and_earnings=1&max_days_between_expiry_and_earnings=6`. Contracts whose underlying has no known next earnings date are excluded whenever this filter is used.'
+      example: 6
+      title: MaxDaysBetweenExpiryAndEarnings
+      type: integer
+    MaxValue:
+      description: The max value of the given field.
+      example: '10.0'
+      title: MaxValue
+      type: string
+    Max_2500_Min_1:
+      description: 'How many items to return. Max: 2500. Min: 1.'
+      example: 10
+      maximum: 2500
+      minimum: 1
+      title: Max 2500 Min 1
+      type: integer
+    Max_Contract_Diff:
+      description: |
+        The maximum OTM diff of a contract.
+        Given a strike price of 120 and an underlying price of 98
+        the diff for a call option would equal to:
+        (120 - 98) / 98 = 0.2245
+
+        The diff for a put option would equal to:
+        -1 * (120 - 98) / 98 = -0.2245.
+      example: 1.34
+      title: Max Contract Diff
+      type: string
+    Max_Contract_Volume:
+      description: 'The maximum volume on the option contract. Min: 0.'
+      example: 55600
+      minimum: 0
+      title: Max Contract Volume
+      type: integer
+    Max_DTE:
+      description: 'The maximum days to expiry. Min: 0.'
+      example: 3
+      minimum: 0
+      title: Max DTE
+      type: integer
+    Max_Earnings_DTE:
+      description: The maximum days until the next earnings report.
+      example: 30
+      title: Max Earnings DTE
+      type: integer
+    Max_Marketcap:
+      description: 'The maximum marketcap. Min: 0.'
+      example: 250000000
+      minimum: 0
+      title: Max Marketcap
+      type: number
+    Max_Open_Interest:
+      description: 'The maximum open interest. Min: 0.'
+      example: 35000
+      minimum: 0
+      title: Max Open Interest
+      type: integer
+    Max_Pain:
+      description: ''
+      example:
+        data:
+          - expiry: 2024-03-04
+            max_pain: '473'
+          - expiry: 2024-03-05
+            max_pain: '475'
+        date: 2024-03-04
+      properties:
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        max_pain:
+          description: The max pain for the given expiry
+          example: '472'
+          type: string
+      title: Max Pain
+      type: object
+    Max_Strike:
+      description: 'The maximum strike. Min: 0.'
+      example: 1200
+      minimum: 0
+      title: Max Strike
+      type: number
+    Max_Volume_OI_Ratio:
+      description: The maximum ratio of contract volume to contract open interest. If the open interest of a contract is zero, then this ratio is evaluated as if the open interest of the contract was one (to avoid divide by zero errors). For example, if you set this ratio to 50, then a contract with zero open interest and 75 volume will NOT be included in your results.
+      example: 1.58
+      minimum: 0
+      title: Max Volume OI Ratio
+      type: number
+    MinDaysBetweenExpiryAndEarnings:
+      description: 'Minimum value of (contract_expiry_date - underlying_next_earnings_date) in days. Negative = contract expires BEFORE earnings; zero = same day; positive = AFTER earnings. Use together with `max_days_between_expiry_and_earnings` to target a window around the next earnings announcement. Examples: to exclude contracts that expire after the next earnings, set `max_days_between_expiry_and_earnings=-1`. To target contracts that expire the same week as (and after) earnings, set `min_days_between_expiry_and_earnings=1&max_days_between_expiry_and_earnings=6`. Contracts whose underlying has no known next earnings date are excluded whenever this filter is used.'
+      example: 1
+      title: MinDaysBetweenExpiryAndEarnings
+      type: integer
+    MinValue:
+      description: The min value of the given field.
+      example: '0.5'
+      title: MinValue
+      type: string
+    Min_Contract_Diff:
+      description: |
+        The minimum OTM diff of a contract.
+        Given a strike price of 120 and an underlying price of 98
+        the diff for a call option would equal to:
+        (120 - 98) / 98 = 0.2245
+
+        The diff for a put option would equal to:
+        -1 * (120 - 98) / 98 = -0.2245.
+      example: 0.53
+      title: Min Contract Diff
+      type: string
+    Min_Contract_Volume:
+      description: 'The minimum volume on the option contract. Min: 0.'
+      example: 12300
+      minimum: 0
+      title: Min Contract Volume
+      type: integer
+    Min_DTE:
+      description: 'The minimum days to expiry. Min: 0.'
+      example: 1
+      minimum: 0
+      title: Min DTE
+      type: integer
+    Min_Earnings_DTE:
+      description: The minimum days until the next earnings report.
+      example: 5
+      title: Min Earnings DTE
+      type: integer
+    Min_Limit_1:
+      description: 'How many items to return. If no limit is given, returns all matching data. Min: 1.'
+      example: 10
+      minimum: 1
+      title: Min Limit 1
+      type: integer
+    Min_Marketcap:
+      description: 'The minimum marketcap. Min: 0.'
+      example: 1000000
+      minimum: 0
+      title: Min Marketcap
+      type: number
+    Min_Open_Interest:
+      description: 'The minimum open interest. Min: 0.'
+      example: 10000
+      minimum: 0
+      title: Min Open Interest
+      type: integer
+    Min_Strike:
+      description: 'The minimum strike. Min: 0.'
+      example: 120.5
+      minimum: 0
+      title: Min Strike
+      type: number
+    Min_Volume_OI_Ratio:
+      description: The minimum ratio of contract volume to contract open interest. If the open interest of a contract is zero, then this ratio is evaluated as if the open interest of the contract was one (to avoid divide by zero errors). For example, if you set this ratio to 10, then a contract with zero open interest and 7 volume will NOT be included in your results.
+      example: 0.32
+      minimum: 0
+      title: Min Volume OI Ratio
+      type: number
+    Min_Years:
+      default: 10
+      description: 'The minimum amount of years data for the month need to be available for the ticker. Default: 10. Min: 1.'
+      example: 3
+      minimum: 1
+      title: Min Years
+      type: integer
+    Mover:
+      properties:
+        change:
+          nullable: true
+          type: number
+        change_percent:
+          nullable: true
+          type: number
+        price:
+          nullable: true
+          type: number
+        ticker:
+          type: string
+        volume:
+          nullable: true
+          type: number
+      title: Mover
+      type: object
+    Movers_Response:
+      properties:
+        data:
+          properties:
+            last_updated:
+              nullable: true
+              type: string
+            most_active:
+              items:
+                $ref: '#/components/schemas/Mover'
+              type: array
+            top_gainers:
+              items:
+                $ref: '#/components/schemas/Mover'
+              type: array
+            top_losers:
+              items:
+                $ref: '#/components/schemas/Mover'
+              type: array
+          type: object
+      title: Movers Response
+      type: object
+    Multi-Leg_Leg:
+      description: A single leg of a multi-leg strategy, aggregated by option contract. Greeks and prices are size-weighted averages; decimals are returned as strings.
+      properties:
+        delta:
+          description: Size-weighted delta.
+          nullable: true
+          type: string
+        expiry:
+          description: Expiration date (YYYY-MM-DD).
+          type: string
+        gamma:
+          description: Size-weighted gamma.
+          nullable: true
+          type: string
+        implied_volatility:
+          description: Size-weighted implied volatility across the constituent fills.
+          nullable: true
+          type: string
+        nbbo_ask:
+          description: Size-weighted NBBO ask.
+          nullable: true
+          type: string
+        nbbo_bid:
+          description: Size-weighted NBBO bid.
+          nullable: true
+          type: string
+        open_interest:
+          description: Contract open interest.
+          nullable: true
+          type: integer
+        option_symbol:
+          description: OCC option symbol.
+          example: AAPL260918C00250000
+          type: string
+        option_symbol_id:
+          description: Internal option symbol id.
+          type: integer
+        premium:
+          description: Total premium for this leg.
+          nullable: true
+          type: string
+        price:
+          description: Size-weighted fill price.
+          nullable: true
+          type: string
+        side:
+          description: 'Dominant aggressor side for this leg: bid or ask.'
+          type: string
+        size:
+          description: Total contracts for this leg.
+          type: integer
+        strike:
+          description: Strike price.
+          type: string
+        theta:
+          description: Size-weighted theta.
+          nullable: true
+          type: string
+        type:
+          description: call or put.
+          type: string
+        vega:
+          description: Size-weighted vega.
+          nullable: true
+          type: string
+        volume:
+          description: Contract day volume.
+          nullable: true
+          type: integer
+      title: Multi-Leg Leg
+      type: object
+    Multi-Leg_Legs_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Multi-Leg_Leg'
+          type: array
+      title: Multi-Leg Legs Response
+      type: object
+    Multi-Leg_Trade:
+      description: A detected multi-leg option strategy (spread, condor, butterfly, calendar, diagonal, etc.) aggregated from its individual legs. Decimal quantities are returned as strings.
+      properties:
+        all_opening_legs:
+          description: Every leg is opening (not closing).
+          type: boolean
+        all_otm:
+          description: Every leg is out-of-the-money.
+          type: boolean
+        avg_iv:
+          description: Size-weighted average implied volatility across fills with known IV. A value of 0.25 represents 25%.
+          nullable: true
+          type: string
+        bid_ask_spread:
+          description: Aggregate bid/ask spread.
+          nullable: true
+          type: string
+        breakevens:
+          description: Breakeven price(s) at expiry.
+          items:
+            type: string
+          type: array
+        code:
+          description: Internal classification code.
+          nullable: true
+          type: string
+        diff_expirations:
+          description: Legs span more than one expiry.
+          type: boolean
+        diff_strikes:
+          description: Legs span more than one strike.
+          type: boolean
+        diff_types:
+          description: Legs mix calls and puts.
+          type: boolean
+        direction:
+          description: Strategy direction, e.g. long/short.
+          nullable: true
+          type: string
+        executed_at:
+          description: UTC timestamp of the strategy execution.
+          example: 2026-07-17T14:31:02Z
+          type: string
+        id:
+          description: Unique strategy id (UUID).
+          example: 0197f...c3
+          type: string
+        iv_term_spread:
+          description: Nearest-expiry size-weighted IV minus farthest-expiry size-weighted IV. A value of 0.10 represents 10 volatility points. Null unless both expiries have known IV.
+          nullable: true
+          type: string
+        ivs:
+          description: Size-weighted implied volatility per distinct strike, ordered like `strikes`.
+          items:
+            type: string
+          type: array
+        leg_count:
+          description: Number of distinct legs.
+          type: integer
+        max_dte:
+          description: Maximum days-to-expiry across legs.
+          nullable: true
+          type: integer
+        max_loss:
+          description: Max theoretical loss (null if unbounded).
+          nullable: true
+          type: string
+        max_profit:
+          description: Max theoretical profit (null if unbounded).
+          nullable: true
+          type: string
+        max_strike:
+          description: Highest leg strike.
+          nullable: true
+          type: string
+        min_dte:
+          description: Minimum days-to-expiry across legs.
+          nullable: true
+          type: integer
+        min_strike:
+          description: Lowest leg strike.
+          nullable: true
+          type: string
+        net_ask:
+          description: Net NBBO ask of the classified spread (buy legs at ask, sell legs at bid).
+          nullable: true
+          type: string
+        net_bid:
+          description: Net NBBO bid of the classified spread (buy legs at bid, sell legs at ask).
+          nullable: true
+          type: string
+        net_delta:
+          description: Net delta across legs.
+          nullable: true
+          type: string
+        net_gamma:
+          description: Signed gamma multiplied by contracts and 100, summed across the legs.
+          nullable: true
+          type: string
+        net_premium:
+          description: Net premium (debit/credit).
+          nullable: true
+          type: string
+        net_price:
+          description: Fill / net execution price of the strategy (debit positive, credit negative).
+          nullable: true
+          type: string
+        net_side:
+          description: 'Net aggressor side of the whole strategy vs its net NBBO: bid, ask, or mid.'
+          enum:
+            - bid
+            - ask
+            - mid
+          nullable: true
+          type: string
+        net_theta:
+          description: Net theta across legs.
+          nullable: true
+          type: string
+        net_vega:
+          description: Signed vega multiplied by contracts and 100, summed across the legs.
+          nullable: true
+          type: string
+        ratios:
+          description: Reduced leg-size ratio with one digit per distinct strike in ascending strike order. For example, 10:20:10 is returned as 121. Null when a reduced component exceeds one digit.
+          example: 121
+          nullable: true
+          type: integer
+        size:
+          description: Total contracts across all legs.
+          type: integer
+        strategy:
+          description: Detected strategy name, e.g. vertical, iron_condor, calendar.
+          example: vertical
+          nullable: true
+          type: string
+        strikes:
+          description: All leg strikes.
+          items:
+            type: string
+          type: array
+        ticker:
+          description: Underlying ticker.
+          example: AAPL
+          type: string
+        total_premium:
+          description: Gross premium across legs.
+          nullable: true
+          type: string
+        txns:
+          description: Number of underlying transactions.
+          type: integer
+        underlying_price:
+          description: Underlying price at execution.
+          nullable: true
+          type: string
+        uniq_exchanges:
+          description: Distinct exchanges the legs printed on.
+          items:
+            type: string
+          type: array
+      title: Multi-Leg Trade
+      type: object
+    Multi-Leg_Trades_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Multi-Leg_Trade'
+          type: array
+      title: Multi-Leg Trades Response
+      type: object
+    NBBO_Ask:
+      description: The National Best Bid and Offer (NBBO) ask price.
+      example: '0.03'
+      title: NBBO Ask
+      type: string
+    NBBO_Ask_Size:
+      description: The quoted size in contracts at the NBBO ask price. `null` when quote metadata is unavailable.
+      example: 24
+      format: int64
+      nullable: true
+      title: NBBO Ask Size
+      type: integer
+    NBBO_Ask_Time:
+      description: The last update time for the NBBO ask quote as an ISO 8601 UTC timestamp. `null` when quote metadata is unavailable. The WebSocket `option_trades` channel represents this field as Unix epoch milliseconds instead.
+      example: 2024-08-21T13:50:52.274302Z
+      format: date-time
+      nullable: true
+      title: NBBO Ask Time
+      type: string
+    NBBO_Bid:
+      description: The National Best Bid and Offer (NBBO) bid price.
+      example: '0.03'
+      title: NBBO Bid
+      type: string
+    NBBO_Bid_Size:
+      description: The quoted size in contracts at the NBBO bid price. `null` when quote metadata is unavailable.
+      example: 17
+      format: int64
+      nullable: true
+      title: NBBO Bid Size
+      type: integer
+    NBBO_Bid_Time:
+      description: The last update time for the NBBO bid quote as an ISO 8601 UTC timestamp. `null` when quote metadata is unavailable. The WebSocket `option_trades` channel represents this field as Unix epoch milliseconds instead.
+      example: 2024-08-21T13:50:52.271302Z
+      format: date-time
+      nullable: true
+      title: NBBO Bid Time
+      type: string
+    Name:
+      description: The institution's name.
+      example: VANGUARD GROUP INC
+      title: Name
+      type: string
+    Nasdaq_Options_Pulse_Result:
+      additionalProperties: true
+      title: Nasdaq Options Pulse Result
+      type: object
+    National_Best_Bid_and_Ask:
+      properties:
+        ask:
+          allOf:
+            - $ref: '#/components/schemas/Stock_Quote_Level'
+          description: National best ask.
+        bid:
+          allOf:
+            - $ref: '#/components/schemas/Stock_Quote_Level'
+          description: National best bid.
+        time:
+          description: Quote source time as a Unix timestamp in milliseconds.
+          example: 1786636351248
+          format: int64
+          type: integer
+      required:
+        - ask
+        - bid
+        - time
+      title: National Best Bid and Ask
+      type: object
+    Nearby_Gamma_Flips:
+      description: Every zero-gamma crossing near spot, ordered by distance from it and capped at five.
+      example:
+        - '560'
+        - '561.5'
+        - '572'
+      items:
+        example: '560'
+        type: string
+      title: Nearby Gamma Flips
+      type: array
+    Net_Flow_Data_Point:
+      description: A single data point in the net flow time series
+      properties:
+        date:
+          description: Date of the data point
+          example: 2023-01-15
+          format: date
+          type: string
+        net_call_premium:
+          description: Net call premium
+          example: 2345.67
+          format: float
+          nullable: true
+          type: number
+        net_put_premium:
+          description: Net put premium
+          example: 1234.56
+          format: float
+          nullable: true
+          type: number
+        net_volume:
+          description: Net volume (call volume - put volume)
+          example: 1234.56
+          format: float
+          nullable: true
+          type: number
+        timestamp:
+          description: Timestamp of the data point
+          example: 2023-01-15T09:30:00Z
+          format: date-time
+          type: string
+        underlying_price:
+          description: Underlying price at this timestamp
+          example: 432.1
+          format: float
+          nullable: true
+          type: number
+      required:
+        - date
+        - timestamp
+      title: Net Flow Data Point
+      type: object
+    Net_Prem_Tick_response.:
+      description: The net premium for each trading minute.
+      example:
+        data:
+          - call_volume: 1145
+            call_volume_ask_side: 822
+            call_volume_bid_side: 182
+            date: 2025-03-21
+            net_call_premium: '2234.00'
+            net_call_volume: 640
+            net_delta: '26294.85817964231814400'
+            net_put_premium: '-11106.00'
+            net_put_volume: -137
+            put_volume: 241
+            put_volume_ask_side: 49
+            put_volume_bid_side: 186
+            tape_time: 2025-03-21T19:58:00.000000Z
+          - call_volume: 1255
+            call_volume_ask_side: 912
+            call_volume_bid_side: 192
+            date: 2025-03-21
+            net_call_premium: '3234.00'
+            net_call_volume: 720
+            net_delta: '28294.85817964231814400'
+            net_put_premium: '-9106.00'
+            net_put_volume: -127
+            put_volume: 231
+            put_volume_ask_side: 59
+            put_volume_bid_side: 166
+            tape_time: 2025-03-21T19:59:00.000000Z
+      properties:
+        call_volume:
+          $ref: '#/components/schemas/Market_General_Call_Volume'
+        call_volume_ask_side:
+          $ref: '#/components/schemas/Market_General_Call_Volume_Ask_Side'
+        call_volume_bid_side:
+          $ref: '#/components/schemas/Market_General_Call_Volume_Bid_Side'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        net_call_premium:
+          $ref: '#/components/schemas/Market_General_Net_Call_Premium'
+        net_call_volume:
+          $ref: '#/components/schemas/Market_General_Net_Call_Volume'
+        net_delta:
+          description: Net delta
+          example: '26294.85'
+          type: string
+        net_put_premium:
+          $ref: '#/components/schemas/Market_General_Net_Put_Premium'
+        net_put_volume:
+          $ref: '#/components/schemas/Market_General_Net_Put_Volume'
+        put_volume:
+          $ref: '#/components/schemas/Market_General_Put_Volume'
+        put_volume_ask_side:
+          $ref: '#/components/schemas/Market_General_Put_Volume_Ask_Side'
+        put_volume_bid_side:
+          $ref: '#/components/schemas/Market_General_Put_Volume_Bid_Side'
+        tape_time:
+          $ref: '#/components/schemas/General_Tick_time'
+      title: Net Prem Tick response.
+      type: object
+    NewerThan:
+      description: 'The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).'
+      example: 1_715_083_417
+      title: NewerThan
+      type: string
+    News_Search_Term:
+      description: A search term to filter news headlines by content.
+      example: earnings
+      title: News Search Term
+      type: string
+    News_Sources:
+      description: A comma-separated list of news sources to filter by (e.g., 'Reuters,Bloomberg').
+      example: BusinessWire,MarketNews
+      title: News Sources
+      type: string
+    News_Ticker:
+      description: Filter news headlines to only those mentioning the specified ticker symbol.
+      example: AAPL
+      nullable: true
+      title: News Ticker
+      type: string
+    Nope:
+      description: |
+
+      example:
+        data:
+          - call_delta: '-21257.36'
+            call_fill_delta: '-28564.02'
+            call_vol: 23421
+            nope: '-0.000648'
+            nope_fill: '-0.000434'
+            put_delta: '-43593.96'
+            put_fill_delta: '-14947.51'
+            put_vol: 23421
+            stock_vol: 100000
+            timestamp: 2024-10-28T18:46:00Z
+      properties:
+        call_delta:
+          $ref: '#/components/schemas/Call_Delta'
+        call_fill_delta:
+          $ref: '#/components/schemas/Call_Fill_Delta'
+        call_vol:
+          $ref: '#/components/schemas/Call_Volume'
+        nope:
+          $ref: '#/components/schemas/Nope_score'
+        nope_fill:
+          $ref: '#/components/schemas/Nope_Fill'
+        put_delta:
+          $ref: '#/components/schemas/Put_Delta'
+        put_fill_delta:
+          $ref: '#/components/schemas/Put_Fill_Delta'
+        put_vol:
+          $ref: '#/components/schemas/Put_Volume'
+        stock_vol:
+          $ref: '#/components/schemas/Stock_Volume'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+      title: Nope
+      type: object
+    Nope_Fill:
+      description: |
+          The NOPE value based on call_fill_delta & put_fill_delta
+      example: '-0.000434'
+      title: Nope Fill
+      type: number
+    Nope_score:
+      description: |
+          The NOPE value based on call_delta & put_delta
+      example: '-0.000648'
+      title: Nope score
+      type: number
+    Noti_Types:
+      description: A list of notification types.
+      example:
+        - analyst_rating
+        - option_contract_interval
+      items:
+        $ref: '#/components/schemas/Notification_Type'
+      title: Noti Types
+      type: array
+    Notification_Type:
+      description: ''
+      enum:
+        - stock
+        - news
+        - earnings
+        - dividends
+        - splits
+        - option_contract
+        - price_target
+        - analyst_rating
+        - option_contract_interval
+        - insider_trades
+        - trading_state
+        - fda
+        - economic_release
+        - politician_trades
+        - market_tide
+        - sec_filings
+        - flow_alerts
+        - chain_oi_change
+        - gex
+      example: flow_alerts
+      title: Notification Type
+      type: string
+    OHLC_Bar:
+      properties:
+        close:
+          nullable: true
+          type: number
+        high:
+          nullable: true
+          type: number
+        low:
+          nullable: true
+          type: number
+        open:
+          nullable: true
+          type: number
+        timestamp:
+          nullable: true
+          type: string
+        volume:
+          nullable: true
+          type: number
+      title: OHLC Bar
+      type: object
+    OHLC_End_Date:
+      description: |
+        A trading date in the format of YYYY-MM-DD.
+
+        This is the end date for the given timeframe. If you set the timeframe to 1 minute ticks and have an end_date of 2024-01-18 then it
+        would start searching backwards from 2024-01-18
+      example: 2024-01-18
+      format: date
+      title: OHLC End Date
+      type: string
+    OI_Change:
+      description: |
+        A list of option contracts with their OI change relative to the previous day.
+      example:
+        data:
+          - avg_price: '30.0543738131838322'
+            curr_date: 2024-01-09
+            curr_oi: 35207
+            last_ask: '34.00'
+            last_bid: '32.90'
+            last_date: 2024-01-08
+            last_fill: '33.50'
+            last_oi: 2119
+            oi_change: '15.6149126946672959'
+            oi_diff_plain: 33088
+            option_symbol: MSFT240315C00350000
+            percentage_of_total: '0.08879378869021333312'
+            prev_ask_volume: 32861
+            prev_bid_volume: 235
+            prev_mid_volume: 81
+            prev_multi_leg_volume: 32762
+            prev_neutral_volume: 81
+            prev_stock_multi_leg_volume: 0
+            prev_total_premium: '99711396.00'
+            rnk: 74
+            trades: 187
+            underlying_symbol: MSFT
+            volume: 33177
+          - avg_price: '0.16762696308382622884'
+            curr_date: 2024-01-09
+            curr_oi: 33253
+            last_ask: '0.23'
+            last_bid: '0.20'
+            last_date: 2024-01-08
+            last_fill: '0.22'
+            last_oi: 27361
+            oi_change: '0.21534300646906180330'
+            oi_diff_plain: 5892
+            option_symbol: MSFT240119C00400000
+            percentage_of_total: '0.02624444319547373013'
+            prev_ask_volume: 8915
+            prev_bid_volume: 860
+            prev_mid_volume: 31
+            prev_multi_leg_volume: 214
+            prev_neutral_volume: 31
+            prev_stock_multi_leg_volume: 0
+            prev_total_premium: '164375.00'
+            rnk: 1638
+            trades: 602
+            underlying_symbol: MSFT
+            volume: 9806
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/ToBeDone'
+        curr_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        curr_oi:
+          $ref: '#/components/schemas/ToBeDone'
+        last_ask:
+          $ref: '#/components/schemas/ToBeDone'
+        last_bid:
+          $ref: '#/components/schemas/ToBeDone'
+        last_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        last_fill:
+          $ref: '#/components/schemas/ToBeDone'
+        last_oi:
+          $ref: '#/components/schemas/ToBeDone'
+        oi_change:
+          $ref: '#/components/schemas/ToBeDone'
+        oi_diff_plain:
+          $ref: '#/components/schemas/ToBeDone'
+        option_symbol:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        percentage_of_total:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_ask_volume:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_bid_volume:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_mid_volume:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_multi_leg_volume:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_neutral_volume:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_stock_multi_leg_volume:
+          $ref: '#/components/schemas/ToBeDone'
+        prev_total_premium:
+          $ref: '#/components/schemas/ToBeDone'
+        rnk:
+          $ref: '#/components/schemas/ToBeDone'
+        trades:
+          $ref: '#/components/schemas/ToBeDone'
+        underlying_symbol:
+          $ref: '#/components/schemas/ToBeDone'
+        volume:
+          $ref: '#/components/schemas/ToBeDone'
+      title: OI Change
+      type: object
+    OTM_Dir_Delta_Flow:
+      description: The directional delta flow of out-of-the-money options.
+      example: '14947.51'
+      title: OTM Dir Delta Flow
+      type: string
+    OTM_Dir_Vega_Flow:
+      description: The directional vega flow of out-of-the-money options.
+      example: '11421.03'
+      title: OTM Dir Vega Flow
+      type: string
+    OTM_Total_Delta_Flow:
+      description: The total delta flow of out-of-the-money options.
+      example: '-28564.02'
+      title: OTM Total Delta Flow
+      type: string
+    OTM_Total_Vega_Flow:
+      description: The total vega flow of out-of-the-money options.
+      example: '101745.64'
+      title: OTM Total Vega Flow
+      type: string
+    Off_Lit_Price_Level:
+      properties:
+        lit_vol:
+          $ref: '#/components/schemas/Stock_Lit_Volume'
+        off_vol:
+          $ref: '#/components/schemas/Stock_Off_Lit_Volume'
+        price:
+          description: The exact execution price level.
+          format: double
+          type: number
+      title: Off Lit Price Level
+      type: object
+    Off_Lit_Price_Levels:
+      example:
+        data:
+          - lit_vol: 19941285
+            off_vol: 22074116
+            price: 120.12
+          - lit_vol: 199415
+            off_vol: 220741
+            price: 123.12
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Off_Lit_Price_Level'
+          type: array
+      title: Off Lit Price Levels
+      type: object
+    OlderThan:
+      description: 'The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).'
+      example: 1_715_083_417
+      title: OlderThan
+      type: string
+    Open_Interest_per_Expiry:
+      description: |
+        The total open interest for calls and puts for a specific expiry date.
+      example:
+        data:
+          - call_oi: 1123
+            date: 2024-12-02
+            expiry: 2024-12-06
+            put_oi: 24443
+      properties:
+        call_oi:
+          $ref: '#/components/schemas/Total_Call_Open_interest'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        put_oi:
+          $ref: '#/components/schemas/Total_Put_Open_interest'
+      title: Open Interest per Expiry
+      type: object
+    Open_Interest_per_Strike:
+      description: |
+        The total open interest for calls and puts for a specific strike.
+      example:
+        data:
+          - call_oi: 1123
+            date: 2024-12-02
+            put_oi: 24443
+            strike: '420'
+      properties:
+        call_oi:
+          $ref: '#/components/schemas/Total_Call_Open_interest'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        put_oi:
+          $ref: '#/components/schemas/Total_Put_Open_interest'
+        strike:
+          $ref: '#/components/schemas/Option_Contract_Strike'
+      title: Open Interest per Strike
+      type: object
+    OptionContract:
+      description: An option contract in the OSI format.
+      example: TSLA230526P00167500
+      title: OptionContract
+      type: string
+    OptionType:
+      description: The option type to filter by if specified.
+      enum:
+        - call
+        - Call
+        - put
+        - Put
+      title: OptionType
+      type: string
+    Option_Chains_response:
+      description: |
+        All option chains for a given ticker. By default `data` is an array of option-symbol strings.
+
+        Pass `greeks=true` to instead get an enriched object per contract with strike, expiry, type,
+        NBBO (`nbbo_bid`/`nbbo_ask`), `implied_volatility`, `open_interest`, `volume`, `delta`, `gamma`,
+        `theta`, `vega`, `rho` and `last_tape_time` — everything needed to rank contracts from a single
+        call, without a separate greeks request per expiry.
+
+        Example enriched row (`greeks=true`):
+
+        ```json
+        {
+          "option_symbol": "AAPL231020C00185000",
+          "strike": 185,
+          "expires": "2023-10-20",
+          "option_type": "call",
+          "nbbo_bid": 4.35,
+          "nbbo_ask": 4.45,
+          "implied_volatility": 0.2612,
+          "open_interest": 1200,
+          "volume": 842,
+          "delta": 0.4573,
+          "gamma": 0.021,
+          "theta": -0.085,
+          "vega": 0.112,
+          "rho": 0.045,
+          "last_tape_time": "2023-09-08T19:59:59Z"
+        }
+        ```
+      example:
+        data:
+          - AAPL230908C00175000
+          - AAPL231020C00185000
+          - AAPL230908C00180000
+          - AAPL230908C00182500
+          - AAPL230908C00185000
+          - AAPL230908C00187500
+          - AAPL230908P00172500
+          - AAPL230908P00175000
+          - AAPL230908P00177500
+          - AAPL230908C00177500
+          - AAPL230915C00177500
+          - AAPL230915C00180000
+          - AAPL230915C00185000
+          - AAPL230915C00187500
+          - AAPL230915C00192500
+          - AAPL230915C00195000
+          - AAPL230915C00200000
+      properties: {}
+      title: Option Chains response
+      type: object
+    Option_Contract_All_Opening_Trades:
+      description: ''
+      example: false
+      title: Option Contract All Opening Trades
+      type: boolean
+    Option_Contract_Ask_Volume:
+      description: |
+        The amount of volume that happened on the ask side.
+
+        Ask side is defined as (ask + bid) / 2 < fill price.
+      example: 119403
+      title: Option Contract Ask Volume
+      type: integer
+    Option_Contract_Avg_Price:
+      description: The volume weighted average fill price of the contract.
+      example: '1.0465802437910297887119234370'
+      title: Option Contract Avg Price
+      type: string
+    Option_Contract_Bid_Volume:
+      description: |
+        The amount of volume that happened on the bid side.
+
+        Bid side is defined as (ask + bid) / 2 > fill price.
+      example: 122789
+      title: Option Contract Bid Volume
+      type: integer
+    Option_Contract_Close:
+      description: The last fill on the contract.
+      example: '0.03'
+      title: Option Contract Close
+      type: string
+    Option_Contract_Cross_Volume:
+      description: |
+        The amount of cross volume.
+        Cross volume consists of all transaction that have the cross trade code.
+      example: 0
+      title: Option Contract Cross Volume
+      type: integer
+    Option_Contract_Expiry:
+      description: The contract expiry date in ISO format.
+      example: 2023-12-22
+      title: Option Contract Expiry
+      type: string
+    Option_Contract_Expiry_Count:
+      description: The amount of expiries belonging to the trade. This is only greater than 1 if it is a multileg trade.
+      example: 2
+      title: Option Contract Expiry Count
+      type: integer
+    Option_Contract_Floor_Volume:
+      description: |
+        The amount of floor volume.
+        Floor volume consists of all transaction that have the floor trade code.
+      example: 142
+      title: Option Contract Floor Volume
+      type: integer
+    Option_Contract_Has_Floor:
+      description: ''
+      example: false
+      title: Option Contract Has Floor
+      type: boolean
+    Option_Contract_High:
+      description: The highest fill on that contract.
+      example: '2.95'
+      title: Option Contract High
+      type: string
+    Option_Contract_IV_High:
+      description: The highest implied volatility at which a transaction occurred.
+      example: '0.675815680048166'
+      title: Option Contract IV High
+      type: string
+    Option_Contract_IV_Low:
+      description: The lowest implied volatility at which a transaction occurred.
+      example: '0.310502942482285'
+      title: Option Contract IV Low
+      type: string
+    Option_Contract_Last_Transaction_IV:
+      description: The implied volatility for the last transaction.
+      example: '0.675815680048166'
+      title: Option Contract Last Transaction IV
+      type: string
+    Option_Contract_Last_Transaction_Time:
+      description: The last time there was a transaction for the given contract as UTC timestamp.
+      example: 2023-09-08T17:45:32Z
+      title: Option Contract Last Transaction Time
+      type: string
+    Option_Contract_Low:
+      description: The lowest fill on that contract.
+      example: '0.02'
+      title: Option Contract Low
+      type: string
+    Option_Contract_Mid_Volume:
+      description: |
+        The amount of volume that happened in the middle of the ask and bid.
+
+        Mid is defined as (ask + bid) / 2 == fill price.
+      example: 22707
+      title: Option Contract Mid Volume
+      type: integer
+    Option_Contract_Minute_Ticks:
+      description: |
+        Minute-by-minute aggregated data for an option contract, based on chain aggregates.
+      example:
+        data:
+          - avg_price: '30.18641509433962264151'
+            close: '30.22'
+            expiry: 2024-06-21
+            high: '30.25'
+            iv_high: '0.25478345'
+            iv_low: '0.24967245'
+            low: '30.05'
+            open: '30.15'
+            option_symbol: AAPL240621C00190000
+            premium_ask_side: '3138.00'
+            premium_bid_side: '1403.92'
+            premium_mid_side: '60.50'
+            premium_no_side: '0.00'
+            start_time: 2024-05-28T14:30:00.000000Z
+            volume_ask_side: 104
+            volume_bid_side: 47
+            volume_mid_side: 2
+            volume_multi: 15
+            volume_no_side: 0
+            volume_stock_multi: 0
+          - avg_price: '30.2637719298245614035'
+            close: '30.20'
+            expiry: 2024-06-21
+            high: '30.35'
+            iv_high: '0.25408976'
+            iv_low: '0.25108545'
+            low: '30.15'
+            open: '30.22'
+            option_symbol: AAPL240621C00190000
+            premium_ask_side: '1058.75'
+            premium_bid_side: '661.32'
+            premium_mid_side: '0.00'
+            premium_no_side: '0.00'
+            start_time: 2024-05-28T14:31:00.000000Z
+            volume_ask_side: 35
+            volume_bid_side: 22
+            volume_mid_side: 0
+            volume_multi: 5
+            volume_no_side: 0
+            volume_stock_multi: 0
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/Option_Contract_Avg_Price'
+        close:
+          $ref: '#/components/schemas/Option_Contract_Close'
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        high:
+          $ref: '#/components/schemas/Option_Contract_High'
+        iv_high:
+          $ref: '#/components/schemas/Option_Contract_IV_High'
+        iv_low:
+          $ref: '#/components/schemas/Option_Contract_IV_Low'
+        low:
+          $ref: '#/components/schemas/Option_Contract_Low'
+        open:
+          $ref: '#/components/schemas/Option_Contract_Open'
+        option_symbol:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        premium_ask_side:
+          $ref: '#/components/schemas/Option_Contract_Premium_Ask_Side'
+        premium_bid_side:
+          $ref: '#/components/schemas/Option_Contract_Premium_Bid_Side'
+        premium_mid_side:
+          $ref: '#/components/schemas/Option_Contract_Premium_Mid_Side'
+        premium_no_side:
+          $ref: '#/components/schemas/Option_Contract_Premium_No_Side'
+        start_time:
+          $ref: '#/components/schemas/General_UTC_Timestamp'
+        volume_ask_side:
+          $ref: '#/components/schemas/Option_Contract_Ask_Volume'
+        volume_bid_side:
+          $ref: '#/components/schemas/Option_Contract_Bid_Volume'
+        volume_mid_side:
+          $ref: '#/components/schemas/Option_Contract_Mid_Volume'
+        volume_multi:
+          $ref: '#/components/schemas/Option_Contract_Multi_Leg_Volume'
+        volume_no_side:
+          $ref: '#/components/schemas/Option_Contract_No_Side_Volume'
+        volume_stock_multi:
+          $ref: '#/components/schemas/Option_Contract_Stock_Multi_Leg_Volume'
+      title: Option Contract Minute Ticks
+      type: object
+    Option_Contract_Multi_Leg_Volume:
+      description: |
+        The amount of volume that happened as part of a multileg trade with another contract.
+        This can be spreads/rolls/condors/butterflies and more.
+      example: 7486
+      title: Option Contract Multi Leg Volume
+      type: integer
+    Option_Contract_No_Side_Volume:
+      description: |
+        The amount of volume that happened on no identifiable side.
+        This can be late, out of sequence and/or cross transactions.
+      example: 0
+      title: Option Contract No Side Volume
+      type: integer
+    Option_Contract_Open:
+      description: The first fill on that contract.
+      example: '0.92'
+      title: Option Contract Open
+      type: string
+    Option_Contract_Open_interest:
+      description: The open interest for the contract.
+      example: 18680
+      title: Option Contract Open interest
+      type: integer
+    Option_Contract_Option_Type:
+      description: The option type of the contract.
+      enum:
+        - call
+        - put
+      example: call
+      title: Option Contract Option Type
+      type: string
+    Option_Contract_Premium:
+      description: The total option premium.
+      example: '27723806.00'
+      title: Option Contract Premium
+      type: string
+    Option_Contract_Premium_Ask_Side:
+      description: The total premium value for transactions executed on the ask side.
+      example: '3138.00'
+      title: Option Contract Premium Ask Side
+      type: string
+    Option_Contract_Premium_Bid_Side:
+      description: The total premium value for transactions executed on the bid side.
+      example: '1403.92'
+      title: Option Contract Premium Bid Side
+      type: string
+    Option_Contract_Premium_Mid_Side:
+      description: The total premium value for transactions executed at the mid price.
+      example: '60.50'
+      title: Option Contract Premium Mid Side
+      type: string
+    Option_Contract_Premium_No_Side:
+      description: The total premium value for transactions without an identifiable side.
+      example: '0.00'
+      title: Option Contract Premium No Side
+      type: string
+    Option_Contract_Previous_Close_Price:
+      description: The previous trading day's contract price.
+      example: '1.29'
+      title: Option Contract Previous Close Price
+      type: string
+    Option_Contract_Previous_Open_Interest:
+      description: The previous trading day's open interest.
+      example: 18680
+      title: Option Contract Previous Open Interest
+      type: integer
+    Option_Contract_Price_Level_Volume:
+      description: |
+        Volume data for an option contract at a specific price level on a particular trading day.
+        Includes breakdowns of volume by trade type (ask, bid, mid, multi-leg, sweep, floor, cross).
+      example:
+        data:
+          - ask_vol: 850
+            bid_vol: 325
+            cross_vol: 5
+            date: 2024-05-28
+            floor_vol: 10
+            mid_vol: 25
+            multi_vol: 40
+            price: '3.50'
+            sweep_vol: 120
+            transactions: 42
+            volume: 1250
+          - ask_vol: 620
+            bid_vol: 275
+            cross_vol: 0
+            date: 2024-05-28
+            floor_vol: 5
+            mid_vol: 15
+            multi_vol: 25
+            price: '3.55'
+            sweep_vol: 90
+            transactions: 31
+            volume: 950
+      properties:
+        ask_vol:
+          $ref: '#/components/schemas/Option_Contract_Ask_Volume'
+        bid_vol:
+          $ref: '#/components/schemas/Option_Contract_Bid_Volume'
+        cross_vol:
+          $ref: '#/components/schemas/Option_Contract_Cross_Volume'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        floor_vol:
+          $ref: '#/components/schemas/Option_Contract_Floor_Volume'
+        mid_vol:
+          $ref: '#/components/schemas/Option_Contract_Mid_Volume'
+        multi_vol:
+          $ref: '#/components/schemas/Option_Contract_Multi_Leg_Volume'
+        price:
+          $ref: '#/components/schemas/Fill_Price'
+        sweep_vol:
+          $ref: '#/components/schemas/Option_Contract_Sweep_Volume'
+        transactions:
+          $ref: '#/components/schemas/Option_Contract_Total_Trades_Count'
+        volume:
+          $ref: '#/components/schemas/Option_Contract_Volume'
+      title: Option Contract Price Level Volume
+      type: object
+    Option_Contract_Screener_response.:
+      description: ''
+      example:
+        data:
+          - ask_side_volume: 119403
+            avg_price: '1.0465802437910297887119234370'
+            bid_side_volume: 122789
+            chain_prev_close: '1.29'
+            close: '0.03'
+            cross_volume: 0
+            er_time: unknown
+            expiry: 2023-09-08
+            floor_volume: 142
+            high: '2.95'
+            last_fill: 2023-09-08T17:45:32Z
+            low: '0.02'
+            mid_volume: 22707
+            multileg_volume: 7486
+            next_earnings_date: 2023-10-18
+            no_side_volume: 0
+            open: '0.92'
+            open_interest: 18680
+            option_symbol: TSLA230908C00255000
+            option_type: call
+            premium: '27723806.00'
+            sector: Consumer Cyclical
+            stock_multi_leg_volume: 52
+            stock_price: '247.94'
+            strike: '255.0'
+            sweep_volume: 18260
+            ticker_vol: 2546773
+            total_ask_changes: 44343
+            total_bid_changes: 43939
+            trades: 39690
+            volume: 264899
+      properties:
+        ask_side_volume:
+          $ref: '#/components/schemas/Option_Contract_Ask_Volume'
+        avg_price:
+          $ref: '#/components/schemas/Option_Contract_Avg_Price'
+        bid_side_volume:
+          $ref: '#/components/schemas/Option_Contract_Bid_Volume'
+        chain_prev_close:
+          $ref: '#/components/schemas/Option_Contract_Previous_Close_Price'
+        close:
+          $ref: '#/components/schemas/Option_Contract_Close'
+        cross_volume:
+          $ref: '#/components/schemas/Option_Contract_Cross_Volume'
+        er_time:
+          $ref: '#/components/schemas/Stock_Earnings_time'
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        floor_volume:
+          $ref: '#/components/schemas/Option_Contract_Floor_Volume'
+        high:
+          $ref: '#/components/schemas/Option_Contract_High'
+        last_fill:
+          $ref: '#/components/schemas/Option_Contract_Last_Transaction_Time'
+        low:
+          $ref: '#/components/schemas/Option_Contract_Low'
+        mid_volume:
+          $ref: '#/components/schemas/Option_Contract_Mid_Volume'
+        multileg_volume:
+          $ref: '#/components/schemas/Option_Contract_Multi_Leg_Volume'
+        next_earnings_date:
+          $ref: '#/components/schemas/Stock_Next_Earnings_Date'
+        no_side_volume:
+          $ref: '#/components/schemas/Option_Contract_No_Side_Volume'
+        open:
+          $ref: '#/components/schemas/Option_Contract_Open'
+        open_interest:
+          $ref: '#/components/schemas/Option_Contract_Open_interest'
+        option_symbol:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        option_type:
+          $ref: '#/components/schemas/Option_Contract_Option_Type'
+        premium:
+          $ref: '#/components/schemas/Option_Contract_Premium'
+        sector:
+          $ref: '#/components/schemas/Market_General_Sector'
+        stock_multi_leg_volume:
+          $ref: '#/components/schemas/Option_Contract_Stock_Multi_Leg_Volume'
+        stock_price:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        strike:
+          $ref: '#/components/schemas/Option_Contract_Strike'
+        sweep_volume:
+          $ref: '#/components/schemas/Option_Contract_Sweep_Volume'
+        ticker_vol:
+          $ref: '#/components/schemas/Stock_Total_Volume'
+        total_ask_changes:
+          $ref: '#/components/schemas/Option_Contract_Total_Ask_Changes'
+        total_bid_changes:
+          $ref: '#/components/schemas/Option_Contract_Total_Bid_Changes'
+        trades:
+          $ref: '#/components/schemas/Option_Contract_Total_Trades_Count'
+        volume:
+          $ref: '#/components/schemas/Option_Contract_Volume'
+      title: Option Contract Screener response.
+      type: object
+    Option_Contract_Stock_Multi_Leg_Volume:
+      description: |
+        The amount of volume that happened as part of a stock transaction and possibly other option contracts.
+        This can be covered calls and more.
+      example: 52
+      title: Option Contract Stock Multi Leg Volume
+      type: integer
+    Option_Contract_Strike:
+      description: The contract strike.
+      example: '375'
+      title: Option Contract Strike
+      type: string
+    Option_Contract_Sweep_Volume:
+      description: |
+        The amount of sweep volume.
+        Sweep volume consists of all transaction that have the sweep trade code.
+      example: 18260
+      title: Option Contract Sweep Volume
+      type: integer
+    Option_Contract_Symbol:
+      description: |
+        The option symbol of the contract.
+
+        You can use the following regex to extract underlying ticker, option type, expiry & strike:
+        `^(?<symbol>[\w]*)(?<expiry>(\d{2})(\d{2})(\d{2}))(?<type>[PC])(?<strike>\d{8})$`
+
+        Keep in mind that the strike needs to be multiplied by 1,000.
+      title: Option Contract Symbol
+      type: string
+    Option_Contract_Total_Ask_Changes:
+      description: The total count of changes to the NBBO ask during that day's trading session.
+      example: 165
+      title: Option Contract Total Ask Changes
+      type: integer
+    Option_Contract_Total_Bid_Changes:
+      description: The total count of changes to the NBBO bid during that day's trading session.
+      example: 28
+      title: Option Contract Total Bid Changes
+      type: integer
+    Option_Contract_Total_Trades_Count:
+      description: The amount of transaction for this contract.
+      example: 39690
+      title: Option Contract Total Trades Count
+      type: integer
+    Option_Contract_Type:
+      description: The contract type.
+      enum:
+        - call
+        - put
+      example: call
+      title: Option Contract Type
+      type: string
+    Option_Contract_Underlying_Symbol:
+      description: The underlying symbol of the contract.
+      example: AAPL
+      title: Option Contract Underlying Symbol
+      type: string
+    Option_Contract_Volume:
+      description: The contract volume.
+      example: 264899
+      title: Option Contract Volume
+      type: integer
+    Option_Holding:
+      description: An option holding in a portfolio
+      properties:
+        max_amount:
+          description: The maximum option quantity.
+          example: 0
+          type: number
+        mid_amount:
+          description: The midpoint option quantity.
+          example: 0
+          type: number
+        min_amount:
+          description: The minimum option quantity.
+          example: 0
+          type: number
+        option_symbol:
+          description: The option symbol.
+          example: CLF250117C00020000
+          type: string
+        ticker:
+          description: The underlying stock ticker symbol.
+          example: CLF
+          type: string
+        type:
+          description: The holding type.
+          example: option
+          type: string
+      title: Option Holding
+      type: object
+    Option_Price_Level:
+      description: ''
+      example:
+        data:
+          - call_volume: 22074116
+            price: '120.12'
+            put_volume: 19941285
+          - call_volume: 220741
+            price: '123.12'
+            put_volume: 199415
+      properties:
+        call_volume:
+          $ref: '#/components/schemas/Market_General_Call_Volume'
+        price:
+          $ref: '#/components/schemas/Stock_Price_Level'
+        put_volume:
+          $ref: '#/components/schemas/Market_General_Put_Volume'
+      title: Option Price Level
+      type: object
+    Option_Trade:
+      description: ''
+      example:
+        ask_vol: 2
+        bid_vol: 1
+        canceled: false
+        delta: '0.610546281537814'
+        er_time: postmarket
+        ewma_nbbo_ask: '21.60'
+        ewma_nbbo_bid: '21.45'
+        exchange: MXOP
+        executed_at: 2024-08-21T13:50:52.278302Z
+        expiry: 2025-01-17
+        flow_alert_id:
+        full_name: NVIDIA CORP
+        gamma: '0.00775013889662635'
+        id: 8ef90a2d-d881-41de-98c9-c1de4318dcb5
+        implied_volatility: '0.604347250962543'
+        industry_type: Semiconductors
+        marketcap: '3130350000000.00'
+        mid_vol: 30
+        multi_vol: 30
+        nbbo_ask: '21.60'
+        nbbo_ask_size: 24
+        nbbo_ask_time: 2024-08-21T13:50:52.274302Z
+        nbbo_bid: '21.45'
+        nbbo_bid_size: 17
+        nbbo_bid_time: 2024-08-21T13:50:52.271302Z
+        next_earnings_date: 2024-08-28
+        no_side_vol: 0
+        open_interest: 6016
+        option_chain_id: NVDA250117C00124000
+        option_type: call
+        premium: '2150.00'
+        price: '21.50'
+        report_flags: []
+        rho: '0.2316546330093438'
+        rule_id:
+        sector: Technology
+        size: 1
+        stock_multi_vol: 0
+        strike: '124.0000000000'
+        tags:
+          - bid_side
+          - bearish
+          - earnings_next_week
+        theo: '21.49999999999999'
+        theta: '-0.0640155364004474'
+        underlying_price: '128.16'
+        underlying_symbol: NVDA
+        upstream_condition_detail: auto
+        vega: '0.3140468475903719'
+        volume: 33
+      properties:
+        ask_vol:
+          $ref: '#/components/schemas/Option_Contract_Ask_Volume'
+        bid_vol:
+          $ref: '#/components/schemas/Option_Contract_Bid_Volume'
+        canceled:
+          $ref: '#/components/schemas/Canceled'
+        delta:
+          $ref: '#/components/schemas/Delta'
+        er_time:
+          $ref: '#/components/schemas/Stock_Earnings_time'
+        ewma_nbbo_ask:
+          $ref: '#/components/schemas/EWMA_NBBO_Ask'
+        ewma_nbbo_bid:
+          $ref: '#/components/schemas/EWMA_NBBO_Bid'
+        exchange:
+          $ref: '#/components/schemas/Exchange'
+        executed_at:
+          $ref: '#/components/schemas/Executed_At'
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        flow_alert_id:
+          $ref: '#/components/schemas/Flow_Alert_ID'
+        full_name:
+          $ref: '#/components/schemas/Stock_Full_Name'
+        gamma:
+          $ref: '#/components/schemas/Gamma'
+        id:
+          $ref: '#/components/schemas/Option_Trade_ID'
+        implied_volatility:
+          $ref: '#/components/schemas/Implied_Volatility'
+        industry_type:
+          $ref: '#/components/schemas/Stock_Industry_Type'
+        is_agg:
+          description: Whether this response item combines related option transactions executed at the same time into a single transaction.
+          example: true
+          type: boolean
+        issue_type:
+          example: Common Stock
+          nullable: true
+          type: string
+        marketcap:
+          $ref: '#/components/schemas/Stock_Marketcap_AUM'
+        mid_vol:
+          $ref: '#/components/schemas/Option_Contract_Mid_Volume'
+        multi_vol:
+          $ref: '#/components/schemas/Option_Contract_Multi_Leg_Volume'
+        nbbo_ask:
+          $ref: '#/components/schemas/NBBO_Ask'
+        nbbo_ask_size:
+          $ref: '#/components/schemas/NBBO_Ask_Size'
+        nbbo_ask_time:
+          $ref: '#/components/schemas/NBBO_Ask_Time'
+        nbbo_bid:
+          $ref: '#/components/schemas/NBBO_Bid'
+        nbbo_bid_size:
+          $ref: '#/components/schemas/NBBO_Bid_Size'
+        nbbo_bid_time:
+          $ref: '#/components/schemas/NBBO_Bid_Time'
+        next_earnings_date:
+          $ref: '#/components/schemas/Stock_Next_Earnings_Date'
+        no_side_vol:
+          $ref: '#/components/schemas/Option_Contract_No_Side_Volume'
+        open_interest:
+          $ref: '#/components/schemas/Option_Contract_Open_interest'
+        option_chain_id:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        option_type:
+          $ref: '#/components/schemas/Option_Contract_Option_Type'
+        premium:
+          $ref: '#/components/schemas/Premium'
+        price:
+          $ref: '#/components/schemas/Fill_Price'
+        report_flags:
+          $ref: '#/components/schemas/Report_Flags'
+        rho:
+          $ref: '#/components/schemas/Rho'
+        rule_id:
+          $ref: '#/components/schemas/Rule_ID'
+        sector:
+          $ref: '#/components/schemas/Market_General_Sector'
+        size:
+          $ref: '#/components/schemas/Option_Trade_Size'
+        stock_multi_vol:
+          $ref: '#/components/schemas/Option_Contract_Stock_Multi_Leg_Volume'
+        strike:
+          $ref: '#/components/schemas/Option_Contract_Strike'
+        tags:
+          $ref: '#/components/schemas/Tags'
+        theo:
+          $ref: '#/components/schemas/Theoretical_Price'
+        theta:
+          $ref: '#/components/schemas/Theta'
+        trade_ids:
+          description: The component trade IDs for an aggregated trade.
+          items:
+            format: uuid
+            type: string
+          type: array
+        underlying_price:
+          $ref: '#/components/schemas/Underlying_Price'
+        underlying_symbol:
+          $ref: '#/components/schemas/Option_Contract_Underlying_Symbol'
+        upstream_condition_detail:
+          $ref: '#/components/schemas/Upstream_Condition_Detail'
+        vega:
+          $ref: '#/components/schemas/Vega'
+        volume:
+          $ref: '#/components/schemas/Option_Trade_Volume'
+      title: Option Trade
+      type: object
+    Option_Trade-Stance_Ranking_response.:
+      description: Descriptive, ranked contracts that fit a chosen trade stance. Not investment advice — see `disclaimer`.
+      properties:
+        as_of_date:
+          example: 2026-07-14
+          format: date
+          type: string
+        context:
+          properties:
+            iv_30d:
+              type: number
+            iv_percentile:
+              description: 1-year IV percentile, 0–100.
+              type: number
+            iv_rank:
+              description: 1-year IV rank, 0–100.
+              type: number
+            stock_price:
+              type: number
+          type: object
+        data:
+          items:
+            properties:
+              avg_price:
+                type: number
+              components:
+                description: Named 0–1 sub-scores behind fit_score.
+                properties:
+                  dte_fit:
+                    type: number
+                  earnings_timing:
+                    type: number
+                  greeks_fit:
+                    type: number
+                  iv_regime:
+                    type: number
+                  liquidity:
+                    type: number
+                type: object
+              delta:
+                type: number
+              dte:
+                type: integer
+              earnings_before_expiry:
+                type: boolean
+              expires:
+                format: date
+                type: string
+              explanation:
+                description: Plain-language mechanics behind the fit — descriptive only.
+                items:
+                  type: string
+                type: array
+              fit_score:
+                description: Stance fit, 0–5. Descriptive, not a rating.
+                type: number
+              gamma:
+                type: number
+              iv:
+                type: number
+              next_earnings_date:
+                format: date
+                nullable: true
+                type: string
+              open_interest:
+                type: integer
+              option_symbol:
+                example: RBLX260815C00070000
+                type: string
+              option_type:
+                enum:
+                  - call
+                  - put
+                type: string
+              pop:
+                description: Theoretical probability of finishing OTM ≈ 1−|Δ|.
+                type: number
+              premium:
+                type: number
+              rank_metric:
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: number
+                type: object
+              roc:
+                description: Return on capital, when available.
+                type: number
+              strike:
+                type: number
+              theta:
+                type: number
+              vega:
+                type: number
+              volume:
+                type: integer
+            type: object
+          type: array
+        disclaimer:
+          type: string
+        stance:
+          example: sell_premium
+          type: string
+        ticker:
+          example: RBLX
+          type: string
+      title: Option Trade-Stance Ranking response.
+      type: object
+    Option_Trade_Exchange_Breakdown:
+      description: |
+        A single ticker × exchange (× trade code, when `by_trade_code=true`) aggregation of the option
+        tape for a trading date.
+      example:
+        data:
+          - cal

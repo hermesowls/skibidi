@@ -1,0 +1,1168 @@
+        description: Internal Server Error
+      summary: Spot GEX exposures by strike
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/spot-exposures/{expiry}/strike:
+    get:
+      callbacks: {}
+      description: |
+        This endpoint has been deprecated and will be removed, please migrate to the new [endpoint](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry_v2)
+      operationId: PublicApi.TickerController.spot_exposures_by_strike_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: path
+          name: expiry
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: min_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Strike'
+        - description: ''
+          in: query
+          name: max_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Strike'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spot_greek_exposures_by_strike'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Spot GEX exposures by strike & expiry (Deprecated)
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/stock-state:
+    get:
+      callbacks: {}
+      description: |
+        Returns the last stock state for the given ticker.
+
+        This is the easiest way to retreive the open, close, high, low and volume of the last trading day.
+
+        For the latest trade and national best bid and ask use `/api/stock/{ticker}/quote`. It also returns the quote age,
+        midpoint, spread, spread in basis points, top of book size imbalance and size-weighted midpoint.
+      operationId: PublicApi.TickerController.last_stock_state
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock_state'
+          description: Stock State Response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Stock State
+      tags:
+        - stock
+  /api/stock/{ticker}/stock-volume-price-levels:
+    get:
+      callbacks: {}
+      description: |
+        Returns the lit & off lit stock volume per price level for the given ticker.
+
+        ----
+        Important: The volume does **NOT** represent the full market dialy volume. It
+        only represents the volume of executed trades on exchanges operated by Nasdaq
+        and FINRA off lit exchanges.
+      operationId: PublicApi.TickerController.stock_volume_price_level
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Off_Lit_Price_Levels'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Off/Lit Price Levels
+      tags:
+        - stock
+  /api/stock/{ticker}/technical-indicator/{function}:
+    get:
+      callbacks: {}
+      description: |
+        Returns any technical indicator time series for a ticker. Supports international stocks and OTC.
+
+        **Supported functions:** SMA, EMA, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, T3, MACD, MACDEXT, STOCH, STOCHF, RSI, STOCHRSI, WILLR, ADX, ADXR, APO, PPO, MOM, BOP, CCI, CMO, ROC, ROCR, AROON, AROONOSC, MFI, TRIX, ULTOSC, DX, MINUS_DI, PLUS_DI, MINUS_DM, PLUS_DM, BBANDS, MIDPOINT, MIDPRICE, SAR, TRANGE, ATR, NATR, AD, ADOSC, OBV, HT_TRENDLINE, HT_SINE, HT_TRENDMODE, HT_DCPERIOD, HT_DCPHASE, HT_PHASOR, VWAP.
+
+        Not all parameters apply to every function. For example, STOCH and BOP only use `interval`, while RSI uses all three (`interval`, `time_period`, `series_type`).
+
+        The `month` parameter is only relevant for intraday intervals (1min, 5min, 15min, 30min, 60min). For daily/weekly/monthly intervals, full history is returned and `month` is ignored.
+      operationId: PublicApi.AvFundamentalController.technical_indicator
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: path
+          name: function
+          required: true
+          schema:
+            description: The technical indicator function name (e.g. RSI, SMA, MACD, BBANDS)
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: daily
+            description: Time interval between data points
+            enum:
+              - 1min
+              - 5min
+              - 15min
+              - 30min
+              - 60min
+              - daily
+              - weekly
+              - monthly
+            type: string
+        - description: ''
+          in: query
+          name: time_period
+          required: false
+          schema:
+            default: 14
+            description: Number of data points used to calculate the indicator (e.g. 14 for RSI, 20 for SMA)
+            type: integer
+        - description: ''
+          in: query
+          name: series_type
+          required: false
+          schema:
+            default: close
+            description: The price type used in the calculation
+            enum:
+              - close
+              - open
+              - high
+              - low
+            type: string
+        - description: ''
+          in: query
+          name: month
+          required: false
+          schema:
+            description: Target month for intraday data in YYYY-MM format (e.g. 2026-02). Only applies to intraday intervals.
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technical_Indicator_Response'
+          description: Technical Indicator
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Technical Indicator
+      tags:
+        - stock
+  /api/stock/{ticker}/unusualness:
+    get:
+      callbacks: {}
+      description: |
+        How unusual the ticker's volume is today vs its own trailing ~90 trading days, as a percentile (0-100)
+        and decile (1-10) for both regular-session stock volume and total (call + put) option volume. This is
+        outlier-robust and comparable across names, unlike a raw volume-vs-average ratio. A metric is null when
+        fewer than 30 trailing days of history are available. Defaults to the last market day.
+      operationId: PublicApi.TickerController.unusualness
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volume_Unusualness'
+          description: Volume Unusualness Response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Volume Unusualness
+      tags:
+        - stock
+  /api/stock/{ticker}/volatility/anomaly:
+    get:
+      callbacks: {}
+      description: |
+        The volatility anomaly score (and recent history) for a ticker — a composite signal flagging
+        unusually rich/cheap volatility.
+      operationId: PublicApi.VolatilityController.anomaly
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Volatility Anomaly Score
+      tags:
+        - volatility
+  /api/stock/{ticker}/volatility/character:
+    get:
+      callbacks: {}
+      description: |
+        The volatility character (Hurst exponent / mean-reversion half-life / entropy) and history for a
+        ticker.
+      operationId: PublicApi.VolatilityController.character
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Volatility Character
+      tags:
+        - volatility
+  /api/stock/{ticker}/volatility/option-sentiment:
+    get:
+      callbacks: {}
+      description: |
+        Per-ticker options positioning sentiment (and recent history): VWKS (volume-weighted strike-spot
+        "center of volume mass") and AVAR (call vs put IV asymmetry), blended into a bullish/bearish score.
+        Positive = bullish positioning (volume above spot, calls bid up); negative = bearish.
+      operationId: PublicApi.VolatilityController.option_sentiment
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Options Positioning Sentiment
+      tags:
+        - volatility
+  /api/stock/{ticker}/volatility/realized:
+    get:
+      callbacks: {}
+      description: |
+        Returns implied and realized volatility history for a ticker. `days` selects the realized volatility
+        horizon in trading days. Each realized horizon uses its mapped implied volatility horizon. The default
+        is 21 trading days of realized volatility paired with 30 calendar days of implied volatility.
+
+        A row's `date` is the implied volatility observation date. `unshifted_rv_date` is the date when the
+        realized volatility window ends. Recent rows can have a `null` realized value until that window ends.
+      operationId: PublicApi.TickerController.realized_volatility
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: timeframe
+          required: false
+          schema:
+            $ref: '#/components/schemas/Time_frame'
+        - description: ''
+          in: query
+          name: days
+          required: false
+          schema:
+            $ref: '#/components/schemas/RealizedVolatilityDays'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Realized_Volatility'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Realized Volatility
+      tags:
+        - stock
+  /api/stock/{ticker}/volatility/realized/windows:
+    get:
+      callbacks: {}
+      description: |
+        Returns every realized volatility horizon with a completion date in the requested calendar lookback.
+        `history_days` defaults to 365 and cannot exceed 365. Rows are ordered by completion date from newest to oldest.
+      operationId: PublicApi.VolatilityController.realized_volatility_windows
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: history_days
+          required: false
+          schema:
+            $ref: '#/components/schemas/VolatilityWindowHistoryDays'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Realized_Volatility_Window'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Realized Volatility Windows
+      tags:
+        - volatility
+  /api/stock/{ticker}/volatility/stats:
+    get:
+      callbacks: {}
+      description: |
+        Returns comprehensive volatility statistics for a ticker on a specific date, including
+        implied volatility data, realized volatility data, and their respective high/low values
+        for the past year.
+      operationId: PublicApi.TickerController.volatility_stats
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Statistics'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Volatility Statistics
+      tags:
+        - stock
+  /api/stock/{ticker}/volatility/term-structure:
+    get:
+      callbacks: {}
+      description: |
+        The average of the latest volatilities for the at the money call and put contracts for every expiry date.
+      operationId: PublicApi.TickerController.implied_volatility_term_structure
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Implied_Volatility_Term_Structure'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Implied Volatility Term Structure
+      tags:
+        - stock
+  /api/stock/{ticker}/volatility/term-structure/distribution:
+    get:
+      callbacks: {}
+      description: |
+        Returns one row per expiry with the range of that expiry's at the money implied volatility over the
+        365 calendar days ending on `date`. Each row holds the minimum, first quartile, median, third quartile
+        and maximum of the daily values, the value on `date`, and the share of daily values at or below it.
+
+        The response covers expiries after `date` and at most 365 days after it. An expiry without a value on
+        `date` is omitted. Expiries listed recently have few daily values, so check `samples` before comparing
+        ranges. Rows are ordered by expiry from nearest to furthest. `date` defaults to the last trading day.
+      operationId: PublicApi.VolatilityController.term_structure_distribution
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Implied_Volatility_Term_Structure_Distribution'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Implied Volatility Term Structure Distribution
+      tags:
+        - volatility
+  /api/stock/{ticker}/volatility/variance-risk-premium:
+    get:
+      callbacks: {}
+      description: |
+        Returns variance risk premium history for a ticker. `days` selects the realized volatility horizon in
+        trading days. The default is 21 trading days paired with 30 calendar days of implied volatility.
+      operationId: PublicApi.VolatilityController.variance_risk_premium
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: days
+          required: false
+          schema:
+            $ref: '#/components/schemas/RealizedVolatilityDays'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Variance_Risk_Premium_Window'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Variance Risk Premium
+      tags:
+        - volatility
+  /api/stock/{ticker}/volatility/variance-risk-premium/windows:
+    get:
+      callbacks: {}
+      description: |
+        Returns every variance risk premium horizon with an implied volatility observation date in the requested
+        calendar lookback. `history_days` defaults to 365 and cannot exceed 365. Rows are ordered by observation
+        date from newest to oldest. Each row includes the realized volatility completion date.
+      operationId: PublicApi.VolatilityController.variance_risk_premium_windows
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: history_days
+          required: false
+          schema:
+            $ref: '#/components/schemas/VolatilityWindowHistoryDays'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Variance_Risk_Premium_Window'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Variance Risk Premium Windows
+      tags:
+        - volatility
+  /api/volatility/anomaly/top:
+    get:
+      callbacks: {}
+      description: |
+        Screener of the top volatility anomalies on a date, by `direction` (`short_vol` or `long_vol`).
+        Supports the same filters as the website screener.
+
+        This is a point-in-time screen queryable by date and includes the full component fields. History is
+        limited to roughly the last three to four weeks.
+      operationId: PublicApi.VolatilityController.anomaly_top
+      parameters:
+        - description: '`short_vol` or `long_vol`.'
+          example: short_vol
+          in: query
+          name: direction
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Max rows (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Top Volatility Anomalies
+      tags:
+        - volatility
+  /api/volatility/character/top:
+    get:
+      callbacks: {}
+      description: |
+        Screener of tickers by volatility character (mean-reverting / persistent / moderate) on a date.
+
+        This is a point-in-time screen queryable by date and includes the full component fields. History is
+        limited to roughly the last three to four weeks.
+      operationId: PublicApi.VolatilityController.character_top
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Max rows (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: '`half_life` (default), `hurst`, or `neg_entropy`.'
+          in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+        - description: '`asc` (default) or `desc`.'
+          in: query
+          name: dir
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Top Volatility Character
+      tags:
+        - volatility
+  /api/volatility/option-sentiment/top:
+    get:
+      callbacks: {}
+      description: |
+        Screener of the most bullish/bearish tickers by options positioning (VWKS + AVAR) on a date.
+        Optional `direction` (`bullish`, `bearish`, `neutral`) and filters (`min_score`/`max_score`,
+        `min_vwks`/`max_vwks`, `min_avar`/`max_avar`, `min_sample_size`, `ticker_search`). Falls back to
+        the latest computed date on/before `date`.
+      operationId: PublicApi.VolatilityController.option_sentiment_top
+      parameters:
+        - description: '`bullish`, `bearish`, or `neutral`.'
+          in: query
+          name: direction
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Max rows (default 50, max 200).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Top Options Positioning Sentiment
+      tags:
+        - volatility
+  /api/volatility/vix-term-structure:
+    get:
+      callbacks: {}
+      description: |
+        The latest VIX futures term structure plus history. Requires the `volatility` API add-on.
+      operationId: PublicApi.VolatilityController.vix_term_structure
+      parameters:
+        - description: Days of history (default 90, max 365).
+          in: query
+          name: history_days
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volatility_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: VIX Term Structure
+      tags:
+        - volatility
+security:
+  - authorization: []
+servers:
+  - url: https://api.unusualwhales.com
+    variables: {}
+tags: []

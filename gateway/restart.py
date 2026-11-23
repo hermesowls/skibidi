@@ -44,7 +44,7 @@ DEFAULT_GATEWAY_RESTART_DRAIN_TIMEOUT = float(
     DEFAULT_CONFIG["agent"]["restart_drain_timeout"]
 )
 DEFAULT_GATEWAY_SIGNAL_INTERRUPT_GRACE_TIMEOUT = float(
-    DEFAULT_CONFIG["gateway"]["signal_interrupt_grace_timeout"]
+    DEFAULT_CONFIG.get("gateway", {}).get("signal_interrupt_grace_timeout", 1)
 )
 DEFAULT_GATEWAY_POST_INTERRUPT_GRACE_TIMEOUT = 5.0
 

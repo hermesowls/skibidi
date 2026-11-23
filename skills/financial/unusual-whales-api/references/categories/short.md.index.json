@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/short.md",
+  "parts": [
+    "references/categories/short.md.part000",
+    "references/categories/short.md.part001"
+  ],
+  "sha256": "5e1cfc5b29525ff61819711b9bc98f7ee20bb6fdcc8a1e943f636ab37e53aba0",
+  "bytes": 107227,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

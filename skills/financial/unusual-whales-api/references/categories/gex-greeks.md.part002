@@ -1,0 +1,1330 @@
+about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Spot GEX exposures by strike & expiry",
+    "tags": [
+      "Gex/Greeks"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/spot-exposures/strike
+
+Spot GEX exposures by strike
+
+Returns the most recent spot GEX exposures across all strikes for the given ticker on a given date. Calculated either with open interest or with volume.
+
+Spot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.
+
+Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+If a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.
+
+Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+In the case of directionalized volume, the bid/ask spread is used when calculating the exposures. When a trade is made closer to the ask, the Market Maker would be selling the contract and when a trade is closer to the bid then the Market Maker would be buying the contract.
+
+For example, the gamma exposure for directional volume is call_gamma_ask, and the value will be negative since a trade made at the ask means the market makers are selling/short the call.
+
+To get the full directionalized exposure, just sum up the call ask, call bid, put ask and put bid of a greek and strike.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/spot-exposures/strike",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/spot-exposures/strike",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the most recent spot GEX exposures across all strikes for the given ticker on a given date. Calculated either with open interest or with volume.\n\nSpot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.\n\nInvestors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.\n\nGEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.\n\nIf a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.\n\nMarket makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).\n\nLong call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.\n\nShort put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.\n\nAs such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.\n\nIn the case of directionalized volume, the bid/ask spread is used when calculating the exposures. When a trade is made closer to the ask, the Market Maker would be selling the contract and when a trade is closer to the bid then the Market Maker would be buying the contract.\n\nFor example, the gamma exposure for directional volume is call_gamma_ask, and the value will be negative since a trade made at the ask means the market makers are selling/short the call.\n\nTo get the full directionalized exposure, just sum up the call ask, call bid, put ask and put bid of a greek and strike.\n",
+    "operationId": "PublicApi.TickerController.spot_exposures_by_strike",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "date",
+        "required": false,
+        "schema": {
+          "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+          "example": "2024-01-18",
+          "title": "Optional Market Date",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "min_strike",
+        "required": false,
+        "schema": {
+          "description": "The minimum strike. Min: 0.",
+          "example": 120.5,
+          "minimum": 0,
+          "title": "Min Strike",
+          "type": "number"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "max_strike",
+        "required": false,
+        "schema": {
+          "description": "The maximum strike. Min: 0.",
+          "example": 1200,
+          "minimum": 0,
+          "title": "Max Strike",
+          "type": "number"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "default": 500,
+          "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+          "example": 10,
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Default 500 Max 500 Min 1",
+          "type": "integer"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "page",
+        "required": false,
+        "schema": {
+          "description": "Page number (use with limit). Starts on page 0.",
+          "example": 1,
+          "title": "Page",
+          "type": "integer"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "",
+              "example": {
+                "data": [
+                  {
+                    "call_charm_ask": "2582359253.61",
+                    "call_charm_bid": "5820636.43",
+                    "call_charm_oi": "70827151575067.12",
+                    "call_charm_vol": "70827151575067.12",
+                    "call_delta_ask": "23452351.20",
+                    "call_delta_bid": "30499234235.52",
+                    "call_delta_oi": "227549667.4651",
+                    "call_delta_vol": "227549667.4651",
+                    "call_gamma_ask": "23452351.20",
+                    "call_gamma_bid": "30499234235.52",
+                    "call_gamma_oi": "5124108502049.17",
+                    "call_gamma_vol": "5124108502049.17",
+                    "call_vanna_ask": "22692351.20",
+                    "call_vanna_bid": "234235.52",
+                    "call_vanna_oi": "65476967081.41",
+                    "call_vanna_vol": "65476967081.41",
+                    "price": "4650",
+                    "put_charm_ask": "96836366.22",
+                    "put_charm_bid": "6100352354.34",
+                    "put_charm_oi": "2282895170748.09",
+                    "put_charm_vol": "2282895170748.09",
+                    "put_delta_ask": "9528523023.39",
+                    "put_delta_bid": "9342852354.34",
+                    "put_delta_oi": "-191893077.7193",
+                    "put_delta_vol": "-191893077.7193",
+                    "put_gamma_ask": "9528523023.39",
+                    "put_gamma_bid": "9342852354.34",
+                    "put_gamma_oi": "320909908341.10",
+                    "put_gamma_vol": "320909908341.10",
+                    "put_vanna_ask": "495803.39",
+                    "put_vanna_bid": "26934630.34",
+                    "put_vanna_oi": "12921519098.30",
+                    "put_vanna_vol": "12921519098.30",
+                    "time": "2023-12-13 05:00:41.481000+00:00"
+                  }
+                ]
+              },
+              "properties": {
+                "call_charm_ask": {
+                  "description": "The call charm exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_charm_bid": {
+                  "description": "The call charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_charm_oi": {
+                  "description": "The sum of the spot charm exposure values of all call transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Exposure",
+                  "type": "string"
+                },
+                "call_charm_vol": {
+                  "description": "The sum of the spot charm exposure values of all call transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Exposure",
+                  "type": "string"
+                },
+                "call_delta_ask": {
+                  "description": "The call delta exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_delta_bid": {
+                  "description": "The call delta exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_delta_oi": {
+                  "description": "The sum of the spot delta exposure values of all call transactions at a given strike.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Exposure",
+                  "type": "string"
+                },
+                "call_delta_vol": {
+                  "description": "The sum of the spot delta exposure values of all call transactions at a given strike.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Exposure",
+                  "type": "string"
+                },
+                "call_gamma_ask": {
+                  "description": "The call gamma exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "-102382359.5786",
+                  "title": "Spot Call Gamma Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_gamma_bid": {
+                  "description": "The call gamma exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Gamma Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_gamma_oi": {
+                  "description": "The sum of the spot gamma exposure values of all call transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Call Gamma Exposure",
+                  "type": "string"
+                },
+                "call_gamma_vol": {
+                  "description": "The sum of the spot gamma exposure values of all call transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Call Gamma Exposure",
+                  "type": "string"
+                },
+                "call_vanna_ask": {
+                  "description": "The call vanna exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Call Vanna Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_vanna_bid": {
+                  "description": "The call vanna exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Vanna Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_vanna_oi": {
+                  "description": "The sum of the spot vanna exposure values of all call transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Call Vanna Exposure",
+                  "type": "string"
+                },
+                "call_vanna_vol": {
+                  "description": "The sum of the spot vanna exposure values of all call transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Call Vanna Exposure",
+                  "type": "string"
+                },
+                "price": {
+                  "description": "The underlying price used in calculations.\nNOTE: For any index ticker this will be the current ATM strike.\n",
+                  "example": "4650",
+                  "title": "Gex Underlying Price",
+                  "type": "string"
+                },
+                "put_charm_ask": {
+                  "description": "The put charm exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_charm_bid": {
+                  "description": "The put charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_charm_oi": {
+                  "description": "The sum of the spot charm exposure values of all put transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Exposure",
+                  "type": "string"
+                },
+                "put_charm_vol": {
+                  "description": "The sum of the spot charm exposure values of all put transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Exposure",
+                  "type": "string"
+                },
+                "put_delta_ask": {
+                  "description": "The put delta exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_delta_bid": {
+                  "description": "The put delta exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_delta_oi": {
+                  "description": "The sum of the spot delta exposure values of all put transactions at a given strike.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Exposure",
+                  "type": "string"
+                },
+                "put_delta_vol": {
+                  "description": "The sum of the spot delta exposure values of all put transactions at a given strike.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Exposure",
+                  "type": "string"
+                },
+                "put_gamma_ask": {
+                  "description": "The put gamma exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "-102382359.5786",
+                  "title": "Spot Put Gamma Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_gamma_bid": {
+                  "description": "The put gamma exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Gamma Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_gamma_oi": {
+                  "description": "The sum of the spot gamma exposure values of all put transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Put Gamma Exposure",
+                  "type": "string"
+                },
+                "put_gamma_vol": {
+                  "description": "The sum of the spot gamma exposure values of all put transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Put Gamma Exposure",
+                  "type": "string"
+                },
+                "put_vanna_ask": {
+                  "description": "The put vanna exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Vanna Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_vanna_bid": {
+                  "description": "The put charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_vanna_oi": {
+                  "description": "The sum of the spot vanna exposure values of all put transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Put Vanna Exposure",
+                  "type": "string"
+                },
+                "put_vanna_vol": {
+                  "description": "The sum of the spot vanna exposure values of all put transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Put Vanna Exposure",
+                  "type": "string"
+                },
+                "strike": {
+                  "description": "The strike price of an option contract.",
+                  "example": "150.0",
+                  "title": "Strike",
+                  "type": "string"
+                },
+                "time": {
+                  "description": "The UTC timestamp of the calculation",
+                  "example": "2023-12-13 05:00:41.481000+00:00",
+                  "title": "Gex Calculation Time",
+                  "type": "string"
+                }
+              },
+              "title": "Spot greek exposures by strike",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Spot GEX exposures by strike",
+    "tags": [
+      "Gex/Greeks"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/spot-exposures/{expiry}/strike
+
+Spot GEX exposures by strike & expiry (Deprecated)
+
+This endpoint has been deprecated and will be removed, please migrate to the new [endpoint](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry_v2)
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/spot-exposures/{expiry}/strike",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/spot-exposures/{expiry}/strike",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "This endpoint has been deprecated and will be removed, please migrate to the new [endpoint](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry_v2)\n",
+    "operationId": "PublicApi.TickerController.spot_exposures_by_strike_expiry",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "path",
+        "name": "expiry",
+        "required": true,
+        "schema": {
+          "description": "A single expiry date in ISO date format.",
+          "example": "2024-02-02",
+          "title": "Single expiry date",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "date",
+        "required": false,
+        "schema": {
+          "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+          "example": "2024-01-18",
+          "title": "Optional Market Date",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "min_strike",
+        "required": false,
+        "schema": {
+          "description": "The minimum strike. Min: 0.",
+          "example": 120.5,
+          "minimum": 0,
+          "title": "Min Strike",
+          "type": "number"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "max_strike",
+        "required": false,
+        "schema": {
+          "description": "The maximum strike. Min: 0.",
+          "example": 1200,
+          "minimum": 0,
+          "title": "Max Strike",
+          "type": "number"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "",
+              "example": {
+                "data": [
+                  {
+                    "call_charm_ask": "2582359253.61",
+                    "call_charm_bid": "5820636.43",
+                    "call_charm_oi": "70827151575067.12",
+                    "call_charm_vol": "70827151575067.12",
+                    "call_delta_ask": "23452351.20",
+                    "call_delta_bid": "30499234235.52",
+                    "call_delta_oi": "227549667.4651",
+                    "call_delta_vol": "227549667.4651",
+                    "call_gamma_ask": "23452351.20",
+                    "call_gamma_bid": "30499234235.52",
+                    "call_gamma_oi": "5124108502049.17",
+                    "call_gamma_vol": "5124108502049.17",
+                    "call_vanna_ask": "22692351.20",
+                    "call_vanna_bid": "234235.52",
+                    "call_vanna_oi": "65476967081.41",
+                    "call_vanna_vol": "65476967081.41",
+                    "price": "4650",
+                    "put_charm_ask": "96836366.22",
+                    "put_charm_bid": "6100352354.34",
+                    "put_charm_oi": "2282895170748.09",
+                    "put_charm_vol": "2282895170748.09",
+                    "put_delta_ask": "9528523023.39",
+                    "put_delta_bid": "9342852354.34",
+                    "put_delta_oi": "-191893077.7193",
+                    "put_delta_vol": "-191893077.7193",
+                    "put_gamma_ask": "9528523023.39",
+                    "put_gamma_bid": "9342852354.34",
+                    "put_gamma_oi": "320909908341.10",
+                    "put_gamma_vol": "320909908341.10",
+                    "put_vanna_ask": "495803.39",
+                    "put_vanna_bid": "26934630.34",
+                    "put_vanna_oi": "12921519098.30",
+                    "put_vanna_vol": "12921519098.30",
+                    "time": "2023-12-13 05:00:41.481000+00:00"
+                  }
+                ]
+              },
+              "properties": {
+                "call_charm_ask": {
+                  "description": "The call charm exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_charm_bid": {
+                  "description": "The call charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_charm_oi": {
+                  "description": "The sum of the spot charm exposure values of all call transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Exposure",
+                  "type": "string"
+                },
+                "call_charm_vol": {
+                  "description": "The sum of the spot charm exposure values of all call transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Charm Exposure",
+                  "type": "string"
+                },
+                "call_delta_ask": {
+                  "description": "The call delta exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_delta_bid": {
+                  "description": "The call delta exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_delta_oi": {
+                  "description": "The sum of the spot delta exposure values of all call transactions at a given strike.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Exposure",
+                  "type": "string"
+                },
+                "call_delta_vol": {
+                  "description": "The sum of the spot delta exposure values of all call transactions at a given strike.",
+                  "example": "227549667.4651",
+                  "title": "Spot Call Delta Exposure",
+                  "type": "string"
+                },
+                "call_gamma_ask": {
+                  "description": "The call gamma exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "-102382359.5786",
+                  "title": "Spot Call Gamma Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_gamma_bid": {
+                  "description": "The call gamma exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Gamma Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_gamma_oi": {
+                  "description": "The sum of the spot gamma exposure values of all call transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Call Gamma Exposure",
+                  "type": "string"
+                },
+                "call_gamma_vol": {
+                  "description": "The sum of the spot gamma exposure values of all call transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Call Gamma Exposure",
+                  "type": "string"
+                },
+                "call_vanna_ask": {
+                  "description": "The call vanna exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Call Vanna Ask Side Exposure",
+                  "type": "string"
+                },
+                "call_vanna_bid": {
+                  "description": "The call vanna exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Call Vanna Bid Side Exposure",
+                  "type": "string"
+                },
+                "call_vanna_oi": {
+                  "description": "The sum of the spot vanna exposure values of all call transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Call Vanna Exposure",
+                  "type": "string"
+                },
+                "call_vanna_vol": {
+                  "description": "The sum of the spot vanna exposure values of all call transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Call Vanna Exposure",
+                  "type": "string"
+                },
+                "price": {
+                  "description": "The underlying price used in calculations.\nNOTE: For any index ticker this will be the current ATM strike.\n",
+                  "example": "4650",
+                  "title": "Gex Underlying Price",
+                  "type": "string"
+                },
+                "put_charm_ask": {
+                  "description": "The put charm exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_charm_bid": {
+                  "description": "The put charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_charm_oi": {
+                  "description": "The sum of the spot charm exposure values of all put transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Exposure",
+                  "type": "string"
+                },
+                "put_charm_vol": {
+                  "description": "The sum of the spot charm exposure values of all put transactions at a given strike.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Exposure",
+                  "type": "string"
+                },
+                "put_delta_ask": {
+                  "description": "The put delta exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_delta_bid": {
+                  "description": "The put delta exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_delta_oi": {
+                  "description": "The sum of the spot delta exposure values of all put transactions at a given strike.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Exposure",
+                  "type": "string"
+                },
+                "put_delta_vol": {
+                  "description": "The sum of the spot delta exposure values of all put transactions at a given strike.",
+                  "example": "-191893077.7193",
+                  "title": "Spot Put Delta Exposure",
+                  "type": "string"
+                },
+                "put_gamma_ask": {
+                  "description": "The put gamma exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "-102382359.5786",
+                  "title": "Spot Put Gamma Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_gamma_bid": {
+                  "description": "The put gamma exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Gamma Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_gamma_oi": {
+                  "description": "The sum of the spot gamma exposure values of all put transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Put Gamma Exposure",
+                  "type": "string"
+                },
+                "put_gamma_vol": {
+                  "description": "The sum of the spot gamma exposure values of all put transactions at a given strike.",
+                  "example": "9356683.4241",
+                  "title": "Spot Put Gamma Exposure",
+                  "type": "string"
+                },
+                "put_vanna_ask": {
+                  "description": "The put vanna exposure when Market Makers are selling contracts when a transactions is closer to the ask side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Vanna Ask Side Exposure",
+                  "type": "string"
+                },
+                "put_vanna_bid": {
+                  "description": "The put charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.",
+                  "example": "102382359.5786",
+                  "title": "Spot Put Charm Bid Side Exposure",
+                  "type": "string"
+                },
+                "put_vanna_oi": {
+                  "description": "The sum of the spot vanna exposure values of all put transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Put Vanna Exposure",
+                  "type": "string"
+                },
+                "put_vanna_vol": {
+                  "description": "The sum of the spot vanna exposure values of all put transactions at a given strike.",
+                  "example": "152099632406.9564",
+                  "title": "Spot Put Vanna Exposure",
+                  "type": "string"
+                },
+                "strike": {
+                  "description": "The strike price of an option contract.",
+                  "example": "150.0",
+                  "title": "Strike",
+                  "type": "string"
+                },
+                "time": {
+                  "description": "The UTC timestamp of the calculation",
+                  "example": "2023-12-13 05:00:41.481000+00:00",
+                  "title": "Gex Calculation Time",
+                  "type": "string"
+                }
+              },
+              "title": "Spot greek exposures by strike",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Spot GEX exposures by strike & expiry (Deprecated)",
+    "tags": [
+      "Gex/Greeks"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```

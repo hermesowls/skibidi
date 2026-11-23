@@ -1,0 +1,1427 @@
+escription": "Earnings announcement timing, such as premarket, postmarket, or unknown.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "etf_share_flow": {
+                        "description": "Signed change in an ETF's share count for the source observation date. Positive values indicate inflow and negative values indicate outflow.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "five_year_close": {
+                        "description": "Reference price for five_year_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "five_year_perc": {
+                        "description": "Fractional price return from the latest regular close on or before five calendar years earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "full_name": {
+                        "description": "Company or security display name.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_charm_per_one_percent_move_dir": {
+                        "description": "Sum of charm weighted by directional session volume. Ask-side volume is negative and bid-side volume is positive. Mid-side volume is excluded. Multiplied by the underlying price and 365.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_charm_per_one_percent_move_oi": {
+                        "description": "Sum of charm weighted by open interest. Put charm is negated. Multiplied by the underlying price and 365.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_charm_per_one_percent_move_vol": {
+                        "description": "Sum of charm weighted by session option volume. Put charm is negated. Multiplied by the underlying price and 365.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_call_charm": {
+                        "description": "Daily call charm exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_call_delta": {
+                        "description": "Daily call delta exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_call_gex": {
+                        "description": "Daily call gamma exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_call_vanna": {
+                        "description": "Daily call vanna exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_net_charm": {
+                        "description": "Daily net charm exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_net_delta": {
+                        "description": "Daily net delta exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_net_gex": {
+                        "description": "Daily net gamma exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_net_vanna": {
+                        "description": "Daily net vanna exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_put_charm": {
+                        "description": "Daily put charm exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_put_delta": {
+                        "description": "Daily put delta exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_put_gex": {
+                        "description": "Daily put gamma exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_daily_put_vanna": {
+                        "description": "Daily put vanna exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_delta_per_one_percent_move_oi": {
+                        "description": "Sum of delta weighted by open interest. Delta retains its source sign for calls and puts. Multiplied by the underlying price squared.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_delta_per_one_percent_move_vol": {
+                        "description": "Sum of delta weighted by session option volume. Delta retains its source sign for calls and puts. Multiplied by the underlying price squared.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_gamma_per_one_percent_move_dir": {
+                        "description": "Sum of gamma weighted by directional session volume. Ask-side volume is negative and bid-side volume is positive. Mid-side volume is excluded. Multiplied by the underlying price squared.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_gamma_per_one_percent_move_oi": {
+                        "description": "Sum of gamma weighted by open interest. Put gamma is negated. Multiplied by the underlying price squared.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_gamma_per_one_percent_move_vol": {
+                        "description": "Sum of gamma weighted by session option volume. Put gamma is negated. Multiplied by the underlying price squared.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_net_change": {
+                        "description": "Current daily net gamma minus the previous trading-date value. Null unless both values are available. Intraday exposure updates do not recalculate this comparison.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_perc_change": {
+                        "description": "Fractional daily net gamma change: (current - previous) / previous. Null when the previous value is zero or either value is missing. Intraday exposure updates do not recalculate this comparison.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_ratio": {
+                        "description": "Absolute daily put gamma divided by daily call gamma. Null when either side is missing or call gamma is zero. Intraday exposure updates do not recalculate this ratio.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_vanna_per_one_percent_move_dir": {
+                        "description": "Sum of vanna weighted by directional session volume. Ask-side volume is negative and bid-side volume is positive. Mid-side volume is excluded. Multiplied by same-date 30-day implied volatility and the underlying price. Zero when same-date implied volatility is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_vanna_per_one_percent_move_oi": {
+                        "description": "Sum of vanna weighted by open interest. Put vanna is negated. Multiplied by same-date 30-day implied volatility and the underlying price. Zero when same-date implied volatility is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "gex_vanna_per_one_percent_move_vol": {
+                        "description": "Sum of vanna weighted by session option volume. Put vanna is negated. Multiplied by same-date 30-day implied volatility and the underlying price. Zero when same-date implied volatility is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "has_options": {
+                        "description": "Whether the security has listed equity options.",
+                        "nullable": true,
+                        "type": "boolean"
+                      },
+                      "high": {
+                        "description": "Highest price in the latest accepted trading session, in the instrument's quoted price units. May be null when index-price access rules hide prices.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move": {
+                        "description": "Expected absolute move for the 30-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_1": {
+                        "description": "Expected absolute move. Fixed 1-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_14": {
+                        "description": "Expected absolute move. Fixed 14-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_180": {
+                        "description": "Expected absolute move. Fixed 180-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_30": {
+                        "description": "Expected absolute move. Fixed 30-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_365": {
+                        "description": "Expected absolute move. Fixed 365-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_5": {
+                        "description": "Expected absolute move. Fixed 5-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_60": {
+                        "description": "Expected absolute move. Fixed 60-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_7": {
+                        "description": "Expected absolute move. Fixed 7-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_90": {
+                        "description": "Expected absolute move. Fixed 90-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc": {
+                        "description": "Expected 30-calendar-day move as a fraction of the underlying price. A value of 0.05 means 5 percent.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_1": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 1-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_14": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 14-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_180": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 180-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_30": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 30-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_365": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 365-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_5": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 5-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_60": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 60-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_7": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 7-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "implied_move_perc_90": {
+                        "description": "Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 90-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "industry_type": {
+                        "description": "Company industry label.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "insider_buy_volume_12m": {
+                        "description": "Insider buy share-volume aggregate for the trailing 12 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "insider_buy_volume_3m": {
+                        "description": "Insider buy share-volume aggregate for the trailing 3 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "insider_buy_volume_6m": {
+                        "description": "Insider buy share-volume aggregate for the trailing 6 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "insider_sell_volume_12m": {
+                        "description": "Insider sell share-volume aggregate for the trailing 12 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "insider_sell_volume_3m": {
+                        "description": "Insider sell share-volume aggregate for the trailing 3 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "insider_sell_volume_6m": {
+                        "description": "Insider sell share-volume aggregate for the trailing 6 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "intraday_change": {
+                        "description": "Fractional session price change: (close - open) / open. A value of 0.05 means 5 percent. Null when open is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "is_index": {
+                        "description": "Whether the returned issue_type is Index. False when issue_type is absent or null.",
+                        "type": "boolean"
+                      },
+                      "issue_type": {
+                        "description": "Security issue type, such as Common Stock, ETF, or Index.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv30d": {
+                        "description": "Alias of the current 30-calendar-day implied volatility.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv30d_1d": {
+                        "description": "Thirty-day implied volatility from exactly the previous trading date. Null when that date's value is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv30d_1m": {
+                        "description": "Thirty-day implied volatility from exactly 21 trading dates before the row's date. Null when that date's value is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv30d_1w": {
+                        "description": "Thirty-day implied volatility from exactly five trading dates before the row's date. Null when that date's value is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv_percentile_1m": {
+                        "description": "Percent rank of IV over observations later than 30 calendar days before the row's date, multiplied by 100. Tied values share a rank.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv_percentile_1y": {
+                        "description": "Percent rank of IV over observations later than one calendar year before the row's date, multiplied by 100. Tied values share a rank.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv_rank": {
+                        "description": "One-year IV rank: 100 * (current - minimum) / (maximum - minimum), using observations later than one calendar year before the row's date. Null when maximum equals minimum or source data is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "iv_rank_1m": {
+                        "description": "IV rank over observations later than 30 calendar days before the row's date: 100 * (current - minimum) / (maximum - minimum). Null when maximum equals minimum or source data is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "last_earnings_date": {
+                        "description": "Latest known earnings report date. Format: YYYY-MM-DD.",
+                        "format": "date",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "last_earnings_price": {
+                        "description": "Reference price for earnings_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "latest_dividend": {
+                        "description": "Split-adjusted dividend per share from the latest selected dividend record.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "latest_dividend_date": {
+                        "description": "Ex-dividend date of the latest selected dividend record. Format: YYYY-MM-DD.",
+                        "format": "date",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "latest_dividend_payment_date": {
+                        "description": "Payment date of the latest selected dividend record. Format: YYYY-MM-DD.",
+                        "format": "date",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "low": {
+                        "description": "Lowest price in the latest accepted trading session, in the instrument's quoted price units. May be null when index-price access rules hide prices.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "macd_12_26_9": {
+                        "description": "MACD line with fast period 12, slow period 26 and signal period 9. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "macd_12_26_9_histogram": {
+                        "description": "Histogram of MACD configured with periods 12, 26 and 9. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "macd_12_26_9_signal": {
+                        "description": "Signal line of MACD configured with periods 12, 26 and 9. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "marketcap": {
+                        "description": "Shares outstanding multiplied by the latest accepted stock price, rounded to whole dollars. Uses the stored company market value when shares or price are unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "mfi_14": {
+                        "description": "Money flow index over 14 periods using price and volume, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "missing_periscope": {
+                        "description": "Present and true when index-price access rules hide the returned price fields.",
+                        "type": "boolean"
+                      },
+                      "net_call_premium": {
+                        "description": "Call ask-side premium minus bid-side premium, in US dollars. Each contributing trade is capped at 2,000,000 dollars before aggregation.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "net_premium": {
+                        "description": "Net call premium minus net put premium, in US dollars. Null when either input is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "net_put_premium": {
+                        "description": "Put ask-side premium minus bid-side premium, in US dollars. Each contributing trade is capped at 2,000,000 dollars before aggregation.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "next_dividend_date": {
+                        "description": "Next scheduled ex-dividend date. Format: YYYY-MM-DD.",
+                        "format": "date",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "next_earnings_date": {
+                        "description": "Next scheduled earnings date. Format: YYYY-MM-DD.",
+                        "format": "date",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "obv": {
+                        "description": "On balance volume, a cumulative signed volume measure in shares. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "one_day_perc": {
+                        "description": "Fractional price return from the previous trading session's regular close, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "one_month_close": {
+                        "description": "Reference price for one_month_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "one_month_perc": {
+                        "description": "Fractional price return from the latest regular close on or before one calendar month earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "one_week_close": {
+                        "description": "Reference price for one_week_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "one_week_perc": {
+                        "description": "Fractional price return from the latest regular close on or before seven calendar days earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "one_year_close": {
+                        "description": "Reference price for one_year_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "one_year_perc": {
+                        "description": "Fractional price return from the latest regular close on or before one calendar year earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "open": {
+                        "description": "Opening price of the latest accepted trading session, in the instrument's quoted price units.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "prev_call_oi": {
+                        "description": "Call open interest from the previous trading-date state.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "prev_call_volume": {
+                        "description": "Call contract volume from the prior available option-flow state.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "prev_close": {
+                        "description": "Regular-session close from the prior available screener state, in the instrument's quoted price units.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "prev_put_oi": {
+                        "description": "Put open interest from the previous trading-date state.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "prev_put_volume": {
+                        "description": "Put contract volume from the prior available option-flow state.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "put_call_ratio": {
+                        "description": "Put contract volume divided by call contract volume. Null when call volume is zero.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "put_open_interest": {
+                        "description": "Put option open interest for the represented trading date.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "put_premium": {
+                        "description": "Total put option premium in US dollars on the row's date.",
+                        "nullable": false,
+                        "type": "string"
+                      },
+                      "put_premium_mid_side": {
+                        "description": "put premium in US dollars classified between the bid and ask.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "put_volume": {
+                        "description": "Put option contracts traded on the row's date.",
+                        "format": "int64",
+                        "nullable": false,
+                        "type": "integer"
+                      },
+                      "put_volume_ask_side": {
+                        "description": "put option contracts classified on the ask side.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "put_volume_bid_side": {
+                        "description": "put option contracts classified on the bid side.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "put_volume_mid_side": {
+                        "description": "put option contracts classified on the mid side.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "quote_time": {
+                        "description": "Quote source time as a Unix timestamp in milliseconds. Null for historical snapshots.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "realized_volatility": {
+                        "description": "Annualized sample standard deviation of daily log returns from 20 market opens before the row's date through that date. Calculated as stddev(daily_log_returns) * sqrt(252), rounded to six decimal places.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "relative_volume": {
+                        "description": "Trading-date share volume divided by avg30_volume. A value of 1 equals the average. Null when the average is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "rsi_14": {
+                        "description": "Relative strength index of the close over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "rv_1d_last_12q": {
+                        "description": "Mean absolute one-day post-earnings return divided by the expected-move fraction over up to 12 preceding earnings reports. A value of 1 means the absolute move equaled the expected move on average.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "sector": {
+                        "description": "Company sector.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "shares_outstanding": {
+                        "description": "Latest available shares outstanding as a share count. Uses company metadata when the selected report has no value.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "shares_outstanding_growth_12q": {
+                        "description": "Fractional share-count growth: (current shares - shares 12 reports earlier) / abs(shares 12 reports earlier). Null when an input is missing or the comparison share count is zero.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "shares_outstanding_growth_4q": {
+                        "description": "Fractional share-count growth: (current shares - shares 4 reports earlier) / abs(shares 4 reports earlier). Null when an input is missing or the comparison share count is zero.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "shares_outstanding_growth_8q": {
+                        "description": "Fractional share-count growth: (current shares - shares 8 reports earlier) / abs(shares 8 reports earlier). Null when an input is missing or the comparison share count is zero.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "short_int": {
+                        "description": "Short interest as a fraction of public float. A value of 0.086 means 8.6 percent.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "six_month_close": {
+                        "description": "Reference price for six_month_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "six_month_perc": {
+                        "description": "Fractional price return from the latest regular close on or before six calendar months earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "sma_10": {
+                        "description": "Simple moving average of the close over 10 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "sma_14": {
+                        "description": "Simple moving average of the close over 14 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "sma_20": {
+                        "description": "Simple moving average of the close over 20 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "sma_200": {
+                        "description": "Simple moving average of the close over 200 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "sma_50": {
+                        "description": "Simple moving average of the close over 50 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "steepness_180_30": {
+                        "description": "volatility_180 divided by volatility_30. Null when an input is missing or volatility_30 is zero.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "stoch_5_3_3_d": {
+                        "description": "Slow D line of the stochastic oscillator with fast K period 5 and simple moving average smoothing periods 3 and 3, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "stoch_5_3_3_k": {
+                        "description": "Slow K line of the stochastic oscillator with fast K period 5 and simple moving average smoothing periods 3 and 3, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "stock_volume": {
+                        "description": "Cumulative shares traded across the New York trading date.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "three_month_close": {
+                        "description": "Reference price for three_month_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "three_month_perc": {
+                        "description": "Fractional price return from the latest regular close on or before three calendar months earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "ticker": {
+                        "description": "Ticker symbol.",
+                        "example": "AAPL",
+                        "type": "string"
+                      },
+                      "total_open_interest": {
+                        "description": "Total option open interest, normally the sum of call and put open interest.",
+                        "format": "int64",
+                        "nullable": true,
+                        "type": "integer"
+                      },
+                      "ttm_dividend": {
+                        "description": "Sum of split-adjusted dividends per share during the 12 months ending on the source snapshot's as-of date. That as-of date is not included in the response.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "variance_risk_premium": {
+                        "description": "Thirty-day implied volatility observed at the start of the realized-volatility window minus realized_volatility.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility": {
+                        "description": "Current 30-calendar-day implied volatility as a decimal value.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_1": {
+                        "description": "Implied volatility as a decimal value. Fixed 1-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_14": {
+                        "description": "Implied volatility as a decimal value. Fixed 14-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_180": {
+                        "description": "Implied volatility as a decimal value. Fixed 180-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_30": {
+                        "description": "Implied volatility as a decimal value. Fixed 30-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_365": {
+                        "description": "Implied volatility as a decimal value. Fixed 365-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_5": {
+                        "description": "Implied volatility as a decimal value. Fixed 5-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_60": {
+                        "description": "Implied volatility as a decimal value. Fixed 60-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_7": {
+                        "description": "Implied volatility as a decimal value. Fixed 7-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "volatility_90": {
+                        "description": "Implied volatility as a decimal value. Fixed 90-calendar-day horizon.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "week_52_high": {
+                        "description": "Maximum split-adjusted regular-session high over the preceding calendar year.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "week_52_low": {
+                        "description": "Minimum split-adjusted regular-session low over the preceding calendar year.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "willr_14": {
+                        "description": "Williams %R over 14 periods, from -100 to 0. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.",
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "ytd_close": {
+                        "description": "Reference price for ytd_perc. Null when the reference price is unavailable.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "ytd_perc": {
+                        "description": "Fractional price return from the latest regular close on or before January 1 of the row's year, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "z_score": {
+                        "description": "((close - prev_close) / prev_close) * sqrt(251) / volatility_30. Null when an input is missing or a denominator is zero.",
+                        "nullable": true,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "data"
+              ],
+              "title": "Stock Screener response",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Stock Screener",
+    "tags": [
+      "screener"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/screener/stocks/dsl
+
+Stock screener query language
+
+Returns an EBNF grammar, syntax notes, examples, function argument counts, supported fields, aliases, types, descriptions, keywords, operators, functions, scopes, and available watchlist names for the stock screener query parameter.
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/screener/stocks/dsl",
+  "method": "GET",
+  "path": "/api/screener/stocks/dsl",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns an EBNF grammar, syntax notes, examples, function argument counts, supported fields, aliases, types, descriptions, keywords, operators, functions, scopes, and available watchlist names for the stock screener query parameter.",
+    "operationId": "PublicApi.ScreenerController.stock_screener_query_help",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "fields": {
+                  "items": {
+                    "properties": {
+                      "aliases": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "description": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "kind": {
+                        "enum": [
+                          "number",
+                          "boolean",
+                          "symbol",
+                          "list",
+                          "keyword"
+                        ],
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "aliases",
+                      "kind",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "functions": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "keywords": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "operators": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "scopes": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "syntax": {
+                  "properties": {
+                    "examples": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "format": {
+                      "enum": [
+                        "EBNF"
+                      ],
+                      "type": "string"
+                    },
+                    "function_signatures": {
+                      "items": {
+                        "properties": {
+                          "max_args": {
+                            "description": "Null when there is no upper argument limit.",
+                            "nullable": true,
+                            "type": "integer"
+                          },
+                          "min_args": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "min_args",
+                          "max_args"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "grammar": {
+                      "description": "EBNF grammar for constructing stock screener queries.",
+                      "type": "string"
+                    },
+                    "notes": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "format",
+                    "grammar",
+                    "notes",
+                    "examples",
+                    "function_signatures"
+                  ],
+                  "type": "object"
+                },
+                "watchlists": {
+                  "description": "Empty for this endpoint. Personal watchlists are not forwarded to the screener.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "syntax",
+                "fields",
+                "keywords",
+                "operators",
+                "functions",
+                "scopes",
+                "watchlists"
+              ],
+              "title": "StockScreenerQueryHelp",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Stock screener query language",
+    "tags": [
+      "screener"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```

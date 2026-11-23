@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.hermes.owlfred</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/admin/repos/hermes-agent/venv/bin/python</string>
+        <string>/Users/admin/repos/hermes-agent/skills/financial/autonomous-trader/scripts/owlfred_supervisor.py</string>
+    </array>
+    
+    <key>WorkingDirectory</key>
+    <string>/Users/admin/repos/hermes-agent</string>
+    
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PYTHONPATH</key>
+        <string>/Users/admin/repos/hermes-agent:/Users/admin/repos/hermes-agent/skills/financial/autonomous-trader/scripts</string>
+    </dict>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <key>StandardOutPath</key>
+    <string>/Users/admin/.hermes/logs/owlfred_supervisor_stdout.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/Users/admin/.hermes/logs/owlfred_supervisor_stderr.log</string>
+</dict>
+</plist>

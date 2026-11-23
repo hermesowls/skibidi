@@ -1,0 +1,2523 @@
+nents/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Crypto Whale Transactions
+      tags:
+        - crypto
+  /api/crypto/whales/recent:
+    get:
+      callbacks: {}
+      description: |
+        Returns recent large crypto trades (whale trades) across all pairs.
+      operationId: PublicApi.CryptoController.whales_recent
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_Recent_Whales_Response'
+          description: Recent Crypto Whale Trades
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Recent Crypto Whale Trades
+      tags:
+        - crypto
+  /api/crypto/{pair}/ohlc/{candle_size}:
+    get:
+      callbacks: {}
+      description: |
+        Returns OHLC candle data for a crypto pair.
+        Available candle sizes: 1m, 5m, 10m, 15m, 30m, 1h, 4h, 1d, 1w
+      operationId: PublicApi.CryptoController.ohlc
+      parameters:
+        - description: ''
+          in: path
+          name: pair
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: path
+          name: candle_size
+          required: true
+          schema:
+            enum:
+              - 1m
+              - 5m
+              - 10m
+              - 15m
+              - 30m
+              - 1h
+              - 4h
+              - 1d
+              - 1w
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_OHLC_Response'
+          description: Crypto OHLC Candles
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Crypto OHLC Candles
+      tags:
+        - crypto
+  /api/crypto/{pair}/state:
+    get:
+      callbacks: {}
+      description: |
+        Returns the current state for a crypto pair including 24h OHLCV data.
+      operationId: PublicApi.CryptoController.state
+      parameters:
+        - description: ''
+          in: path
+          name: pair
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_Pair_State_Response'
+          description: Crypto Pair State
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Crypto Pair State
+      tags:
+        - crypto
+  /api/darkpool/recent:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest darkpool trades.
+
+        For real time streaming of darkpool trades, subscribe to the `off_lit_trades` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.off_lit_trades](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.off_lit_trades).
+      operationId: PublicApi.DarkpoolController.darkpool_recent
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinPremium'
+        - description: ''
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxPremium'
+        - description: ''
+          in: query
+          name: min_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinSize'
+        - description: ''
+          in: query
+          name: max_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxSize'
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinVol'
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxVol'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: order_by
+          required: false
+          schema:
+            $ref: '#/components/schemas/Darkpool_order_by_field'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Darkpool_Trade'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Recent Darkpool Trades
+      tags:
+        - darkpool
+  /api/darkpool/{ticker}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the darkpool trades for the given ticker on a given day.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+        For real time streaming of darkpool trades, subscribe to the `off_lit_trades` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.off_lit_trades](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.off_lit_trades).
+
+        `executed_at` is an ISO 8601 timestamp in UTC. `trf_executed_at` is the time the trade was reported to
+        the tape.
+      operationId: PublicApi.DarkpoolController.darkpool_ticker
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+        - description: ''
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinPremium'
+        - description: ''
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxPremium'
+        - description: ''
+          in: query
+          name: min_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinSize'
+        - description: ''
+          in: query
+          name: max_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxSize'
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMinVol'
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/StockTradesMaxVol'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: order_by
+          required: false
+          schema:
+            $ref: '#/components/schemas/Darkpool_order_by_field'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Darkpool_Trade'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Ticker Darkpool Trades
+      tags:
+        - darkpool
+  /api/darkpool/{ticker}/price-levels:
+    get:
+      callbacks: {}
+      description: |
+        Returns rounded darkpool and regular stock volume concentration by price level for one ticker.
+        Each price is grouped into a bucket to highlight areas where trading activity is concentrated.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.DarkpoolController.darkpool_price_levels
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Darkpool_Price_Levels'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Darkpool Price Levels
+      tags:
+        - darkpool
+  /api/digital-currencies/history:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Daily, weekly, or monthly OHLC bars for a digital asset.'
+      operationId: PublicApi.DigitalCurrenciesController.history
+      parameters:
+        - description: ''
+          in: query
+          name: symbol
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: market
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: daily
+            enum:
+              - daily
+              - weekly
+              - monthly
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series_Response'
+          description: Digital Currency History
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Digital Currency Historical Series
+      tags:
+        - digital_currencies
+  /api/digital-currencies/intraday:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Intraday OHLC bars for a digital asset against a fiat market.'
+      operationId: PublicApi.DigitalCurrenciesController.intraday
+      parameters:
+        - description: ''
+          in: query
+          name: symbol
+          required: true
+          schema:
+            example: BTC
+            type: string
+        - description: ''
+          in: query
+          name: market
+          required: true
+          schema:
+            example: USD
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: 5min
+            enum:
+              - 1min
+              - 5min
+              - 15min
+              - 30min
+              - 60min
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series_Response'
+          description: Digital Currency Intraday
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Digital Currency Intraday Series
+      tags:
+        - digital_currencies
+  /api/earnings/afterhours:
+    get:
+      callbacks: {}
+      description: |
+        Returns the afterhours earnings for a given date.
+
+        If you are looking to scan for extreme IV term steepness before earnings use https://unusualwhales.com/skills/uw-earnings-vol-scan-skill.md
+      operationId: PublicApi.EarningsController.afterhours
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_50_Max_100_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Earnings'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Afterhours
+      tags:
+        - earnings
+  /api/earnings/premarket:
+    get:
+      callbacks: {}
+      description: |
+        Returns the premarket earnings for a given date.
+
+        If you are looking to scan for extreme IV term steepness before earnings use https://unusualwhales.com/skills/uw-earnings-vol-scan-skill.md
+      operationId: PublicApi.EarningsController.premarket
+      parameters:
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_50_Max_100_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Earnings'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Premarket
+      tags:
+        - earnings
+  /api/earnings/{ticker}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the historical earnings for the given ticker.
+
+        The returned data includes information about how the stock
+        performed before and after the earnings event in its history.
+
+        Furthermore, data about how a long and short straddle would have performed
+        in the past are included as well.
+
+        If you are looking to scan for extreme IV term steepness before earnings use https://unusualwhales.com/skills/uw-earnings-vol-scan-skill.md
+      operationId: PublicApi.EarningsController.ticker
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historical_Ticker_Earnings'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Historical Ticker Earnings
+      tags:
+        - earnings
+  /api/economy/{indicator}:
+    get:
+      callbacks: {}
+      description: |
+        **Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).**
+
+        Returns a long-running US economic indicator series.
+
+        Indicators: gdp, gdp-per-capita, treasury-yield, fed-funds, cpi, inflation, retail-sales, durables, unemployment, payrolls.
+
+        The optional `interval` and `maturity` parameters apply only to indicators that support them
+        (e.g. `treasury-yield` accepts a maturity like `10year`).
+      operationId: PublicApi.EconomyController.show
+      parameters:
+        - description: ''
+          in: path
+          name: indicator
+          required: true
+          schema:
+            enum:
+              - gdp
+              - gdp-per-capita
+              - treasury-yield
+              - fed-funds
+              - cpi
+              - inflation
+              - retail-sales
+              - durables
+              - unemployment
+              - payrolls
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            enum:
+              - daily
+              - weekly
+              - monthly
+              - quarterly
+              - annual
+              - semiannual
+            type: string
+        - description: Only for treasury-yield.
+          in: query
+          name: maturity
+          required: false
+          schema:
+            enum:
+              - 3month
+              - 2year
+              - 5year
+              - 7year
+              - 10year
+              - 30year
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Macro_Series_Response'
+          description: Economic Series
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Economic Indicator
+      tags:
+        - economy
+  /api/etfs/{ticker}/exposure:
+    get:
+      callbacks: {}
+      description: |
+        Returns all ETFs in which the given ticker is a holding
+      operationId: PublicApi.EtfController.exposure
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exposure'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Exposure
+      tags:
+        - etfs
+  /api/etfs/{ticker}/holdings:
+    get:
+      callbacks: {}
+      description: |
+        Returns the holdings of the ETF
+      operationId: PublicApi.EtfController.holdings
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Holdings'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Holdings
+      tags:
+        - etfs
+  /api/etfs/{ticker}/in-outflow:
+    get:
+      callbacks: {}
+      description: |
+        Returns an ETF's inflow and outflow.
+        Defaults to the last year of data. Maximum date range is 3 years.
+      operationId: PublicApi.EtfController.in_outflow
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: start_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: end_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inflow_and_Outflow'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Inflow & Outflow
+      tags:
+        - etfs
+  /api/etfs/{ticker}/info:
+    get:
+      callbacks: {}
+      description: |
+        Returns the information about the given ETF ticker.
+      operationId: PublicApi.EtfController.info
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etf_Info'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Information
+      tags:
+        - etfs
+  /api/etfs/{ticker}/weights:
+    get:
+      callbacks: {}
+      description: |
+        Returns the sector & country weights for the given ETF ticker.
+      operationId: PublicApi.EtfController.weights
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country_and_Sector_exposure'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Sector & Country weights
+      tags:
+        - etfs
+  /api/forex/history:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Daily, weekly, or monthly OHLC bars for a currency pair.'
+      operationId: PublicApi.ForexController.history
+      parameters:
+        - description: ''
+          in: query
+          name: from
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: to
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: daily
+            enum:
+              - daily
+              - weekly
+              - monthly
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series_Response'
+          description: FX History
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: FX Historical Series
+      tags:
+        - forex
+  /api/forex/intraday:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Intraday OHLC bars for a currency pair.'
+      operationId: PublicApi.ForexController.intraday
+      parameters:
+        - description: ''
+          in: query
+          name: from
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: to
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: 5min
+            enum:
+              - 1min
+              - 5min
+              - 15min
+              - 30min
+              - 60min
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series_Response'
+          description: FX Intraday
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: FX Intraday Series
+      tags:
+        - forex
+  /api/forex/rate:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Realtime spot exchange rate between two currencies.'
+      operationId: PublicApi.ForexController.rate
+      parameters:
+        - description: From currency code (ISO 4217).
+          in: query
+          name: from
+          required: true
+          schema:
+            example: USD
+            type: string
+        - description: To currency code (ISO 4217).
+          in: query
+          name: to
+          required: true
+          schema:
+            example: EUR
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FX_Rate_Response'
+          description: FX Spot Rate
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: FX Spot Rate
+      tags:
+        - forex
+  /api/futures/contracts:
+    get:
+      callbacks: {}
+      description: |
+        Active CME futures contracts with trading activity over the last `days` CME sessions (default 3, max 30),
+        most active first. Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.contracts
+      parameters:
+        - description: Lookback in CME sessions, skipping weekends and holidays (default 3, max 30).
+          in: query
+          name: days
+          required: false
+          schema:
+            type: integer
+        - description: Case-insensitive substring match on contract name or product.
+          in: query
+          name: q
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Contracts'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Contracts
+      tags:
+        - Futures
+  /api/futures/display_factors:
+    get:
+      callbacks: {}
+      description: |
+        CME per-instrument display factors, used to convert raw integer prices to their displayed decimal values.
+        Filter by `asset` (e.g. HO, ES, CL) or `subtype`. Paginate with `after_id` + `limit` across the full ~158k contract table.
+        Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.display_factors
+      parameters:
+        - description: CME asset code to filter by, e.g. HO, ES, CL.
+          in: query
+          name: asset
+          required: false
+          schema:
+            type: string
+        - description: Contract subtype filter.
+          in: query
+          name: subtype
+          required: false
+          schema:
+            type: string
+        - description: 'Cursor: return rows with security_id greater than this value.'
+          in: query
+          name: after_id
+          required: false
+          schema:
+            type: integer
+        - description: Max rows per page (default 1000, max 5000).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Display_Factors'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Display Factors
+      tags:
+        - Futures
+  /api/futures/display_factors/{security_id}:
+    get:
+      callbacks: {}
+      description: |
+        Display factor for a single CME contract identified by its numeric `security_id`.
+        Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.display_factor
+      parameters:
+        - description: CME numeric security ID.
+          in: path
+          name: security_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Display_Factor'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Display Factor
+      tags:
+        - Futures
+  /api/futures/flow:
+    get:
+      callbacks: {}
+      description: |
+        Newest-first trade prints across ALL contracts, block trades included by default.
+        Each row carries `is_block` and `is_spread`. Optional server-side filters narrow the feed.
+        Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.flow
+      parameters:
+        - description: Max rows (default 100, max 500).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: 'Cursor: return trades executed before this ISO8601 timestamp.'
+          in: query
+          name: older_than
+          required: false
+          schema:
+            type: string
+        - description: 'Cursor: return trades executed after this ISO8601 timestamp.'
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            type: string
+        - description: Comma-separated CME product codes to include, e.g. ES,NQ.
+          in: query
+          name: products
+          required: false
+          schema:
+            type: string
+        - description: Filter by aggressor side. Case-sensitive.
+          in: query
+          name: side
+          required: false
+          schema:
+            enum:
+              - buy
+              - sell
+            type: string
+        - description: Minimum trade size (contracts).
+          in: query
+          name: min_size
+          required: false
+          schema:
+            type: integer
+        - description: Maximum trade size (contracts).
+          in: query
+          name: max_size
+          required: false
+          schema:
+            type: integer
+        - description: Minimum trade price.
+          in: query
+          name: min_price
+          required: false
+          schema:
+            type: number
+        - description: Maximum trade price.
+          in: query
+          name: max_price
+          required: false
+          schema:
+            type: number
+        - description: Minimum notional (price x size x multiplier). Needs secdef economics.
+          in: query
+          name: min_notional
+          required: false
+          schema:
+            type: number
+        - description: Set to false to exclude calendar/spread contracts.
+          in: query
+          name: include_spreads
+          required: false
+          schema:
+            type: boolean
+        - description: Set to true to exclude CME block trades.
+          in: query
+          name: skip_blocks
+          required: false
+          schema:
+            type: boolean
+        - description: Set to true to return only CME block trades.
+          in: query
+          name: blocks_only
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Flow'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Flow
+      tags:
+        - Futures
+  /api/futures/{contract}/candles:
+    get:
+      callbacks: {}
+      description: |
+        OHLCV candles for a contract. Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.candles
+      parameters:
+        - description: Dated CME contract symbol, e.g. ESU6.
+          example: ESU6
+          in: path
+          name: contract
+          required: true
+          schema:
+            type: string
+        - description: Candle interval.
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: 1m
+            enum:
+              - 1m
+              - 5m
+              - 1d
+            type: string
+        - description: History range.
+          in: query
+          name: range
+          required: false
+          schema:
+            default: 1d
+            enum:
+              - 1d
+              - 3d
+              - 5d
+              - 1w
+              - 1m
+              - 3m
+              - 6m
+              - 1y
+              - 5y
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Candles'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Candles (OHLCV)
+      tags:
+        - Futures
+  /api/futures/{contract}/stats:
+    get:
+      callbacks: {}
+      description: |
+        Latest session statistics for a contract: official settlement (day-change reference),
+        settlement date, open interest and session volume. Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.stats
+      parameters:
+        - description: Dated CME contract symbol, e.g. ESU6.
+          example: ESU6
+          in: path
+          name: contract
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Stats'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Session Stats
+      tags:
+        - Futures
+  /api/futures/{contract}/trades:
+    get:
+      callbacks: {}
+      description: |
+        Newest-first trade prints for a contract, cursor-paginated via `older_than`/`newer_than`.
+        Response includes both regular and CME block trades by default; each row has `is_block` to distinguish them.
+        Pass `blocks_only=true` to return only block trades.
+        Pass `skip_blocks=true` to exclude block trades and return only regular prints.
+        Available on the Advanced API tier, or with the `futures` add-on — contact oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access.
+      operationId: PublicApi.FuturesController.trades
+      parameters:
+        - description: Dated CME contract symbol, e.g. ESU6.
+          example: ESU6
+          in: path
+          name: contract
+          required: true
+          schema:
+            type: string
+        - description: Max rows (default 100, max 500).
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: 'Cursor: return trades executed before this ISO8601 timestamp.'
+          in: query
+          name: older_than
+          required: false
+          schema:
+            type: string
+        - description: 'Cursor: return trades executed after this ISO8601 timestamp.'
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            type: string
+        - description: Set to true to exclude CME block trades and return only regular prints.
+          in: query
+          name: skip_blocks
+          required: false
+          schema:
+            type: boolean
+        - description: Set to true to return only CME block trades.
+          in: query
+          name: blocks_only
+          required: false
+          schema:
+            type: boolean
+        - description: Minimum notional (price x size x multiplier). Needs secdef economics.
+          in: query
+          name: min_notional
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Futures_Trades'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Futures Trades (Time & Sales)
+      tags:
+        - Futures
+  /api/group-flow/{flow_group}/greek-flow:
+    get:
+      callbacks: {}
+      description: |
+        Returns the group flow's greek flow (delta & vega flow) for the given market day broken down per minute.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.GroupFlowController.greek_flow
+      parameters:
+        - description: ''
+          in: path
+          name: flow_group
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleFlowGroup'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group_Flow'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Greek flow
+      tags:
+        - group_flow
+  /api/group-flow/{flow_group}/greek-flow/{expiry}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the group flow's greek flow (delta & vega flow) for the given market day broken down per minute & expiry.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.GroupFlowController.greek_flow_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: flow_group
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleFlowGroup'
+        - description: ''
+          in: path
+          name: expiry
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group_Flow_Expiry'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Greek flow by expiry
+      tags:
+        - group_flow
+  /api/insider/transactions:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest insider transactions.
+
+        By default all transacations that have been filled by the same person on the same day with the same trade code are aggregated into a single row.
+        Each of those aggregated rows will contain a field `ids` which contains the ids of the single transactions that were aggregated as well as the amount
+        of transactions that were aggregated.
+
+        If you want to disable this behaviour you can set the `group` parameter to false to receive the single transacations as they have been filled.
+      operationId: PublicApi.InsiderController.transactions
+      parameters:
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: Minimum transaction value in dollars
+          example: 100000
+          in: query
+          name: min_value
+          required: false
+          schema:
+            type: string
+        - description: Maximum transaction value in dollars
+          example: 1000000
+          in: query
+          name: max_value
+          required: false
+          schema:
+            type: string
+        - description: Minimum stock price at the time of transaction
+          example: 10.5
+          in: query
+          name: min_price
+          required: false
+          schema:
+            type: string
+        - description: Maximum stock price at the time of transaction
+          example: 50.75
+          in: query
+          name: max_price
+          required: false
+          schema:
+            type: string
+        - description: Name of the insider who made the transaction
+          example: John Doe
+          in: query
+          name: owner_name
+          required: false
+          schema:
+            type: string
+        - description: Filter by company sector(s)
+          in: query
+          name: sectors[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Sectors'
+        - description: Filter by company industry or industries
+          in: query
+          name: industries[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Industries'
+        - description: ''
+          in: query
+          name: min_marketcap
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Marketcap'
+        - description: ''
+          in: query
+          name: max_marketcap
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Marketcap'
+        - description: Size category of company market cap
+          in: query
+          name: market_cap_size
+          required: false
+          schema:
+            $ref: '#/components/schemas/Single_market_cap_size'
+        - description: ''
+          in: query
+          name: min_earnings_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Earnings_DTE'
+        - description: ''
+          in: query
+          name: max_earnings_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Earnings_DTE'
+        - description: Minimum number of shares in transaction
+          example: 1000
+          in: query
+          name: min_amount
+          required: false
+          schema:
+            type: string
+        - description: Maximum number of shares in transaction
+          example: 10000
+          in: query
+          name: max_amount
+          required: false
+          schema:
+            type: string
+        - description: Filter transactions by company directors
+          example: true
+          in: query
+          name: is_director
+          required: false
+          schema:
+            type: boolean
+        - description: Filter transactions by company officers
+          example: true
+          in: query
+          name: is_officer
+          required: false
+          schema:
+            type: boolean
+        - description: Only include S&P 500 companies
+          example: true
+          in: query
+          name: is_s_p_500
+          required: false
+          schema:
+            type: boolean
+        - description: Filter transactions by 10% owners
+          example: false
+          in: query
+          name: is_ten_percent_owner
+          required: false
+          schema:
+            type: boolean
+        - description: Only include common stock transactions
+          example: true
+          in: query
+          name: common_stock_only
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by transaction codes (P=Purchase, S=Sale, etc.)
+          example:
+            - P
+            - S
+          in: query
+          name: transaction_codes[]
+          required: false
+          schema:
+            type: string
+        - description: 'Filter by SEC form: 3, 3/A, 4, 4/A, 5, 5/A, 144, 144/A. Form 144 is a notice of intended sale, so pass 4 (and 4/A for amendments) to get executed trades only. Default: all forms.'
+          example:
+            - '4'
+            - 4/A
+          in: query
+          name: form_types[]
+          required: false
+          schema:
+            type: string
+        - description: Exact match on the reporting owner's SEC CIK. The stable identifier for one insider across companies and years; owner_name spelling varies between filings.
+          example: '0001548760'
+          in: query
+          name: reporter_cik
+          required: false
+          schema:
+            type: string
+        - description: 'Filter by security acquisition/disposition codes: NA, ND, DA, DD, D'
+          example:
+            - NA
+            - ND
+          in: query
+          name: security_ad_codes[]
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: Group insider transactions with same person and trade code on the same day into a single row
+          example: true
+          in: query
+          name: group
+          required: false
+          schema:
+            type: boolean
+        - description: 'Filter for transaction dates occurring on or after this date (ISO format: YYYY-MM-DD)'
+          example: 2026-01-01
+          in: query
+          name: start_date
+          required: false
+          schema:
+            format: date
+            type: string
+        - description: 'Filter for transaction dates occurring on or before this date (ISO format: YYYY-MM-DD)'
+          example: 2026-01-23
+          in: query
+          name: end_date
+          required: false
+          schema:
+            format: date
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insider_Trade_Agg'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Transactions
+      tags:
+        - insiders
+  /api/insider/{sector}/sector-flow:
+    get:
+      callbacks: {}
+      description: |
+        Returns an aggregated view of the insider flow for the given sector.
+
+        This can be used to quickly examine the buy & sell insider flow for a given trading date
+      operationId: PublicApi.InsiderController.sector_flow
+      parameters:
+        - description: ''
+          in: path
+          name: sector
+          required: true
+          schema:
+            $ref: '#/components/schemas/Sector'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insider_Sector_Flow'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Sector Flow
+      tags:
+        - insiders
+  /api/insider/{ticker}:
+    get:
+      callbacks: {}
+      description: |
+        Returns all insiders for the given ticker
+      operationId: PublicApi.InsiderController.insiders
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insider'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Insiders
+      tags:
+        - insiders
+  /api/insider/{ticker}/ticker-flow:
+    get:
+      callbacks: {}
+      description: |
+        Returns an aggregated view of the insider flow for the given ticker.
+
+        This can be used to quickly examine the buy & sell insider flow for a given trading date
+      operationId: PublicApi.InsiderController.ticker_flow
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insider_Ticker_Flow'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Ticker Flow
+      tags:
+        - insiders
+  /api/institution/{name}/activity:
+    get:
+      callbacks: {}
+      description: |
+        The trading activities for a given institution.
+
+        WARNING: Providing partial names e.g. "VANGUARD" might lead to unexpected results.
+        To ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.
+
+        You can use endpoint "api/institutions" with a partial name like "VANGUARD" to get all matching institutions with their CIKs.
+      operationId: PublicApi.InstitutionController.activity
+      parameters:
+        - description: ''
+          in: path
+          name: name
+          required: true
+          schema:
+            $ref: '#/components/schemas/Institution'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Reporting_End_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Activity_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institutional_Activity'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Institutional Activity (Deprecated)
+      tags:
+        - institution
+  /api/institution/{name}/activity/v2:
+    get:
+      callbacks: {}
+      description: |
+        The trading activities for a given institution.
+
+        If the result contains multiple report periods, it will contain first the latest report period results ordered by the `order` and `order_direction`,
+        then the second latest report period ordered by the `order` and `order_direction` and so on, e.g. first all results for report period 2025-09-30, then
+        all results for report period 2025-06-30 ...
+
+        Per default the results per report period will be ordered by `units` descending.
+
+        If you provide the same date for `start_date` and `end_date` you will only get the results for filings with that date as the report period end date
+        e.g. if you set `start_date` and `end_date` to 2025-09-30 you will only get the results for the report period ending on 2025-09-30.
+
+        WARNING: Providing partial names e.g. "VANGUARD" might lead to unexpected results.
+        To ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.
+
+        You can use endpoint "api/institutions" with a partial name like "VANGUARD" to get all matching institutions with their CIKs.
+
+        If you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md
+      operationId: PublicApi.InstitutionController.activity_v2
+      parameters:
+        - description: ''
+          in: path
+          name: name
+          required: true
+          schema:
+            $ref: '#/components/schemas/Institution'
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: start_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Reporting_Start_Date'
+        - description: ''
+          in: query
+          name: end_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Reporting_End_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Activity_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institutional_Activity'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Institutional Activity
+      tags:
+        - institution
+  /api/institution/{name}/holdings:
+    get:
+      callbacks: {}
+      description: |
+        Returns the holdings for a given institution.
+
+        WARNING: Providing partial names e.g. "VANGUARD" might lead to unexpected results.
+        To ensure you get the expected result, it is recommended to use the company CIK (e.g. 0000102909 for VANGUARD GROUP INC) as the name parameter.
+
+        You can use endpoint "api/institutions" with a partial name like "VANGUARD" to get all matching institutions with their CIKs.
+
+        If you are looking to build a database of insitutional positions use https://unusualwhales.com/skills/institutional.md
+      operationId: PublicApi.InstitutionController.holdings
+      parameters:
+        - description: ''
+          in: path
+          name: name
+          required: true
+          schema:
+            $ref: '#/components/schemas/Institution'
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: start_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Report_Start_Date'
+        - description: ''
+          in: query
+          name: end_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Report_End_Date'
+        - description: ''
+          in: query
+          name: security_types
+          required: false
+          schema:
+            $ref: '#/components/schemas/Security_Types'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Institutional_Holdings_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/An_Institutions_Holdings'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Institutional Holdings
+      tags:
+        - institution
+ 

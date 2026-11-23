@@ -1,0 +1,1835 @@
+# alerts
+
+Source: https://api.unusualwhales.com/docs/openapi.yaml; retrieved 2026-09-24T01:21:27.462441+00:00
+
+Full descriptions, inherited security, effective parameters, responses and schemas. No live calls.
+
+## GET /api/alerts
+
+Alerts
+
+Returns all the alerts that have been triggered for the user.
+
+Time filtering is available using the `newer_than` and `older_than` parameters:
+- The maximum lookback period is 14 days
+- If no time range is specified, defaults to the last 14 days
+- If only one time parameter is provided, the other is automatically calculated to maintain the 14-day limit
+- If both parameters are provided but exceed 14 days, the range is adjusted to 14 days from the `older_than` timestamp
+
+The alerts are the same alerts as the user created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/alerts",
+  "method": "GET",
+  "path": "/api/alerts",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns all the alerts that have been triggered for the user.\n\nTime filtering is available using the `newer_than` and `older_than` parameters:\n- The maximum lookback period is 14 days\n- If no time range is specified, defaults to the last 14 days\n- If only one time parameter is provided, the other is automatically calculated to maintain the 14-day limit\n- If both parameters are provided but exceed 14 days, the range is adjusted to 14 days from the `older_than` timestamp\n\nThe alerts are the same alerts as the user created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)\n",
+    "operationId": "PublicApi.AlertsController.alerts",
+    "parameters": [
+      {
+        "description": "",
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "default": 50,
+          "description": "How many items to return. Default: 50. Max: 500. Min: 1.",
+          "example": 10,
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Default 50, Max 500 Min 1",
+          "type": "integer"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "intraday_only",
+        "required": false,
+        "schema": {
+          "default": true,
+          "description": "Boolean flag whether to return only intraday alerts.",
+          "example": true,
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "config_ids[]",
+        "required": false,
+        "schema": {
+          "description": "A list of alert ids to filter by.",
+          "example": [
+            "ded2bee3-68fe-4aff-8316-f6ddbcf7ea67",
+            "c170e1cb-38c8-4cc9-91a0-e9b249ef7e00"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Configration IDs",
+          "type": "array"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "ticker_symbols",
+        "required": false,
+        "schema": {
+          "description": "A comma separated list of tickers. To exclude certain tickers prefix the first ticker with a `-`.",
+          "example": "AAPL,INTC",
+          "title": "Ticker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "noti_types[]",
+        "required": false,
+        "schema": {
+          "description": "A list of notification types.",
+          "example": [
+            "analyst_rating",
+            "option_contract_interval"
+          ],
+          "items": {
+            "description": "",
+            "enum": [
+              "stock",
+              "news",
+              "earnings",
+              "dividends",
+              "splits",
+              "option_contract",
+              "price_target",
+              "analyst_rating",
+              "option_contract_interval",
+              "insider_trades",
+              "trading_state",
+              "fda",
+              "economic_release",
+              "politician_trades",
+              "market_tide",
+              "sec_filings",
+              "flow_alerts",
+              "chain_oi_change",
+              "gex"
+            ],
+            "example": "flow_alerts",
+            "title": "Notification Type",
+            "type": "string"
+          },
+          "title": "Noti Types",
+          "type": "array"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "newer_than",
+        "required": false,
+        "schema": {
+          "description": "Filter alerts created after this timestamp. When used alone, the time range is limited to 14 days forward from this timestamp. The format can either be a timestamp in unix seconds or milliseconds or a string in ISO format.",
+          "example": "2024-01-01 00:00:00+00:00",
+          "format": "datetime",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "older_than",
+        "required": false,
+        "schema": {
+          "description": "Filter alerts created before this timestamp. When used alone, the time range is limited to 14 days backward from this timestamp. The format can either be a timestamp in unix seconds or milliseconds or a string in ISO format",
+          "example": "2024-01-15 23:59:59+00:00",
+          "format": "datetime",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "An alert that triggered for a user",
+              "example": {
+                "data": [
+                  {
+                    "created_at": "2024-12-11 14:00:00+00:00",
+                    "id": "fdc2cf91-d387-480f-a79e-28026447a6f5",
+                    "meta": {
+                      "alert_type": "PayDate",
+                      "date": "2024-11-21",
+                      "div_yield": "0.0503",
+                      "dividend": "0.1275",
+                      "frequency": "Quarterly",
+                      "payment_date": "2024-12-11",
+                      "prev_dividend": "0.125"
+                    },
+                    "name": "S&P 500 Dividends",
+                    "noti_type": "dividends",
+                    "symbol": "AMCR",
+                    "symbol_type": "stock",
+                    "tape_time": "2024-12-11 14:00:00+00:00",
+                    "user_noti_config_id": "cb70c287-f10a-4e63-98ad-571b7dafc8e4"
+                  },
+                  {
+                    "created_at": "2024-12-11 14:00:01+00:00",
+                    "id": "46a5cf8d-6b41-4a92-926d-80e21b729222",
+                    "meta": {
+                      "avg_vol_30": "431912.809523809524",
+                      "curr": "14.55",
+                      "curr_vol": 364977,
+                      "prev": "22.88",
+                      "reason": "",
+                      "sector": "Healthcare",
+                      "state": "trading"
+                    },
+                    "name": "Trading halts",
+                    "noti_type": "trading_state",
+                    "symbol": "ANAB",
+                    "symbol_type": "stock",
+                    "tape_time": "2024-12-11 14:00:00+00:00",
+                    "user_noti_config_id": "5e476026-d01e-423b-9635-7ead39301665"
+                  }
+                ]
+              },
+              "properties": {
+                "created_at": {
+                  "description": "",
+                  "example": "2024-11-19 18:19:14+00:00",
+                  "title": "The creation timestamp",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "",
+                  "example": "ebe24953-a0bf-4b4d-98be-14f721a1199a",
+                  "title": "The alert id",
+                  "type": "string"
+                },
+                "meta": {
+                  "description": "The data of the alert. There is no fixed schema as the data depends on the alert type.",
+                  "title": "The raw data of the alert",
+                  "type": "object"
+                },
+                "name": {
+                  "description": "",
+                  "example": "Chain OI Chg: TGT241122C00177500",
+                  "title": "The name of the alert",
+                  "type": "string"
+                },
+                "noti_type": {
+                  "description": "",
+                  "example": "chain_oi_change",
+                  "title": "The type of the alert",
+                  "type": "string"
+                },
+                "symbol": {
+                  "description": "Depending on the type of the alert this is either a stock ticker or an option contract.",
+                  "example": "TGT",
+                  "title": "The stock ticker or option contract of the alert",
+                  "type": "string"
+                },
+                "tape_time": {
+                  "description": "The alerts tape time.",
+                  "example": "2023-09-07 20:06:00+00:00",
+                  "title": "Alert Tape Time",
+                  "type": "string"
+                },
+                "user_noti_config_id": {
+                  "description": "",
+                  "example": "ebe24953-a0bf-4b4d-98be-14f721a1199a",
+                  "title": "The alert id",
+                  "type": "string"
+                }
+              },
+              "title": "Alert",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Alerts",
+    "tags": [
+      "alerts"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/alerts/configuration
+
+Alert configurations
+
+Returnst all alert configurations of the user.
+
+Users can create alerts for:
+- Market tide
+- Gamma exposure (GEX), Vanna exposure (VEX), Charm exposure (CEX)
+- Interval Contract screeners (replicates and alerts on the Flow Feed)
+- Analyst ratings, price targets, and actions
+- Politician trades
+- Insider trades
+- OI changes for contract in premarket
+- FDA
+- Flow alerts
+- Contract screener (replicates and alerts on the Hottest Chains)
+- Stock screeners
+- News
+- Earnings
+- Dividends
+- Splits
+- Trading stats (halts, unhalts)
+- Economic release
+- SEC filings
+
+The alerts are the same alerts as the user created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/alerts/configuration",
+  "method": "GET",
+  "path": "/api/alerts/configuration",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returnst all alert configurations of the user.\n\nUsers can create alerts for:\n- Market tide\n- Gamma exposure (GEX), Vanna exposure (VEX), Charm exposure (CEX)\n- Interval Contract screeners (replicates and alerts on the Flow Feed)\n- Analyst ratings, price targets, and actions\n- Politician trades\n- Insider trades\n- OI changes for contract in premarket\n- FDA\n- Flow alerts\n- Contract screener (replicates and alerts on the Hottest Chains)\n- Stock screeners\n- News\n- Earnings\n- Dividends\n- Splits\n- Trading stats (halts, unhalts)\n- Economic release\n- SEC filings\n\nThe alerts are the same alerts as the user created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)\n",
+    "operationId": "PublicApi.AlertsController.configs",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "An alert configuration",
+              "example": {
+                "data": [
+                  {
+                    "config": {
+                      "option_symbols": [
+                        "TGT241122C00177500"
+                      ],
+                      "symbols": "all"
+                    },
+                    "created_at": "2024-11-19 18:19:14+00:00",
+                    "id": "ebe24953-a0bf-4b4d-98be-14f721a1199a",
+                    "name": "Chain OI Chg: TGT241122C00177500",
+                    "noti_type": "chain_oi_change",
+                    "status": "active"
+                  },
+                  {
+                    "config": {
+                      "name_contains": [
+                        "berkshire"
+                      ],
+                      "symbols": "all"
+                    },
+                    "created_at": "2024-08-09 23:23:13+00:00",
+                    "id": "4457d60e-e7e5-4950-82e6-0ea010586f25",
+                    "name": "Berkshire",
+                    "noti_type": "sec_filings",
+                    "status": "active"
+                  }
+                ]
+              },
+              "properties": {
+                "config": {
+                  "description": "An alert configuration, there is no fixed schema for this as each alert will have a different configuration.",
+                  "example": {
+                    "config": {
+                      "option_symbols": [
+                        "TGT241122C00177500"
+                      ],
+                      "symbols": "all"
+                    }
+                  },
+                  "title": "The configuration of an alert.",
+                  "type": "object"
+                },
+                "created_at": {
+                  "description": "",
+                  "example": "2024-11-19 18:19:14+00:00",
+                  "title": "The creation timestamp",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "",
+                  "example": "ebe24953-a0bf-4b4d-98be-14f721a1199a",
+                  "title": "The alert id",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "",
+                  "example": "Chain OI Chg: TGT241122C00177500",
+                  "title": "The name of the alert",
+                  "type": "string"
+                },
+                "noti_type": {
+                  "description": "",
+                  "example": "chain_oi_change",
+                  "title": "The type of the alert",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "",
+                  "enum": [
+                    "active",
+                    "rate_limit",
+                    "paused"
+                  ],
+                  "example": "active",
+                  "title": "The status of the alert",
+                  "type": "string"
+                }
+              },
+              "title": "Alert config",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Alert configurations",
+    "tags": [
+      "alerts"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/alerts/filters
+
+Alert filters
+
+Returns the available filters for creating alert configurations:
+- `data`: per alert type (`noti_type`) the filter fields that can be used in the `config` object, each with its accepted values
+- `access`: per alert type whether your account can create alerts of that type
+- `noti_type_descriptions`: a description of each alert type
+- `filter_descriptions`: per alert type a description of each filter field
+- `rate_limits`: per alert type the maximum amount of alerts that trigger per day
+
+Use this endpoint to determine which alert types the account can access and to build a structured `config` object.
+Submit the resulting `noti_type` and `config` to `POST /api/alerts/configuration` to create an alert.
+
+For more complex filters, fetch the Query language syntax and fields from `GET /api/alerts/query/grammar`,
+then submit the Query expression to `POST /api/alerts/configuration` using `input` instead of `config`.
+The `config` and `input` fields are mutually exclusive.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/alerts/filters",
+  "method": "GET",
+  "path": "/api/alerts/filters",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the available filters for creating alert configurations:\n- `data`: per alert type (`noti_type`) the filter fields that can be used in the `config` object, each with its accepted values\n- `access`: per alert type whether your account can create alerts of that type\n- `noti_type_descriptions`: a description of each alert type\n- `filter_descriptions`: per alert type a description of each filter field\n- `rate_limits`: per alert type the maximum amount of alerts that trigger per day\n\nUse this endpoint to determine which alert types the account can access and to build a structured `config` object.\nSubmit the resulting `noti_type` and `config` to `POST /api/alerts/configuration` to create an alert.\n\nFor more complex filters, fetch the Query language syntax and fields from `GET /api/alerts/query/grammar`,\nthen submit the Query expression to `POST /api/alerts/configuration` using `input` instead of `config`.\nThe `config` and `input` fields are mutually exclusive.\n",
+    "operationId": "PublicApi.AlertsController.filters",
+    "parameters": [],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "The available filters per alert type for creating alert configurations",
+              "example": {
+                "access": {
+                  "flow_alerts": true,
+                  "option_trade": true,
+                  "politician_trades": false
+                },
+                "data": {
+                  "option_trade": [
+                    {
+                      "accepted_values": [
+                        "all",
+                        "watchlist_only",
+                        "list"
+                      ],
+                      "filter": "symbols"
+                    },
+                    {
+                      "accepted_values": "list",
+                      "filter": "option_contracts"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Filter for options expiring on OpEx (monthly expiration) Friday",
+                      "filter": "opex_only"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Filter for options expiring on a quarterly OpEx (3rd Friday of Mar/Jun/Sep/Dec)",
+                      "filter": "is_quarterly"
+                    },
+                    {
+                      "accepted_values": [
+                        "jan",
+                        "feb",
+                        "mar",
+                        "apr",
+                        "may",
+                        "jun",
+                        "jul",
+                        "aug",
+                        "sep",
+                        "oct",
+                        "nov",
+                        "dec"
+                      ],
+                      "description": "Filter for monthly opex expiries in any of these months",
+                      "filter": "expiry_months"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "filter": "is_multi_leg"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "filter": "is_otm"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Trade size exceeds total open interest",
+                      "filter": "size_greater_oi"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Daily volume exceeds total open interest",
+                      "filter": "volume_greater_oi"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Filter for opening transactions only (new positions)",
+                      "filter": "opening"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Exclude deep in-the-money contracts",
+                      "filter": "exclude_deep_itm"
+                    },
+                    {
+                      "accepted_values": "bool",
+                      "description": "Include aggregated/block trades",
+                      "filter": "add_agg_trades"
+                    },
+                    {
+                      "accepted_values": [
+                        "ask_side",
+                        "bid_side",
+                        "mid_side",
+                        "no_side",
+                        "china",
+                        "volatility",
+                        "dividend",
+                        "index",
+                        "arbitrage"
+                      ],
+                      "filter": "excluded_tags"
+                    },
+                    {
+                      "accepted_values": [
+                        "ask_side",
+                        "bid_side",
+                        "mid_side",
+                        "no_side",
+                        "china",
+                        "volatility",
+                        "dividend",
+                        "index",
+                        "arbitrage"
+                      ],
+                      "filter": "tags"
+                    },
+                    {
+                      "accepted_values": [
+                        "Common Stock",
+                        "ETF",
+                        "ADR",
+                        "Index"
+                      ],
+                      "filter": "issue_types"
+                    },
+                    {
+                      "accepted_values": "list",
+                      "filter": "industries"
+                    },
+                    {
+                      "accepted_values": [
+                        "Basic Materials",
+                        "Communication Services",
+                        "Consumer Cyclical",
+                        "Consumer Defensive",
+                        "Energy",
+                        "Financial Services",
+                        "Healthcare",
+                        "Industrials",
+                        "Real Estate",
+                        "Technology",
+                        "Utilities"
+                      ],
+                      "filter": "sectors"
+                    },
+                    {
+                      "accepted_values": [
+                        "GMNI",
+                        "XCBO",
+                        "BATO",
+                        "XBXO",
+                        "MPRL",
+                        "C2OX",
+                        "AMXO",
+                        "MCRY",
+                        "ARCO",
+                        "EDGO",
+                        "XISX",
+                        "XNDQ",
+                        "XMIO",
+                        "XPHO",
+                        "XBOX",
+                        "EMLD",
+                        "MXOP",
+                        "SPHR",
+                        "MXTO",
+                        "IEXO"
+                      ],
+                      "filter": "exchanges"
+                    },
+                    {
+                      "accepted_values": [
+                        "Canc",
+                        "Oseq",
+                        "Cncl",
+                        "Late",
+                        "Cnco",
+                        "Open",
+                        "Cnol",
+                        "Opnl",
+                        "Auto",
+                        "Reop",
+                        "Isoi",
+                        "Slan",
+                        "Slai",
+                        "Slcn",
+                        "Slci",
+                        "Slft",
+                        "Mlet",
+                        "Mlat",
+                        "Mlct",
+                        "Mlft",
+                        "Mesl",
+                        "Tlat",
+                        "Masl",
+                        "Mfsl",
+                        "Tlet",
+                        "Tlct",
+                        "Tlft",
+                        "Tesl",
+                        "Tasl",
+                        "Tfsl",
+                        "Cbmo",
+                        "Mctp",
+                        "Exht"
+                      ],
+                      "filter": "trade_codes"
+                    },
+                    {
+                      "accepted_values": "list",
+                      "filter": "expiry_dates"
+                    },
+                    {
+                      "accepted_values": [
+                        "micro",
+                        "small",
+                        "mid",
+                        "large",
+                        "big"
+                      ],
+                      "filter": "marketcap_size"
+                    },
+                    {
+                      "accepted_values": [
+                        "opening",
+                        "closing",
+                        "reopening",
+                        "cross_trade",
+                        "extended_hours",
+                        "intermarket_sweep",
+                        "trade_through_exempt",
+                        "odd_lot",
+                        "official_price_report",
+                        "futures_floor",
+                        "summary",
+                        "printable",
+                        "normal"
+                      ],
+                      "filter": "report_flags"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "description": "Volume to open interest ratio (>1.0 = volume exceeds OI)",
+                      "filter": "min_volume_oi_ratio"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "description": "Volume to open interest ratio (>1.0 = volume exceeds OI)",
+                      "filter": "max_volume_oi_ratio"
+                    },
+                    {
+                      "accepted_values": [
+                        "call",
+                        "put"
+                      ],
+                      "filter": "type"
+                    },
+                    {
+                      "accepted_values": [
+                        "am",
+                        "pm",
+                        "asian",
+                        "cliquet"
+                      ],
+                      "filter": "settlement"
+                    },
+                    {
+                      "accepted_values": {
+                        "arith_ops": [
+                          "add",
+                          "sub",
+                          "mul",
+                          "div"
+                        ],
+                        "cmp_ops": [
+                          "gt",
+                          "gte",
+                          "lt",
+                          "lte",
+                          "eq",
+                          "neq"
+                        ],
+                        "fields": [
+                          "spot",
+                          "strike",
+                          "bid",
+                          "ask",
+                          "ewma_bid",
+                          "ewma_ask",
+                          "premium",
+                          "price",
+                          "size",
+                          "volume",
+                          "open_int",
+                          "dte",
+                          "delta",
+                          "gamma",
+                          "vega",
+                          "theta",
+                          "rho",
+                          "theo",
+                          "iv",
+                          "marketcap",
+                          "diff",
+                          "spread",
+                          "bid_perc",
+                          "ask_perc",
+                          "bull_perc",
+                          "bear_perc",
+                          "earnings_dte",
+                          "days_between_expiry_and_earnings",
+                          "vol_oi_ratio"
+                        ]
+                      },
+                      "description": "Cross field comparison",
+                      "filter": "compare"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "min_underlying_price"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "max_underlying_price"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "min_strike"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "max_strike"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "min_premium"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "max_premium"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "min_price"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "max_price"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "min_size"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "max_size"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "min_volume"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "max_volume"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "min_open_interest"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "max_open_interest"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "min_dte"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "filter": "max_dte"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "filter": "min_delta"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "filter": "max_delta"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "filter": "min_gamma"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "filter": "max_gamma"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "filter": "min_theta"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "filter": "max_theta"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Implied volatility of the contract (decimal: 0.5 = 50%)",
+                      "filter": "min_iv"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Implied volatility of the contract (decimal: 0.5 = 50%)",
+                      "filter": "max_iv"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "min_marketcap"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "filter": "max_marketcap"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Stock price percentage change (decimal: 0.1 = 10%)",
+                      "filter": "min_diff"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Stock price percentage change (decimal: 0.1 = 10%)",
+                      "filter": "max_diff"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "description": "Bid-ask spread percentage",
+                      "filter": "min_spread"
+                    },
+                    {
+                      "accepted_values": "decimal",
+                      "description": "Bid-ask spread percentage",
+                      "filter": "max_spread"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of volume traded at the bid price",
+                      "filter": "min_bid_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of volume traded at the bid price",
+                      "filter": "max_bid_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of volume traded at the ask price",
+                      "filter": "min_ask_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of volume traded at the ask price",
+                      "filter": "max_ask_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of bullish flow (calls at ask + puts at bid)",
+                      "filter": "min_bull_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of bullish flow (calls at ask + puts at bid)",
+                      "filter": "max_bull_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of bearish flow (calls at bid + puts at ask)",
+                      "filter": "min_bear_perc"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Percentage of bearish flow (calls at bid + puts at ask)",
+                      "filter": "max_bear_perc"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "description": "Days until next earnings report",
+                      "filter": "min_earnings_dte"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "description": "Days until next earnings report",
+                      "filter": "max_earnings_dte"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "description": "Minimum (contract_expiry - next_earnings_date) in calendar days — signed",
+                      "filter": "min_days_between_expiry_and_earnings"
+                    },
+                    {
+                      "accepted_values": "integer",
+                      "description": "Maximum (contract_expiry - next_earnings_date) in calendar days — signed",
+                      "filter": "max_days_between_expiry_and_earnings"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Bull/bear skew ratio",
+                      "filter": "min_skew"
+                    },
+                    {
+                      "accepted_values": "decimal_abs",
+                      "description": "Bull/bear skew ratio",
+                      "filter": "max_skew"
+                    }
+                  ]
+                },
+                "filter_descriptions": {
+                  "option_trade": [
+                    {
+                      "opening": "Filter for opening transactions only (new positions)"
+                    },
+                    {
+                      "min_iv": "Implied volatility of the contract (decimal: 0.5 = 50%)"
+                    }
+                  ]
+                },
+                "noti_type_descriptions": {
+                  "option_trade": "Get notified about any new option trades that hit the flow"
+                },
+                "rate_limits": {
+                  "flow_alerts": "500",
+                  "option_trade": "5000"
+                }
+              },
+              "properties": {
+                "access": {
+                  "description": "Per alert type whether your account can create alerts of that type.",
+                  "type": "object"
+                },
+                "data": {
+                  "description": "Per alert type (`noti_type`) the list of filter fields that can be used in the `config` object, each with its accepted values.\n\n`accepted_values` is either an array of allowed literal values, an object describing a nested structure, or one of these type tokens:\n- `bool`: true or false\n- `integer`: a whole number\n- `decimal`: a decimal number\n- `decimal_abs`: a decimal number that can optionally be wrapped as `abs(x)` or `|x|` to match on absolute value, e.g. `\"min_delta\": \"abs(0.3)\"` matches both delta 0.4 and delta -0.4\n- `string`: a string\n- `list`: an array of values such as symbols, option contracts or dates\n- `object`: a nested object, see the filter's description\n",
+                  "type": "object"
+                },
+                "filter_descriptions": {
+                  "description": "Per alert type a description of each filter field.",
+                  "type": "object"
+                },
+                "noti_type_descriptions": {
+                  "description": "A description of each alert type.",
+                  "type": "object"
+                },
+                "rate_limits": {
+                  "description": "Per alert type the maximum amount of alerts that trigger per day.",
+                  "type": "object"
+                }
+              },
+              "title": "Alert filters",
+              "type": "object"
+            }
+          }
+        },
+        "description": "The alert filters"
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Alert filters",
+    "tags": [
+      "alerts"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/alerts/query/grammar
+
+Query grammar
+
+Returns the grammar of the alert Query language: available targets, syntax, fields, functions, operators,
+scopes and example expressions.
+
+Without a `target` parameter an overview over all targets is returned. Pass a `target` to get
+the full field reference for that alert type. Use the Query language to create complex alert configurations
+via the create alert configuration endpoint. You can compare fields `strike > spot`, add complex math operations
+`ln(strike / spot) / (iv * sqrt(dte / 365)) > 2` and write configs similar as to one writes SQL.
+
+If you are an Ai/Agent you should use this endpoint to fetch the grammar and then post them to `/api/alerts/configuration`.
+See the documentation at the https://api.unusualwhales.com/docs/operations/PublicApi.AlertsController.create_config for more info on the format and how to post
+an alert config.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/alerts/query/grammar",
+  "method": "GET",
+  "path": "/api/alerts/query/grammar",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the grammar of the alert Query language: available targets, syntax, fields, functions, operators,\nscopes and example expressions.\n\nWithout a `target` parameter an overview over all targets is returned. Pass a `target` to get\nthe full field reference for that alert type. Use the Query language to create complex alert configurations\nvia the create alert configuration endpoint. You can compare fields `strike > spot`, add complex math operations\n`ln(strike / spot) / (iv * sqrt(dte / 365)) > 2` and write configs similar as to one writes SQL.\n\nIf you are an Ai/Agent you should use this endpoint to fetch the grammar and then post them to `/api/alerts/configuration`.\nSee the documentation at the https://api.unusualwhales.com/docs/operations/PublicApi.AlertsController.create_config for more info on the format and how to post\nan alert config.\n",
+    "operationId": "PublicApi.AlertsController.dsl_grammar",
+    "parameters": [
+      {
+        "description": "",
+        "in": "query",
+        "name": "target",
+        "required": false,
+        "schema": {
+          "description": "The alert target to return the detailed grammar for.",
+          "enum": [
+            "flow_alert",
+            "option_trade",
+            "option_contract",
+            "ticker_interval_flow",
+            "news",
+            "trading_state",
+            "multi_leg_trade"
+          ],
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "additionalProperties": true,
+              "description": "Machine readable description of the alert DSL: available targets, syntax, fields, functions, operators, scopes and example expressions.",
+              "title": "Alert DSL grammar",
+              "type": "object"
+            }
+          }
+        },
+        "description": "The Query language grammar"
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the

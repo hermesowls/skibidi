@@ -1,0 +1,1953 @@
+ '444.93'
+            prev_close: '444.85'
+            prev_date: 2023-09-07
+            put_premium: '244159205'
+            put_volume: 2009005
+            ticker: SPY
+            volume: 23132119
+            week52_high: '459.44'
+            week52_low: '342.65'
+          - avg30_call_volume: '1574.3333333333333333'
+            avg30_put_volume: '2571.6000000000000000'
+            avg30_stock_volume: '4773693'
+            avg_30_day_call_volume: '1574.3333333333333333'
+            avg_30_day_put_volume: '2571.6000000000000000'
+            avg_7_day_call_volume: '2003.0000000000000000'
+            avg_7_day_put_volume: '1208.2857142857142857'
+            bearish_premium: '25852'
+            bullish_premium: '30558'
+            call_premium: '37618'
+            call_volume: 319
+            full_name: Materials
+            high: '82.145'
+            last: '81.96'
+            low: '81.55'
+            marketcap: '5607626400'
+            open: '81.67'
+            prev_close: '81.72'
+            prev_date: 2023-09-07
+            put_premium: '27107'
+            put_volume: 250
+            ticker: XLB
+            volume: 1582879
+            week52_high: '85.86'
+            week52_low: '66.13'
+          - avg30_call_volume: '2020.4000000000000000'
+            avg30_put_volume: '1831.2000000000000000'
+            avg30_stock_volume: '5018213'
+            avg_30_day_call_volume: '2020.4000000000000000'
+            avg_30_day_put_volume: '1831.2000000000000000'
+            avg_7_day_call_volume: '1677.2857142857142857'
+            avg_7_day_put_volume: '2283.4285714285714286'
+            bearish_premium: '524756'
+            bullish_premium: '249626'
+            call_premium: '711775'
+            call_volume: 855
+            full_name: Communication Services
+            high: '67.26'
+            last: '67.08'
+            low: '66.78'
+            marketcap: '14026276000'
+            open: '66.78'
+            prev_close: '66.76'
+            prev_date: 2023-09-07
+            put_premium: '261697'
+            put_volume: 1048
+            ticker: XLC
+            volume: 1435724
+            week52_high: '69.22'
+            week52_low: '44.63'
+      properties:
+        avg30_stock_volume:
+          $ref: '#/components/schemas/Market_General_Avg_30_Day_Stock_Volume'
+        avg_30_day_call_volume:
+          $ref: '#/components/schemas/Market_General_Avg_30_Day_Call_Volume'
+        avg_30_day_put_volume:
+          $ref: '#/components/schemas/Market_General_Avg_30_Day_Put_Volume'
+        avg_7_day_call_volume:
+          $ref: '#/components/schemas/Market_General_Avg_7_Day_Call_Volume'
+        avg_7_day_put_volume:
+          $ref: '#/components/schemas/Market_General_Avg_7_Day_Put_Volume'
+        bearish_premium:
+          $ref: '#/components/schemas/Market_General_Bearish_Premium'
+        bullish_premium:
+          $ref: '#/components/schemas/Market_General_Bullish_Premium'
+        call_premium:
+          $ref: '#/components/schemas/Market_General_Call_Premium'
+        call_volume:
+          $ref: '#/components/schemas/Market_General_Call_Volume'
+        close:
+          $ref: '#/components/schemas/Candle_Close'
+        full_name:
+          $ref: '#/components/schemas/Etf_Sector_Full_Name'
+        high:
+          $ref: '#/components/schemas/Candle_High'
+        low:
+          $ref: '#/components/schemas/Candle_Low'
+        marketcap:
+          $ref: '#/components/schemas/Stock_Marketcap_AUM'
+        open:
+          $ref: '#/components/schemas/Candle_Open'
+        prev_close:
+          $ref: '#/components/schemas/Stock_Prev_Close_Price'
+        prev_date:
+          $ref: '#/components/schemas/Market_General_Previous_Trading_Day'
+        put_premium:
+          $ref: '#/components/schemas/Market_General_Put_Premium'
+        put_volume:
+          $ref: '#/components/schemas/Market_General_Put_Volume'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        volume:
+          $ref: '#/components/schemas/Stock_Day_Stock_Volume'
+        week_52_high:
+          $ref: '#/components/schemas/Stock_Week_52_High'
+        week_52_low:
+          $ref: '#/components/schemas/Stock_Week_52_low'
+      title: Sector ETF
+      type: object
+    Sectors:
+      description: An array of 1 or more sectors.
+      example:
+        - Consumer Cyclical
+        - Technology
+        - Utilities
+      items:
+        $ref: '#/components/schemas/Single_sector'
+      title: Sectors
+      type: array
+    Security_Type:
+      description: ''
+      example: Share
+      title: Security Type
+      type: string
+    Security_Types:
+      description: An array of security types
+      example:
+        - Share
+      items:
+        $ref: '#/components/schemas/Security_Type'
+      title: Security Types
+      type: array
+    Sell_Price:
+      description: ''
+      example: '23.49'
+      title: Sell Price
+      type: string
+    Sell_Value:
+      description: The rounded total sell value in the institution's portfolio.
+      example: '2394292.0'
+      title: Sell Value
+      type: string
+    Senate_Stock:
+      description: A senate stock
+      example:
+        data:
+          - amounts: $15,001 - $50,000
+            filed_at_date: 2023-02-13
+            is_active: true
+            issuer: not-disclosed
+            member_type: house
+            name: Stephen Cohen
+            notes: 'Subholding Of: Stephens Advantage Account Description: FT UNIT 10479 PFD mutual-fund 32500'
+            politician_id: 18f9fc95-4661-444e-99f5-99d3778e0c31
+            reporter: Stephen C.
+            ticker: FHWVOX
+            transaction_date: 2023-02-06
+            txn_type: Buy
+          - amounts: $1,000 - $15,000
+            filed_at_date: 2023-02-13
+            is_active: false
+            issuer: joint
+            member_type: house
+            name: Deborah Ross
+            notes: 'Subholding Of: Fidelity Brokerage Account stock 8000'
+            politician_id: 5b1e3f4a-2d3c-4e5f-8a6b-7c8d9e0f1a2b
+            reporter: Debby Ross
+            ticker: MSFT
+            transaction_date: 2023-02-01
+            txn_type: Sell
+      properties:
+        amounts:
+          $ref: '#/components/schemas/Insider_Trades_Amount_Range'
+        filed_at_date:
+          $ref: '#/components/schemas/Insider_Trades_Filing_Date'
+        is_active:
+          $ref: '#/components/schemas/Is_Active'
+        issuer:
+          $ref: '#/components/schemas/Insider_Trades_Issuer'
+        member_type:
+          $ref: '#/components/schemas/Insider_Trades_Member_Type'
+        name:
+          $ref: '#/components/schemas/Insider_Trades_Reporters_Standard_Name'
+        notes:
+          $ref: '#/components/schemas/Insider_Trades_Filing_Notes'
+        politician_id:
+          $ref: '#/components/schemas/Politician_ID'
+        reporter:
+          $ref: '#/components/schemas/Insider_Trades_Reporter'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        transaction_date:
+          $ref: '#/components/schemas/Insider_Trades_Transaction_Date'
+        txn_type:
+          $ref: '#/components/schemas/Insider_Trades_Transaction_Type'
+      title: Senate Stock
+      type: object
+    Series_Point:
+      properties:
+        date:
+          format: date
+          nullable: true
+          type: string
+        value:
+          nullable: true
+          type: number
+      title: Series Point
+      type: object
+    Series_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/FX_Crypto_Series'
+      title: Series Response
+      type: object
+    Share_Value:
+      description: The rounded total share value in the institution's portfolio.
+      example: '2394292.0'
+      title: Share Value
+      type: string
+    Shares_Outstanding:
+      description: Total outstanding shares for the ticker.
+      example: '424295343.0'
+      title: Shares Outstanding
+      type: string
+    ShortScreenerOrderBy:
+      description: ordering options.
+      example: market_date
+      title: ShortScreenerOrderBy
+      type: string
+    Short_Data:
+      description: |
+        Short data including rebate rate and short shares available for a specific ticker.
+        This endpoint provides information about the cost to borrow shares for short selling (rebate rate)
+        and the number of shares available to short.
+      example:
+        data:
+          - currency: USD
+            fee_rate: '0.42'
+            name: EXAMPLE COMPANY INC
+            rebate_rate: '2.75'
+            short_shares_available: 5000000
+            symbol: EXMP
+            timestamp: 2025-03-15T14:30:00Z
+          - currency: USD
+            fee_rate: '0.38'
+            name: EXAMPLE COMPANY INC
+            rebate_rate: '2.80'
+            short_shares_available: 5250000
+            symbol: EXMP
+            timestamp: 2025-03-15T11:15:00Z
+          - currency: USD
+            fee_rate: '0.45'
+            name: EXAMPLE COMPANY INC
+            rebate_rate: '2.65'
+            short_shares_available: 4800000
+            symbol: EXMP
+            timestamp: 2025-03-14T16:45:00Z
+      properties:
+        currency:
+          description: The currency used for fee and rebate rates.
+          type: string
+        fee_rate:
+          description: The fee rate for shorting the stock, expressed as a percentage.
+          type: string
+        name:
+          description: The company name.
+          type: string
+        rebate_rate:
+          description: The rebate rate for shorting the stock, expressed as a percentage.
+          type: string
+        short_shares_available:
+          description: The number of shares available to short.
+          type: integer
+        symbol:
+          description: The ticker symbol.
+          type: string
+        timestamp:
+          description: The timestamp when the short data was recorded.
+          format: date_time
+          type: string
+      title: Short Data
+      type: object
+    Short_Name:
+      description: The institution's short name.
+      example: Vanguard
+      title: Short Name
+      type: string
+    Short_Screener:
+      description: |
+        Short interest data and float information for percentage calculations based of filter parameters.
+        This endpoint provides information about the relationship between short interest and the float,
+        including the percentage of the float that is shorted and the days to cover metric.
+      example:
+        data:
+          days_to_cover: '2.1'
+          fee_rate: '0.2782'
+          market_date: 2023-04-15
+          rebate_rate: '3.3518'
+          short_interest: 75000
+          short_shares_available: 10000000
+          si_float: '0.017647058'
+          si_float_with_synth_long_pct_of_total_shares: '0.01734104046'
+          symbol: EXMP
+          total_float: 4250000
+      properties:
+        days_to_cover:
+          description: The estimated number of days to cover all short positions based on average daily trading volume.
+          type: string
+        fee_rate:
+          description: The fee rate.
+          format: date
+          type: string
+        market_date:
+          description: The date of the short interest data.
+          format: date
+          type: string
+        rebate_rate:
+          description: The rebate rate.
+          format: date
+          type: string
+        short_interest:
+          description: The total number of shares sold short.
+          type: integer
+        short_shares_available:
+          description: The short shares available.
+          format: date
+          type: string
+        si_float:
+          description: The short interest float ratio.
+          type: string
+        si_float_with_synth_long_pct_of_total_shares:
+          description: The short interest float ratio with volume of shares sold short added to total float.
+          type: string
+        symbol:
+          description: The ticker symbol.
+          type: string
+        total_float:
+          description: The float (available shares for trading).
+          type: integer
+      title: Short Screener
+      type: object
+    Short_Straddle_1_Day:
+      description: The 1 day % returns for the closest expiry short ATM straddle. The straddle expiry is equal to or greater than 1 day after earnings.
+      example: '0.3421'
+      title: Short Straddle 1 Day
+      type: string
+    Short_Straddle_1_Week:
+      description: The 1 week % returns for the closest expiry short ATM straddle. The straddle expiry is equal to or greater than 1 week after earnings.
+      example: '0.3421'
+      title: Short Straddle 1 Week
+      type: string
+    Short_Volume:
+      description: |
+        Short volume data including short volume and ratio for a specific ticker.
+        This endpoint provides information about the volume of shares that have been
+        sold short and the ratio of short volume to total volume.
+      example:
+        data:
+          - close_price: '45.75'
+            market_date: 2023-04-10
+            short_volume: 925000
+            short_volume_ratio: '0.14'
+            total_volume: 6607143
+          - close_price: '46.23'
+            market_date: 2023-04-11
+            short_volume: 1150000
+            short_volume_ratio: '0.15'
+            total_volume: 7666667
+          - close_price: '45.92'
+            market_date: 2023-04-12
+            short_volume: 875000
+            short_volume_ratio: '0.13'
+            total_volume: 6730769
+          - close_price: '46.45'
+            market_date: 2023-04-13
+            short_volume: 1050000
+            short_volume_ratio: '0.17'
+            total_volume: 6176471
+      properties:
+        close_price:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        market_date:
+          description: The date for short interest.
+          format: date
+          type: string
+        short_volume:
+          description: The short volume.
+          type: string
+        short_volume_ratio:
+          description: The relative ratio of short volume to total volume.
+          type: string
+        total_volume:
+          description: The total volume.
+          type: string
+      title: Short Volume
+      type: object
+    Short_Volume_By_Exchange:
+      description: |
+        Short volume data broken down by exchange for a specific ticker.
+        This endpoint provides information about short selling activity across different exchanges,
+        allowing analysis of where short selling is most concentrated.
+      example:
+        data:
+          - date: 2023-04-15
+            exchange_name: NYSE
+            market_center: NYSE
+            short_volume: 325000
+            total_volume: 2150000
+          - date: 2023-04-15
+            exchange_name: NASDAQ
+            market_center: NASDAQ
+            short_volume: 720000
+            total_volume: 4500000
+      properties:
+        date:
+          description: The date of the short volume data.
+          format: date
+          type: string
+        exchange_name:
+          description: The exchange identifier.
+          type: string
+        market_center:
+          description: The market center identifier.
+          type: string
+        short_volume:
+          description: The short volume for this exchange.
+          type: integer
+        total_volume:
+          description: The total volume for this exchange.
+          type: integer
+      title: Short Volume By Exchange
+      type: object
+    Side:
+      default: ALL
+      description: The side of a stock trade. Must be one of ASK, BID, MID. If not set, will return all side's trades.
+      enum:
+        - ALL
+        - ASK
+        - BID
+        - MID
+      example: ASK
+      title: Side
+      type: string
+    SingleFlowGroup:
+      description: A flow group
+      enum:
+        - airline
+        - bank
+        - basic materials
+        - china
+        - communication services
+        - consumer cyclical
+        - consumer defensive
+        - crypto
+        - cyber
+        - energy
+        - financial services
+        - gas
+        - gold
+        - healthcare
+        - industrials
+        - mag7
+        - oil
+        - real estate
+        - refiners
+        - reit
+        - semi
+        - silver
+        - technology
+        - uranium
+        - utilities
+      example: airline
+      title: SingleFlowGroup
+      type: string
+    SingleMonthNumber:
+      description: A month number indicating the month, e.g. 1 -> January, 2 -> February, ...
+      enum:
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+        - '5'
+        - '6'
+        - '7'
+        - '8'
+        - '9'
+        - '10'
+        - '11'
+        - '12'
+      example: '3'
+      title: SingleMonthNumber
+      type: string
+    SingleTicker:
+      description: A single ticker
+      example: AAPL
+      title: SingleTicker
+      type: string
+    SingleTickerForSector:
+      description: A single ticker. The result will only contain tickers in the same sector as the given ticker, e.g. 'MSFT' will only yield result tickers in sector 'Technology'.
+      example: AAPL
+      title: SingleTickerForSector
+      type: string
+    Single_Trade_Execution_Time:
+      description: The trade execution time as an ISO 8601 UTC timestamp.
+      example: 2023-02-16T00:59:44Z
+      format: date-time
+      title: Single Trade Execution Time
+      type: string
+    Single_Trade_External_Hour_Sold_Code:
+      description: The code describing why the trade happened outside of regular market hours. Null if none applies.
+      enum:
+        - sold_out_of_sequence
+        - extended_hours_trade_late_or_out_of_sequence
+        - extended_hours_trade
+      example: sold_out_of_sequence
+      title: Single Trade External Hour Sold Code
+      type: string
+    Single_Trade_Has_Multileg:
+      description: Whether the trade is a multileg trade.
+      example: false
+      title: Single Trade Has Multileg
+      type: boolean
+    Single_Trade_Is_Single_Leg:
+      description: Whether the trade is a singleleg trade.
+      example: true
+      title: Single Trade Is Single Leg
+      type: boolean
+    Single_Trade_Is_Sweep:
+      description: Whether the trade is a sweep.
+      example: true
+      title: Single Trade Is Sweep
+      type: boolean
+    Single_Trade_Is_Trade_Cancelled:
+      description: Whether the trade has been cancelled.
+      example: true
+      title: Single Trade Is Trade Cancelled
+      type: boolean
+    Single_Trade_Market_Center:
+      description: The market center code.
+      example: L
+      title: Single Trade Market Center
+      type: string
+    Single_Trade_Price:
+      description: The price of the trade.
+      example: '18.9904'
+      title: Single Trade Price
+      type: string
+    Single_Trade_Sale_Cond_Code:
+      description: The sale condition code. Null if none applies.
+      enum:
+        - contingent_trade
+        - odd_lot_execution
+        - prior_reference_price
+        - average_price_trade
+      example: contingent_trade
+      title: Single Trade Sale Cond Code
+      type: string
+    Single_Trade_Settlement:
+      description: The kind of trade settlement.
+      enum:
+        - cash
+        - next_day
+        - seller
+        - regular
+      example: cash_settlement
+      title: Single Trade Settlement
+      type: string
+    Single_Trade_Size:
+      description: The size of the transaction.
+      example: 6400
+      title: Single Trade Size
+      type: integer
+    Single_Trade_TRF_Execution_Time:
+      description: The ISO 8601 UTC timestamp when the trade was reported to the tape by a Trade Reporting Facility. Only available for trades from 2025-05-01 onwards. It is `null` for any trade before that date.
+      example: 2025-05-02T13:42:11Z
+      format: date-time
+      nullable: true
+      title: Single Trade TRF Execution Time
+      type: string
+    Single_Trade_Tracking_ID:
+      description: The tracking ID of the trade.
+      example: 71984388012245
+      title: Single Trade Tracking ID
+      type: integer
+    Single_Trade_Trade_Code:
+      description: The trade code. Null if none applies.
+      enum:
+        - derivative_priced
+        - qualified_contingent_trade
+        - intermarket_sweep
+      example: derivative_priced
+      title: Single Trade Trade Code
+      type: string
+    Single_expiry_date:
+      description: A single expiry date in ISO date format.
+      example: 2024-02-02
+      title: Single expiry date
+      type: string
+    Single_issue_type:
+      description: A singular issue type.
+      enum:
+        - Common Stock
+        - ETF
+        - Index
+        - ADR
+      example: Common Stock
+      title: Single issue type
+      type: string
+    Single_market_cap_size:
+      description: A market capitalization size category.
+      enum:
+        - micro
+        - small
+        - mid
+        - large
+        - big
+      example: large
+      title: Single market cap size
+      type: string
+    Single_sector:
+      description: A singular sector.
+      enum:
+        - Basic Materials
+        - Communication Services
+        - Consumer Cyclical
+        - Consumer Defensive
+        - Energy
+        - Financial Services
+        - Healthcare
+        - Industrials
+        - Real Estate
+        - Technology
+        - Utilities
+      example: Real Estate
+      title: Single sector
+      type: string
+    Smart_Money_Market:
+      properties:
+        category:
+          example: Sports
+          nullable: true
+          type: string
+        description:
+          example: Resolves YES if the Los Angeles Lakers win the 2026 NBA Finals.
+          nullable: true
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        outcomes:
+          items:
+            $ref: '#/components/schemas/Smart_Money_Outcome'
+          type: array
+        question_id:
+          example: 84213
+          type: integer
+        resolves:
+          example: 2026-08-15T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        smart_gap:
+          description: Difference between smart-money implied price and the current market price.
+          example: '20.7'
+          type: string
+        title:
+          example: Will the Lakers win the 2026 NBA Championship?
+          nullable: true
+          type: string
+      title: Smart Money Market
+      type: object
+    Smart_Money_Outcome:
+      properties:
+        asset_id:
+          example: '111'
+          type: string
+        label:
+          example: Yes
+          type: string
+        price:
+          example: '0.62'
+          nullable: true
+          type: string
+        prices:
+          items:
+            $ref: '#/components/schemas/Prediction_Price_Point'
+          type: array
+        smart_score:
+          example: '15.5'
+          type: string
+      title: Smart Money Outcome
+      type: object
+    Source:
+      description: 'The source of the report date. Either the report date comes from the company or it is an estimation. Possible values: company, estimation.'
+      example: company
+      title: Source
+      type: string
+    Splits_Response:
+      properties:
+        data:
+          properties:
+            splits:
+              items:
+                $ref: '#/components/schemas/Stock_Split_Event'
+              type: array
+            ticker:
+              type: string
+          type: object
+      title: Splits Response
+      type: object
+    Spot_Call_Charm_Ask_Side_Exposure:
+      description: The call charm exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '102382359.5786'
+      title: Spot Call Charm Ask Side Exposure
+      type: string
+    Spot_Call_Charm_Bid_Side_Exposure:
+      description: The call charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '102382359.5786'
+      title: Spot Call Charm Bid Side Exposure
+      type: string
+    Spot_Call_Charm_Exposure:
+      description: The sum of the spot charm exposure values of all call transactions at a given strike.
+      example: '102382359.5786'
+      title: Spot Call Charm Exposure
+      type: string
+    Spot_Call_Delta_Ask_Side_Exposure:
+      description: The call delta exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '227549667.4651'
+      title: Spot Call Delta Ask Side Exposure
+      type: string
+    Spot_Call_Delta_Bid_Side_Exposure:
+      description: The call delta exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '227549667.4651'
+      title: Spot Call Delta Bid Side Exposure
+      type: string
+    Spot_Call_Delta_Exposure:
+      description: The sum of the spot delta exposure values of all call transactions at a given strike.
+      example: '227549667.4651'
+      title: Spot Call Delta Exposure
+      type: string
+    Spot_Call_Gamma_Ask_Side_Exposure:
+      description: The call gamma exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '-102382359.5786'
+      title: Spot Call Gamma Ask Side Exposure
+      type: string
+    Spot_Call_Gamma_Bid_Side_Exposure:
+      description: The call gamma exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '102382359.5786'
+      title: Spot Call Gamma Bid Side Exposure
+      type: string
+    Spot_Call_Gamma_Exposure:
+      description: The sum of the spot gamma exposure values of all call transactions at a given strike.
+      example: '9356683.4241'
+      title: Spot Call Gamma Exposure
+      type: string
+    Spot_Call_Vanna_Ask_Side_Exposure:
+      description: The call vanna exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '152099632406.9564'
+      title: Spot Call Vanna Ask Side Exposure
+      type: string
+    Spot_Call_Vanna_Bid_Side_Exposure:
+      description: The call vanna exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '102382359.5786'
+      title: Spot Call Vanna Bid Side Exposure
+      type: string
+    Spot_Call_Vanna_Exposure:
+      description: The sum of the spot vanna exposure values of all call transactions at a given strike.
+      example: '152099632406.9564'
+      title: Spot Call Vanna Exposure
+      type: string
+    Spot_GEX_exposures_per_1min:
+      description: ''
+      example:
+        data:
+          - charm_per_one_percent_move_dir: '654769081.21'
+            charm_per_one_percent_move_oi: '5124108502049.17'
+            charm_per_one_percent_move_vol: '320909908341.10'
+            gamma_per_one_percent_move_dir: '475681.21'
+            gamma_per_one_percent_move_oi: '65476967081.41'
+            gamma_per_one_percent_move_vol: '12921519098.30'
+            price: '4650'
+            time: 2023-12-13T05:00:41.481000Z
+            vanna_per_one_percent_move_dir: '-342349081.21'
+            vanna_per_one_percent_move_oi: '-54622844772.90'
+            vanna_per_one_percent_move_vol: '-5559678859.12'
+          - charm_per_one_percent_move_dir: '654769081.21'
+            charm_per_one_percent_move_oi: '4736293042981.03'
+            charm_per_one_percent_move_vol: '308180334258.50'
+            gamma_per_one_percent_move_dir: '475681.21'
+            gamma_per_one_percent_move_oi: '64220497598.15'
+            gamma_per_one_percent_move_vol: '11924696599.44'
+            price: '4650'
+            time: 2023-12-13T11:29:41.501000Z
+            vanna_per_one_percent_move_dir: '-342349081.21'
+            vanna_per_one_percent_move_oi: '-52107741026.80'
+            vanna_per_one_percent_move_vol: '-5043673317.55'
+      properties:
+        charm_per_one_percent_move_dir:
+          $ref: '#/components/schemas/CEX_Per_One_Percent_Move_Directionalized_Volume'
+        charm_per_one_percent_move_oi:
+          $ref: '#/components/schemas/CEX_Per_One_Percent_Move_OI'
+        charm_per_one_percent_move_vol:
+          $ref: '#/components/schemas/CEX_Per_One_Percent_Move_Volume'
+        gamma_per_one_percent_move_dir:
+          $ref: '#/components/schemas/GEX_Per_One_Percent_Move_Directionalized_Volume'
+        gamma_per_one_percent_move_oi:
+          $ref: '#/components/schemas/Gex_Gamma_Per_One_Percent_Move_OI'
+        gamma_per_one_percent_move_vol:
+          $ref: '#/components/schemas/Gex_Gamma_Per_One_Percent_Move_Volume'
+        price:
+          $ref: '#/components/schemas/Gex_Underlying_Price'
+        time:
+          $ref: '#/components/schemas/Gex_Calculation_Time'
+        vanna_per_one_percent_move_dir:
+          $ref: '#/components/schemas/VEX_Per_One_Percent_Move_Directionalized_Volume'
+        vanna_per_one_percent_move_oi:
+          $ref: '#/components/schemas/VEX_Per_One_Percent_Move_OI'
+        vanna_per_one_percent_move_vol:
+          $ref: '#/components/schemas/VEX_Per_One_Percent_Move_Volume'
+      title: Spot GEX exposures per 1min
+      type: object
+    Spot_Put_Charm_Ask_Side_Exposure:
+      description: The put charm exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '102382359.5786'
+      title: Spot Put Charm Ask Side Exposure
+      type: string
+    Spot_Put_Charm_Bid_Side_Exposure:
+      description: The put charm exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '102382359.5786'
+      title: Spot Put Charm Bid Side Exposure
+      type: string
+    Spot_Put_Charm_Exposure:
+      description: The sum of the spot charm exposure values of all put transactions at a given strike.
+      example: '102382359.5786'
+      title: Spot Put Charm Exposure
+      type: string
+    Spot_Put_Delta_Ask_Side_Exposure:
+      description: The put delta exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '-191893077.7193'
+      title: Spot Put Delta Ask Side Exposure
+      type: string
+    Spot_Put_Delta_Bid_Side_Exposure:
+      description: The put delta exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '-191893077.7193'
+      title: Spot Put Delta Bid Side Exposure
+      type: string
+    Spot_Put_Delta_Exposure:
+      description: The sum of the spot delta exposure values of all put transactions at a given strike.
+      example: '-191893077.7193'
+      title: Spot Put Delta Exposure
+      type: string
+    Spot_Put_Gamma_Ask_Side_Exposure:
+      description: The put gamma exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '-102382359.5786'
+      title: Spot Put Gamma Ask Side Exposure
+      type: string
+    Spot_Put_Gamma_Bid_Side_Exposure:
+      description: The put gamma exposure when Market Makers are buying contracts when a transactions is closer to the bid side.
+      example: '102382359.5786'
+      title: Spot Put Gamma Bid Side Exposure
+      type: string
+    Spot_Put_Gamma_Exposure:
+      description: The sum of the spot gamma exposure values of all put transactions at a given strike.
+      example: '9356683.4241'
+      title: Spot Put Gamma Exposure
+      type: string
+    Spot_Put_Vanna_Ask_Side_Exposure:
+      description: The put vanna exposure when Market Makers are selling contracts when a transactions is closer to the ask side.
+      example: '102382359.5786'
+      title: Spot Put Vanna Ask Side Exposure
+      type: string
+    Spot_Put_Vanna_Exposure:
+      description: The sum of the spot vanna exposure values of all put transactions at a given strike.
+      example: '152099632406.9564'
+      title: Spot Put Vanna Exposure
+      type: string
+    Spot_greek_exposures_by_strike:
+      description: ''
+      example:
+        data:
+          - call_charm_ask: '2582359253.61'
+            call_charm_bid: '5820636.43'
+            call_charm_oi: '70827151575067.12'
+            call_charm_vol: '70827151575067.12'
+            call_delta_ask: '23452351.20'
+            call_delta_bid: '30499234235.52'
+            call_delta_oi: '227549667.4651'
+            call_delta_vol: '227549667.4651'
+            call_gamma_ask: '23452351.20'
+            call_gamma_bid: '30499234235.52'
+            call_gamma_oi: '5124108502049.17'
+            call_gamma_vol: '5124108502049.17'
+            call_vanna_ask: '22692351.20'
+            call_vanna_bid: '234235.52'
+            call_vanna_oi: '65476967081.41'
+            call_vanna_vol: '65476967081.41'
+            price: '4650'
+            put_charm_ask: '96836366.22'
+            put_charm_bid: '6100352354.34'
+            put_charm_oi: '2282895170748.09'
+            put_charm_vol: '2282895170748.09'
+            put_delta_ask: '9528523023.39'
+            put_delta_bid: '9342852354.34'
+            put_delta_oi: '-191893077.7193'
+            put_delta_vol: '-191893077.7193'
+            put_gamma_ask: '9528523023.39'
+            put_gamma_bid: '9342852354.34'
+            put_gamma_oi: '320909908341.10'
+            put_gamma_vol: '320909908341.10'
+            put_vanna_ask: '495803.39'
+            put_vanna_bid: '26934630.34'
+            put_vanna_oi: '12921519098.30'
+            put_vanna_vol: '12921519098.30'
+            time: 2023-12-13T05:00:41.481000Z
+      properties:
+        call_charm_ask:
+          $ref: '#/components/schemas/Spot_Call_Charm_Ask_Side_Exposure'
+        call_charm_bid:
+          $ref: '#/components/schemas/Spot_Call_Charm_Bid_Side_Exposure'
+        call_charm_oi:
+          $ref: '#/components/schemas/Spot_Call_Charm_Exposure'
+        call_charm_vol:
+          $ref: '#/components/schemas/Spot_Call_Charm_Exposure'
+        call_delta_ask:
+          $ref: '#/components/schemas/Spot_Call_Delta_Ask_Side_Exposure'
+        call_delta_bid:
+          $ref: '#/components/schemas/Spot_Call_Delta_Bid_Side_Exposure'
+        call_delta_oi:
+          $ref: '#/components/schemas/Spot_Call_Delta_Exposure'
+        call_delta_vol:
+          $ref: '#/components/schemas/Spot_Call_Delta_Exposure'
+        call_gamma_ask:
+          $ref: '#/components/schemas/Spot_Call_Gamma_Ask_Side_Exposure'
+        call_gamma_bid:
+          $ref: '#/components/schemas/Spot_Call_Gamma_Bid_Side_Exposure'
+        call_gamma_oi:
+          $ref: '#/components/schemas/Spot_Call_Gamma_Exposure'
+        call_gamma_vol:
+          $ref: '#/components/schemas/Spot_Call_Gamma_Exposure'
+        call_vanna_ask:
+          $ref: '#/components/schemas/Spot_Call_Vanna_Ask_Side_Exposure'
+        call_vanna_bid:
+          $ref: '#/components/schemas/Spot_Call_Vanna_Bid_Side_Exposure'
+        call_vanna_oi:
+          $ref: '#/components/schemas/Spot_Call_Vanna_Exposure'
+        call_vanna_vol:
+          $ref: '#/components/schemas/Spot_Call_Vanna_Exposure'
+        price:
+          $ref: '#/components/schemas/Gex_Underlying_Price'
+        put_charm_ask:
+          $ref: '#/components/schemas/Spot_Put_Charm_Ask_Side_Exposure'
+        put_charm_bid:
+          $ref: '#/components/schemas/Spot_Put_Charm_Bid_Side_Exposure'
+        put_charm_oi:
+          $ref: '#/components/schemas/Spot_Put_Charm_Exposure'
+        put_charm_vol:
+          $ref: '#/components/schemas/Spot_Put_Charm_Exposure'
+        put_delta_ask:
+          $ref: '#/components/schemas/Spot_Put_Delta_Ask_Side_Exposure'
+        put_delta_bid:
+          $ref: '#/components/schemas/Spot_Put_Delta_Bid_Side_Exposure'
+        put_delta_oi:
+          $ref: '#/components/schemas/Spot_Put_Delta_Exposure'
+        put_delta_vol:
+          $ref: '#/components/schemas/Spot_Put_Delta_Exposure'
+        put_gamma_ask:
+          $ref: '#/components/schemas/Spot_Put_Gamma_Ask_Side_Exposure'
+        put_gamma_bid:
+          $ref: '#/components/schemas/Spot_Put_Gamma_Bid_Side_Exposure'
+        put_gamma_oi:
+          $ref: '#/components/schemas/Spot_Put_Gamma_Exposure'
+        put_gamma_vol:
+          $ref: '#/components/schemas/Spot_Put_Gamma_Exposure'
+        put_vanna_ask:
+          $ref: '#/components/schemas/Spot_Put_Vanna_Ask_Side_Exposure'
+        put_vanna_bid:
+          $ref: '#/components/schemas/Spot_Put_Charm_Bid_Side_Exposure'
+        put_vanna_oi:
+          $ref: '#/components/schemas/Spot_Put_Vanna_Exposure'
+        put_vanna_vol:
+          $ref: '#/components/schemas/Spot_Put_Vanna_Exposure'
+        strike:
+          $ref: '#/components/schemas/Strike'
+        time:
+          $ref: '#/components/schemas/Gex_Calculation_Time'
+      title: Spot greek exposures by strike
+      type: object
+    StockScreenerQueryHelp:
+      properties:
+        fields:
+          items:
+            properties:
+              aliases:
+                items:
+                  type: string
+                type: array
+              description:
+                nullable: true
+                type: string
+              kind:
+                enum:
+                  - number
+                  - boolean
+                  - symbol
+                  - list
+                  - keyword
+                type: string
+              name:
+                type: string
+            required:
+              - name
+              - aliases
+              - kind
+              - description
+            type: object
+          type: array
+        functions:
+          items:
+            type: string
+          type: array
+        keywords:
+          items:
+            type: string
+          type: array
+        operators:
+          items:
+            type: string
+          type: array
+        scopes:
+          items:
+            type: string
+          type: array
+        syntax:
+          properties:
+            examples:
+              items:
+                type: string
+              type: array
+            format:
+              enum:
+                - EBNF
+              type: string
+            function_signatures:
+              items:
+                properties:
+                  max_args:
+                    description: Null when there is no upper argument limit.
+                    nullable: true
+                    type: integer
+                  min_args:
+                    type: integer
+                  name:
+                    type: string
+                required:
+                  - name
+                  - min_args
+                  - max_args
+                type: object
+              type: array
+            grammar:
+              description: EBNF grammar for constructing stock screener queries.
+              type: string
+            notes:
+              items:
+                type: string
+              type: array
+          required:
+            - format
+            - grammar
+            - notes
+            - examples
+            - function_signatures
+          type: object
+        watchlists:
+          description: Empty for this endpoint. Personal watchlists are not forwarded to the screener.
+          items:
+            type: string
+          type: array
+      required:
+        - syntax
+        - fields
+        - keywords
+        - operators
+        - functions
+        - scopes
+        - watchlists
+      title: StockScreenerQueryHelp
+      type: object
+    StockTradesMaxPremium:
+      description: The maximum premium requested trades should have.
+      example: 150000
+      title: StockTradesMaxPremium
+      type: integer
+    StockTradesMaxSize:
+      description: The maximum size requested trades should have. Must be a positive integer.
+      example: 150000
+      title: StockTradesMaxSize
+      type: integer
+    StockTradesMaxVol:
+      description: The maximum consolidated volume requested trades should have. Must be a positive integer.
+      example: 150000
+      title: StockTradesMaxVol
+      type: integer
+    StockTradesMinPremium:
+      default: 0
+      description: The minimum premium requested trades should have.
+      example: 50000
+      minimum: 0
+      title: StockTradesMinPremium
+      type: integer
+    StockTradesMinSize:
+      default: 0
+      description: The minimum size requested trades should have. Must be a positive integer.
+      example: 50000
+      minimum: 0
+      title: StockTradesMinSize
+      type: integer
+    StockTradesMinVol:
+      default: 0
+      description: The minimum consolidated volume requested trades should have. Must be a positive integer.
+      example: 50000
+      minimum: 0
+      title: StockTradesMinVol
+      type: integer
+    Stock_Average_30_Day_Volume:
+      description: The avg stock volume for the stock last 30 days.
+      example: '55973002'
+      title: Stock Average 30 Day Volume
+      type: string
+    Stock_Beta:
+      description: The beta coefficient measuring the stock's volatility relative to the overall market (typically S&P 500). A beta of 1 indicates the stock moves with the market, greater than 1 indicates higher volatility, and less than 1 indicates lower volatility.
+      example: '1.25'
+      title: Stock Beta
+      type: string
+    Stock_Close_Price:
+      description: The close stock price of the ticker.
+      example: '182.91'
+      title: Stock Close Price
+      type: string
+    Stock_Company_Name:
+      description: The name of the company.
+      example: APPLE INC
+      title: Stock Company Name
+      type: string
+    Stock_Day_Stock_Volume:
+      description: The volume of the ticker for the trading day.
+      example: 23132119
+      title: Stock Day Stock Volume
+      type: integer
+    Stock_Earnings_time:
+      description: The time when the earnings will be released.
+      enum:
+        - unknown
+        - afterhours
+        - premarket
+      example: premarket
+      title: Stock Earnings time
+      type: string
+    Stock_Expiry:
+      description: The expiry of an options cycle as an ISO date.
+      example: 2023-09-08
+      title: Stock Expiry
+      type: string
+    Stock_Full_Name:
+      description: Full name of the ticker.
+      example: APPLE
+      title: Stock Full Name
+      type: string
+    Stock_Has_Dividend:
+      description: Boolean flag whether the company pays dividends.
+      example: true
+      title: Stock Has Dividend
+      type: boolean
+    Stock_Has_Earnings_History:
+      description: Boolean flag whether historic earnings data is present.
+      example: true
+      title: Stock Has Earnings History
+      type: boolean
+    Stock_Has_Investment_Arm:
+      description: Boolean flag whether the given stock is holding stocks of other companies.
+      example: true
+      title: Stock Has Investment Arm
+      type: boolean
+    Stock_Has_Options:
+      description: Boolean flag whether the company has options.
+      example: true
+      title: Stock Has Options
+      type: boolean
+    Stock_High_Price:
+      description: The high stock price of the ticker.
+      example: '182.91'
+      title: Stock High Price
+      type: string
+    Stock_Holding:
+      description: A stock or ETF holding in a portfolio
+      properties:
+        max_amount:
+          description: The maximum share quantity.
+          example: 15
+          type: number
+        mid_amount:
+          description: The midpoint share quantity.
+          example: 7
+          type: number
+        min_amount:
+          description: The minimum share quantity.
+          example: 1
+          type: number
+        ticker:
+          description: The stock ticker symbol.
+          example: XYZ
+          type: string
+        type:
+          description: The holding type.
+          example: stock
+          type: string
+      title: Stock Holding
+      type: object
+    Stock_Implied_Move:
+      description: The implied move of the underlying stock by a given date based on the money option contracts. It is calculated by multiplying the sum of the call and put price by 0.85. If no expiry date is included, then the implied move is for the nearest end of the week expiration (the nearest monthly expiration if there are no weekly contracts).
+      example: '2.2398043036460877'
+      title: Stock Implied Move
+      type: string
+    Stock_Implied_Move_Perc:
+      description: The implied move as a percentage of the underlying stock price.
+      example: '0.012247398860706955'
+      title: Stock Implied Move Perc
+      type: string
+    Stock_Industry_Type:
+      description: The industry type of the ticker.
+      example: Semiconductors
+      title: Stock Industry Type
+      type: string
+    Stock_Issue_Type:
+      description: The issue type of the ticker.
+      enum:
+        - Common Stock
+        - ETF
+        - Index
+        - ADR
+      example: Common Stock
+      title: Stock Issue Type
+      type: string
+    Stock_Last_Tape_Time:
+      description: The last tape time of the data.
+      example: 2023-09-07T20:06:00Z
+      title: Stock Last Tape Time
+      type: string
+    Stock_Lit_Volume:
+      description: The lit volume (this only represents stock trades executed on exchanges operated by Nasdaq).
+      example: 19941285
+      title: Stock Lit Volume
+      type: integer
+    Stock_Low_Price:
+      description: The low stock price of the ticker.
+      example: '182.91'
+      title: Stock Low Price
+      type: string
+    Stock_Marketcap_AUM:
+      description: The marketcap of the underlying ticker. If the issue type of the ticker is ETF then the marketcap represents the AUM.
+      example: '2965813810400'
+      title: Stock Marketcap AUM
+      type: string
+    Stock_Next_Earnings_Date:
+      description: The next earnings date of the ticker. Null if either unknown as of now or if the ticker does not have any earnings such as an ETF
+      example: 2023-10-26
+      format: date
+      title: Stock Next Earnings Date
+      type: string
+    Stock_Off_Lit_Volume:
+      description: The off lit stock volume (this only represents the FINRA operated exchanges).
+      example: 22074116
+      title: Stock Off Lit Volume
+      type: integer
+    Stock_Open_Interest:
+      description: The sum of open interest for all contracts.
+      example: 451630
+      title: Stock Open Interest
+      type: integer
+    Stock_Open_Price:
+      description: The open stock price of the ticker.
+      example: '182.91'
+      title: Stock Open Price
+      type: string
+    Stock_Options_Volume:
+      description: The sum of volume for all contracts.
+      example: 962332
+      title: Stock Options Volume
+      type: integer
+    Stock_Prev_Close_Price:
+      description: The previous trading day's stock price of the ticker.
+      example: '189.70'
+      title: Stock Prev Close Price
+      type: string
+    Stock_Price_Level:
+      description: The price level.
+      example: '120.12'
+      title: Stock Price Level
+      type: string
+    Stock_Quote:
+      properties:
+        last_trade:
+          $ref: '#/components/schemas/Latest_Stock_Trade'
+          description: Latest price forming trade, or null when unavailable.
+          nullable: true
+        market_time:
+          $ref: '#/components/schemas/Stock_Quote_Market_Time'
+        quote:
+          $ref: '#/components/schemas/National_Best_Bid_and_Ask'
+          description: Latest national best bid and ask, or null when unavailable.
+          nullable: true
+        quote_statistics:
+          $ref: '#/components/schemas/Stock_Quote_Statistics'
+        quote_values:
+          $ref: '#/components/schemas/Derived_Stock_Quote_Values'
+          description: Values derived from the latest quote, or null when no quote is available.
+          nullable: true
+      required:
+        - market_time
+        - quote_statistics
+      title: Stock Quote
+      type: object
+    Stock_Quote_Error_Response:
+      properties:
+        error:
+          properties:
+            code:
+              example: stock_quote_not_found
+              type: string
+            message:
+              example: Stock quote not found
+              type: string
+          required:
+            - code
+            - message
+          type: object
+      required:
+        - error
+      title: Stock Quote Error Response
+      type: object
+    Stock_Quote_Level:
+      properties:
+        price:
+          description: Price in US dollars.
+          example: '775.660'
+          type: string
+        size:
+          description: Number of shares available at this price.
+          example: 240
+          format: int64
+          type: integer
+      required:
+        - price
+        - size
+      title: Stock Quote Level
+      type: object
+    Stock_Quote_Market_Time:
+      description: Current US equity market session.
+      enum:
+        - regular
+        - premarket
+        - postmarket
+      example: regular
+      title: Stock Quote Market Time
+      type: string
+    Stock_Quote_Response:
+      example:
+        data:
+          last_trade:
+            price: '775.645'
+            time: 1786636349747
+            vol: 13548986
+          market_time: regular
+          quote:
+            ask:
+              price: '775.660'
+              size: 240
+            bid:
+              price: '775.650'
+              size: 80
+            time: 1786636351248
+          quote_statistics:
+            postmarket:
+              midpoint_changes: 0
+              quote_changes: 0
+              size_only_changes: 0
+              spread_tightened: 0
+              spread_unchanged: 0
+              spread_widened: 0
+            premarket:
+              midpoint_changes: 12540
+              quote_changes: 105322
+              size_only_changes: 92782
+              spread_tightened: 6440
+              spread_unchanged: 92782
+              spread_widened: 6100
+            regular:
+              midpoint_changes: 145814
+              quote_changes: 1255891
+              size_only_changes: 1110077
+              spread_tightened: 74875
+              spread_unchanged: 1110077
+              spread_widened: 70939
+          quote_values:
+            midpoint: '775.655'
+            quote_age_ms: 89
+            size_imbalance: 0.5238095238095238
+            size_weighted_midpoint: 775.657619047619
+            spread: '0.010'
+            spread_bps: 0.12892329708428238
+      properties:
+        data:
+          $ref: '#/components/schemas/Stock_Quote'
+      required:
+        - data
+      title: Stock Quote Response
+      type: object
+    Stock_Quote_Session_Statistics:
+      description: Quote change and spread direction counters accumulated during one market session.
+      properties:
+        midpoint_changes:
+          description: Quote changes where the arithmetic midpoint changed.
+          example: 145814
+          format: int64
+          type: integer
+        quote_changes:
+          description: Updates where at least one bid or ask price or size changed.
+          example: 1255891
+          format: int64
+          type: integer
+        size_only_changes:
+          description: Quote changes where size changed but bid and ask prices did not.
+          example: 1110077
+          format: int64
+          type: integer
+        spread_tightened:
+          description: Quote changes where the ask minus bid spread decreased.
+          example: 74875
+          format: int64
+          type: integer
+        spread_unchanged:
+          description: Quote changes where the ask minus bid spread did not change.
+          example: 1110077
+          format: int64
+          type: integer
+        spread_widened:
+          description: Quote changes where the ask minus bid spread increased.
+          example: 70939
+          format: int64
+          type: integer
+      required:
+        - midpoint_changes
+        - quote_changes
+        - size_only_changes
+        - spread_tightened
+        - spread_unchanged
+        - spread_widened
+      title: Stock Quote Session Statistics
+      type: object
+    Stock_Quote_Statistics:
+      description: Quote change statistics grouped by US equity market session.
+      properties:
+        postmarket:
+          $ref: '#/components/schemas/Stock_Quote_Session_Statistics'
+        premarket:
+          $ref: '#/components/schemas/Stock_Quote_Session_Statistics'
+        regular:
+          $ref: '#/components/schemas/Stock_Quote_Session_Statistics'
+      required:
+        - premarket
+        - regular
+        - postmarket
+      title: Stock Quote Statistics
+      type: object
+    Stock_Screener_response:
+      description: Matching stock screener rows. Decimal values are JSON strings.
+      example:
+        data:
+          - ask: '212.37'
+            ask_quantity: 200
+            avg30_volume: '130548356.35'
+            avg_30_day_call_oi: '8051988.5'
+            avg_30_day_call_volume: '2249702.1667'
+            avg_30_day_put_oi: '6761847.1333'
+            avg_30_day_put_volume: '1233488.0333'
+            avg_3_day_call_volume: '1827235'
+            avg_3_day_put_volume: '1035420.3333'
+            avg_7_day_call_volume: '2072806.2857'
+            avg_7_day_put_volume: '1152390'
+            bearish_premium: '251292082.00'
+            bid: '212.22'
+            bid_quantity: 1
+            bullish_premium: '263159651.00'
+            call_open_interest: 8264707
+            call_premium: '386488449.00'
+            call_premium_mid_side: '39629161.00'
+            call_volume: 1154879
+            call_volume_ask_side: 515816
+            call_volume_bid_side: 559199
+            call_volume_mid_side: 79840
+            close: '212.32'
+            cum_dir_delta: -677914
+            cum_dir_gamma: -259659
+            cum_dir_vega: -743026
+            date: 2026-09-15
+            dividend_yield: '0.0024491333835719668425018839'
+            earnings_perc: '0.0126872078603453209958981208'
+            eps_growth_12q: '7.88000000000000017760'
+            eps_growth_16q: '68.37500000000000138750'
+            eps_growth_4q: '1.24242424242424242424'
+            eps_growth_8q: '2.41538461538461538462'
+            er_time: unknown
+            etf_share_flow:
+            five_year_perc: '8.504028648164726947179946285'
+            full_name:
+            gex_charm_per_one_percent_move_dir: '-4173772259.32'
+            gex_charm_per_one_percent_move_oi: '-178109539132.43'
+            gex_charm_per_one_percent_move_vol: '-86622472511.05'
+            gex_delta_per_one_percent_move_oi: '91551310557.8'
+            gex_delta_per_one_percent_move_vol: '6933889994.39'
+            gex_gamma_per_one_percent_move_dir: '60387043.67'
+            gex_gamma_per_one_percent_move_oi: '614273906.59'
+            gex_gamma_per_one_percent_move_vol: '1162736871.6'
+            gex_net_change: '1142737.0464'
+            gex_perc_change: '2.5576649791004452'
+            gex_ratio: '0.70511582545094547148'
+            gex_vanna_per_one_percent_move_dir: '1351888.72'
+            gex_vanna_per_one_percent_move_oi: '181215271.33'
+            gex_vanna_per_one_percent_move_vol: '23383778.47'
+            has_options: true
+            high: '212.68'
+            implied_move: '13.995'
+            implied_move_1: '3.074'
+            implied_move_14: '9.284'
+            implied_move_180: '38.44'
+            implied_move_30: '13.995'
+            implied_move_365: '55.601'
+            implied_move_5: '5.711'
+            implied_move_60: '21.765'
+            implied_move_7: '6.568'
+            implied_move_90: '26.744'
+            implied_move_perc: '0.066'
+            implied_move_perc_1: '0.014'
+            implied_move_perc_14: '0.044'
+            implied_move_perc_180: '0.181'
+            implied_move_perc_30: '0.066'
+            implied_move_perc_365: '0.262'
+            implied_move_perc_5: '0.027'
+            implied_move_perc_60: '0.103'
+            implied_move_perc_7: '0.031'
+            implied_move_perc_90: '0.126'
+            industry_type: Semiconductors
+            insider_buy_volume_12m: 0
+            insider_buy_volume_3m: 0
+            insider_buy_volume_6m: 0
+            insider_sell_volume_12m: 6468150
+            insider_sell_volume_3m: 3755740
+            insider_sell_volume_6m: 4992922
+            intraday_change: '0.0008484962760441218063542943'
+            is_index: false
+            issue_type: Common Stock
+            iv30d: '0.339'
+            iv30d_1d: '0.335'
+            iv30d_1m: '0.379'
+            iv30d_1w: '0.344'
+            iv_percentile_1m: '50'
+            iv_percentile_1y: '8.4'
+            iv_rank: '10.7619'
+            iv_rank_1m: '25.5102'
+            last_earnings_date: 2026-08-26
+            latest_dividend: '0.25000000000000000000'
+            latest_dividend_date: 2026-09-10
+            latest_dividend_payment_date: 2026-10-01
+            low: '212.14'
+            marketcap: '5116912000000'
+            net_call_premium: '-1688824.00'
+            net_premium: '12448069.00'
+            net_put_premium: '-14136893.00'
+            next_dividend_date: 2026-09-10
+            next_earnings_date: 2026-11-18
+            one_day_perc: '0.0064467197572999620781190747'
+            one_month_perc: '-0.0570261147628353171078344289'
+            one_week_perc: '-0.0594072564568289549461746334'
+            one_year_perc: '0.1944866385372714486638537271'
+            open: '212.14'
+            prev_call_oi: 8045834
+            prev_call_volume: 2013743
+            prev_close: '210.96'
+            prev_put_oi: 7124369
+            prev_put_volume: 1206385
+            put_call_ratio: '0.4763910331731722544093363894'
+            put_open_interest: 7246905
+            put_premium: '200197635.00'
+            put_premium_mid_side: '21803110.00'
+            put_volume: 550174
+            put_volume_ask_side: 255999
+            put_volume_bid_side: 243660
+            put_volume_mid_side: 39512
+            quote_time: 1789515606340
+            realized_volatility: '0.442142'
+            relative_volume: '0.6741319344079202572051379182'
+            rv_1d_last_12q: '0.69530601632178044935'
+            sector: Technology
+            shares_outstanding: '24100000000'
+            shares_outstanding_growth_12q: '-0.02429149797570850202'
+            shares_outstanding_growth_4q: '-0.00823045267489711934'
+            shares_outstanding_growth_8q: '-0.01752955564614757440'
+            short_int: '0'
+            six_month_perc: '0.1779195561719833564493758669'
+            steepness_180_30: '1.1327433628318584070796460177'
+            stock_volume: 88006816
+            three_month_perc: '-0.000611908684396328547893622'
+            ticker: NVDA
+            total_open_interest: 15511612
+            ttm_dividend: '0.52000000000000000000'
+            variance_risk_premium: '-0.054142'
+            volatility: '0.339'
+            volatility_1: '0.406'
+            volatility_14: '0.328'
+            volatility_180: '0.384'
+            volatility_30: '0.339'
+            volatility_365: '0.39'
+            volatility_5: '0.339'
+            volatility_60: '0.374'
+            volatility_7: '0.329'
+            volatility_90: '0.375'
+            week_52_high: '236.54'
+            week_52_low: '164.27'
+            ytd_perc: '0.1384450402144772117962466488'
+            z_score: '0.3012839205652179291530506224'
+      properties:
+        data:
+          description: Rows after filtering, sorting, and pagination. Empty when no rows match.
+          items:
+            properties:
+              adx_14:
+                description: Average directional index over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              aroon_14_down:
+                description: Aroon down over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              aroon_14_up:
+                description: Aroon up over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              ask:
+                description: Latest best ask price, in the instrument's quoted price units. Null for historical snapshots.
+                nullable: true
+                type: string
+              ask_quantity:
+                description: Shares available at the latest best ask. Null for historical snapshots.
+                format: int64
+                nullable: true
+                type: integer
+              atr_14:
+                description: Average true range over 14 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              avg30_volume:
+                description: Average regular-session share volume for observations later than 30 calendar days before the latest market open, rather than exactly 30 trading sessions.
+                nullable: true
+                type: string
+              avg_30_day_call_oi:
+                description: Mean non-null call open interest among up to the 30 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_30_day_call_volume:
+                description: Mean call contract volume over up to the 30 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_30_day_put_oi:
+                description: Mean non-null put open interest among up to the 30 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_30_day_put_volume:
+                description: Mean put contract volume over up to the 30 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_3_day_call_volume:
+                description: Mean call contract volume over up to the 3 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_3_day_put_volume:
+                description: Mean put contract volume over up to the 3 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_7_day_call_volume:
+                description: Mean call contract volume over up to the 7 most recent earlier stored dates.
+                nullable: true
+                type: string
+              avg_7_day_put_volume:
+                description: Mean put contract volume over up to the 7 most recent earlier stored dates.
+                nullable: true
+                type: string
+              bb_14_2_lower:
+                description: Lower Bollinger band over 14 closing prices at 2 standard deviations. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              bb_14_2_middle:
+                description: Middle Bollinger band, the simple moving average of the close over 14 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              bb_14_2_upper:
+                description: Upper Bollinger band over 14 closing prices at 2 standard deviations. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              bb_20_2_lower:
+                description: Lower Bollinger band over 20 closing prices at 2 standard deviations. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              bb_20_2_middle:
+                description: Middle Bollinger band, the simple moving average of the close over 20 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              bb_20_2_upper:
+                description: Upper Bollinger band over 20 closing prices at 2 standard deviations. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              bearish_premium:
+                description: Call bid-side premium plus put ask-side premium, in US dollars. Excludes mid-side and unclassified trades.
+                nullable: false
+                type: string
+              bid:
+                description: Latest best bid price, in the instrument's quoted price units. Null for historical snapshots.
+                nullable: true
+                type: string
+              bid_quantity:
+                description: Shares available at the latest best bid. Null for historical snapshots.
+                format: int64
+                nullable: true
+                type: integer
+              bullish_premium:
+                description: Call ask-side premium plus put bid-side premium, in US dollars. Excludes mid-side and unclassified trades.
+                nullable: false
+                type: string
+              call_open_interest:
+                description: Call option open interest for the represented trading date.
+                format: int64
+                nullable: true
+                type: integer
+              call_premium:
+                description: Total call option premium in US dollars on the row's date.
+                nullable: false
+                type: string
+              call_premium_mid_side:
+                description: call premium in US dollars classified between the bid and ask.
+                nullable: true
+                type: string
+              call_volume:
+                description: Call option contracts traded on the row's date.
+                format: int64
+                nullable: false
+                type: integer
+              call_volume_ask_side:
+                description: call option contracts classified on the ask side.
+                format: int64
+                nullable: true
+                type: integer
+              call_volume_bid_side:
+                description: call option contracts classified on the bid side.
+                format: int64
+                nullable: true
+                type: integer
+              call_volume_mid_side:
+                description: call option contracts classified on the mid side.
+                format: int64
+                nullable: true
+                type: integer
+              cci_14:
+                description: Commodity channel index over 14 periods. This oscillator has no fixed bounds. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              close:
+                description: Latest trade price from the latest accepted trading session, in the instrument's quoted price units. May be null when index-price access rules hide prices.
+                nullable: true
+                type: string
+              cum_dir_delta:
+                description: Trade-level sum of floor(sign * abs(delta * contracts * 100)). Call ask and put bid trades are positive. Call bid and put ask trades are negative. Other trades contribute zero.
+                format: int64
+                nullable: true
+                type: integer
+              cum_dir_gamma:
+                description: Trade-level sum of floor(sign * abs(gamma * contracts * 100)). Ask-side trades are positive, bid-side trades are negative, and other trades contribute zero.
+                format: int64
+                nullable: true
+                type: integer
+              cum_dir_vega:
+                description: Trade-level sum of floor(sign * abs(vega * contracts * 100)). Ask-side trades are positive, bid-side trades are negative, and other trades contribute zero.
+                format: int64
+                nullable: true
+                type: integer
+              date:
+                description: New York trading date represented by this row.
+                format: date
+                type: string
+              dividend_yield:
+                description: ttm_dividend divided by the latest accepted stock price. A value of 0.04 means 4 percent. Null when price is zero or an input is missing.
+                nullable: true
+                type: string
+              earnings_perc:
+                description: Fractional price return from the regular close immediately before the latest earnings reaction window, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              ema_14:
+                description: Exponential moving average of the close over 14 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              ema_20:
+                description: Exponential moving average of the close over 20 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              ema_21:
+                description: Exponential moving average of the close over 21 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              ema_50:
+                description: Exponential moving average of the close over 50 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              ema_9:
+                description: Exponential moving average of the close over 9 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              eps_growth_12q:
+                description: 'Fractional EPS growth: (current EPS - EPS 12 reports earlier) / abs(EPS 12 reports earlier). Null when an input is missing or the comparison EPS is zero.'
+                nullable: true
+                type: string
+              eps_growth_16q:
+                description: 'Fractional EPS growth: (current EPS - EPS 16 reports earlier) / abs(EPS 16 reports earlier). Null when an input is missing or the comparison EPS is zero.'
+                nullable: true
+                type: string
+              eps_growth_4q:
+                description: 'Fractional EPS growth: (current EPS - EPS 4 reports earlier) / abs(EPS 4 reports earlier). Null when an input is missing or the comparison EPS is zero.'
+                nullable: true
+                type: string
+              eps_growth_8q:
+                description: 'Fractional EPS growth: (current EPS - EPS 8 reports earlier) / abs(EPS 8 reports earlier). Null when an input is missing or the comparison EPS is zero.'
+                nullable: true
+                type: string
+              er_time:
+                description: Earnings announcement timing, such as premarket, postmarket, or unknown.
+                nullable: true
+                type: string
+              etf_share_flow:
+                description: Signed change in an ETF's share count for the source observation date. Positive values indicate inflow and negative values indicate outflow.
+                format: int64
+                nullable: true
+                type: integer
+              five_year_close:
+                description: Reference price for five_year_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              five_year_perc:
+                description: Fractional price return from the latest regular close on or before five calendar years earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              full_name:
+                description: Company or security display name.
+                nullable: true
+                type: string
+              gex_charm_per_one_percent_move_dir:
+                description: Sum of charm weighted by directional session volume. Ask-side volume is negative and bid-side volume is positive. Mid-side volume is excluded. Multiplied by the underlying price and 365.
+                nullable: true
+                type: string
+              gex_charm_per_one_percent_move_oi:
+                description: Sum of charm weighted by open interest. Put charm is negated. Multiplied by the underlying price and 365.
+                nullable: true
+                type: string
+              gex_charm_per_one_percent_move_vol:
+                description: Sum of charm weighted by session option volume. Put charm is negated. Multiplied by the underlying price and 365.
+                nullable: true
+                type: string
+              gex_daily_call_charm:
+                description: Daily call charm exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_call_delta:
+                description: Daily call delta exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_call_gex:
+                description: Daily call gamma exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_call_vanna:
+                description: Daily call vanna exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_net_charm:
+                description: Daily net charm exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_net_delta:
+                description: Daily net delta exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_net_gex:
+                description: Daily net gamma exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_net_vanna:
+                description: Daily net vanna exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_put_charm:
+                description: Daily put charm exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_put_delta:
+                description: Daily put delta exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_put_gex:
+                description: Daily put gamma exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_daily_put_vanna:
+                description: Daily put vanna exposure from gex_daily for the row's date. Includes open interest and the contract multiplier of 100, without underlying-price scaling. Put gamma is negated; other Greeks retain their source signs. Net is call plus put. Null when a required side is unavailable.
+                nullable: true
+                type: string
+              gex_delta_per_one_percent_move_oi:
+                description: Sum of delta weighted by open interest. Delta retains its source sign for calls and puts. Multiplied by the underlying price squared.
+                nullable: true
+                type: string
+              gex_delta_per_one_percent_move_vol:
+                description: Sum of delta weighted by session option volume. Delta retains its source sign for calls and puts. Multiplied by the underlying price squared.
+                nullable: true
+                type: string
+              gex_gamma_per_one_percent_move_dir:
+                description: Sum of gamma weighted by directional session volume. Ask-side volume is negative and bid-side volume is positive. Mid-side volume is excluded. Multiplied by the underlying price squared.
+                nullable: true
+                type: string
+              gex_gamma_per_one_percent_move_oi:
+                description: Sum of gamma weighted by open interest. Put gamma is negated. Multiplied by the underlying price squared.
+            

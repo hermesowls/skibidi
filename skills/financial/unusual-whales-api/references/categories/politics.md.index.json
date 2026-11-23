@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/politics.md",
+  "parts": [
+    "references/categories/politics.md.part000",
+    "references/categories/politics.md.part001"
+  ],
+  "sha256": "c3254bb9c1aedcec2f20a3c1bc5da198bf3febcbc1ef12fa1eec977a39b3bd6e",
+  "bytes": 92628,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

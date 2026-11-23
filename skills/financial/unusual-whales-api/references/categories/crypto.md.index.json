@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/crypto.md",
+  "parts": [
+    "references/categories/crypto.md.part000",
+    "references/categories/crypto.md.part001"
+  ],
+  "sha256": "7b95327df32e4dbe99e3fafa1fccc714e4bc2c804fb7917c03c32e7d294a22fe",
+  "bytes": 113772,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

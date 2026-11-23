@@ -1,0 +1,2071 @@
+cotton, sugar, coffee, and the global commodities index.
+    - Added [`/economy/:indicator`](https://api.unusualwhales.com/docs/operations/PublicApi.EconomyController.show) for US economic indicator series (GDP, GDP per capita, treasury yield, fed funds rate, CPI, inflation, retail sales, durables, unemployment, payrolls).
+
+    ### Forex
+    - Added [`/forex/rate`](https://api.unusualwhales.com/docs/operations/PublicApi.ForexController.rate) for live FX spot rates with bid and ask.
+    - Added [`/forex/intraday`](https://api.unusualwhales.com/docs/operations/PublicApi.ForexController.intraday) for 1min through 60min FX OHLC bars.
+    - Added [`/forex/history`](https://api.unusualwhales.com/docs/operations/PublicApi.ForexController.history) for daily, weekly, and monthly FX OHLC bars.
+
+    ### Digital currencies
+    - Added [`/digital-currencies/intraday`](https://api.unusualwhales.com/docs/operations/PublicApi.DigitalCurrenciesController.intraday) for intraday OHLC bars priced against a fiat market.
+    - Added [`/digital-currencies/history`](https://api.unusualwhales.com/docs/operations/PublicApi.DigitalCurrenciesController.history) for daily, weekly, and monthly OHLC bars.
+
+    ### Market intel and analytics
+    - Added [`/market/movers`](https://api.unusualwhales.com/docs/operations/PublicApi.IntelController.movers) for pre-ranked top gainers, top losers, and most actively traded US tickers.
+    - Added [`/calendar/ipo`](https://api.unusualwhales.com/docs/operations/PublicApi.IntelController.ipo_calendar) for upcoming IPOs over the next 3 months.
+    - Added [`/analytics/window`](https://api.unusualwhales.com/docs/operations/PublicApi.IntelController.analytics_window) for fixed-window statistical analytics across baskets of tickers (mean, stddev, correlation, drawdown, autocorrelation, covariance, and more).
+    - Added [`/analytics/sliding`](https://api.unusualwhales.com/docs/operations/PublicApi.IntelController.analytics_sliding) for sliding-window statistical analytics.
+
+    ### Congressional unusual trades (scope `unusual-trades`)
+    - Added [`/congress/unusual-trades`](https://api.unusualwhales.com/docs/operations/PublicApi.UnusualTradesController.recent) for unusual congressional trades filtered by reason tag (committee_conflict, first_person_to_trade, low_marketcap, unusual_industry, unusually_large_trade, fec_donation_conflict).
+    - Added [`/congress/unusual-trades/by-tickers`](https://api.unusualwhales.com/docs/operations/PublicApi.UnusualTradesController.by_tickers) with ticker, transaction type, date range, and politician filters.
+    - Added [`/congress/unusual-trades/chart-data`](https://api.unusualwhales.com/docs/operations/PublicApi.UnusualTradesController.chart_data) returning trade points with SPY benchmark closes.
+    - Added [`/congress/unusual-trades/stats`](https://api.unusualwhales.com/docs/operations/PublicApi.UnusualTradesController.stats) for aggregate overview statistics.
+
+    ### Private markets (scope `private-markets`)
+    - Added [`/private-markets/companies`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.companies) for the full Nasdaq Private Markets company list with sector and name filters.
+    - Added [`/private-markets/companies/:npm_ticker`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.company_profile) for the company profile with latest price, total funding, and investor count.
+    - Added [`/private-markets/companies/:npm_ticker/funding`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.funding) for funding round history.
+    - Added [`/private-markets/companies/:npm_ticker/investors`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.investors) for disclosed investors.
+    - Added [`/private-markets/companies/:npm_ticker/management`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.management) for disclosed leadership.
+    - Added [`/private-markets/companies/:npm_ticker/pricing`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.pricing) for historical implied per-share pricing.
+    - Added [`/private-markets/investors`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.top_investors) for top investors ranked by distinct company count.
+    - Added [`/private-markets/investors/:name`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.investor_profile) for an investor's portfolio.
+    - Added [`/private-markets/search`](https://api.unusualwhales.com/docs/operations/PublicApi.PrivateMarketsController.search) for substring search across companies and investors.
+
+    ### MCP
+    - Added 5 premium MCP catalogs covering the new endpoints: `uw_companies_extras`, `uw_macro`, `uw_forex`, `uw_digital_currencies`, `uw_intel`. Plus `uw_unusual_trades` and `uw_private_markets` for the scope-gated catalogs above.
+    - Premium MCP catalogs and individual premium commands (`uw_stock.ownership`, `uw_flow.full_tape`, `uw_politicians`) are now hidden by default. Operators opt in via `UW_ENABLE_PREMIUM_TOOLS=true` (all on) or `UW_PREMIUM_TOOLS=uw_companies_extras,uw_macro,...` (per-tool allowlist supporting `<catalog_id>` or `<catalog_id>.<command>` form).
+
+    # 2026.04.29
+    - Added MCP tool `get_short_volume_ratio_by_exchange` for [`/shorts/:ticker/volumes-by-exchange`](https://api.unusualwhales.com/docs/operations/PublicApi.ShortController.short_volume_by_exchange) data.
+    - Added MCP tool `get_short_volume_ratio_by_ticker` for [`/shorts/:ticker/volume-and-ratio`](https://api.unusualwhales.com/docs/operations/PublicApi.ShortController.short_volume_and_ratio) data.
+    - Added MCP tool `get_short_screener` for [`/short_screener`](https://api.unusualwhales.com/docs/operations/PublicApi.ShortController.short_screener)
+    - Added MCP tool `get_short_data_by_ticker` for [`/shorts/:ticker/data`](https://api.unusualwhales.com/docs/operations/PublicApi.ShortController.short_data)
+
+    # 2026.04.14
+    - Enhanced MCP [`/api/mcp`](https://api.unusualwhales.com/docs) `tools/call` validation to reject unsupported arguments, missing required arguments, and invalid enum values before tool execution.
+    - MCP tool errors now include retry guidance telling clients to inspect `tools/list` `inputSchema` and retry with supported arguments.
+
+    # 2026.03.02
+    - Added authenticated MCP endpoint [`/api/mcp`](https://api.unusualwhales.com/docs) to expose existing AI tools to API subscribers using the same `Authorization: Bearer <API_TOKEN>` flow.
+    - Supports MCP `initialize`, `tools/list`, and `tools/call` methods backed by the existing internal tool registry and execution pipeline.
+
+    # 2026.01.20
+    - Updated interest-float endpoint with new version and deprecated old version
+    - [`/shorts/:ticker/interest-float/v2`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.short_interest_and_float_v2)
+    - Added interest-float search screener endpoint
+    - [`/short_screener`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.short_screener)
+
+    # 2025.09.23
+
+    - Added new websocket channels [`lit_trades`](https://api.unusualwhales.com/docs#/operations/PublicApi.SocketController.lit_trades) and [`off_lit_trades`](https://api.unusualwhales.com/docs#/operations/PublicApi.SocketController.off_lit_trades) to stream live lit (exchange-based) and off-lit (dark pool) trades respectively.
+
+    # 2025.09.22
+
+    - Added `newer_than` and `older_than` time filtering parameters to [`/alerts`](https://api.unusualwhales.com/docs#/operations/PublicApi.AlertsController.alerts) endpoint with 14-day maximum lookback period for custom alerts queries
+
+    # 2025.08.20
+
+    - Added [`/market/top-net-impact`](https://api.unusualwhales.com/docs#/operations/PublicApi.MarketController.top_net_impact) endpoint to get the top tickers by net premium (split between bullish and bearish). Supports filtering by `issue_types[]`, `date`, and `limit` (default 20, max 100).
+
+    # 2025.06.18
+
+    - Added [`/market/:sector/sector-tide`](https://api.unusualwhales.com/docs#/operations/PublicApi.MarketController.sec_indst) endpoint to get the market tide for a specific sector
+
+    # 2025.06.02
+
+    - Added [`/stock/:ticker/interpolated-iv`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.interpolated_iv) endpoint to get the interpolated iv for various days
+
+
+    # 2025.05.29
+
+    - Added [`/option-contract/:id/volume-profile`](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionContractController.volume_profile) endpoint to get the volume profile of an option contract (volume by fill price)
+
+    # 2025.05.23
+
+    - Added [`/option-contract/:id/intraday`](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionContractController.intraday) endpoint to get the volume, premium & OHLC for a contract in 1min ticks for a given trading day
+
+    # 2025.05.07
+
+    - Added `prev_close_price` field to [`/stock/:ticker/stock-state`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.last_stock_state) endpoint to provide the previous close price.
+
+    # 2025.04.30
+
+    - Enhanced [`/option-trades/full-tape/{date}`](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.full_tape) to allow users with `websocket` scope to access the last two trading days of data
+
+    # 2025.04.23
+
+    - Added [`/net-flow/expiry`](https://api.unusualwhales.com/docs#/operations/PublicApi.NetFlowController.expiry) endpoint to track net premium flow by tide type, moneyness, and expiration categories. This powers charts like those found on the [zero-DTE dashboard](https://unusualwhales.com/zero-dte)
+
+    # 2025.04.08
+
+    - Enhanced [`/market/correlations`](https://api.unusualwhales.com/docs#/operations/PublicApi.MarketController.correlations) endpoint with new date filtering options: `start_date` and `end_date` parameters to specify custom date ranges, complementing the existing `interval` parameter
+
+    # 2025.03.23
+    - Updated [`/stock/{ticker}/net-prem-ticks`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.net_prem_ticks) endpoint to
+    include `call_volume`, `put_volume`, `call_volume_bid_side`,  `put_volume_bid_side`, `call_volume_ask_side`,  `put_volume_ask_side` & `net_delta`.
+
+    # 2025.03.10
+
+    - Added [`/news/headlines`](https://api.unusualwhales.com/docs#/operations/PublicApi.NewsController.headlines) endpoint to access financial news headlines with filtering capabilities
+    - Added Shorts API endpoints:
+      - [`/shorts/:ticker/data`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.short_data)
+      - [`/shorts/:ticker/volumes-by-exchange`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.short_volume_by_exchange)
+      - [`/shorts/:ticker/ftds`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.failures_to_deliver)
+      - [`/shorts/:ticker/interest-float`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.short_interest_and_float)
+      - [`/shorts/:ticker/volume-and-ratio`](https://api.unusualwhales.com/docs#/operations/PublicApi.ShortController.short_volume_and_ratio)
+
+    # 2025.02.19
+
+    - The endpoint [`/stock/:ticker/spot-exposures/:expiry/strike`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry) has been deprecated and been replaced by [`/stock/:ticker/spot-exposures/expiry-strike`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry_v2)
+
+    To migrate over replace all your `/api/stock/:ticker/spot-exposures/:expiry/strike` calls with `/api/stock/:ticker/spot-exposures/expiry-strike?expirations[]=expiry`
+
+    # 2025.02.13
+    - The endpoint `/congress/recent-reports` has been removed as it returns the same data as `/congress/recent-trades`.
+
+    # 2025.02.05
+    - Enhanced [`/market/fda-calendar`](https://api.unusualwhales.com/docs#/operations/PublicApi.MarketController.fda_calendar) with better FDA data, additional fields (notes, outcomes, sources), and filtering by company metrics
+
+    # 2025.02.03
+    - Updated dark pool/off lit endpoints to allow filtering for size, premium & consolidated volume
+
+    # 2025.01.22
+    - Added [`gex_strike_expiry:<TICKER>`](https://api.unusualwhales.com/docs#/operations/PublicApi.SocketController.gex) channel to the websocket
+    - Added `call_option_symbol` & `put_option_symbol` to [`/stock/{ticker}/greeks`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.greeks)
+
+    # 2025.01.16
+    - Added [`/stock/:ticker/spot-exposures/:expiry/strike`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike_expiry)
+
+    # 2024.12.11
+    - Added [`/alerts/configuration`](https://api.unusualwhales.com/docs#/operations/PublicApi.AlertsController.configs)
+    - Added [`/alerts`](https://api.unusualwhales.com/docs#/operations/PublicApi.AlertsController.alerts)
+
+    This allows one to grab all the alerts that have been triggerd for any alert that one has configured. With an existing unusualwhales account you can view and configure alerts directly on the [website](https://unusualwhales.com/custom-alerts)
+
+    # 2024.12.02
+    - Added [`/stock/:ticker/oi-per-strike`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.oi_per_strike)
+    - Added [`/stock/:ticker/oi-per-expiry`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.oi_per_expiry)
+
+    # 2024.11.19
+    - Improved all earnings endpoint
+
+    # 2024.11.09
+    - Added `perc_of_total` & `perc_of_share_value` to [`/institution/:name/holdings`](https://api.unusualwhales.com/docs#/operations/PublicApi.InstitutionController.holdings)
+
+    # 2024.10.30
+    - Added [`/stock/:ticker/nope`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.nope)
+
+    # 2024.10.28
+    - Added [`/group-flow/:flow_group/greek-flow`](https://api.unusualwhales.com/docs#/operations/PublicApi.GroupFlowController.greek_flow)
+    - Added [`/group-flow/:flow_group/greek-flow/:expiry`](https://api.unusualwhales.com/docs#/operations/PublicApi.GroupFlowController.greek_flow_expiry)
+    - Added [`/stock/:ticker/greek-flow`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.greek_flow)
+    - Added [`/stock/:ticker/greek-flow/:epxiry`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.greek_flow_expiry)
+
+    # 2024.10.16
+    - Added etf inflow & outflow endpoint [`/etfs/:ticker/in_outflow`](PublicApi.EtfController.in_outflow)
+
+    # 2024.10.15
+    - Added institutional latest filings endpoint [`/institution/latest_filings`](PublicApi.InstitutionController.latest_filings)
+    - Added institutional ownership endpoint [`/institution/:ticker/ownership`](PublicApi.InstitutionController.ownership)
+
+    # 2024.10.14
+    - Added 2 new fields: `days_of_oi_increases` & `days_of_vol_greater_than_oi` to [`/market/oi-change`](PublicApi.MarketController.oi_change)
+    ```
+    days_of_oi_increases: The number of consecutive days that the open interest has increased for this contract. If on any day the open interest decreases or does not change the count will reset.
+
+    days_of_vol_greater_than_oi: The number of consecutive days that the volume has been greater than the open interest for this contract. If on any day the volume is less than or equal to the open interest the count will reset.
+    ```
+
+    <br/>
+
+    # 2024.10.10
+    - Added institutional activity endpoint [`/institution/:name/activity`](PublicApi.InstitutionController.activity)
+
+    # 2024.10.09
+    - Added institutional list endpoint [`institutions`](PublicApi.InstitutionController.list)
+    - Added institutional holdings endpoint [`/institution/:name/holdings`](PublicApi.InstitutionController.holdings)
+    - Added institutional sector exposure endpoint [`/institution/:name/sectors`](PublicApi.InstitutionController.sectors)
+
+    # 2024.08.01
+    - Added new flow per strike intraday endpoint [`/stock/:ticker/flow-per-strike-intraday`](PublicApi.TickerController.flow_per_strike_intraday)
+
+    # 2024.07.11
+    - Added new correlation endpoint [`/market/correlations?tickers=SPY,QQQ,JPM,BAC`](PublicApi.MarketController.correlations)
+
+    # 2024.05.30
+    - Added the ability to filter [`/darkpool/:ticker`](PublicApi.DarkPoolController.darkpool_ticker) by timestamps through the two new query parameters `older_than` and `newer_than`
+
+    # 2024.05.21
+    - Added directionalized volume fields to [`/stock/:ticker/spot-exposures`](PublicApi.TickerController.spot_exposures_one_minute) and [`/stock/:ticker/spot-exposures/strike`](PublicApi.TickerController.spot_exposures_by_strike)
+
+    # 2024.05.17
+    - Added the channels `gex:TICKER` & `gex_strike:TICKER` to the [websocket](https://api.unusualwhales.com/docs#/operations/PublicApi.SocketController.channels)
+
+    # 2024.05.07
+    - Added the ability to filter [`/option-trades/flow-alerts`](PublicApi.OptionTradeController.flow_alerts) by timestamps through the two new query parameters `older_than` and `newer_than`
+
+    # 2024.05.06
+    - Added endpoint [`/stock/:ticker/stock-state`](PublicApi.TickerController.last_stock_state) to retrieve the last stock price & volume
+    - Added endpoint [`/stock/:ticker/volatility/realized`](PublicApi.TickerController.realized_volatility) to retrieve a stock's realized volatility
+
+    # 2024.05.03
+    - The data returned by /stock/:ticker/option-contracts has been limited to 500 results
+
+    # 2024.05.02
+    - Added endpoint [`/market/:ticker/etf-tide`](PublicApi.MarketController.etf_tide)
+
+    # 2024.05.01
+    - Added endpoint [`/stock/:ticker/spot-exposures/strike`](PublicApi.TickerController.spot_exposures_by_strike)
+    - Added new channel [`price:TICKER`](https://api.unusualwhales.com/docs#/operations/PublicApi.SocketController.channels) to the websocket. The channel will push live price updates for the given ticker.
+
+    # 2024.04.25
+    - Added endpoint [`/stock/:ticker/greek-exposure/strike`](PublicApi.TickerController.greek_exposure_by_strike)
+    - Added endpoint [`/stock/:ticker/greek-exposure/expiry`](PublicApi.TickerController.greek_exposure_by_expiry)
+    - Added endpoint [`/stock/:ticker/greek-exposure/strike-expiry`](PublicApi.TickerController.greek_exposure_by_strike_expiry)
+
+    # 2024.03.28
+    - Fixed field name volatility -> risk_reversal for endpoint [`/stock/:ticker/historical_risk_reversal_skew`](PublicApi.TickerController.historical_risk_reversal_skew)
+
+    # 2024.03.26
+    - Added endpoint [`/stock/:ticker/greeks`](PublicApi.TickerController.greeks)
+    - Added endpoint [`/stock/:ticker/historical_risk_reversal_skew`](PublicApi.TickerController.historical_risk_reversal_skew)
+
+    # 2024.03.23
+    - BREAKING CHANGE:
+    Previously `/option-contract/:id/flow` would return the data as a json list. This has been now changed so that the endpoint
+    returns the data in the format `{"data": [], "date": "2024-03-22"}`. Secondly, the endpoint will now only return data for
+    a single trading day.
+
+    # 2024.03.06
+    - Added endpoint [`/option-trades/flow-alerts`](PublicApi.OptionTradeController.flow_alerts)
+    - Added flow-alerts streaming to the WebSocket.
+
+    # 2024.03.04
+    - Added endpoint [`/stock/:ticker/max-pain`](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.max_pain)
+
+    # 2024.02.16
+    - Added new endpoint section [`Seasonality`](https://api.unusualwhales.com/docs#/operations/PublicApi.SeasonalityController.market_seasonality) with new endpoints:
+        - [`/seasonality/market`](https://api.unusualwhales.com/docs#/operations/PublicApi.SeasonalityController.market_seasonality)
+        - [`/seasonality/:month/performers`](https://api.unusualwhales.com/docs#/operations/PublicApi.SeasonalityController.month_performers)
+        - [`/seasonality/:ticker/monthly`](https://api.unusualwhales.com/docs#/operations/PublicApi.SeasonalityController.monthly)
+        - [`/seasonality/:ticker/year-month`](https://api.unusualwhales.com/docs#/operations/PublicApi.SeasonalityController.year_month)
+
+    # 2024.02.07
+    - Added endpoints [`/stock/:ticker/expiry-breakdown`](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionContractController.expiry_breakdown) & [`/stock/:ticker/option-contracts`](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionContractController.option_contracts). These 2 endpoints allow access to the data located here: [https://unusualwhales.com/stock/AAPL/option-chains](https://unusualwhales.com/stock/AAPL/option-chains)
+  title: UnusualWhales Api
+  version: '1.0'
+openapi: 3.0.0
+paths:
+  /api/alerts:
+    get:
+      callbacks: {}
+      description: |
+        Returns all the alerts that have been triggered for the user.
+
+        Time filtering is available using the `newer_than` and `older_than` parameters:
+        - The maximum lookback period is 14 days
+        - If no time range is specified, defaults to the last 14 days
+        - If only one time parameter is provided, the other is automatically calculated to maintain the 14-day limit
+        - If both parameters are provided but exceed 14 days, the range is adjusted to 14 days from the `older_than` timestamp
+
+        The alerts are the same alerts as the user created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)
+      operationId: PublicApi.AlertsController.alerts
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_50_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: intraday_only
+          required: false
+          schema:
+            default: true
+            description: Boolean flag whether to return only intraday alerts.
+            example: true
+            type: boolean
+        - description: ''
+          in: query
+          name: config_ids[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Configration_IDs'
+        - description: ''
+          in: query
+          name: ticker_symbols
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: noti_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Noti_Types'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            description: Filter alerts created after this timestamp. When used alone, the time range is limited to 14 days forward from this timestamp. The format can either be a timestamp in unix seconds or milliseconds or a string in ISO format.
+            example: 2024-01-01T00:00:00Z
+            format: datetime
+            type: string
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            description: Filter alerts created before this timestamp. When used alone, the time range is limited to 14 days backward from this timestamp. The format can either be a timestamp in unix seconds or milliseconds or a string in ISO format
+            example: 2024-01-15T23:59:59Z
+            format: datetime
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Alerts
+      tags:
+        - alerts
+  /api/alerts/configuration:
+    get:
+      callbacks: {}
+      description: |
+        Returnst all alert configurations of the user.
+
+        Users can create alerts for:
+        - Market tide
+        - Gamma exposure (GEX), Vanna exposure (VEX), Charm exposure (CEX)
+        - Interval Contract screeners (replicates and alerts on the Flow Feed)
+        - Analyst ratings, price targets, and actions
+        - Politician trades
+        - Insider trades
+        - OI changes for contract in premarket
+        - FDA
+        - Flow alerts
+        - Contract screener (replicates and alerts on the Hottest Chains)
+        - Stock screeners
+        - News
+        - Earnings
+        - Dividends
+        - Splits
+        - Trading stats (halts, unhalts)
+        - Economic release
+        - SEC filings
+
+        The alerts are the same alerts as the user created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)
+      operationId: PublicApi.AlertsController.configs
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert_config'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Alert configurations
+      tags:
+        - alerts
+    post:
+      callbacks: {}
+      description: |
+        Creates a new alert configuration, or updates an existing one when `id` is given.
+
+        The alert filters can be given in one of two ways, but never both:
+        - `config`: a structured filter object for the given `noti_type`, the same configuration as returned by the alert configurations endpoint.
+        - `input`: a Query language expression. Use the Query language for complex filter expressions.
+
+        Before creating an alert fetch the available filters:
+        - `GET /api/alerts/filters` lists per alert type (`noti_type`) the filter fields that can be used in `config`, their accepted values, and whether your account can create alerts of that type.
+        - `GET /api/alerts/query/grammar` returns the Query language syntax. `GET /api/alerts/query/grammar?target=option_trade` the full field reference for one target.
+
+        Example with a structured `config`:
+        ```json
+        {
+          "name": "FED news",
+          "noti_type": "news",
+          "config": {"symbols": "all", "contains": ["FED"]}
+        }
+        ```
+
+        Example with a Query language `input`:
+        ```json
+        {
+          "name": "Energy sector calls",
+          "noti_type": "flow_alerts",
+          "input": "add @energy where calls and volume > 100 and (dte > 10 or (dte = 0 and ticker = 'XOM'))"
+        }
+        ```
+
+        The created alerts are delivered like the alerts created on [https://unusualwhales.com/custom-alerts](https://unusualwhales.com/custom-alerts)
+        and their triggers can be fetched from the alerts endpoint or streamed over the `custom_alerts` websocket channel.
+
+        The alerts and usage of the websocket are the easiest way to setup and get notified on anything that matches your filter configs.
+        The query language is a powerful tool to create complex configurations in a SQL like language.
+      operationId: PublicApi.AlertsController.create_config
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Create_alert_config_request'
+        description: Alert configuration
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created_alert_config'
+          description: The created or updated alert configuration
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Invalid alert configuration
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: User or alert configuration not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Internal Server Error
+      summary: Create alert configuration
+      tags:
+        - alerts
+  /api/alerts/filters:
+    get:
+      callbacks: {}
+      description: |
+        Returns the available filters for creating alert configurations:
+        - `data`: per alert type (`noti_type`) the filter fields that can be used in the `config` object, each with its accepted values
+        - `access`: per alert type whether your account can create alerts of that type
+        - `noti_type_descriptions`: a description of each alert type
+        - `filter_descriptions`: per alert type a description of each filter field
+        - `rate_limits`: per alert type the maximum amount of alerts that trigger per day
+
+        Use this endpoint to determine which alert types the account can access and to build a structured `config` object.
+        Submit the resulting `noti_type` and `config` to `POST /api/alerts/configuration` to create an alert.
+
+        For more complex filters, fetch the Query language syntax and fields from `GET /api/alerts/query/grammar`,
+        then submit the Query expression to `POST /api/alerts/configuration` using `input` instead of `config`.
+        The `config` and `input` fields are mutually exclusive.
+      operationId: PublicApi.AlertsController.filters
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert_filters'
+          description: The alert filters
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Alert filters
+      tags:
+        - alerts
+  /api/alerts/query/grammar:
+    get:
+      callbacks: {}
+      description: |
+        Returns the grammar of the alert Query language: available targets, syntax, fields, functions, operators,
+        scopes and example expressions.
+
+        Without a `target` parameter an overview over all targets is returned. Pass a `target` to get
+        the full field reference for that alert type. Use the Query language to create complex alert configurations
+        via the create alert configuration endpoint. You can compare fields `strike > spot`, add complex math operations
+        `ln(strike / spot) / (iv * sqrt(dte / 365)) > 2` and write configs similar as to one writes SQL.
+
+        If you are an Ai/Agent you should use this endpoint to fetch the grammar and then post them to `/api/alerts/configuration`.
+        See the documentation at the https://api.unusualwhales.com/docs/operations/PublicApi.AlertsController.create_config for more info on the format and how to post
+        an alert config.
+      operationId: PublicApi.AlertsController.dsl_grammar
+      parameters:
+        - description: ''
+          in: query
+          name: target
+          required: false
+          schema:
+            description: The alert target to return the detailed grammar for.
+            enum:
+              - flow_alert
+              - option_trade
+              - option_contract
+              - ticker_interval_flow
+              - news
+              - trading_state
+              - multi_leg_trade
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert_DSL_grammar'
+          description: The Query language grammar
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Query grammar
+      tags:
+        - alerts
+  /api/analytics/sliding:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Sliding window statistical analytics across one or more tickers.'
+      operationId: PublicApi.IntelController.analytics_sliding
+      parameters:
+        - description: ''
+          in: query
+          name: symbols
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: range
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: range_end
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: DAILY
+            type: string
+        - description: ''
+          in: query
+          name: ohlc
+          required: false
+          schema:
+            default: close
+            type: string
+        - description: ''
+          in: query
+          name: window_size
+          required: false
+          schema:
+            default: 20
+            minimum: 1
+            type: integer
+        - description: ''
+          in: query
+          name: calculations
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics_Response'
+          description: Analytics Sliding
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Sliding-Window Analytics
+      tags:
+        - intel
+  /api/analytics/window:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Statistical analytics over a fixed window across one or more tickers. Returns mean, stddev, correlation, etc.'
+      operationId: PublicApi.IntelController.analytics_window
+      parameters:
+        - description: Comma-separated tickers.
+          in: query
+          name: symbols
+          required: true
+          schema:
+            example: AAPL,IBM,MSFT
+            type: string
+        - description: Either an ISO date for the start of the window (pair with the optional range_end) or a relative shorthand like '2month' or 'full'.
+          in: query
+          name: range
+          required: true
+          schema:
+            example: 2month
+            type: string
+        - description: Optional end date when using ISO range_start.
+          in: query
+          name: range_end
+          required: false
+          schema:
+            example: 2024-08-31
+            type: string
+        - description: ''
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: DAILY
+            enum:
+              - 1min
+              - 5min
+              - 15min
+              - 30min
+              - 60min
+              - DAILY
+              - WEEKLY
+              - MONTHLY
+            type: string
+        - description: ''
+          in: query
+          name: ohlc
+          required: false
+          schema:
+            default: close
+            enum:
+              - open
+              - high
+              - low
+              - close
+            type: string
+        - description: 'Comma-separated. Supported: MIN, MAX, MEAN, MEDIAN, CUMULATIVE_RETURN, VARIANCE, STDDEV, MAX_DRAWDOWN, HISTOGRAM, AUTOCORRELATION, COVARIANCE, CORRELATION.'
+          in: query
+          name: calculations
+          required: true
+          schema:
+            example: MEAN,STDDEV,CORRELATION
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics_Response'
+          description: Analytics Window
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Fixed-Window Analytics
+      tags:
+        - intel
+  /api/calendar/ipo:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Upcoming IPOs in the next 3 months.'
+      operationId: PublicApi.IntelController.ipo_calendar
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IPO_Calendar_Response'
+          description: IPO Calendar
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: IPO Calendar
+      tags:
+        - intel
+  /api/commodities/{name}:
+    get:
+      callbacks: {}
+      description: |
+        **Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).**
+
+        Returns a long-running price series for a commodity.
+
+        Available names: wti, brent, natural-gas, copper, aluminum, wheat, corn, cotton, sugar, coffee, all-commodities.
+      operationId: PublicApi.CommoditiesController.show
+      parameters:
+        - description: ''
+          in: path
+          name: name
+          required: true
+          schema:
+            enum:
+              - wti
+              - brent
+              - natural-gas
+              - copper
+              - aluminum
+              - wheat
+              - corn
+              - cotton
+              - sugar
+              - coffee
+              - all-commodities
+            type: string
+        - description: Series cadence. Defaults to monthly.
+          in: query
+          name: interval
+          required: false
+          schema:
+            default: monthly
+            enum:
+              - daily
+              - weekly
+              - monthly
+              - quarterly
+              - annual
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Macro_Series_Response'
+          description: Commodity Series
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Commodity Series
+      tags:
+        - commodities
+  /api/companies/listings:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** All US-traded securities, optionally filtered to delisted as of a given date.'
+      operationId: PublicApi.IntelController.listings
+      parameters:
+        - description: ''
+          in: query
+          name: status
+          required: false
+          schema:
+            default: active
+            enum:
+              - active
+              - delisted
+            type: string
+        - description: Only used when status=delisted. ISO date.
+          in: query
+          name: date
+          required: false
+          schema:
+            format: date
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Listings_Response'
+          description: Listings
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Active or Delisted Securities
+      tags:
+        - intel
+  /api/companies/{ticker}/dividends:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Historical dividend events for a ticker (ex-date, declaration, record, payment, amount).'
+      operationId: PublicApi.CompaniesController.dividends
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dividends_Response'
+          description: Dividends
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Company Dividends
+      tags:
+        - companies
+  /api/companies/{ticker}/earnings-estimates:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Analyst-driven forward earnings estimates by quarter/year.'
+      operationId: PublicApi.CompaniesController.earnings_estimates
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Earnings_Estimates_Response'
+          description: Earnings Estimates
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Forward Earnings Estimates
+      tags:
+        - companies
+  /api/companies/{ticker}/profile:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Returns a normalized company profile (sector, industry, description, market cap, P/E, dividend yield, etc.).'
+      operationId: PublicApi.CompaniesController.profile
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company_Profile_Response'
+          description: Company Profile
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Company Profile
+      tags:
+        - companies
+  /api/companies/{ticker}/splits:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Historical stock split events for a ticker.'
+      operationId: PublicApi.CompaniesController.splits
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Splits_Response'
+          description: Splits
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Company Stock Splits
+      tags:
+        - companies
+  /api/companies/{ticker}/transcripts/{quarter}:
+    get:
+      callbacks: {}
+      description: '**Requires Advanced+ tier (Advanced, Enterprise, or Enterprise + Kafka).** Full earnings-call transcript for a ticker and quarter (e.g. 2024Q1). Returns speakers, sentiment, and statements.'
+      operationId: PublicApi.CompaniesController.transcript
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+        - description: Year and quarter, e.g. "2024Q1".
+          in: path
+          name: quarter
+          required: true
+          schema:
+            pattern: ^[0-9]{4}Q[1-4]$
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transcript_Response'
+          description: Transcript
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Earnings Call Transcript
+      tags:
+        - companies
+  /api/congress/congress-trader:
+    get:
+      callbacks: {}
+      description: |
+        Returns the recent reports by the given congress member.
+
+        Supports pagination via `page` (1-indexed) and `limit` parameters.
+        Date range filtering: use `date` for upper bound and `date_from` for lower bound.
+        To query a single day, set both to the same date (e.g. `?date_from=2025-06-15&date=2025-06-15`).
+      operationId: PublicApi.CongressController.congress_trader
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Ticker'
+        - description: ''
+          in: query
+          name: name
+          required: false
+          schema:
+            $ref: '#/components/schemas/Congress_Member'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: date_from
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Senate_Stock'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Recent Reports By Trader
+      tags:
+        - congress
+  /api/congress/late-reports:
+    get:
+      callbacks: {}
+      description: |
+        Returns the recent late reports by congress members.
+        If a date is given, will only return recent late reports, which's report date is <= the given input date.
+      operationId: PublicApi.CongressController.congress_late_reports
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Ticker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Senate_Stock'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Recent Late Reports
+      tags:
+        - congress
+  /api/congress/politicians:
+    get:
+      callbacks: {}
+      description: |
+        Returns a distinct list of politicians for which trade data exists.
+        Use `last_traded_within_months` to filter to only recently-active politicians (e.g. 13 for last 13 months).
+        Each entry includes trade count, first/last trade date, party, chamber, and gender.
+      operationId: PublicApi.CongressController.congress_politicians
+      parameters:
+        - description: ''
+          in: query
+          name: last_traded_within_months
+          required: false
+          schema:
+            maximum: 240
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Senate_Stock'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: List of Politicians with Trade Data
+      tags:
+        - congress
+  /api/congress/recent-trades:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest transacted trades by congress members.
+        If a date is given, will only return reports, which's transaction date is <= the given input date.
+      operationId: PublicApi.CongressController.congress_recent_trades
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_200_Min_1'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Ticker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Senate_Stock'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Recent Congress Trades
+      tags:
+        - congress
+  /api/congress/unusual-trades:
+    get:
+      callbacks: {}
+      description: |
+        Returns congressional trades that have been flagged as unusual, optionally filtered by reason tags.
+        Supported `types` values include `committee_conflict`, `first_person_to_trade`, `low_marketcap`,
+        `unusual_industry`, `unusually_large_trade`, and `fec_donation_conflict`.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.UnusualTradesController.recent
+      parameters:
+        - description: Comma-separated list of unusual-activity tags to filter by. Returns all unusual trades when omitted.
+          in: query
+          name: types
+          required: false
+          schema:
+            type: string
+        - description: Number of results per page (max 500).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            maximum: 500
+            minimum: 1
+            type: integer
+        - description: Page number (1-indexed).
+          in: query
+          name: page
+          required: false
+          schema:
+            default: 1
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unusual_Trades'
+          description: Unusual Trades
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Unusual Congressional Trades
+      tags:
+        - unusual_trades
+  /api/congress/unusual-trades/by-tickers:
+    get:
+      callbacks: {}
+      description: |
+        Returns congressional trades filtered by one or more tickers, with optional date range,
+        transaction type, and politician name filters. Includes price-at-trade and current-price context.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.UnusualTradesController.by_tickers
+      parameters:
+        - description: Comma-separated list of tickers to filter by.
+          in: query
+          name: tickers
+          required: false
+          schema:
+            type: string
+        - description: Filter to either buy- or sell-side transactions.
+          in: query
+          name: transaction_type
+          required: false
+          schema:
+            enum:
+              - buy
+              - sell
+            type: string
+        - description: Inclusive lower bound on transaction_date (ISO 8601).
+          in: query
+          name: date_from
+          required: false
+          schema:
+            format: date
+            type: string
+        - description: Inclusive upper bound on transaction_date (ISO 8601).
+          in: query
+          name: date_to
+          required: false
+          schema:
+            format: date
+            type: string
+        - description: Case-insensitive substring match against the politician's full name.
+          in: query
+          name: politician
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            maximum: 500
+            minimum: 1
+            type: integer
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            default: 1
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unusual_Trades'
+          description: Unusual Trades
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Unusual Trades by Ticker
+      tags:
+        - unusual_trades
+  /api/congress/unusual-trades/chart-data:
+    get:
+      callbacks: {}
+      description: |
+        Returns trade points (with price context) and SPY daily closes over the requested date range,
+        suitable for plotting congressional trade activity against the broader market.
+        Defaults to the last ~4 months when no range is supplied.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.UnusualTradesController.chart_data
+      parameters:
+        - description: Inclusive lower bound on transaction_date (ISO 8601).
+          in: query
+          name: date_from
+          required: false
+          schema:
+            format: date
+            type: string
+        - description: Inclusive upper bound on transaction_date (ISO 8601).
+          in: query
+          name: date_to
+          required: false
+          schema:
+            format: date
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unusual_Trades_Chart_Data'
+          description: Unusual Trades Chart Data
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Unusual Trades Chart Data
+      tags:
+        - unusual_trades
+  /api/congress/unusual-trades/stats:
+    get:
+      callbacks: {}
+      description: |
+        Returns the most recent cached overview statistics: top 30 politicians by unusual trade count,
+        party/chamber breakdowns, committee and industry groupings, top tickers, biggest trades,
+        and daily trade volume series with SPY benchmark.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.UnusualTradesController.stats
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unusual_Trades_Stats'
+          description: Unusual Trades Stats
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Unusual Trades Aggregate Stats
+      tags:
+        - unusual_trades
+  /api/crypto/candles/{interval}:
+    get:
+      callbacks: {}
+      description: |
+        Returns OHLC candles for a token.
+      operationId: PublicApi.CryptoController.get_candles
+      parameters:
+        - description: ''
+          in: path
+          name: interval
+          required: true
+          schema:
+            enum:
+              - 1min
+              - 5min
+              - 15min
+              - 30min
+              - 1hour
+              - 2hour
+              - 4hour
+              - 1day
+              - 1week
+              - 1month
+            type: string
+        - description: ''
+          in: query
+          name: next_token
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: token1
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: token2
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: from
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoDateTime'
+        - description: ''
+          in: query
+          name: to
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoDateTime'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_API_OHLC_Response'
+          description: Crypto OHLC Candles
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Get Crypto API OHLC Candles.
+      tags:
+        - crypto
+  /api/crypto/list_tokens:
+    get:
+      callbacks: {}
+      description: |
+        Returns a list of tokens meeting specified filter criteria.
+      operationId: PublicApi.CryptoController.list_tokens
+      parameters:
+        - description: ''
+          in: query
+          name: min_liquidity
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: max_liquidity
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: min_total_supply
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: max_total_supply
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: min_circulating_supply
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: max_circulating_supply
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: min_market_cap
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: max_market_cap
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: min_holders
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: max_holders
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoApiNumberArg'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_100_Max_1000_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_Tokens_List_Response'
+          description: Crypto Tokens list.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Get a list of tokens.
+      tags:
+        - crypto
+  /api/crypto/token/{token}:
+    get:
+      callbacks: {}
+      description: |
+        Returns token metadata for a given token address.
+      operationId: PublicApi.CryptoController.get_token
+      parameters:
+        - description: ''
+          in: path
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_Tokens_List_Response'
+          description: Crypto token metadata.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Get token metadata.
+      tags:
+        - crypto
+  /api/crypto/trades:
+    get:
+      callbacks: {}
+      description: |
+        Return a list of trades for a token pair.
+      operationId: PublicApi.CryptoController.list_trades
+      parameters:
+        - description: ''
+          in: query
+          name: next_token
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: token
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: from
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoDateTime'
+        - description: ''
+          in: query
+          name: to
+          required: false
+          schema:
+            $ref: '#/components/schemas/CryptoDateTime'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_Transactions_List_Response'
+          description: Crypto API Transactions
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Get a list of trades.
+      tags:
+        - crypto
+  /api/crypto/whale-transactions:
+    get:
+      callbacks: {}
+      description: |
+        Returns recent whale transactions.
+      operationId: PublicApi.CryptoController.whale_transactions
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Crypto_Whale_Transactions_Response'
+          description: Crypto Whale Transactions
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/compo

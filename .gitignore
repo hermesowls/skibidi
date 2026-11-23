@@ -220,3 +220,16 @@ native/fts5_cjk/*.so
 
 # Disposable profile created by scripts/probe_active_session_exclusivity.py
 .probe-home/
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary staging and skills curator runtime state
+hermes_cli/web_dist.tracking-staged/
+skills/.curator_*
+skills/.curator_backups/
+skills/.usage.json*
+skills/.archive/
+skills/.bundled_manifest

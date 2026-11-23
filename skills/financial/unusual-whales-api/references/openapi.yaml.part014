@@ -1,0 +1,2302 @@
+unts, RSU data, and revenue breakdowns by product and geography.
+      operationId: PublicApi.FundamentalController.show
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fundamental_Breakdown_Response'
+          description: Fundamental Breakdown
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Fundamental Breakdown
+      tags:
+        - stock
+  /api/stock/{ticker}/gex-levels:
+    get:
+      callbacks: {}
+      description: |
+        The key gamma-exposure (GEX) price levels for a ticker on a given market date, derived from
+        per-strike net gamma exposure evaluated relative to spot:
+
+        - `call_wall`: strike above spot with the largest positive net gamma (resistance)
+        - `put_wall`: strike below spot with the largest positive net gamma (support)
+        - `gamma_magnet`: strike with the largest-magnitude net gamma (the strongest pin)
+        - `gamma_flip`: interpolated price where net dealer gamma crosses zero (between the two
+          strikes).
+
+        The levels are built from **directionalized volume** by default. This is the exposure dealers took on from
+        the day's ask/bid sided flow, updated through the session. Pass `source` to derive them from another
+        basis instead:
+
+        - `vol`: directionalized volume (default)
+        - `oi`: open interest
+
+        `nearby_flips` lists every zero-gamma crossing near spot, ordered by distance from it and capped at
+        five, with `gamma_flip` as its first entry. On chains with many strikes the crossings often cluster
+        within a dollar or two, which means no single level is decisive. The list makes that visible.
+
+        The response echoes the `source` used, along with `date`, the market date the levels describe, and
+        `time`, when the exposure snapshot behind them was calculated.
+
+        Any level may be `null` when there is no data for the date (or, for `gamma_flip`, when net gamma
+        does not change sign across the strike range).
+
+        To determine the gamma regime, use the sign of net gamma from
+        `/api/stock/{ticker}/greek-exposure` (`call_gamma + put_gamma`). Positive net gamma means price is
+        above the flip and hedging tends to dampen volatility. Negative net gamma means price is below the flip
+        and hedging tends to amplify volatility. `gamma_flip` is a cumulative zero-crossing that can be `null`
+        or far from spot, so do not use it for regime detection.
+      operationId: PublicApi.TickerController.gex_levels
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: source
+          required: false
+          schema:
+            $ref: '#/components/schemas/GEX_Source'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GEX_Levels'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: GEX Levels
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greek-exposure:
+    get:
+      callbacks: {}
+      description: |
+        Greek Exposure is the assumed greek exposure that market makers are exposed to.
+
+        The most popular greek exposure is gamma exposure (GEX).
+
+        Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+        GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+        If a market maker has one contract open with a gamma value of 0.05, then that market maker is exposed to 0.05 * [100 shares] of gamma. The total market maker exposure is calculated by summing up the exposure values of all open contracts determined by the daily open interest.
+
+        Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+        Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+        Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+        As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+        This data updates once per day at market open.
+      operationId: PublicApi.TickerController.greek_exposure
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: timeframe
+          required: false
+          schema:
+            $ref: '#/components/schemas/Time_frame'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greek_Exposure'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Greek Exposure
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greek-exposure/expiry:
+    get:
+      callbacks: {}
+      description: |
+        The greek exposure of a ticker grouped by expiry dates across all contracts on a given market date.
+      operationId: PublicApi.TickerController.greek_exposure_by_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greek_Exposure_By_Expiry'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Greek Exposure By Expiry
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greek-exposure/strike:
+    get:
+      callbacks: {}
+      description: |
+        The greek exposure of a ticker grouped by strike price across all contracts on a given market date.
+      operationId: PublicApi.TickerController.greek_exposure_by_strike
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greek_Exposure_By_Strike'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Greek Exposure By Strike
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greek-exposure/strike-expiry:
+    get:
+      callbacks: {}
+      description: |
+        The greek exposure of a ticker grouped by strike price for a specific expiry date.
+      operationId: PublicApi.TickerController.greek_exposure_by_strike_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: expiry
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greek_Exposure_By_Strike_And_Expiry'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Greek Exposure By Strike And Expiry
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greek-flow:
+    get:
+      callbacks: {}
+      description: |
+        Returns the tickers greek flow (delta & vega flow) for the given market day broken down per minute.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.TickerController.greek_flow
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greek_Flow'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Greek flow
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greek-flow/{expiry}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the tickers greek flow (delta & vega flow) for the given market day broken down per minute & expiry.
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.TickerController.greek_flow_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: path
+          name: expiry
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greek_Flow_Expiry'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Greek flow by expiry
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/greeks:
+    get:
+      callbacks: {}
+      description: |
+        Returns the greeks for each strike for a single expiry date.
+
+        `expiry` is required. Without it, the endpoint returns an empty array rather than an error.
+
+        Open interest is not included. For open interest and the full contract set, use
+        `/api/stock/{ticker}/option-contracts`. That endpoint also returns per-contract delta, gamma, theta,
+        vega and rho. Charm and vanna remain available here. Join `call_option_symbol` or `put_option_symbol`
+        to the option contracts response's `option_symbol`.
+      operationId: PublicApi.TickerController.greeks
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: expiry
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greeks'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Greeks
+      tags:
+        - stock
+  /api/stock/{ticker}/historical-risk-reversal-skew:
+    get:
+      callbacks: {}
+      description: |
+        Returns the historical risk reversal skew (the difference between put and call volatility) at a delta of 25 or 10 (colloquial for 0.25 or 0.1) for a given expiry date.
+      operationId: PublicApi.TickerController.historical_risk_reversal_skew
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: expiry
+          required: true
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+        - description: ''
+          in: query
+          name: timeframe
+          required: false
+          schema:
+            $ref: '#/components/schemas/Time_frame'
+        - description: ''
+          in: query
+          name: delta
+          required: true
+          schema:
+            $ref: '#/components/schemas/Delta'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historical_Risk_Reversal_Skew'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Historical Risk Reversal Skew
+      tags:
+        - stock
+  /api/stock/{ticker}/income-statements:
+    get:
+      callbacks: {}
+      description: |
+        Returns income statement data including revenue, gross profit, operating income,
+        EBIT, EBITDA, net income, R&D, SG&A, depreciation, interest, and tax expenses.
+      operationId: PublicApi.AvFundamentalController.income_statements
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Income_Statements_Response'
+          description: Income Statements
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Income Statements
+      tags:
+        - stock
+  /api/stock/{ticker}/info:
+    get:
+      callbacks: {}
+      description: |
+        Returns a information about the given ticker.
+      operationId: PublicApi.TickerController.info
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticker_Info'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Information
+      tags:
+        - stock
+  /api/stock/{ticker}/insider-buy-sells:
+    get:
+      callbacks: {}
+      description: |
+        Returns the total amount of purchases & sells as well as notional values for insider transactions
+        for the given ticker
+      operationId: PublicApi.TickerController.insider_buy_sell
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insider_statistics'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Insider buy & sells
+      tags:
+        - stock
+  /api/stock/{ticker}/interpolated-iv:
+    get:
+      callbacks: {}
+      description: |
+        Returns the Interpolated IV for a given trading day. If there is no expiration then the data is calcualted via linear interpolation
+        with the next 2 closest expirations
+
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.TickerController.interpolated_iv
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interpolated_IV'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Interpolated IV
+      tags:
+        - stock
+  /api/stock/{ticker}/interpolated-iv/distribution:
+    get:
+      callbacks: {}
+      description: |
+        Returns one row per fixed maturity with the range of its interpolated implied volatility over the
+        365 calendar days ending on `date`. Each row holds the minimum, first quartile, median, third quartile
+        and maximum of the daily values, the value on `date`, and the share of daily values at or below it.
+
+        The response covers the 7, 30, 60, 90, 180 and 365 day maturities. Daily values at or below zero are
+        ignored, and a maturity without a positive value on `date` is omitted. Rows are ordered by maturity
+        from shortest to longest. `date` defaults to the last trading day.
+      operationId: PublicApi.VolatilityController.interpolated_iv_distribution
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interpolated_IV_Distribution'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Interpolated IV Distribution
+      tags:
+        - volatility
+  /api/stock/{ticker}/iv-rank:
+    get:
+      callbacks: {}
+      description: |
+        Returns the IV rank data for a ticker over a period of time.
+        IV rank is a measure of where current implied volatility stands relative to its historical range.
+
+        Rows are returned oldest first, so the latest value is the last element. Sort by date or read the last
+        row before using the current value.
+      operationId: PublicApi.TickerController.iv_rank
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: timespan
+          required: false
+          schema:
+            $ref: '#/components/schemas/OptionalTimespan'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IV_Rank'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: IV Rank
+      tags:
+        - stock
+  /api/stock/{ticker}/max-pain:
+    get:
+      callbacks: {}
+      description: |
+        Returns the max pain for all expirations for the given ticker for the last 120 days
+      operationId: PublicApi.TickerController.max_pain
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Max_Pain'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Max Pain
+      tags:
+        - stock
+  /api/stock/{ticker}/net-prem-ticks:
+    get:
+      callbacks: {}
+      description: |
+        Returns the net premium ticks for a given ticker which can be used to build the following chart:
+        ![Net Prem chart](https://i.imgur.com/Rom1kcB.png)
+
+        ----
+        Each tick is resembling the data for a single minute tick. To build a daily chart
+        you would have to add the previous data to the current tick:
+        ```javascript
+        const url =
+          'https://api.unusualwhales.com/api/stock/AAPL/net-prem-ticks';
+        const options = {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer YOUR_TOKEN'
+          }
+        };
+
+        fetch(url, options)
+        .then(r => r.json())
+        .then(r => {
+          const {data} = r.data;
+          const fieldsToSum = [
+            "net_call_premium",
+            "net_call_volume",
+            "net_put_premium",
+            "net_put_volume"
+          ];
+
+          let result = [];
+          data.forEach((e, idx) => {
+            e.net_call_premium = parseFloat(e.net_call_premium);
+            e.net_put_premium = parseFloat(e.net_put_premium);
+            if (idx !== 0) {
+              fieldsToSum.forEach((field) => {
+                e[field] = e[field] + result[idx-1][field];
+              })
+            }
+            result.push(e);
+          })
+
+          return result;
+        });
+
+        ```
+      operationId: PublicApi.TickerController.net_prem_ticks
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Net_Prem_Tick_response.'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Call/Put Net/Vol Ticks
+      tags:
+        - stock
+  /api/stock/{ticker}/nope:
+    get:
+      callbacks: {}
+      description: |
+        Returns the tickers NOPE for the given market day broken down per minute.
+
+        NOPE is the Net Options Pricing Effect, which tracks the intraday net delta of any ticker, but most research has been done on indexes.
+        It functions under 2 assumptions:
+        1) MM's take short side of any call or put traded during the day
+        2) MM's try to minimize risk by dynamically hedging their delta-gamma exposure, and do so by buying/shorting the underlying stock in proportion to the total net delta being tradedBased on these assumptions, options trading in large amounts (re: very liquid tickers) can potentially drive the price of the underlying, to a certain extent. Large movements might exacerbate this real time hedging, and drive price movements further in respective directions.
+
+        In short, NOPE represents a best-estimate of expected number of shares to be hedged at any given time, and will show a general expected direction on the underlying
+
+        The original NOPE calculation was based on the following formula:
+        `NOPE = (Call Delta - Put Delta) / Stock Volume`
+        where call/put delta is obtained by multiplying each chains volume with its latest delta and then summing those values up.
+
+        `NOPE fill` on the other hand is based on the delta at the time of the transaction
+
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.TickerController.nope
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nope'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: Nope
+      tags:
+        - stock
+  /api/stock/{ticker}/ohlc/{candle_size}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the Open High Low Close (OHLC) candle data for a given ticker.
+
+        Results are limited to 2,500 elements even if there are more available.
+
+        Row order depends on `candle_size`: intraday candles are newest first, while daily candles are oldest
+        first. The most recent intraday candle is still forming, and its `start_time` is the start of the current
+        bucket. Select the latest bar by the maximum `start_time`, not by array position.
+
+        Note: If you select 1d or 1w as a candle_size then the candles won't have a start & end time. For 1w, the `date` field is the Monday of the ISO week.
+
+        Note: Suppose you enter end_date value 2024-11-25 which was a Monday. Your response will include 1-2 hours of data from Tuesday 2024-11-26 due to UTC date rollover.
+        Rest-assured, the response data covers the full trading day (based on Eastern time) according to your entered end_date.
+      operationId: PublicApi.TickerController.ohlc
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: path
+          name: candle_size
+          required: true
+          schema:
+            enum:
+              - 1m
+              - 5m
+              - 10m
+              - 15m
+              - 30m
+              - 1h
+              - 4h
+              - 1d
+              - 1w
+            type: string
+        - description: ''
+          in: query
+          name: timeframe
+          required: false
+          schema:
+            $ref: '#/components/schemas/Time_frame'
+        - description: ''
+          in: query
+          name: end_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/OHLC_End_Date'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Market_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_2500_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candle_data'
+          description: OHLC Response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: OHLC
+      tags:
+        - stock
+  /api/stock/{ticker}/oi-change:
+    get:
+      callbacks: {}
+      description: |
+        Returns the tickers contracts' OI change data ordered by absolute OI change (default: descending).
+        Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+      operationId: PublicApi.TickerController.oi_change
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Limit_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OI_Change'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+      summary: OI Change
+      tags:
+        - stock
+  /api/stock/{ticker}/oi-per-expiry:
+    get:
+      callbacks: {}
+      description: |
+        Returns the total open interest for calls and puts for a specific expiry date.
+      operationId: PublicApi.TickerController.oi_per_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Open_Interest_per_Expiry'
+          description: OI per expiry response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: OI per Expiry
+      tags:
+        - stock
+  /api/stock/{ticker}/oi-per-strike:
+    get:
+      callbacks: {}
+      description: |
+        Returns the total open interest for calls and puts for a specific strike.
+      operationId: PublicApi.TickerController.oi_per_strike
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Open_Interest_per_Strike'
+          description: OI per strike response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: OI per Strike
+      tags:
+        - stock
+  /api/stock/{ticker}/option-chains:
+    get:
+      callbacks: {}
+      description: |
+        Returns all option symbols for the given ticker that were present at the given day.
+
+        If no date is given, returns data for the current/last market day.
+
+        You can use the following regex to extract underlying ticker, option type, expiry & strike:
+        `^(?<symbol>[\w]*)(?<expiry>(\d{2})(\d{2})(\d{2}))(?<type>[PC])(?<strike>\d{8})$`
+
+        Keep in mind that the strike needs to be divided by 1,000.
+      operationId: PublicApi.TickerController.option_chains
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: When true, return an enriched row per contract (strike, expiry, type, NBBO, IV, OI, volume, delta, gamma, theta, vega, rho, last_tape_time) instead of the default array of option-symbol strings.
+          example: true
+          in: query
+          name: greeks
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Chains_response'
+          description: Option chains response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Option Chains
+      tags:
+        - stock
+  /api/stock/{ticker}/option-contracts:
+    get:
+      callbacks: {}
+      description: |
+        Returns all option contracts for the given ticker.
+
+        Each row includes the NBBO bid and ask, implied volatility and per-contract delta, gamma, theta, vega
+        and rho, so quotes and greeks are available in one call. Charm and vanna are not included. Use
+        `/api/stock/{ticker}/greeks` and join this response's `option_symbol` to `call_option_symbol` or
+        `put_option_symbol` for those values.
+      operationId: PublicApi.OptionContractController.option_contracts
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: expiry
+          required: false
+          schema:
+            $ref: '#/components/schemas/Single_expiry_date'
+        - description: ''
+          in: query
+          name: option_type
+          required: false
+          schema:
+            $ref: '#/components/schemas/OptionType'
+        - description: Wether to only return chains where volume > open interest
+          example: true
+          in: query
+          name: vol_greater_oi
+          required: false
+          schema:
+            type: boolean
+        - description: Wether to only return chains where volume > 0
+          example: true
+          in: query
+          name: exclude_zero_vol_chains
+          required: false
+          schema:
+            type: boolean
+        - description: Wether to only return chains which do not expire on the same day
+          example: true
+          in: query
+          name: exclude_zero_dte
+          required: false
+          schema:
+            type: boolean
+        - description: Wether to only return chains where open interest > 0
+          example: true
+          in: query
+          name: exclude_zero_oi_chains
+          required: false
+          schema:
+            type: boolean
+        - description: Wether to only return chains which are out of the money
+          example: true
+          in: query
+          name: maybe_otm_only
+          required: false
+          schema:
+            type: boolean
+        - description: Minimum days to expiration (expiry at least this many days from today).
+          in: query
+          name: min_dte
+          required: false
+          schema:
+            type: integer
+        - description: Maximum days to expiration (expiry at most this many days from today).
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            type: integer
+        - description: Options symbols to filter by
+          in: query
+          name: option_symbol[]
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_contracts'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Option contracts
+      tags:
+        - option-contract
+  /api/stock/{ticker}/option-stance:
+    get:
+      callbacks: {}
+      description: |
+        Ranks a ticker's option contracts by how well their mechanics fit a chosen trade **stance**, across all
+        recent expiries and strikes. Returns a 0–5 `fit_score` plus named 0–1 sub-scores (`iv_regime`, `greeks_fit`,
+        `dte_fit`, `liquidity`, `earnings_timing`) and a plain-language `explanation` for each contract, alongside a
+        `context` header (stock price, IV rank, IV percentile).
+
+        This is **descriptive** analysis of greeks / IV context / liquidity mechanics — not trade advice or a
+        recommendation to buy or sell. Every response carries a `disclaimer`.
+
+        `stance` is one of: `sell_premium`, `sell_vega`, `directional`, `leaps`, `cheapies`. Any stance threshold can
+        be overridden by passing the corresponding screener filter (e.g. `max_dte`, `min_premium`, `type`).
+
+        Pass `option_symbol` to score a **single specific contract** for the stance instead of ranking the chain. The
+        response's `data` then holds exactly that one scored contract (with the same `fit_score`, sub-scores and
+        `explanation`), even when it falls outside the stance's usual candidate profile.
+      operationId: PublicApi.OptionContractController.option_stance
+      parameters:
+        - description: Ticker symbol, e.g. RBLX.
+          in: path
+          name: ticker
+          required: true
+          schema:
+            type: string
+        - description: Trade stance to rank by.
+          in: query
+          name: stance
+          required: true
+          schema:
+            enum:
+              - sell_premium
+              - sell_vega
+              - directional
+              - leaps
+              - cheapies
+            type: string
+        - description: Max contracts to return. Default 25, max 100.
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: Restrict to Calls or Puts.
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - Calls
+              - Puts
+            type: string
+        - description: Score a single specific contract (OCC option symbol, e.g. NVDA270115P00275000) instead of ranking the chain. `data` returns just that one scored contract.
+          in: query
+          name: option_symbol
+          required: false
+          schema:
+            type: string
+        - description: Optional historical date (YYYY-MM-DD).
+          in: query
+          name: date
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Trade-Stance_Ranking_response.'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Option Trade-Stance Ranking
+      tags:
+        - option-contract
+  /api/stock/{ticker}/option/stock-price-levels:
+    get:
+      callbacks: {}
+      description: |
+        Returns the call and put volume per price level for the given ticker.
+
+        ----
+        Can be used to build a chart such as following:
+        ![Option Price Level chart](https://i.imgur.com/y6BZ4sG.png)
+      operationId: PublicApi.TickerController.option_price_level
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Price_Level'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Option Price Levels
+      tags:
+        - stock
+  /api/stock/{ticker}/option/volume-oi-expiry:
+    get:
+      callbacks: {}
+      description: |
+        Returns the total volume and open interest per expiry for the given ticker.
+      operationId: PublicApi.TickerController.vol_oi_per_expiry
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volume_and_OI_per_Expiry'
+          description: Vol & OI per expiry response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Volume & OI per Expiry
+      tags:
+        - stock
+  /api/stock/{ticker}/options-pulse:
+    get:
+      callbacks: {}
+      description: |
+        The Nasdaq Options Pulse sentiment for a single ticker: the latest intraday snapshot plus the
+        full intraday series (`hr_min` buckets) for the trade date. `sntm_score` is the running daily
+        sentiment, `intvl_sntm_score` the per-bucket sentiment, and `put_txn`/`call_txn` the opening-buy
+        transaction counts.
+      operationId: PublicApi.NasdaqPulseController.ticker
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nasdaq_Options_Pulse_Result'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Options Pulse for a ticker
+      tags:
+        - options-pulse
+  /api/stock/{ticker}/options-volume:
+    get:
+      callbacks: {}
+      description: |
+        Returns the options volume & premium for all trade executions
+        that happened on a given trading date for the given ticker.
+
+        ----
+        This can be used to build a ticker options overview such as:
+
+        ![Table](https://i.imgur.com/7FHyuqc.png)
+
+        ----
+
+        ![Line](https://i.imgur.com/UnVryDK.png)
+      operationId: PublicApi.TickerController.options_volume
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_1_Max_500_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticker_Options_Volume'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Options Volume
+      tags:
+        - stock
+  /api/stock/{ticker}/ownership:
+    get:
+      callbacks: {}
+      description: |
+        Returns the institutions, insider trades and politicians with the most shares.
+
+        This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+      operationId: PublicApi.TickerController.ownership
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_20_Max_100_Min_1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ownership'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Ownership
+      tags:
+        - stock
+  /api/stock/{ticker}/quote:
+    get:
+      callbacks: {}
+      description: Returns the latest trade, national best bid and ask, derived quote values, and quote change statistics for each market session.
+      operationId: PublicApi.StockQuoteController.show
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock_Quote_Response'
+          description: Latest Stock Quote
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock_Quote_Error_Response'
+          description: Ticker is unknown
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock_Quote_Error_Response'
+          description: Stock quote service unavailable
+      summary: Stock Quote
+      tags:
+        - stock
+  /api/stock/{ticker}/spot-exposures:
+    get:
+      callbacks: {}
+      description: |
+        Returns the spot GEX exposures for the given ticker per minute.
+
+        Spot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.
+
+        Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+        GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+        If a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.
+
+        Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+        Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+        Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+        As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+        This data updates about once per minute during the cash session.
+      operationId: PublicApi.TickerController.spot_exposures_one_minute
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spot_GEX_exposures_per_1min'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Spot GEX exposures per 1min
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/spot-exposures/expiry-strike:
+    get:
+      callbacks: {}
+      description: |
+        Returns the most recent spot GEX exposures across all strikes for the given ticker & expiration on a given date. Calculated either with open interest or with volume.
+
+        Data is available since 2025-01-16.
+
+        [Click here for the spot docs](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike)
+      operationId: PublicApi.TickerController.spot_exposures_by_strike_expiry_v2
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: expirations[]
+          required: true
+          schema:
+            $ref: '#/components/schemas/Expiry_dates'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: min_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Strike'
+        - description: ''
+          in: query
+          name: max_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Strike'
+        - description: ''
+          in: query
+          name: min_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_DTE'
+        - description: ''
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_DTE'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spot_greek_exposures_by_strike'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Spot GEX exposures by strike & expiry
+      tags:
+        - Gex/Greeks
+  /api/stock/{ticker}/spot-exposures/strike:
+    get:
+      callbacks: {}
+      description: |
+        Returns the most recent spot GEX exposures across all strikes for the given ticker on a given date. Calculated either with open interest or with volume.
+
+        Spot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.
+
+        Investors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.
+
+        GEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.
+
+        If a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.
+
+        Market makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).
+
+        Long call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.
+
+        Short put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.
+
+        As such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.
+
+        In the case of directionalized volume, the bid/ask spread is used when calculating the exposures. When a trade is made closer to the ask, the Market Maker would be selling the contract and when a trade is closer to the bid then the Market Maker would be buying the contract.
+
+        For example, the gamma exposure for directional volume is call_gamma_ask, and the value will be negative since a trade made at the ask means the market makers are selling/short the call.
+
+        To get the full directionalized exposure, just sum up the call ask, call bid, put ask and put bid of a greek and strike.
+      operationId: PublicApi.TickerController.spot_exposures_by_strike
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: ''
+          in: query
+          name: min_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Strike'
+        - description: ''
+          in: query
+          name: max_strike
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Strike'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_500_Max_500_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spot_greek_exposures_by_strike'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+  

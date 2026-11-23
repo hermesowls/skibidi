@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.hermes.reconciler</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/admin/repos/hermes-agent/venv/bin/python3</string>
+        <string>-u</string>
+        <string>/Users/admin/repos/hermes-agent/scripts/reconcile_hardening.py</string>
+        <string>--watch</string>
+        <string>--auto-commit</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/admin/repos/hermes-agent</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/admin/repos/hermes-agent/venv/bin:/Users/admin/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HERMES_HOME</key>
+        <string>/Users/admin/.hermes</string>
+        <key>PYTHONUNBUFFERED</key>
+        <string>1</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/admin/.hermes/logs/reconciler.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/admin/.hermes/logs/reconciler.log</string>
+</dict>
+</plist>

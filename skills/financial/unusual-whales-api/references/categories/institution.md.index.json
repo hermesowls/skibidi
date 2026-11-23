@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/institution.md",
+  "parts": [
+    "references/categories/institution.md.part000",
+    "references/categories/institution.md.part001"
+  ],
+  "sha256": "85d4057fc5f4ed97e01fbf697a0077e7c05426fc5102e369a749becf193176f3",
+  "bytes": 153908,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

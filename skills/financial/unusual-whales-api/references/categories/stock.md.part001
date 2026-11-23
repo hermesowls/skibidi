@@ -1,0 +1,1832 @@
+es API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Earnings History",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/financials
+
+Full Financials
+
+Returns full financial data for the given ticker, including
+income statements, balance sheets, cash flows, and earnings.
+Supports both annual and quarterly data.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/financials",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/financials",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns full financial data for the given ticker, including\nincome statements, balance sheets, cash flows, and earnings.\nSupports both annual and quarterly data.\n",
+    "operationId": "PublicApi.AvFundamentalController.financials",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "data": {
+                  "description": "All four statement types for a ticker, each newest-first (annual and quarterly rows combined).",
+                  "properties": {
+                    "balance_sheets": {
+                      "items": {
+                        "description": "A single balance-sheet period. All monetary figures are numeric strings, null when not reported.",
+                        "properties": {
+                          "accumulated_depreciation_amortization_ppe": {
+                            "example": "73448000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "capital_lease_obligations": {
+                            "example": "12430000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cash_and_cash_equivalents": {
+                            "example": "29943000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cash_and_short_term_investments": {
+                            "example": "65171000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "common_stock": {
+                            "example": "83276000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "common_stock_shares_outstanding": {
+                            "example": "15115823000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "current_accounts_payable": {
+                            "example": "68960000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "current_debt": {
+                            "example": "21023000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "current_long_term_debt": {
+                            "example": "10912000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "current_net_receivables": {
+                            "example": "66243000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "deferred_revenue": {
+                            "example": "8249000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "fiscal_date_ending": {
+                            "example": "2024-09-30",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "goodwill": {
+                            "example": "8000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "inserted_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "intangible_assets": {
+                            "example": "5000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "intangible_assets_excluding_goodwill": {
+                            "example": "3000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "inventory": {
+                            "example": "7286000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "investments": {
+                            "example": "254000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "long_term_debt": {
+                            "example": "96700000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "long_term_debt_noncurrent": {
+                            "example": "85750000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "long_term_investments": {
+                            "example": "91479000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_current_assets": {
+                            "example": "14287000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_current_liabilities": {
+                            "example": "78304000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_non_current_assets": {
+                            "example": "74834000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_non_current_liabilities": {
+                            "example": "45888000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "property_plant_equipment": {
+                            "example": "45680000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_type": {
+                            "enum": [
+                              "annual",
+                              "quarterly"
+                            ],
+                            "example": "quarterly",
+                            "type": "string"
+                          },
+                          "reported_currency": {
+                            "example": "USD",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "retained_earnings": {
+                            "example": "-19154000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "short_long_term_debt_total": {
+                            "example": "106629000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "short_term_debt": {
+                            "example": "9967000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "short_term_investments": {
+                            "example": "35228000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ticker": {
+                            "example": "AAPL",
+                            "type": "string"
+                          },
+                          "total_assets": {
+                            "example": "364980000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "total_current_assets": {
+                            "example": "152987000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "total_current_liabilities": {
+                            "example": "176392000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "total_liabilities": {
+                            "example": "308030000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "total_non_current_assets": {
+                            "example": "211993000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "total_non_current_liabilities": {
+                            "example": "131638000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "total_shareholder_equity": {
+                            "example": "56950000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "treasury_stock": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          }
+                        },
+                        "title": "Balance Sheet",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "cash_flows": {
+                      "items": {
+                        "description": "A single cash-flow period. All monetary figures are numeric strings, null when not reported.",
+                        "properties": {
+                          "capital_expenditures": {
+                            "example": "-9959000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cashflow_from_financing": {
+                            "example": "-121983000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cashflow_from_investment": {
+                            "example": "2935000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "change_in_cash_and_cash_equivalents": {
+                            "example": "-794000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "change_in_exchange_rate": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "change_in_inventory": {
+                            "example": "-1046000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "change_in_operating_assets": {
+                            "example": "-5900000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "change_in_operating_liabilities": {
+                            "example": "21572000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "change_in_receivables": {
+                            "example": "-5100000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "depreciation_depletion_and_amortization": {
+                            "example": "11445000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "dividend_payout": {
+                            "example": "-15234000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "dividend_payout_common_stock": {
+                            "example": "-15234000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "dividend_payout_preferred_stock": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "fiscal_date_ending": {
+                            "example": "2024-09-30",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "inserted_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "net_income": {
+                            "example": "93736000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "operating_cashflow": {
+                            "example": "118254000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "payments_for_operating_activities": {
+                            "example": "12000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "payments_for_repurchase_of_common_stock": {
+                            "example": "-94949000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "payments_for_repurchase_of_equity": {
+                            "example": "-94949000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "payments_for_repurchase_of_preferred_stock": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_issuance_of_common_stock": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_issuance_of_long_term_debt": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_issuance_of_preferred_stock": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_operating_activities": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_repayments_of_short_term_debt": {
+                            "example": "-1367000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_repurchase_of_equity": {
+                            "example": "-94949000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "proceeds_from_sale_of_treasury_stock": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "profit_loss": {
+                            "example": "93736000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_type": {
+                            "enum": [
+                              "annual",
+                              "quarterly"
+                            ],
+                            "example": "quarterly",
+                            "type": "string"
+                          },
+                          "reported_currency": {
+                            "example": "USD",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "stock_based_compensation": {
+                            "example": "11688000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ticker": {
+                            "example": "AAPL",
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          }
+                        },
+                        "title": "Cash Flow Statement",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "earnings": {
+                      "items": {
+                        "description": "A single earnings period. EPS and surprise figures are numeric strings, null when not reported.",
+                        "properties": {
+                          "estimated_eps": {
+                            "example": "1.60",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "fiscal_date_ending": {
+                            "example": "2024-09-30",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "inserted_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "report_date": {
+                            "example": "2024-10-31",
+                            "format": "date",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_time": {
+                            "description": "Normalized to \"premarket\" / \"postmarket\"; earnings-calendar rows may pass through \"bmo\" / \"amc\".",
+                            "example": "postmarket",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_type": {
+                            "enum": [
+                              "annual",
+                              "quarterly"
+                            ],
+                            "example": "quarterly",
+                            "type": "string"
+                          },
+                          "reported_eps": {
+                            "example": "1.64",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "surprise": {
+                            "example": "0.04",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "surprise_percentage": {
+                            "example": "2.5",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ticker": {
+                            "example": "AAPL",
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          }
+                        },
+                        "title": "Earnings Report",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "income_statements": {
+                      "items": {
+                        "description": "A single income-statement period. All monetary figures are numeric strings, null when not reported.",
+                        "properties": {
+                          "comprehensive_income_net_of_tax": {
+                            "example": "22430000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cost_of_goods_and_services_sold": {
+                            "example": "51000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cost_of_revenue": {
+                            "example": "52553000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "depreciation": {
+                            "example": "1200000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "depreciation_and_amortization": {
+                            "example": "2910000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ebit": {
+                            "example": "29281000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ebitda": {
+                            "example": "32191000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "fiscal_date_ending": {
+                            "example": "2024-09-30",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "gross_profit": {
+                            "example": "42377000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "income_before_tax": {
+                            "example": "28279000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "income_tax_expense": {
+                            "example": "4422000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "inserted_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "interest_and_debt_expense": {
+                            "example": "1002000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "interest_expense": {
+                            "example": "1002000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "interest_income": {
+                            "example": "1190000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "investment_income_net": {
+                            "example": "800000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "net_income": {
+                            "example": "23857000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "net_income_from_continuing_operations": {
+                            "example": "23857000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "net_interest_income": {
+                            "example": "188000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "non_interest_income": {
+                            "example": "93740000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "operating_expenses": {
+                            "example": "14286000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "operating_income": {
+                            "example": "28091000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_non_operating_income": {
+                            "example": "-13000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_type": {
+                            "enum": [
+                              "annual",
+                              "quarterly"
+                            ],
+                            "example": "quarterly",
+                            "type": "string"
+                          },
+                          "reported_currency": {
+                            "example": "USD",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "research_and_development": {
+                            "example": "7763000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "selling_general_and_administrative": {
+                            "example": "6523000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ticker": {
+                            "example": "AAPL",
+                            "type": "string"
+                          },
+                          "total_revenue": {
+                            "example": "94930000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "example": "2026-07-29 12:34:56+00:00",
+                            "format": "date-time",
+                            "type": "string"
+                          }
+                        },
+                        "title": "Income Statement",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "title": "Full Financials",
+                  "type": "object"
+                }
+              },
+              "title": "Full Financials Response",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Full Financials"
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Full Financials",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/flow-alerts
+
+Flow Alerts
+
+Deprecated. Use `/api/option-trades/flow-alerts`, which supports the full filter set:
+[https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.flow_alerts](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.flow_alerts)
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/flow-alerts",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/flow-alerts",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Deprecated. Use `/api/option-trades/flow-alerts`, which supports the full filter set:\n[https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.flow_alerts](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.flow_alerts)\n",
+    "operationId": "PublicApi.TickerController.flow_alerts",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "default": 100,
+          "description": "How many items to return. Default: 100. Max: 200. Min: 1.",
+          "example": 10,
+          "maximum": 200,
+          "minimum": 1,
+          "title": "Default 100 Max 200 Min 1",
+          "type": "integer"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "is_ask_side",
+        "required": false,
+        "schema": {
+          "default": true,
+          "description": "Boolean flag whether a transaction is ask side.",
+          "example": true,
+          "type": "boolean"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "is_bid_side",
+        "required": false,
+        "schema": {
+          "default": true,
+          "description": "Boolean flag whether a transaction is bid side.",
+          "example": true,
+          "type": "boolean"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Representation of a flow alert.\n",
+              "example": {
+                "data": [
+                  {
+                    "alert_rule": "RepeatedHits",
+                    "all_opening_trades": false,
+                    "created_at": "2023-12-12 16:35:52.168490+00:00",
+                    "expiry": "2023-12-22",
+                    "expiry_count": 1,
+                    "has_floor": false,
+                    "has_multileg": false,
+                    "has_singleleg": true,
+                    "has_sweep": true,
+                    "issue_type": "Common Stock",
+                    "open_interest": 7913,
+                    "option_chain": "MSFT231222C00375000",
+                    "price": "4.05",
+                    "strike": "375",
+                    "ticker": "MSFT",
+                    "total_ask_side_prem": "151875",
+                    "total_bid_side_prem": "405",
+                    "total_premium": "186705",
+                    "total_size": 461,
+                    "trade_count": 32,
+                    "type": "call",
+                    "underlying_price": "372.99",
+                    "volume": 2442,
+                    "volume_oi_ratio": "0.30860609124226"
+                  }
+                ]
+              },
+              "properties": {
+                "alert_rule": {
+                  "description": "The name of the alert rule.",
+                  "example": "RepeatedHits",
+                  "title": "Alert Rule Name",
+                  "type": "string"
+                },
+                "all_opening_trades": {
+                  "description": "",
+                  "example": false,
+                  "title": "Option Contract All Opening Trades",
+                  "type": "boolean"
+                },
+                "created_at": {
+                  "description": "A UTC timestamp.",
+                  "example": "2023-12-12 16:35:52.168490+00:00",
+                  "title": "General UTC Timestamp",
+                  "type": "string"
+                },
+                "delta": {
+                  "description": "Size weighted delta of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "expiry": {
+                  "description": "The contract expiry date in ISO format.",
+                  "example": "2023-12-22",
+                  "title": "Option Contract Expiry",
+                  "type": "string"
+                },
+                "expiry_count": {
+                  "description": "The amount of expiries belonging to the trade. This is only greater than 1 if it is a multileg trade.",
+                  "example": 2,
+                  "title": "Option Contract Expiry Count",
+                  "type": "integer"
+                },
+                "gamma": {
+                  "description": "Size weighted gamma of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "has_floor": {
+                  "description": "",
+                  "example": false,
+                  "title": "Option Contract Has Floor",
+                  "type": "boolean"
+                },
+                "has_multileg": {
+                  "description": "Whether the trade is a multileg trade.",
+                  "example": false,
+                  "title": "Single Trade Has Multileg",
+                  "type": "boolean"
+                },
+                "has_singleleg": {
+                  "description": "Whether the trade is a singleleg trade.",
+                  "example": true,
+                  "title": "Single Trade Is Single Leg",
+                  "type": "boolean"
+                },
+                "has_sweep": {
+                  "description": "Whether the trade is a sweep.",
+                  "example": true,
+                  "title": "Single Trade Is Sweep",
+                  "type": "boolean"
+                },
+                "issue_type": {
+                  "description": "The issue type of the ticker.",
+                  "enum": [
+                    "Common Stock",
+                    "ETF",
+                    "Index",
+                    "ADR"
+                  ],
+                  "example": "Common Stock",
+                  "title": "Stock Issue Type",
+                  "type": "string"
+                },
+                "iv": {
+                  "description": "Size weighted implied volatility of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "open_interest": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "option_chain": {
+                  "description": "The option symbol of the contract.\n\nYou can use the following regex to extract underlying ticker, option type, expiry & strike:\n`^(?<symbol>[\\w]*)(?<expiry>(\\d{2})(\\d{2})(\\d{2}))(?<type>[PC])(?<strike>\\d{8})$`\n\nKeep in mind that the strike needs to be multiplied by 1,000.\n",
+                  "title": "Option Contract Symbol",
+                  "type": "string"
+                },
+                "price": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "rho": {
+                  "description": "Size weighted rho of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "strike": {
+                  "description": "The contract strike.",
+                  "example": "375",
+                  "title": "Option Contract Strike",
+                  "type": "string"
+                },
+                "theo": {
+                  "description": "Size weighted theoretical option price of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "theta": {
+                  "description": "Size weighted theta of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "ticker": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "total_ask_side_prem": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "total_bid_side_prem": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "total_premium": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "total_size": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "trade_count": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "type": {
+                  "description": "The contract type.",
+                  "enum": [
+                    "call",
+                    "put"
+                  ],
+                  "example": "call",
+                  "title": "Option Contract Type",
+                  "type": "string"
+                },
+                "underlying_price": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "vega": {
+                  "description": "Size weighted vega of all transactions that make up the flow alert. Null when unavailable.",
+                  "format": "double",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "volume": {
+                  "description": "",
+                  "title": "ToBeDone"
+                },
+                "volume_oi_ratio": {
+                  "description": "",
+                  "title": "ToBeDone"
+                }
+              },
+              "title": "Flow Alert",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Flow Alerts",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/flow-per-expiry
+
+Flow per expiry
+
+Returns the option flow per expiry for the last trading day
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/flow-per-expiry",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/flow-per-expiry",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the option flow per expiry for the last trading day\n",
+    "operationId": "PublicApi.TickerController.flow_per_expiry",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "The flow data per expiry for a trading day.\n",
+              "example": {
+                "data": [
+                  {
+                    "call_otm_premium": "3885339",
+                    "call_otm_trades": 10213,
+                    "call_otm_volume": 81598,
+                    "call_premium": "5839180",
+                    "call_premium_ask_side": "2615356",
+                    "call_premium_bid_side": "2722619",
+                    "call_trades": 11383,
+                    "call_volume": 89177,
+                    "call_volume_ask_side": 43669,
+                    "call_volume_bid_side": 40164,
+                    "date": "2024-01-22",
+                    "expiry": "2024-01-26",
+                    "put_otm_premium": "632247",
+                    "put_otm_trades": 2077,
+                    "put_otm_volume": 12164,
+                    "put_premium": "4802145",
+                    "put_premium_ask_side": "3593584",
+                    "put_premium_bid_side": "690572",
+                    "put_trades": 2744,
+                    "put_volume": 20101,
+                    "put_volume_ask_side": 7396,
+                    "put_volume_bid_side": 8113,
+                    "ticker": "BABA"
+                  },
+                  {
+                    "call_otm_premium": "1264038",
+                    "call_otm_trades": 2550,
+                    "call_otm_volume": 17525,
+                    "call_premium": "1869073",
+                    "call_premium_ask_side": "885103",
+                    "call_premium_bid_side": "832727",
+                    "call_trades": 2936,
+                    "call_volume": 19268,
+                    "call_volume_ask_side": 7778,
+                    "call_volume_bid_side": 9875,
+                    "date": "2024-01-22",
+                    "expiry": "2024-02-02",
+                    "put_otm_premium": "206709",
+                    "put_otm_trades": 588,
+                    "put_otm_volume": 3581,
+                    "put_premium": "627117",
+                    "put_premium_ask_side": "191982",
+                    "put_premium_bid_side": "354687",
+                    "put_trades": 847,
+                    "put_volume": 4709,
+                    "put_volume_ask_side": 1238,
+                    "put_volume_bid_side": 3004,
+                    "ticker": "BABA"
+                  }
+                ],
+                "date": "2024-01-22"
+              },
+              "properties": {
+                "call_otm_premium": {
+                  "description": "The sum of the premium of all the out the money (OTM) call transactions that executed.",
+                  "example": "9908777.0",
+                  "title": "Market General Call OTM Premium",
+                  "type": "string"
+                },
+                "call_otm_trades": {
+                  "description": "The amount of out the money (OTM) call transactions that executed.",
+                  "example": 6338,
+                  "title": "Market General Call OTM Trades",
+                  "type": "integer"
+                },
+                "call_otm_volume": {
+                  "description": "The sum of the size of all the out the money (OTM) call transactions that executed.",
+                  "example": 40385,
+                  "title": "Market General Call OTM Volume",
+                  "type": "integer"
+                },
+                "call_premium": {
+                  "description": "The sum of the premium of all the call transactions that executed.",
+                  "example": "9908777.0",
+                  "title": "Market General Call Premium",
+                  "type": "string"
+                },
+                "call_premium_ask_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the ask side.",
+                  "example": "5037703.0",
+                  "title": "Market General Call Premium Ask Side",
+                  "type": "string"
+                },
+                "call_premium_bid_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Call Premium Bid Side",
+                  "type": "string"
+                },
+                "call_trades": {
+                  "description": "The amount of call transactions that executed.",
+                  "example": 6338,
+                  "title": "Market General Call Trades",
+                  "type": "integer"
+                },
+                "call_volume": {
+                  "description": "The sum of the size of all the call transactions that executed.",
+                  "example": 990943,
+                  "title": "Market General Call Volume",
+                  "type": "integer"
+                },
+                "call_volume_ask_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the ask side.",
+                  "example": 417251,
+                  "title": "Market General Call Volume Ask Side",
+                  "type": "integer"
+                },
+                "call_volume_bid_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the bid side.",
+                  "example": 498271,
+                  "title": "Market General Call Volume Bid Side",
+                  "type": "integer"
+                },
+                "date": {
+                  "description": "A trading date in ISO format.\n",
+                  "example": "2023-09-08",
+                  "title": "Market General Trading day",
+                  "type": "string"
+                },
+                "expiry": {
+                  "description": "The contract expiry date in ISO format.",
+                  "example": "2023-12-22",
+                  "title": "Option Contract Expiry",
+                  "type": "string"
+                },
+                "put_otm_premium": {
+                  "description": "The sum of the premium of all the out the money (OTM) put transactions that executed.",
+                  "example": "1204570.0",
+                  "title": "Market General Put OTM Premium",
+                  "type": "string"
+                },
+                "put_otm_trades": {
+                  "description": "The amount of out the money (OTM) put transactions that executed.",
+                  "example": 4270,
+                  "title": "Market General Put OTM Trades",
+                  "type": "integer"
+                },
+                "put_otm_volume": {
+                  "description": "The sum of the size of all the out the money (OTM) put transactions that executed.",
+                  "example": 12638,
+                  "title": "Market General Put OTM Volume",
+                  "type": "integer"
+                },
+                "put_premium": {
+                  "description": "The sum of the premium of all the put transactions that executed.",
+                  "example": "163537151",
+                  "title": "Market General Put Premium",
+                  "type": "string"
+                },
+                "put_premium_ask_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the ask side.",
+                  "example": "799873.0",
+                  "title": "Market General Put Premium Ask Side",
+                  "type": "string"
+                },
+                "put_premium_bid_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Put Premium Bid Side",
+              

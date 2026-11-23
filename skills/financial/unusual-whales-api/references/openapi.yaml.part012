@@ -1,0 +1,1807 @@
+         schema:
+            type: string
+        - description: The maximum put to call ratio.
+          example: '1.5'
+          in: query
+          name: max_put_call_ratio
+          required: false
+          schema:
+            type: string
+        - description: Sort by a screener field, such as ticker, marketcap, stock_volume, z_score, or steepness_180_30. The default volume is combined call and put contract volume. Quote fields support sorting only for current data. The added is_index and missing_periscope fields are not sortable.
+          in: query
+          name: order
+          required: false
+          schema:
+            default: volume
+            type: string
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: The minimum stock volume vs average 30 day volume.
+          example: '1.2'
+          in: query
+          name: min_stock_volume_vs_avg30_volume
+          required: false
+          schema:
+            type: string
+        - description: The maximum stock volume vs average 30 day volume.
+          example: '10.0'
+          in: query
+          name: max_avg30_volume
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock_Screener_response'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Stock Screener
+      tags:
+        - screener
+  /api/screener/stocks/dsl:
+    get:
+      callbacks: {}
+      description: Returns an EBNF grammar, syntax notes, examples, function argument counts, supported fields, aliases, types, descriptions, keywords, operators, functions, scopes, and available watchlist names for the stock screener query parameter.
+      operationId: PublicApi.ScreenerController.stock_screener_query_help
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockScreenerQueryHelp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Stock screener query language
+      tags:
+        - screener
+  /api/seasonality/market:
+    get:
+      callbacks: {}
+      description: |
+        Returns the average return by month for the tickers SPY, QQQ, IWM, XLE, XLC, XLK, XLV, XLP, XLY, XLRE, XLF, XLI, XLB .
+      operationId: PublicApi.SeasonalityController.market_seasonality
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seasonality_Market'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Market Seasonality
+      tags:
+        - seasonality
+  /api/seasonality/{month}/performers:
+    get:
+      callbacks: {}
+      description: |
+        Returns the tickers with the highest performance in terms of price change in the month over the years.
+        Per default the result is ordered by 'positive_months_perc' descending, then 'median_change' descending, then 'marketcap' descending.
+      operationId: PublicApi.SeasonalityController.month_performers
+      parameters:
+        - description: ''
+          in: path
+          name: month
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleMonthNumber'
+        - description: ''
+          in: query
+          name: min_years
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Years'
+        - description: ''
+          in: query
+          name: ticker_for_sector
+          required: false
+          schema:
+            $ref: '#/components/schemas/SingleTickerForSector'
+        - description: ''
+          in: query
+          name: s_p_500_nasdaq_only
+          required: false
+          schema:
+            $ref: '#/components/schemas/SandP_500_Nasdaq_Only'
+        - description: ''
+          in: query
+          name: min_oi
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Open_Interest'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Seasonality_Performers_Limit'
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Seasonality_Performance_Order_By'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seasonality_Performers'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Month Performers
+      tags:
+        - seasonality
+  /api/seasonality/{ticker}/monthly:
+    get:
+      callbacks: {}
+      description: |
+        Returns the average return by month for the given ticker.
+      operationId: PublicApi.SeasonalityController.monthly
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seasonality_Monthly'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Average return per month
+      tags:
+        - seasonality
+  /api/seasonality/{ticker}/year-month:
+    get:
+      callbacks: {}
+      description: |
+        Returns the relative price change for all past months over multiple years.
+      operationId: PublicApi.SeasonalityController.year_month
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seasonality_Year_Month'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Price change per month per year
+      tags:
+        - seasonality
+  /api/short_screener:
+    get:
+      callbacks: {}
+      description: |
+        Returns short interest and float data for percentage calculations based off search params.
+        This endpoint provides information about the percentage of float that is shorted,
+        the float size, and the days to cover metric.
+      operationId: PublicApi.ShortController.short_screener
+      parameters:
+        - description: ''
+          in: query
+          name: tickers
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            description: 'The limit of results. Default: 100. Max: 500. Min: 0.'
+            example: 125
+            maximum: 500
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            description: 'The offset of results. Default: 0. Min: 0.'
+            example: 100
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: min_short_interest
+          required: false
+          schema:
+            description: The min short interest.
+            example: 5000
+            type: integer
+        - description: ''
+          in: query
+          name: max_short_interest
+          required: false
+          schema:
+            description: The max short interest.
+            example: 100000
+            type: integer
+        - description: ''
+          in: query
+          name: min_days_to_cover
+          required: false
+          schema:
+            description: The min days to cover.
+            example: 1.1
+            type: integer
+        - description: ''
+          in: query
+          name: max_days_to_cover
+          required: false
+          schema:
+            description: The max days to cover.
+            example: 5.3
+            type: integer
+        - description: ''
+          in: query
+          name: min_si_float
+          required: false
+          schema:
+            description: The min short interest float ratio.
+            example: 0.1
+            type: integer
+        - description: ''
+          in: query
+          name: max_si_float
+          required: false
+          schema:
+            description: The max short interest float ratio.
+            example: 0.05
+            type: integer
+        - description: ''
+          in: query
+          name: min_si_float_with_synth_long_pct_of_total_shares
+          required: false
+          schema:
+            description: The min si_float_with_synth_long_pct_of_total_shares.
+            example: 0.05
+            type: integer
+        - description: ''
+          in: query
+          name: max_si_float_with_synth_long_pct_of_total_shares
+          required: false
+          schema:
+            description: The max si_float_with_synth_long_pct_of_total_shares.
+            example: 0.05
+            type: integer
+        - description: ''
+          in: query
+          name: min_total_float
+          required: false
+          schema:
+            description: The min total float.
+            example: 10000000
+            type: integer
+        - description: ''
+          in: query
+          name: max_total_float
+          required: false
+          schema:
+            description: The max total float.
+            example: 100000000
+            type: integer
+        - description: ''
+          in: query
+          name: order_by
+          required: false
+          schema:
+            $ref: '#/components/schemas/ShortScreenerOrderBy'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: min_market_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Market_Date'
+        - description: ''
+          in: query
+          name: max_market_date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Market_Date'
+        - description: ''
+          in: query
+          name: min_fee_rate
+          required: false
+          schema:
+            description: The min fee rate.
+            example: 0.01
+            type: integer
+        - description: ''
+          in: query
+          name: max_fee_rate
+          required: false
+          schema:
+            description: The max fee rate.
+            example: 0.45
+            type: integer
+        - description: ''
+          in: query
+          name: min_rebate_rate
+          required: false
+          schema:
+            description: The min rebate rate.
+            example: 0.11
+            type: integer
+        - description: ''
+          in: query
+          name: max_rebate_rate
+          required: false
+          schema:
+            description: The max rebate rate.
+            example: 5.34
+            type: integer
+        - description: ''
+          in: query
+          name: min_short_shares_available
+          required: false
+          schema:
+            description: The min short shares available.
+            example: 0
+            type: integer
+        - description: ''
+          in: query
+          name: max_short_shares_available
+          required: false
+          schema:
+            description: The max short shares available.
+            example: 10000
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Short_Screener'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Short Screener
+      tags:
+        - short
+  /api/shorts/{ticker}/data:
+    get:
+      callbacks: {}
+      description: |
+        Returns short data including rebate rate and short shares available for a ticker.
+      operationId: PublicApi.ShortController.short_data
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Short_Data'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Short Data
+      tags:
+        - short
+  /api/shorts/{ticker}/ftds:
+    get:
+      callbacks: {}
+      description: |
+        Returns the short failures to deliver per day for the given ticker starting from the given date.
+        If no date is given, returns the data for the current/last market day.
+      operationId: PublicApi.ShortController.failures_to_deliver
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Failures_to_Deliver'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Failures to Deliver
+      tags:
+        - short
+  /api/shorts/{ticker}/interest-float:
+    get:
+      callbacks: {}
+      description: |
+        Deprecated. Use `/api/shorts/{ticker}/interest-float/v2`.
+
+        Returns short interest and float data for percentage calculations for a ticker.
+        This endpoint provides information about the percentage of float that is shorted,
+        the float size, and the days to cover metric.
+      operationId: PublicApi.ShortController.short_interest_and_float
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1_Short_Interest_and_Float_Deprecated'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: V1 Short Interest and Float (Deprecated)
+      tags:
+        - short
+  /api/shorts/{ticker}/interest-float/v2:
+    get:
+      callbacks: {}
+      description: |
+        Returns short interest, float size, days-to-cover, and related percentage calculations for a given ticker.
+
+        Broker-dealers report short interest to FINRA twice per month then FINRA publishes the aggregated results approximately one week after each submission window closes. Because updates arrive on this fixed schedule, data in the response from this endpoint can lag the current date by several weeks. This is a FINRA reporting constraint, not a data delivery issue or bug.
+
+        This endpoint updates twice a month and pulls data from FINRA. The update schedule can be viewed on the FINRA website [here](https://www.finra.org/filing-reporting/regulatory-filing-systems/short-interest)
+      operationId: PublicApi.ShortController.short_interest_and_float_v2
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2_Short_Interest_and_Float'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: V2 Short Interest and Float
+      tags:
+        - short
+  /api/shorts/{ticker}/volume-and-ratio:
+    get:
+      callbacks: {}
+      description: |
+        Returns short volume and short ratio data for a ticker.
+
+        Rows are returned under the `si` key, not `data`.
+      operationId: PublicApi.ShortController.short_volume_and_ratio
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Short_Volume'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Short Volume and Ratio
+      tags:
+        - short
+  /api/shorts/{ticker}/volumes-by-exchange:
+    get:
+      callbacks: {}
+      description: |
+        Returns short volume data broken down by exchange for a ticker.
+
+        If no date range is given the default is the last 2 years. The max lookback range is 5 years;
+        requests for a wider range are clamped to the most recent 5 years ending at `older_than`.
+
+        The `newer_than` and `older_than` query params accept Unix-format timestamps (milliseconds or seconds) as well as ISO-format dates (`YYYY-MM-DD`).
+      operationId: PublicApi.ShortController.short_volume_by_exchange
+      parameters:
+        - description: ''
+          in: path
+          name: ticker
+          required: true
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Short_Volume_By_Exchange'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Short Volume By Exchange
+      tags:
+        - short
+  /api/socket:
+    get:
+      callbacks: {}
+      description: |
+        Returns the available WebSocket channels for connections.
+
+        ## Websocket Guide
+        #You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        If you are an AI or work with AI there is an available websocket skill at: https://unusualwhales.com/skills/websocket.md
+
+        The following channels are available:
+        | Channel                     | Description                                                                                                           |
+        |-----------------------------|-----------------------------------------------------------------------------------------------------------------------|
+        | option_trades               | Receive live option trades throughout the trading session. Expect 6-10M records per day.                              |
+        | option_trades:TICKER        | Similar to `option_trades` but receive all trades only for the specified ticker.                                      |
+        | flow-alerts                 | Receive live flow alerts (all of them unfiltered). This data can be used to build views like [https://unusualwhales.com/option-flow-alerts](https://unusualwhales.com/option-flow-alerts). |
+        | price                       | Receive live price updates for every ticker at once.                                                                  |
+        | price:TICKER                | Receive live price updates for the given ticker.                                                                      |
+        | news                        | Receive live headline news (Truth Social posts + aggregator news).                                                    |
+        | lit_trades                  | Receive live lit (exchange-based) trades throughout the trading session.                                              |
+        | off_lit_trades              | Receive live off-lit (dark pool) trades throughout the trading session.                                               |
+        | gex                         | Receive live gex updates for every ticker at once.                                                                    |
+        | gex:TICKER                  | Receive live gex update for the given ticker.                                                                         |
+        | gex_strike                  | Receive live gex strike updates for every strike of every ticker.                                                     |
+        | gex_strike:TICKER           | Receive live gex strike updates for every strike of the given ticker.                                                 |
+        | gex_strike_expiry           | Receive live gex strike updates for every strike & expiry of every ticker.                                            |
+        | gex_strike_expiry:TICKER    | Receive live gex strike updates for every strike & expiry of the given ticker.                                        |
+        | periscope                   | Receive live periscope market-maker greek exposures (gamma/charm/vanna) per strike & expiry for every index ticker (SPX, VIX, XSP, NANOS). Not available on the enterprise and enterprise startup plans. |
+        | periscope:TICKER            | Receive live periscope market-maker greek exposures per strike & expiry for the given index ticker. Not available on the enterprise and enterprise startup plans. |
+        | greeks                      | Receive live per-contract option greeks (first- and second-order) for every contract of every underlying.             |
+        | greeks:TICKER               | Receive live per-contract option greeks (first- and second-order) for every contract of the given underlying.         |
+        | market_tide                 | Receive live updates of both the market tide and the otm market tide.                                                 |
+        | net_flow:TICKER             | Receive live net call/put premium and volume aggregates for the specified ticker to build a net prem view.            |
+        | interval_flow               | Receive per interval option flow statistics for a ticker (sweeps, floors, multilegs, Greek flows, IV, net prem). Use this to build alert systems to spot spikes in tickers   |
+        | contract_screener           | Receive live option contract snapshots (Greeks, side volumes, OI growth indicators). This your entry point to build a screener on top of option contracts.                   |
+        | trading_halts               | Receive live trading state changes (halts, resumes, LULD pauses) for individual tickers.                              |
+        | custom_alerts               | Receive notifications matching the alert configurations on your own Unusual Whales account.                           |
+        | futures_trades              | Receive live CME futures trade prints across all contracts. Available on the Advanced API tier, or with the `futures` add-on — email oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access. |
+        | futures:TICKER              | Similar to `futures_trades` but only for the specified dated contract, e.g. `futures:ESU6`. Available on the Advanced API tier, or with the `futures` add-on. |
+        | interpolated_iv             | Receive live interpolated IV and expected move updates at fixed horizons (1-365 days) for every ticker at once.       |
+        | interpolated_iv:TICKER      | Receive live interpolated IV and expected move updates at fixed horizons for the given ticker.                        |
+        | iv_term_structure           | Receive live ATM IV and expected move updates per real option expiry for every ticker at once.                        |
+        | iv_term_structure:TICKER    | Receive live ATM IV and expected move updates per real option expiry for the given ticker.                            |
+        | risk_reversal_skew          | Receive live 25- and 10-delta risk reversal skew (put IV minus call IV) per expiry for every ticker at once.          |
+        | quotes                      | Receive live best bid and ask (top of book) updates for every ticker at once. This is a high volume firehose - prefer `quotes:TICKER` unless you need the full tape. |
+        | quotes:TICKER               | Receive live best bid and ask (top of book) updates for the given ticker. |
+        | greek_flow                  | Receive live delta & vega flow from option trades for every ticker at once, bucketed to the minute and updated about once a second. |
+        | greek_flow:TICKER           | The same for the given ticker. Silent while that ticker has no option trades. |
+        | greek_flow_expiry           | Same as `greek_flow`, additionally broken out by option expiry, for every ticker at once. |
+        | greek_flow_expiry:TICKER    | Per-minute delta & vega flow broken out by option expiry for the given ticker. |
+        | ta_1d_live:TICKER           | Receive live technical-analysis indicator values on the daily candle for the given ticker. |
+
+        The `option_trades` channel will stream all 6,000,000 option trades in real-time, `option_trades:<TICKER>` will stream
+        all option trades for the given ticker in real-time.
+
+        `flow-alerts` will stream from the alerts [page](https://unusualwhales.com/option-flow-alerts?limit=50)
+
+        ## Connect
+        For a python example script that streams gex by ticker (gex:TICKER), flow alerts (flow-alerts), and all TSLA option trades (option_trades:TSLA), see our "examples" repo on Github: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+
+        We will use [websocat](https://github.com/vi/websocat) to demonstrate how to connect to the WebSocket server.
+
+        ```bash
+        websocat "wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>"
+        {"channel":"option_trades","msg_type":"join"}
+        ```
+        The server will then reply with
+        ```bash
+        ["option_trades",{"response":{},"status":"ok"}]
+        ```
+        indicating that the connection was successful.
+
+        You will then receive data in the following format:
+        ```bash
+        [<CHANNEL_NAME>, <PAYLOAD>]
+        ```
+        during market hours.
+
+        To receive the trades only for a specific ticker, use the following command:
+        ```bash
+        {"channel":"option_trades","msg_type":"join"}
+        ```
+
+        You can join multiple channels with the same websocket connection:
+        ```bash
+        websocat "wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>"
+        {"channel":"option_trades","msg_type":"join"}
+        ["option_trades",{"response":{},"status":"ok"}]
+        {"channel":"option_trades:JPM","msg_type":"join"}
+        ["option_trades:JPM",{"response":{},"status":"ok"}]
+        ```
+
+        ## Using a client
+        If you are using Python, you can use the [websocket-client](https://github.com/websocket-client/websocket-client) library to connect to the server.
+
+        ```python
+        import websocket
+        import time
+        import rel
+        import json
+
+        def on_message(ws, msg):
+            msg = json.loads(msg)
+            channel, payload = msg
+            print(f"Got a message on channel {channel}: Payload: {payload}")
+
+        def on_error(ws, error):
+            print(error)
+
+        def on_close(ws, close_status_code, close_msg):
+            print("### closed ###")
+
+        def on_open(ws):
+            print("Opened connection")
+            msg = {"channel":"option_trades","msg_type":"join"}
+            ws.send(json.dumps(msg))
+
+        if __name__ == "__main__":
+            websocket.enableTrace(False)
+            ws = websocket.WebSocketApp("wss://api.unusualwhales.com/socket?token=<YOUR_TOKEN>",
+                                      on_open=on_open,
+                                      on_message=on_message,
+                                      on_error=on_error,
+                                      on_close=on_close)
+
+            ws.run_forever(dispatcher=rel, reconnect=5)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
+            rel.signal(2, rel.abort)  # Keyboard Interrupt
+            rel.dispatch()
+
+
+        ## Historic data
+        To download/access historic data, use the endpoint [/api/option-trades/full-tape](https://api.unusualwhales.com/docs#/operations/PublicApi.OptionTradeController.full_tape)
+      operationId: PublicApi.SocketController.channels
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: WebSocket channels
+      tags:
+        - websocket
+  /api/socket/contract_screener:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for websocket channel `contract_screener`.
+        Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        The data on this channel is the exact same data shown on [https://unusualwhales.com/options-screener](https://unusualwhales.com/options-screener).
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel you wish to stream: `contract_screener` for live hot-option-contract snapshots (Greeks, side volumes, OI growth indicators).
+
+        Payload format:
+
+        ```
+        [
+          "contract_screener",
+          {
+            "option_symbol": "WMT260501P00126000",
+            "tape_time": "2026-04-27T14:27:56Z",
+            "volume": 498,
+            "open_interest": 536,
+            "prev_oi": 349,
+            "trades": 143,
+            "premium": "32830.00",
+            "ask_side_volume": 231,
+            "bid_side_volume": 190,
+            "neutral_volume": 0,
+            "floor_volume": 50,
+            "high": "0.76",
+            "low": "0.51",
+            "open": "0.53",
+            "close": "0.75",
+            "iv": "0.3222611630685708",
+            "bid": "0.73",
+            "ask": "0.75",
+            "multileg_volume": 10,
+            "avg_price": "0.6592369477911646586345381529",
+            "mid_volume": 77,
+            "sweep_volume": 2,
+            "cross_volume": 0,
+            "stock_multi_leg_volume": 0,
+            "days_of_oi_increases": 3,
+            "days_of_vol_greater_than_oi": 0,
+            "chain_prev_close": "0.55",
+            "delta": "-0.2759145792070713",
+            "gamma": "0.0771084404181128",
+            "theta": "-0.180959140636331",
+            "vega": "0.04495190198751509",
+            "is_new": false,
+            "ask_side_perc_7_day": "0.750000",
+            "bid_side_perc_7_day": "0.250000"
+          }
+        ]
+        ```
+
+        ### Field reference
+
+        Each message is a snapshot of a single option contract that's currently active. Streamed continuously throughout the session.
+
+        | Field | Type | Description |
+        |---|---|---|
+        | `option_symbol` | string | OSI option chain id. |
+        | `tape_time` | ISO 8601 string | Snapshot time, UTC. |
+        | `volume` | int | Session volume on the contract. |
+        | `open_interest` | int | Open interest as of `tape_time`. |
+        | `prev_oi` | int | Open interest at the previous session close. Compare with `open_interest` to detect OI growth. |
+        | `trades` | int | Number of distinct trades in the session. |
+        | `premium` | decimal string | Total dollar premium traded today. |
+        | `ask_side_volume`, `bid_side_volume`, `neutral_volume` | int | Volume broken out by side classification. |
+        | `mid_volume` | int | Volume executed at the NBBO mid. |
+        | `floor_volume`, `sweep_volume`, `cross_volume`, `multileg_volume`, `stock_multi_leg_volume` | int | Volume by trade kind. |
+        | `high` / `low` / `open` / `close` | decimal string | Session OHLC for this contract. |
+        | `avg_price` | decimal string | Volume-weighted average trade price. |
+        | `bid` / `ask` | decimal string | NBBO at `tape_time`. |
+        | `iv` | decimal string \| null | Implied volatility at `tape_time`. |
+        | `delta` / `gamma` / `theta` / `vega` | decimal string \| null | Greeks at `tape_time`. |
+        | `chain_prev_close` | decimal string \| null | Closing price of the contract at the previous session close. |
+        | `days_of_oi_increases` | int | Consecutive sessions where OI increased. |
+        | `days_of_vol_greater_than_oi` | int | Consecutive sessions where session volume exceeded OI. |
+        | `is_new` | bool | `true` for newly listed contracts. |
+        | `ask_side_perc_7_day` / `bid_side_perc_7_day` | decimal string \| null | Fraction of the last 7 trading days' volume that printed on the ask side / bid side. |
+      operationId: PublicApi.SocketController.contract_screener
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: Contract screener
+      tags:
+        - websocket
+  /api/socket/custom_alerts:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for websocket channel `custom_alerts`.
+        Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        Unlike the other websocket channels, `custom_alerts` is a **per-user** stream. You only receive notifications that match the alert configurations on the Unusual Whales account that owns the API token used to connect. Configure alerts on [https://unusualwhales.com/notifications](https://unusualwhales.com/notifications); every notification fired against your account is also delivered on this channel.
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel: `custom_alerts`.
+
+        Payload format:
+
+        ```
+        [
+          "custom_alerts",
+          {
+            "name": "Aggressive ask-side flow on AAPL",
+            "noti_type": "flow_alerts",
+            "user_noti_config_id": "f80a7f23-2cf6-4bc2-b7cd-2cb13e7a9a80",
+            "user_id": "0d5b0a13-b9d8-4f3b-8a4f-7c6c9a9a1b40",
+            "symbol": "AAPL",
+            "symbol_type": "stock",
+            "tape_time": "2026-04-27T14:32:11Z",
+            "meta": {}
+          }
+        ]
+        ```
+
+        `meta` is a free-form object whose shape depends on `noti_type`.
+
+        ### Field reference
+
+        | Field | Type | Description |
+        |---|---|---|
+        | `name` | string | The alert configuration's display name. |
+        | `noti_type` | string | The kind of alert that fired (e.g. `"flow_alerts"`, `"price_alert"`, `"news"`). Determines the shape of `meta`. |
+        | `user_noti_config_id` | uuid string | Identifier of the alert configuration that produced this notification. Use this to group alerts by the rule that fired them. |
+        | `user_id` | uuid string | Account that received the alert (always the account associated with the API token). |
+        | `symbol` | string \| null | Symbol the alert is about, if applicable. |
+        | `symbol_type` | `"stock"` \| `"option_chain"` \| null | Tells you how to interpret `symbol`. |
+        | `tape_time` | ISO 8601 string | Time the alert fired, UTC. |
+        | `meta` | object | Free-form payload whose shape depends on `noti_type`. |
+      operationId: PublicApi.SocketController.custom_alerts
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: Custom alerts
+      tags:
+        - websocket
+  /api/socket/flow_alerts:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for websocket channel `flow-alerts`.
+        Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel you wish to stream: `flow-alerts` for all flow alerts.
+
+        Payload format:
+
+        ```
+        [
+          "flow-alerts",
+          {
+            "rule_id": "5ce5ec11-087c-4c00-b164-08106b015856",
+            "rule_name": "RepeatedHitsDescendingFill",
+            "ticker": "DIA",
+            "option_chain": "DIA241018C00415000",
+            "underlying_price": 415.981,
+            "volume": 106,
+            "total_size": 50,
+            "total_premium": 36466,
+            "total_ask_side_prem": 36466,
+            "total_bid_side_prem": 0,
+            "start_time": 1726670212648,
+            "end_time": 1726670212748,
+            "url": "",
+            "price": 7.3,
+            "has_multileg": false,
+            "has_sweep": false,
+            "has_floor": false,
+            "open_interest": 575,
+            "all_opening_trades": false,
+            "id": "29ed5829-e4ce-4934-876b-51985d2f9b70",
+            "has_singleleg": true,
+            "volume_oi_ratio": 0,
+            "trade_ids": [
+              "417f0cd6-09ae-4d43-8542-38557bb713aa",
+              "4af4c646-4b21-4a27-8326-db7b0698d3d8",
+              "74ddcd55-dcb3-4543-a488-16ee7ca91d45",
+              "4ec49859-74a2-4d32-9911-ea329dd77326",
+              "e164da3a-a6aa-41d9-a948-c17817453a21",
+              "b0d98eeb-1429-4494-9dcc-8d5e7eb46f7d",
+              "81b1dcad-f3f6-48a2-bf51-0bfd362ad372"
+            ],
+            "trade_count": 7,
+            "expiry_count": 1,
+            "executed_at": 1726670212748,
+            "ask_vol": 52,
+            "bid_vol": 49,
+            "no_side_vol": 0,
+            "mid_vol": 5,
+            "multi_vol": 0,
+            "stock_multi_vol": 0,
+            "upstream_condition_details": [
+              "auto",
+              "slan"
+            ],
+            "exchanges": [
+              "XCBO",
+              "MPRL"
+            ],
+            "bid": "7.15",
+            "ask": "7.3"
+          }
+        ]
+        ```
+
+        ### Field reference
+
+        A flow alert is an aggregate of one or more individual `option_trades` that matched a rule (sweep, repeated hits, etc.). Use `trade_ids` to look up the underlying option trades.
+
+        | Field | Type | Description |
+        |---|---|---|
+        | `id` | uuid string | Unique alert identifier. |
+        | `rule_id` | uuid string | Identifier of the rule that produced the alert. |
+        | `rule_name` | string \| null | Human-readable rule name (e.g. `"RepeatedHitsDescendingFill"`). May be null if the rule definition is not present. |
+        | `ticker` | string | Underlying ticker. |
+        | `option_chain` | string | OSI option chain id matched by the alert. |
+        | `underlying_price` | float | Spot price of the underlying at `end_time`. |
+        | `volume` | int | Aggregate session volume on the contract at `end_time`. |
+        | `total_size` | int | Sum of `size` across the trades in this alert. |
+        | `total_premium` | float | Sum of `premium` across the trades in this alert. |
+        | `total_ask_side_prem` / `total_bid_side_prem` | float | Premium broken out by side classification at trade time. |
+        | `start_time` / `end_time` | int (ms) | First and last trade timestamps included in the alert (unix epoch milliseconds). |
+        | `executed_at` | int (ms) | Same as `end_time` (kept for backwards compatibility). |
+        | `price` | float | Last trade price in the aggregation window. |
+        | `bid` / `ask` | decimal string | NBBO at `end_time`. |
+        | `open_interest` | int | Open interest on the contract as of the most recent close. |
+        | `volume_oi_ratio` | float | `volume / open_interest`. `0` if `open_interest` is `0`. |
+        | `has_sweep` / `has_floor` / `has_singleleg` / `has_multileg` | bool | True if at least one matching trade is of that kind. |
+        | `all_opening_trades` | bool | True if every matching trade looks like an opening trade (price near ask). |
+        | `trade_ids` | string[] | UUIDs of the underlying `option_trades`; cross-reference against the `option_trades` channel or the full-tape endpoint. |
+        | `trade_count` | int | `length(trade_ids)`. |
+        | `expiry_count` | int | Number of distinct expiries spanned by the matching trades (almost always `1`). |
+        | `ask_vol` / `bid_vol` / `mid_vol` / `no_side_vol` | int | Aggregate volume by side classification across the trades. |
+        | `multi_vol` / `stock_multi_vol` | int | Multi-leg / stock-combo volume across the trades. |
+        | `upstream_condition_details` | string[] | Union of upstream condition codes (`"slan"`, `"auto"`, ...) seen across the trades. |
+        | `exchanges` | string[] | OPRA exchanges that printed the matching trades. |
+        | `url` | string | Deep link to the alert on unusualwhales.com (may be empty). |
+      operationId: PublicApi.SocketController.flow_alerts
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: Flow alerts
+      tags:
+        - websocket
+  /api/socket/gex:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for websocket channels `gex`, `gex:<TICKER>`, `gex_strike`, `gex_strike:<TICKER>`, `gex_strike_expiry`, and `gex_strike_expiry:<TICKER>`.
+        Websocket access for personal use is only available through the[Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel you wish to stream, for example `gex:SPY` for live GEX updates for SPY, `gex_strike:SPY` for strike-level GEX data, or `gex_strike_expiry:SPY` for strike and expiry level GEX data. Omit the ticker suffix to receive the corresponding updates for every ticker.
+
+        If you are connecting to multiple ticker specific GEX channels and just want updates for all tickers, connect only to the corresponding global channel: `gex`, `gex_strike`, or `gex_strike_expiry`.
+
+        Payload format:
+
+        Format for `gex:<TICKER>`:
+        ```
+        [
+          "gex:SPY",
+          {
+            "ticker": "SPY",
+            "timestamp": 1726670396000,
+            "gamma_per_one_percent_move_oi": "-262444980.31",
+            "delta_per_one_percent_move_oi": "",
+            "charm_per_one_percent_move_oi": "-1677926539943.05",
+            "vanna_per_one_percent_move_oi": "2842602508.57",
+            "price": "562.86",
+            "gamma_per_one_percent_move_vol": "-934307209.58",
+            "delta_per_one_percent_move_vol": "",
+            "charm_per_one_percent_move_vol": "-556207588704.10",
+            "vanna_per_one_percent_move_vol": "128814703.59",
+            "gamma_per_one_percent_move_dir": "-9372185.61",
+            "charm_per_one_percent_move_dir": "-2055997560.50",
+            "vanna_per_one_percent_move_dir": "-6220855.09"
+          }
+        ]
+        ```
+
+        Format for `gex_strike:<TICKER>`:
+        ```
+        [
+          "gex_strike:SPY",
+          {
+            "ticker": "SPY",
+            "timestamp": 1726670426000,
+            "call_delta_oi": "0.4521",
+            "put_delta_oi": "-0.3812",
+            "call_gamma_oi": "174792.59",
+            "put_gamma_oi": "-1172037.66",
+            "call_charm_oi": "85658181.72",
+            "put_charm_oi": "-315259003.37",
+            "call_vanna_oi": "-6103.51",
+            "put_vanna_oi": "1337727.64",
+            "call_delta_vol": "0.0413",
+            "put_delta_vol": "-0.0288",
+            "call_gamma_vol": "15596.81",
+            "put_gamma_vol": "-236.69",
+            "call_charm_vol": "-326871.58",
+            "put_charm_vol": "-68457.78",
+            "call_vanna_vol": "2063.13",
+            "put_vanna_vol": "845.06",
+            "strike": "290",
+            "price": "562.96",
+            "call_gamma_ask_vol": "-4064.62",
+            "call_gamma_bid_vol": "11532.18",
+            "put_gamma_ask_vol": "-140.95",
+            "put_gamma_bid_vol": "95.73",
+            "call_charm_ask_vol": "85184.72",
+            "call_charm_bid_vol": "-241686.87",
+            "put_charm_ask_vol": "-59412.37",
+            "put_charm_bid_vol": "9045.42",
+            "call_vanna_ask_vol": "-537.66",
+            "call_vanna_bid_vol": "1525.46",
+            "put_vanna_ask_vol": "523.79",
+            "put_vanna_bid_vol": "-321.27"
+          }
+        ]
+        ```
+
+        Format for `gex_strike_expiry:<TICKER>`:
+        ```
+        [
+          "gex_strike_expiry:SPY",
+          {
+            "ticker": "SPY",
+            "expiry": "2025-01-24",
+            "timestamp": 1726670426000,
+            "call_delta_oi": "0.4521",
+            "put_delta_oi": "-0.3812",
+            "call_gamma_oi": "174792.59",
+            "put_gamma_oi": "-1172037.66",
+            "call_charm_oi": "85658181.72",
+            "put_charm_oi": "-315259003.37",
+            "call_vanna_oi": "-6103.51",
+            "put_vanna_oi": "1337727.64",
+            "call_delta_vol": "0.0413",
+            "put_delta_vol": "-0.0288",
+            "call_gamma_vol": "15596.81",
+            "put_gamma_vol": "-236.69",
+            "call_charm_vol": "-326871.58",
+            "put_charm_vol": "-68457.78",
+            "call_vanna_vol": "2063.13",
+            "put_vanna_vol": "845.06",
+            "strike": "290",
+            "price": "562.96",
+            "call_gamma_ask_vol": "-4064.62",
+            "call_gamma_bid_vol": "11532.18",
+            "put_gamma_ask_vol": "-140.95",
+            "put_gamma_bid_vol": "95.73",
+            "call_charm_ask_vol": "85184.72",
+            "call_charm_bid_vol": "-241686.87",
+            "put_charm_ask_vol": "-59412.37",
+            "put_charm_bid_vol": "9045.42",
+            "call_vanna_ask_vol": "-537.66",
+            "call_vanna_bid_vol": "1525.46",
+            "put_vanna_ask_vol": "523.79",
+            "put_vanna_bid_vol": "-321.27"
+          }
+        ]
+        ```
+
+        ### Field reference: `gex:<TICKER>` (ticker-aggregate)
+
+        Per-ticker totals of dealer Greek exposures, expressed as the dollar move per 1% move in the underlying.
+
+        | Field | Type | Description |
+        |---|---|---|
+        | `ticker` | string | |
+        | `timestamp` | int (ms) | Calculation time, unix epoch milliseconds. |
+        | `price` | decimal string | Underlying spot at `timestamp`. |
+        | `gamma_per_one_percent_move_oi` | decimal | Dollar gamma per 1% spot move, weighted by open interest. |
+        | `delta_per_one_percent_move_oi` | decimal | Dollar delta per 1% spot move, weighted by open interest. |
+        | `charm_per_one_percent_move_oi` | decimal | Dollar charm (delta decay) per 1% spot move, weighted by open interest. |
+        | `vanna_per_one_percent_move_oi` | decimal | Dollar vanna (delta sensitivity to vol) per 1% spot move, weighted by open interest. |
+        | `gamma_per_one_percent_move_vol`, `delta_per_one_percent_move_vol`, `charm_per_one_percent_move_vol`, `vanna_per_one_percent_move_vol` | decimal | Same metrics weighted by session volume rather than open interest. |
+        | `gamma_per_one_percent_move_dir`, `charm_per_one_percent_move_dir`, `vanna_per_one_percent_move_dir` | decimal | Directional (bid/ask classified) volume-weighted variants. |
+
+        ### Field reference: `gex_strike:<TICKER>` and `gex_strike_expiry:<TICKER>`
+
+        Greek exposures broken out by strike (and additionally by expiry for the `_expiry` channel). All numeric Greek fields are decimal strings. Calls and puts are reported separately; sum them to get net exposure at the strike.
+
+        | Field | Type | Description |
+        |---|---|---|
+        | `ticker` | string | |
+        | `strike` | decimal string | Strike price. |
+        | `expiry` | date string `YYYY-MM-DD` | Only on `gex_strike_expiry`. |
+        | `timestamp` | int (ms) | Calculation time, unix epoch milliseconds. |
+        | `price` | decimal string | Underlying spot at `timestamp`. |
+        | `call_delta_oi` / `put_delta_oi` | decimal | Delta exposure from calls / puts at this strike, weighted by open interest. |
+        | `call_gamma_oi` / `put_gamma_oi` | decimal | Gamma exposure from calls / puts at this strike, weighted by open interest. |
+        | `call_charm_oi` / `put_charm_oi` | decimal | Charm exposure from calls / puts at this strike, weighted by open interest. |
+        | `call_vanna_oi` / `put_vanna_oi` | decimal | Vanna exposure from calls / puts at this strike, weighted by open interest. |
+        | `call_delta_vol`, `put_delta_vol`, `call_gamma_vol`, `put_gamma_vol`, `call_charm_vol`, `put_charm_vol`, `call_vanna_vol`, `put_vanna_vol` | decimal | Same metrics weighted by session volume rather than open interest. |
+        | `call_gamma_ask_vol` / `call_gamma_bid_vol` / `put_gamma_ask_vol` / `put_gamma_bid_vol` | decimal | Gamma exposure attributed to ask-side (assumed dealer-sold) and bid-side (assumed dealer-bought) flow at this strike. |
+        | `call_charm_ask_vol`, `call_charm_bid_vol`, `put_charm_ask_vol`, `put_charm_bid_vol` | decimal | Charm exposure split by side. |
+        | `call_vanna_ask_vol`, `call_vanna_bid_vol`, `put_vanna_ask_vol`, `put_vanna_bid_vol` | decimal | Vanna exposure split by side. |
+      operationId: PublicApi.SocketController.gex
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: GEX
+      tags:
+        - websocket
+  /api/socket/greek_flow:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for the websocket channels `greek_flow` and `greek_flow:<TICKER>`.
+        For the same data broken out by option expiry, see [`greek_flow_expiry`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.greek_flow_expiry).
+        Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel you wish to stream, for example `greek_flow:SPY` for SPY's delta and
+        vega flow. Omit the ticker suffix to receive updates for every ticker.
+
+        Each message carries the delta and vega exposure of the option trades that printed for one
+        ticker in one minute and arrived since the previous message for that minute; see Delivery
+        characteristics below for how to sum them. `total_*` fields carry the greek's own sign - for
+        delta that means calls contribute positive and puts negative - so they are net greek exposure
+        regardless of who was the aggressor. `dir_*` fields instead sign the magnitude by trade
+        sentiment: for delta, bullish trades (bought calls, sold puts) positive and bearish negative;
+        for vega, buys (ask side) positive and sells (bid side) negative. Mid/no-side trades are
+        excluded from every `dir_*` field.
+
+        ### Delivery characteristics
+
+        Read these before writing a client, they are not obvious from the payload:
+
+        - **Each message is a partial sum, not a running total.** A minute's bucket is flushed
+          roughly once per second as trades arrive, so to get that minute's total you must **add
+          together every message sharing the same `ticker` and `timestamp`**. Grouping on `timestamp`
+          alone is wrong on the global channel, where every ticker's messages carry that same minute.
+          A client that overwrites on the key instead of adding will silently under-report.
+        - Because of that, a dropped frame does not just delay a value, it changes your sum. Read
+          from the socket promptly: a slow consumer is not disconnected, but frames it fails to keep
+          up with are dropped.
+        - **Updates are trade-driven, not scheduled.** A ticker with no option trades in the window
+          produces no message at all - there is no per-minute tick and no zero-valued heartbeat. A
+          minute bucket is also never announced as closed: messages carrying a given `timestamp`
+          simply stop arriving.
+        - The channels are keyed by the **root** ticker: weekly/PM index series are folded into their
+          root (`SPXW` under `SPX`, `NDXP` under `NDX`, `VIXW` under `VIX`, `RUTW` under `RUT`).
+          Joining `greek_flow:SPXW` is acknowledged as, and streams, `greek_flow:SPX`.
+        - All flow values are decimal strings, matching the REST endpoint below.
+
+        This is the live counterpart of [`/stock/:ticker/greek-flow`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.greek_flow),
+        which returns the same fields with the same encodings. Note the REST endpoint serves each
+        minute's **accumulated total**, while this channel serves the per-second partials that add up
+        to it.
+
+        Payload format for `greek_flow:<TICKER>`:
+
+        ```
+        [
+          "greek_flow:SPY",
+          {
+            "ticker": "SPY",
+            "timestamp": "2026-09-04T15:46:00Z",
+            "total_delta_flow": "-21257.36",
+            "dir_delta_flow": "-43593.96",
+            "otm_total_delta_flow": "-28564.02",
+            "otm_dir_delta_flow": "14947.51",
+            "total_vega_flow": "350944.58",
+            "dir_vega_flow": "31243.04",
+            "otm_total_vega_flow": "101745.64",
+            "otm_dir_vega_flow": "11421.03",
+            "transactions": 1188,
+            "volume": 12348
+          }
+        ]
+        ```
+
+        ### Field reference
+
+        | Field                  | Type    | Description |
+        |------------------------|---------|-------------|
+        | `ticker`               | string  | Root ticker of the underlying. |
+        | `timestamp`            | string  | The minute bucket these trades fall into, ISO 8601 UTC. |
+        | `total_delta_flow`     | string  | Sum of signed delta exposure: `delta * contracts * 100`. |
+        | `dir_delta_flow`       | string  | Delta magnitude signed by sentiment: positive for bullish trades (buy call / sell put), negative for bearish. |
+        | `otm_total_delta_flow` | string  | `total_delta_flow` counting only trades identified as out of the money. |
+        | `otm_dir_delta_flow`   | string  | `dir_delta_flow` counting only trades identified as out of the money. |
+        | `total_vega_flow`      | string  | Sum of vega exposure: `vega * contracts * 100`. |
+        | `dir_vega_flow`        | string  | Vega magnitude signed by side: positive for buys (ask side), negative for sells (bid side). |
+        | `otm_total_vega_flow`  | string  | `total_vega_flow` counting only trades identified as out of the money. |
+        | `otm_dir_vega_flow`    | string  | `dir_vega_flow` counting only trades identified as out of the money. |
+        | `transactions`         | integer | Number of option trades aggregated into this message. A trade whose delta or vega was unavailable still counts here and in `volume` but adds zero to that greek's flow fields. |
+        | `volume`               | integer | Total contracts traded across the aggregated trades. |
+      operationId: PublicApi.SocketController.greek_flow
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: Greek flow
+      tags:
+        - websocket
+  /api/socket/greek_flow_expiry:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for the websocket channels `greek_flow_expiry` and
+        `greek_flow_expiry:<TICKER>`.
+        For the same data aggregated across all expiries, see [`greek_flow`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.greek_flow).
+        Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel you wish to stream, for example `greek_flow_expiry:SPY` for SPY's
+        delta and vega flow broken out per option expiry. Omit the ticker suffix to receive updates
+        for every ticker.
+
+        Each message carries the delta and vega exposure of the option trades that printed for one
+        ticker, in one minute, **for a single option expiry**, and arrived since the previous message
+        for that minute and expiry; see Delivery characteristics below for how to sum them. Both
+        channels are built from the same option trades, so once every message for a minute has
+        arrived, that minute's expiries sum to the same minute on the
+        [`greek_flow`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.greek_flow)
+        channel. `total_*` fields carry the greek's own sign - for delta that means calls contribute
+        positive and puts negative - so they are net greek exposure regardless of who was the
+        aggressor. `dir_*` fields instead sign the magnitude by trade sentiment: for delta, bullish
+        trades (bought calls, sold puts) positive and bearish negative; for vega, buys (ask side)
+        positive and sells (bid side) negative. Mid/no-side trades are excluded from every `dir_*`
+        field.
+
+        ### Delivery characteristics
+
+        Read these before writing a client, they are not obvious from the payload:
+
+        - **Each message is a partial sum, not a running total.** A minute's bucket is flushed
+          roughly once per second as trades arrive, so to get that minute's total for one expiry you
+          must **add together every message sharing the same `ticker`, `timestamp` and `expiry`**.
+          Grouping on `timestamp` alone is wrong even on the per-ticker channel, since every expiry
+          that traded carries that same minute; on the global channel every ticker does too. A client
+          that overwrites on the key instead of adding will silently under-report.
+        - Because of that, a dropped frame does not just delay a value, it changes your sum. Read
+          from the socket promptly: a slow consumer is not disconnected, but frames it fails to keep
+          up with are dropped.
+        - **Updates are trade-driven, not scheduled.** An expiry with no option trades in the window
+          produces no message at all - there is no per-minute tick and no zero-valued heartbeat. A
+          minute bucket is also never announced as closed: messages carrying a given `timestamp`
+          simply stop arriving.
+        - **This channel carries considerably more messages than `greek_flow`** - one per expiry that
+          traded, rather than one per ticker.
+        - The channels are keyed by the **root** ticker: weekly/PM index series are folded into their
+          root (`SPXW` under `SPX`, `NDXP` under `NDX`, `VIXW` under `VIX`, `RUTW` under `RUT`).
+          Joining `greek_flow_expiry:SPXW` is acknowledged as, and streams, `greek_flow_expiry:SPX`.
+        - All flow values are decimal strings, matching the REST endpoint below.
+
+        This is the live counterpart of [`/stock/:ticker/greek-flow/:expiry`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.greek_flow_expiry),
+        which returns the same fields with the same encodings. Note the REST endpoint serves each
+        minute's **accumulated total**, while this channel serves the per-second partials that add up
+        to it.
+
+        Payload format for `greek_flow_expiry:<TICKER>`:
+
+        ```
+        [
+          "greek_flow_expiry:SPY",
+          {
+            "ticker": "SPY",
+            "timestamp": "2026-09-04T15:46:00Z",
+            "expiry": "2026-10-16",
+            "total_delta_flow": "-21257.36",
+            "dir_delta_flow": "-43593.96",
+            "otm_total_delta_flow": "-28564.02",
+            "otm_dir_delta_flow": "14947.51",
+            "total_vega_flow": "350944.58",
+            "dir_vega_flow": "31243.04",
+            "otm_total_vega_flow": "101745.64",
+            "otm_dir_vega_flow": "11421.03",
+            "transactions": 77,
+            "volume": 4242
+          }
+        ]
+        ```
+
+        ### Field reference
+
+        | Field                  | Type    | Description |
+        |------------------------|---------|-------------|
+        | `ticker`               | string  | Root ticker of the underlying. |
+        | `timestamp`            | string  | The minute bucket these trades fall into, ISO 8601 UTC. |
+        | `expiry`               | string  | The option expiry this bucket is broken out by, `YYYY-MM-DD`. |
+        | `total_delta_flow`     | string  | Sum of signed delta exposure: `delta * contracts * 100`. |
+        | `dir_delta_flow`       | string  | Delta magnitude signed by sentiment: positive for bullish trades (buy call / sell put), negative for bearish. |
+        | `otm_total_delta_flow` | string  | `total_delta_flow` counting only trades identified as out of the money. |
+        | `otm_dir_delta_flow`   | string  | `dir_delta_flow` counting only trades identified as out of the money. |
+        | `total_vega_flow`      | string  | Sum of vega exposure: `vega * contracts * 100`. |
+        | `dir_vega_flow`        | string  | Vega magnitude signed by side: positive for buys (ask side), negative for sells (bid side). |
+        | `otm_total_vega_flow`  | string  | `total_vega_flow` counting only trades identified as out of the money. |
+        | `otm_dir_vega_flow`    | string  | `dir_vega_flow` counting only trades identified as out of the money. |
+        | `transactions`         | integer | Number of option trades aggregated into this message. A trade whose delta or vega was unavailable still counts here and in `volume` but adds zero to that greek's flow fields. |
+        | `volume`               | integer | Total contracts traded across the aggregated trades. |
+      operationId: PublicApi.SocketController.greek_flow_expiry
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+      summary: Greek flow by expiry
+      tags:
+        - websocket
+  /api/socket/greeks:
+    get:
+      callbacks: {}
+      description: |
+        **NOTE:**
+        This is the documentation for websocket channels `greeks` and `greeks:<TICKER>`.
+        Websocket access for personal use is only available through the [Advanced plan](https://unusualwhales.com/pricing?product=api).
+
+        You can find fully-functional examples that stream data from many channels here:
+
+        - Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+        - Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+        Connect to the websocket URI:
+
+        `wss://api.unusualwhales.com/socket?token=<YOUR_API_TOKEN>`
+
+        then `join` the channel you wish to stream: `greeks` for every underlying at once,
+        or `greeks:SPY` for a single one.
+
+        Both channels stream the live counterpart of [/api/stock/{ticker}/greeks](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.greeks),
+        with a different shape: the REST endpoint returns one row per strike for a single
+        expiry with `call_*`/`put_*` field pairs, while these channels stream **one message
+        per contract**, across all expiries, with a single set of greek fields plus
+        `option_type`. A message is emitted every time a contract's greeks are recalculated
+        and its theoretical price moved - for a busy underlying that is many messages per
+        second across the whole chain.
+
+        Weekly/PM index series are folded into their canonical root on both channels:
+        `greeks:SPX` includes SPXW contracts (likewise VIXW under VIX, NDXP under NDX, RUTW
+        under RUT). The `ticker` field carries the canonical root; use `option_symbol` to
+        tell the series apart.
+
+        Payload format:
+
+        Format for `greeks:<TICKER>`:
+
+        ```
+        [
+          "greeks:SPY",
+          {
+            "option_symbol": "SPY261218C00480000",
+            "ticker": "SPY",
+            "expiry": "2026-12-18",
+            "strike": "480",
+            "option_type": "call",
+            "timestamp": 1726670396000,
+            "volatility": 0.2543,
+            "delta": 0.5231,
+            "gamma": 0.0125,
+            "theta": -0.0821,
+            "vega": 1.2143,
+            "rho": 0.4312,
+            "theo": 38.5217,
+            "vanna": 0.1123,
+            "vomma": 2.3121,
+            "veta": -1.0212,
+            "speed": -0.0031,
+            "zomma": 0.0523,
+            "color": -0.0012,
+            "ultima": 3.1214,
+            "charm": -0.0214
+          }
+        ]
+        ```
+
+        The global `greeks` channel streams the same per-contract object for every
+        underlying, tagged `greeks` (the `ticker` field distinguishes them):
+
+        ```
+        [
+          "greeks",
+          {
+     

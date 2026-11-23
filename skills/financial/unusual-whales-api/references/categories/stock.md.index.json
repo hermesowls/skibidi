@@ -1,0 +1,17 @@
+{
+  "logical_path": "references/categories/stock.md",
+  "parts": [
+    "references/categories/stock.md.part000",
+    "references/categories/stock.md.part001",
+    "references/categories/stock.md.part002",
+    "references/categories/stock.md.part003",
+    "references/categories/stock.md.part004",
+    "references/categories/stock.md.part005",
+    "references/categories/stock.md.part006",
+    "references/categories/stock.md.part007",
+    "references/categories/stock.md.part008"
+  ],
+  "sha256": "0b139b46e9942ab46ba85cb34e56a37cfb9d3355ff11ac4813ee5aaacdcdcee6",
+  "bytes": 694825,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

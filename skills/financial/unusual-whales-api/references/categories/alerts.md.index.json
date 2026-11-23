@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/alerts.md",
+  "parts": [
+    "references/categories/alerts.md.part000",
+    "references/categories/alerts.md.part001"
+  ],
+  "sha256": "fed9688d8abd6c0bcf7c4689a42142fc0e6fcc7427ca82d9d2dae45e62c947be",
+  "bytes": 106725,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

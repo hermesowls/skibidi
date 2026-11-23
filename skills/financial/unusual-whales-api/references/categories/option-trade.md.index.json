@@ -1,0 +1,11 @@
+{
+  "logical_path": "references/categories/option-trade.md",
+  "parts": [
+    "references/categories/option-trade.md.part000",
+    "references/categories/option-trade.md.part001",
+    "references/categories/option-trade.md.part002"
+  ],
+  "sha256": "6c7ba161a0516961f630d48690b6d6e6731546642c78fa4d581c908c13019d2b",
+  "bytes": 221621,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

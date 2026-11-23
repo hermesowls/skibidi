@@ -1,0 +1,11 @@
+{
+  "logical_path": "references/categories/market.md",
+  "parts": [
+    "references/categories/market.md.part000",
+    "references/categories/market.md.part001",
+    "references/categories/market.md.part002"
+  ],
+  "sha256": "d5c4e61a746aa50069b1d3d6ed5ba55aa41b98071da467da212f50631dc2fc09",
+  "bytes": 209359,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

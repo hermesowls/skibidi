@@ -1,0 +1,46 @@
+# Endpoint selection and operational semantics
+
+Official entry: https://api.unusualwhales.com/docs#/ ; exact snapshot: `openapi.yaml`; exhaustive index: `catalog.md`; fully resolved definitions: `categories/*.md`; complete endpoint-local timing/filter text: `time-filter-pagination.md`. All listed paths below are in this snapshot. Each category, including less commonly used endpoints, appears in the catalog; use it rather than assuming this guide is exhaustive by itself.
+
+## Choose the observation, not a similarly named wrapper
+| Need | Official route(s) and caveat |
+|---|---|
+| Latest full option prints / rolled-up activity | `/api/option-trades`; choose `include_agg_trades` explicitly. |
+| Historical full market option tape | `/api/option-trades/full-tape/{date}` ZIP; plan lookback, available since 2022-01-01 per description; not JSON pagination. |
+| Rule-triggered flow | `/api/option-trades/flow-alerts`; alert aggregate, not full tape. `/api/option-trades/flow-alerts/{id}` documents associated trades, but its untyped trade objects do not guarantee verified-print fields or complete constituent retrieval; check actual rows, `has_more` and documented pagination. |
+| Multi-leg strategies | `/api/option-trades/multi-leg`, `/api/option-trades/multi-leg/{id}/legs`; not interchangeable with a single call/put execution. |
+| One contract's history | `/api/option-contract/{id}/historic` daily history, `/flow` last trades for selected day, `/intraday` minute aggregates, `/volume-profile` fill-price volume. |
+| Chain symbols vs quote rows | `/api/stock/{ticker}/option-chains` symbols by `date`; `/option-contracts` quote/IV/greek rows with page/limit and expiry filters, no historical `date` parameter in snapshot. `/atm-chains` targeted symbols. |
+| Quote / underlying | `/api/stock/{ticker}/quote` latest stock NBBO/trade/session values, `/stock-state` state, `/ohlc/{candle_size}` candles. Neither is a historical execution-time spot by default. |
+| Options greeks | `/api/stock/{ticker}/option-contracts` includes bid/ask, IV, delta/gamma/theta/vega/rho; charm/vanna via `/greeks`, join `option_symbol` to `call_option_symbol`/`put_option_symbol`. |
+| OI | `/api/market/oi-change`, `/api/stock/{ticker}/oi-change`, `/oi-per-strike`, `/oi-per-expiry`; contract daily history for time series. |
+| GEX | `/api/stock/{ticker}/gex-levels`, `/greek-exposure` family, `/spot-exposures` family. Different weighting/timing: do not conflate. Changelog says gex-levels uses spot directionalized volume, includes date/time/source/nearby_flips. |
+| Aggregate flow | `/api/stock/{ticker}/flow-per-strike`, `/flow-per-expiry`, `/flow-per-strike-intraday`, `/greek-flow`; `/api/group-flow/{flow_group}/greek-flow`; market/ETF/sector tide and `/api/net-flow/expiry`. Aggregates cannot verify individual prints. |
+| IV/volatility | `/api/stock/{ticker}/volatility/term-structure`, `/interpolated-iv`, `/iv-rank`, `/historical-risk-reversal-skew`, realized/variance-risk-premium/anomaly/character routes in volatility category. |
+| Technical analysis | `/api/stock/{ticker}/technical-indicator/{function}`: inspect allowed functions, interval/time_period/series_type/month; daily live websocket TA is a separate channel. No invented REST indicator-event wrapper counterpart. |
+| Fundamentals | `/api/stock/{ticker}/income-statements`, `/balance-sheets`, `/cash-flows`, `/financials`, `/fundamental-breakdown`; companies profile/dividends/splits/estimates/transcripts and listings. Read endpoint definitions for periods and entitlements. |
+| Broader research | Catalog covers stock screeners, analyst ratings, earnings, insiders, institutions, shorts, seasonality, darkpool/lit, ETF holdings, economic/news/calendar, congress/politics/portfolios, predictions, private markets, forex, commodities, digital currencies, crypto, futures, analytics/intel, custom alerts and websocket channels. |
+
+## Latest day vs historical: verified documentation, not verified live behavior
+`GET /api/option-trades` explicitly returns **latest trading day only**. `intraday_only=false` does not grant historical data. Old-day cursor gives HTTP 400 per operation prose, even if response definitions omit 400. `older_than`/`newer_than` accept seconds, milliseconds or ISO 8601; their shared schema also mentions ISO date/RFC3339. No `page` or `offset`; default 50, maximum 500. Repeated bracket arrays, e.g. `tags[]=ask_side&tags[]=bid_side`. REST execution/NBBO times are ISO 8601 UTC; websocket option_trades uses epoch **milliseconds** for those fields.
+
+`include_agg_trades=true` groups related transactions at the same time, so premium/size filters apply to combined activity. A $25k combined order split across ten $2.5k transactions matches `min_premium=20000` only with aggregation (official descriptive example, not live data). Side-volume fields sum to contract volume; multi_vol and stock_multi_vol overlap that volume, not additional amounts to subtract.
+
+Flow alerts use timestamp cursors, default 100/max 200. Custom `/api/alerts` has a 14-day lookback; the spec explicitly says this does NOT apply to `/api/option-trades/flow-alerts`. Do not invent an unlimited alert lookback; entitlements still need separate confirmation. Deprecated ticker flow-alerts should be replaced by the general alerts route.
+
+Contract `/flow` supports a single `date`, defaults last trading day, says last 50 trades; parameter schema and full response remain authoritative but do not invent cursor support absent in its parameters. `/option-chains` accepts date and defaults current/last market day; `/option-contracts` uses pages starting at 0, default/max limit 500. A full page is not complete chain coverage.
+
+### Pagination discipline
+Read exact operation parameter list and descriptions, never transfer cursor/page/offset semantics between endpoints. Save raw page and boundary values before continuing. Deduplicate by provider IDs plus scope and preserve duplicate evidence for ties. Progress time cursors from observed timestamps only. Do not subtract a guessed second or millisecond; precision and boundary inclusivity affect missed trades. Detect repeated/no-progress pages and timestamp ties at page capacity. The spec does NOT establish universal strict/inclusive boundaries, stable ordering, snapshot consistency, or a unique secondary cursor. Therefore a docs-only build cannot honestly assert exhaustive live retrieval under timestamp ties. Mark partial coverage, retain diagnostics and use full-tape archive when appropriate/authorized. For page-based endpoints use documented zero/one-based origin; never assume all Page-like parameters share it. Full exhaustive parameter descriptions are bundled for every HTTP operation.
+
+## Read versus write scope
+The inventory includes 236 GET operations and one POST: `POST /api/alerts/configuration` creates an alert configuration. Documentation coverage is not permission to execute it. Require an explicit user request and verify the exact target after any authorized account write; no write operation was executed during this skill build. Websocket-tagged routes describe subscriptions rather than interchangeable REST snapshots.
+
+## Authentication, rate limits and errors
+Server: `https://api.unusualwhales.com`; paths include `/api`. Global security is HTTP bearer scheme `authorization`, inherited unless the operation overrides it. Keep authorized tokens out of URLs, artifacts and logs; no key discovery is part of this skill. The source changelog describes scope/plan gating; full security objects are preserved in inventory. A 403 is not proof of a wrong path or absent endpoint.
+
+Common declared responses: 401 unauthorized, 403 forbidden, 422 validation and 500; consult each operation because not every one declares all codes. Latest tape prose also documents 400. Never assume response schema enumerates all runtime errors. For 429, honor Retry-After if present and back off with jitter; avoid blind retries for invalid parameters or permissions. Retry idempotent reads cautiously; do not automatically retry account writes.
+
+No universal rate ceiling is established here. Source info advertises Startup monthly 500 requests/minute and 80k daily, annual 1,000/minute and 10 concurrent; those are tier-specific descriptions, not this user's entitlement. Historical windows, commercial redistribution and streaming scopes are plan-dependent. Preserve source-context.md and check current plan documentation rather than inventing a default quota.
+
+`request-examples.json` contains schema-validated request templates only, not market responses; none were sent. The approved default is individual tape with `min_premium="50000"`, `min_size=500`, `volume_greater_oi=true`, `min_dte=1`, `max_dte=14`, `is_otm=true`, `include_agg_trades=false`, `limit=20`. DTE uses the current analysis date in America/New_York; historical source-date DTE is a separate diagnostic. Unlimited OTM distance is local policy `max_otm_fraction: null`, not an API parameter or a premium-cap claim. Generic aggregate/alert templates require separate authorization and describe different cohorts; alert volume >=500 is neither individual size >=500 nor 500 prints. Server filter semantics come from documentation; client diagnostic recalculation must retain missing-field unknowns.

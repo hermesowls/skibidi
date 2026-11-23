@@ -1,0 +1,1658 @@
+            "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Options Volume",
+        "tags": [
+          "stock"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/stock/{ticker}/ownership",
+      "method": "GET",
+      "path": "/api/stock/{ticker}/ownership",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns the institutions, insider trades and politicians with the most shares.\n\nThis is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.\n",
+        "operationId": "PublicApi.TickerController.ownership",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "description": "A single ticker",
+              "example": "AAPL",
+              "title": "SingleTicker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "description": "How many items to return. Default: 20. Max: 100. Min: 1.",
+              "example": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Default 20 Max 100 Min 1",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "example": {
+                    "data": [
+                      {
+                        "cik": "",
+                        "entity_type": "other",
+                        "name": "OTHER",
+                        "ownership": "0.5778598057824398968559314757",
+                        "ownership_perc": "57.79",
+                        "units": 1258514670
+                      },
+                      {
+                        "cik": "0001548760",
+                        "entity_type": "insider",
+                        "name": "ZUCKERBERG MARK",
+                        "ownership": "0.1573567903006183552668030525",
+                        "ownership_perc": "15.74",
+                        "units": 342705665
+                      },
+                      {
+                        "cik": "0000102909",
+                        "entity_type": "institution",
+                        "name": "VANGUARD GROUP INC",
+                        "ownership": "0.08849226346961719659402940931",
+                        "ownership_perc": "8.85",
+                        "units": 192726351
+                      },
+                      {
+                        "cik": "0002012383",
+                        "entity_type": "institution",
+                        "name": "BLACKROCK, INC.",
+                        "ownership": "0.07690733150859746487873438344",
+                        "ownership_perc": "7.69",
+                        "units": 167495652
+                      },
+                      {
+                        "cik": "0000315066",
+                        "entity_type": "institution",
+                        "name": "FMR LLC",
+                        "ownership": "0.05969144108951482234425757667",
+                        "ownership_perc": "5.97",
+                        "units": 130001349
+                      },
+                      {
+                        "cik": "0000093751",
+                        "entity_type": "institution",
+                        "name": "STATE STREET CORP",
+                        "ownership": "0.03969236784921226406024410234",
+                        "ownership_perc": "3.97",
+                        "units": 86445582
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "cik": {
+                      "description": "The cik of the institution or insider trader owning the shares. Politicians don't have a CIK, so the field is empty for those.",
+                      "example": "0001548760",
+                      "title": "Ownership CIK",
+                      "type": "string"
+                    },
+                    "entity_type": {
+                      "description": "The type of entity owning the ticker shares.",
+                      "enum": [
+                        "institution",
+                        "insider",
+                        "politician",
+                        "other"
+                      ],
+                      "title": "Ownership Entity Type",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "The name of the institution, insider trader or politician owning the shares.",
+                      "example": "MARK ZUCKERBERG",
+                      "title": "Ownership Name",
+                      "type": "string"
+                    },
+                    "ownership": {
+                      "description": "The relative amount of ticker shares owned by the institution, insider trader or politician.",
+                      "title": "Ownership Relative",
+                      "type": "string"
+                    },
+                    "ownership_perc": {
+                      "description": "The percentage of ticker shares owned by the institution, insider trader or politician.",
+                      "title": "Ownership Percentage",
+                      "type": "string"
+                    },
+                    "units": {
+                      "description": "The absolute amount of ticker shares owned by the institution, insider trader or politician.",
+                      "title": "Ownership Units",
+                      "type": "integer"
+                    }
+                  },
+                  "title": "Ownership",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Ownership",
+        "tags": [
+          "stock"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/stock/{ticker}/quote",
+      "method": "GET",
+      "path": "/api/stock/{ticker}/quote",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns the latest trade, national best bid and ask, derived quote values, and quote change statistics for each market session.",
+        "operationId": "PublicApi.StockQuoteController.show",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "description": "A single ticker",
+              "example": "AAPL",
+              "title": "SingleTicker",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": {
+                      "last_trade": {
+                        "price": "775.645",
+                        "time": 1786636349747,
+                        "vol": 13548986
+                      },
+                      "market_time": "regular",
+                      "quote": {
+                        "ask": {
+                          "price": "775.660",
+                          "size": 240
+                        },
+                        "bid": {
+                          "price": "775.650",
+                          "size": 80
+                        },
+                        "time": 1786636351248
+                      },
+                      "quote_statistics": {
+                        "postmarket": {
+                          "midpoint_changes": 0,
+                          "quote_changes": 0,
+                          "size_only_changes": 0,
+                          "spread_tightened": 0,
+                          "spread_unchanged": 0,
+                          "spread_widened": 0
+                        },
+                        "premarket": {
+                          "midpoint_changes": 12540,
+                          "quote_changes": 105322,
+                          "size_only_changes": 92782,
+                          "spread_tightened": 6440,
+                          "spread_unchanged": 92782,
+                          "spread_widened": 6100
+                        },
+                        "regular": {
+                          "midpoint_changes": 145814,
+                          "quote_changes": 1255891,
+                          "size_only_changes": 1110077,
+                          "spread_tightened": 74875,
+                          "spread_unchanged": 1110077,
+                          "spread_widened": 70939
+                        }
+                      },
+                      "quote_values": {
+                        "midpoint": "775.655",
+                        "quote_age_ms": 89,
+                        "size_imbalance": 0.5238095238095238,
+                        "size_weighted_midpoint": 775.657619047619,
+                        "spread": "0.010",
+                        "spread_bps": 0.12892329708428238
+                      }
+                    }
+                  },
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "last_trade": {
+                          "properties": {
+                            "price": {
+                              "description": "Last eligible trade price in US dollars.",
+                              "example": "775.645",
+                              "type": "string"
+                            },
+                            "time": {
+                              "description": "Trade execution time as a Unix timestamp in milliseconds.",
+                              "example": 1786636349747,
+                              "format": "int64",
+                              "type": "integer"
+                            },
+                            "vol": {
+                              "description": "Consolidated trading volume reported with the trade.",
+                              "example": 13548986,
+                              "format": "int64",
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "price",
+                            "time",
+                            "vol"
+                          ],
+                          "title": "Latest Stock Trade",
+                          "type": "object",
+                          "description": "Latest price forming trade, or null when unavailable.",
+                          "nullable": true
+                        },
+                        "market_time": {
+                          "description": "Current US equity market session.",
+                          "enum": [
+                            "regular",
+                            "premarket",
+                            "postmarket"
+                          ],
+                          "example": "regular",
+                          "title": "Stock Quote Market Time",
+                          "type": "string"
+                        },
+                        "quote": {
+                          "properties": {
+                            "ask": {
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "price": {
+                                      "description": "Price in US dollars.",
+                                      "example": "775.660",
+                                      "type": "string"
+                                    },
+                                    "size": {
+                                      "description": "Number of shares available at this price.",
+                                      "example": 240,
+                                      "format": "int64",
+                                      "type": "integer"
+                                    }
+                                  },
+                                  "required": [
+                                    "price",
+                                    "size"
+                                  ],
+                                  "title": "Stock Quote Level",
+                                  "type": "object"
+                                }
+                              ],
+                              "description": "National best ask."
+                            },
+                            "bid": {
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "price": {
+                                      "description": "Price in US dollars.",
+                                      "example": "775.660",
+                                      "type": "string"
+                                    },
+                                    "size": {
+                                      "description": "Number of shares available at this price.",
+                                      "example": 240,
+                                      "format": "int64",
+                                      "type": "integer"
+                                    }
+                                  },
+                                  "required": [
+                                    "price",
+                                    "size"
+                                  ],
+                                  "title": "Stock Quote Level",
+                                  "type": "object"
+                                }
+                              ],
+                              "description": "National best bid."
+                            },
+                            "time": {
+                              "description": "Quote source time as a Unix timestamp in milliseconds.",
+                              "example": 1786636351248,
+                              "format": "int64",
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "ask",
+                            "bid",
+                            "time"
+                          ],
+                          "title": "National Best Bid and Ask",
+                          "type": "object",
+                          "description": "Latest national best bid and ask, or null when unavailable.",
+                          "nullable": true
+                        },
+                        "quote_statistics": {
+                          "description": "Quote change statistics grouped by US equity market session.",
+                          "properties": {
+                            "postmarket": {
+                              "description": "Quote change and spread direction counters accumulated during one market session.",
+                              "properties": {
+                                "midpoint_changes": {
+                                  "description": "Quote changes where the arithmetic midpoint changed.",
+                                  "example": 145814,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "quote_changes": {
+                                  "description": "Updates where at least one bid or ask price or size changed.",
+                                  "example": 1255891,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "size_only_changes": {
+                                  "description": "Quote changes where size changed but bid and ask prices did not.",
+                                  "example": 1110077,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_tightened": {
+                                  "description": "Quote changes where the ask minus bid spread decreased.",
+                                  "example": 74875,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_unchanged": {
+                                  "description": "Quote changes where the ask minus bid spread did not change.",
+                                  "example": 1110077,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_widened": {
+                                  "description": "Quote changes where the ask minus bid spread increased.",
+                                  "example": 70939,
+                                  "format": "int64",
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "midpoint_changes",
+                                "quote_changes",
+                                "size_only_changes",
+                                "spread_tightened",
+                                "spread_unchanged",
+                                "spread_widened"
+                              ],
+                              "title": "Stock Quote Session Statistics",
+                              "type": "object"
+                            },
+                            "premarket": {
+                              "description": "Quote change and spread direction counters accumulated during one market session.",
+                              "properties": {
+                                "midpoint_changes": {
+                                  "description": "Quote changes where the arithmetic midpoint changed.",
+                                  "example": 145814,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "quote_changes": {
+                                  "description": "Updates where at least one bid or ask price or size changed.",
+                                  "example": 1255891,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "size_only_changes": {
+                                  "description": "Quote changes where size changed but bid and ask prices did not.",
+                                  "example": 1110077,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_tightened": {
+                                  "description": "Quote changes where the ask minus bid spread decreased.",
+                                  "example": 74875,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_unchanged": {
+                                  "description": "Quote changes where the ask minus bid spread did not change.",
+                                  "example": 1110077,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_widened": {
+                                  "description": "Quote changes where the ask minus bid spread increased.",
+                                  "example": 70939,
+                                  "format": "int64",
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "midpoint_changes",
+                                "quote_changes",
+                                "size_only_changes",
+                                "spread_tightened",
+                                "spread_unchanged",
+                                "spread_widened"
+                              ],
+                              "title": "Stock Quote Session Statistics",
+                              "type": "object"
+                            },
+                            "regular": {
+                              "description": "Quote change and spread direction counters accumulated during one market session.",
+                              "properties": {
+                                "midpoint_changes": {
+                                  "description": "Quote changes where the arithmetic midpoint changed.",
+                                  "example": 145814,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "quote_changes": {
+                                  "description": "Updates where at least one bid or ask price or size changed.",
+                                  "example": 1255891,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "size_only_changes": {
+                                  "description": "Quote changes where size changed but bid and ask prices did not.",
+                                  "example": 1110077,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_tightened": {
+                                  "description": "Quote changes where the ask minus bid spread decreased.",
+                                  "example": 74875,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_unchanged": {
+                                  "description": "Quote changes where the ask minus bid spread did not change.",
+                                  "example": 1110077,
+                                  "format": "int64",
+                                  "type": "integer"
+                                },
+                                "spread_widened": {
+                                  "description": "Quote changes where the ask minus bid spread increased.",
+                                  "example": 70939,
+                                  "format": "int64",
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "midpoint_changes",
+                                "quote_changes",
+                                "size_only_changes",
+                                "spread_tightened",
+                                "spread_unchanged",
+                                "spread_widened"
+                              ],
+                              "title": "Stock Quote Session Statistics",
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "premarket",
+                            "regular",
+                            "postmarket"
+                          ],
+                          "title": "Stock Quote Statistics",
+                          "type": "object"
+                        },
+                        "quote_values": {
+                          "properties": {
+                            "midpoint": {
+                              "description": "Arithmetic mean of the best bid and ask prices.",
+                              "example": "775.655",
+                              "type": "string"
+                            },
+                            "quote_age_ms": {
+                              "description": "Milliseconds since the latest quote update when this response was generated.",
+                              "example": 89,
+                              "format": "int64",
+                              "type": "integer"
+                            },
+                            "size_imbalance": {
+                              "description": "Top of book size imbalance. Positive values indicate more displayed bid size.",
+                              "example": 0.5238095238095238,
+                              "format": "double",
+                              "maximum": 1,
+                              "minimum": -1,
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "size_weighted_midpoint": {
+                              "description": "Midpoint adjusted toward the side opposite the greater displayed size.",
+                              "example": 775.657619047619,
+                              "format": "double",
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "spread": {
+                              "description": "Best ask price minus best bid price.",
+                              "example": "0.010",
+                              "type": "string"
+                            },
+                            "spread_bps": {
+                              "description": "Quoted spread relative to the midpoint, expressed in basis points.",
+                              "example": 0.12892329708428238,
+                              "format": "double",
+                              "nullable": true,
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "midpoint",
+                            "spread",
+                            "quote_age_ms"
+                          ],
+                          "title": "Derived Stock Quote Values",
+                          "type": "object",
+                          "description": "Values derived from the latest quote, or null when no quote is available.",
+                          "nullable": true
+                        }
+                      },
+                      "required": [
+                        "market_time",
+                        "quote_statistics"
+                      ],
+                      "title": "Stock Quote",
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "title": "Stock Quote Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Latest Stock Quote"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "example": "stock_quote_not_found",
+                          "type": "string"
+                        },
+                        "message": {
+                          "example": "Stock quote not found",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "title": "Stock Quote Error Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Ticker is unknown"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "example": "stock_quote_not_found",
+                          "type": "string"
+                        },
+                        "message": {
+                          "example": "Stock quote not found",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "title": "Stock Quote Error Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Stock quote service unavailable"
+          }
+        },
+        "summary": "Stock Quote",
+        "tags": [
+          "stock"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/stock/{ticker}/spot-exposures",
+      "method": "GET",
+      "path": "/api/stock/{ticker}/spot-exposures",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns the spot GEX exposures for the given ticker per minute.\n\nSpot GEX is the assumed $ value of the given greek (ie. gamma) exposure that market makers need to hedge per 1% change of the underlying stock's price movement. A positive value is long and a negative value is short.\n\nInvestors and large funds lower risk and protect their money by selling calls and buying puts. Market makers provide the liquidity to facilitate these trades.\n\nGEX assumes that market makers are part of every transaction and that the bulk of their transactions are buying calls and selling puts to investors hedging their portfolios.\n\nIf a market maker has one contract open with a gamma value of 0.05, then if the underlying stock price moves by 1%, that market maker is exposed to $[0.05 * 100 shares * 0.01 * stock price * underlying parameter of the greek variable (for gamma this variable is the stock price)]. The total market maker spot exposure is calculated by summing up the spot exposure of all open contracts determined by the daily open interest or by volume.\n\nMarket makers profit from the bid-ask spreads and as such, they constantly gamma hedge (they buy and sell shares to keep their positions delta neutral).\n\nLong call positions are positive gamma - as the stock price increases and delta rises (approaches 1), market makers hedge by selling shares, and they buy shares if the stock price decreases and delta falls.\n\nShort put positions are negative gamma - as the stock price increases and delta falls (approaches -1), market makers hedge by buying shares, and they sell shares if the stock price decreases and delta rises.\n\nAs such, in the event of large positive gamma, volatility is suppressed as market makers will hedge by buying as the stock price decreases and selling as the stock price increases. And in the event of large negative gamma, volatility is amplified as market makers will hedge by buying as the stock price increases and selling as the stock price decreases.\n\nThis data updates about once per minute during the cash session.\n",
+        "operationId": "PublicApi.TickerController.spot_exposures_one_minute",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "description": "A single ticker",
+              "example": "AAPL",
+              "title": "SingleTicker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+              "example": "2024-01-18",
+              "title": "Optional Market Date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "example": {
+                    "data": [
+                      {
+                        "charm_per_one_percent_move_dir": "654769081.21",
+                        "charm_per_one_percent_move_oi": "5124108502049.17",
+                        "charm_per_one_percent_move_vol": "320909908341.10",
+                        "gamma_per_one_percent_move_dir": "475681.21",
+                        "gamma_per_one_percent_move_oi": "65476967081.41",
+                        "gamma_per_one_percent_move_vol": "12921519098.30",
+                        "price": "4650",
+                        "time": "2023-12-13 05:00:41.481000+00:00",
+                        "vanna_per_one_percent_move_dir": "-342349081.21",
+                        "vanna_per_one_percent_move_oi": "-54622844772.90",
+                        "vanna_per_one_percent_move_vol": "-5559678859.12"
+                      },
+                      {
+                        "charm_per_one_percent_move_dir": "654769081.21",
+                        "charm_per_one_percent_move_oi": "4736293042981.03",
+                        "charm_per_one_percent_move_vol": "308180334258.50",
+                        "gamma_per_one_percent_move_dir": "475681.21",
+                        "gamma_per_one_percent_move_oi": "64220497598.15",
+                        "gamma_per_one_percent_move_vol": "11924696599.44",
+                        "price": "4650",
+                        "time": "2023-12-13 11:29:41.501000+00:00",
+                        "vanna_per_one_percent_move_dir": "-342349081.21",
+                        "vanna_per_one_percent_move_oi": "-52107741026.80",
+                        "vanna_per_one_percent_move_vol": "-5043673317.55"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "charm_per_one_percent_move_dir": {
+                      "description": "The charm 1% move based on directionalized volume\n",
+                      "example": "-5559678859.12",
+                      "title": "CEX Per One Percent Move Directionalized Volume",
+                      "type": "string"
+                    },
+                    "charm_per_one_percent_move_oi": {
+                      "description": "The charm 1% move based on OI:\nThis is calculated as charm * open interest * 365\n",
+                      "example": "5124108502049.17",
+                      "title": "CEX Per One Percent Move OI",
+                      "type": "string"
+                    },
+                    "charm_per_one_percent_move_vol": {
+                      "description": "The charm 1% move based on volume:\nThis is calculated as charm * volume * 365\n",
+                      "example": "320909908341.10",
+                      "title": "CEX Per One Percent Move Volume",
+                      "type": "string"
+                    },
+                    "gamma_per_one_percent_move_dir": {
+                      "description": "The gamma 1% move based on directionalized volume\n",
+                      "example": "-5559678859.12",
+                      "title": "GEX Per One Percent Move Directionalized Volume",
+                      "type": "string"
+                    },
+                    "gamma_per_one_percent_move_oi": {
+                      "description": "The gamma 1% move based on OI:\nThis is calculated as gamma * open interest * price * price\n",
+                      "example": "65476967081.41",
+                      "title": "Gex Gamma Per One Percent Move OI",
+                      "type": "string"
+                    },
+                    "gamma_per_one_percent_move_vol": {
+                      "description": "The gamma 1% move based on volume:\nThis is calculated as gamma * volume * price * price\n",
+                      "example": "12921519098.30",
+                      "title": "Gex Gamma Per One Percent Move Volume",
+                      "type": "string"
+                    },
+                    "price": {
+                      "description": "The underlying price used in calculations.\nNOTE: For any index ticker this will be the current ATM strike.\n",
+                      "example": "4650",
+                      "title": "Gex Underlying Price",
+                      "type": "string"
+                    },
+                    "time": {
+                      "description": "The UTC timestamp of the calculation",
+                      "example": "2023-12-13 05:00:41.481000+00:00",
+                      "title": "Gex Calculation Time",
+                      "type": "string"
+                    },
+                    "vanna_per_one_percent_move_dir": {
+                      "description": "The vanna 1% move based on directionalized volume\n",
+                      "example": "-5559678859.12",
+                      "title": "VEX Per One Percent Move Directionalized Volume",
+                      "type": "string"
+                    },
+                    "vanna_per_one_percent_move_oi": {
+                      "description": "The vanna 1% move based on OI:\nThis is calculated as vanna * open interest\n",
+                      "example": "-54622844772.90",
+                      "title": "VEX Per One Percent Move OI",
+                      "type": "string"
+                    },
+                    "vanna_per_one_percent_move_vol": {
+                      "description": "The vanna 1% move based on volume:\nThis is calculated as vanna * volume\n",
+                      "example": "-5559678859.12",
+                      "title": "VEX Per One Percent Move Volume",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Spot GEX exposures per 1min",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Spot GEX exposures per 1min",
+        "tags": [
+          "Gex/Greeks"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/stock/{ticker}/spot-exposures/expiry-strike",
+      "method": "GET",
+      "path": "/api/stock/{ticker}/spot-exposures/expiry-strike",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns the most recent spot GEX exposures across all strikes for the given ticker & expiration on a given date. Calculated either with open interest or with volume.\n\nData is available since 2025-01-16.\n\n[Click here for the spot docs](https://api.unusualwhales.com/docs#/operations/PublicApi.TickerController.spot_exposures_by_strike)\n",
+        "operationId": "PublicApi.TickerController.spot_exposures_by_strike_expiry_v2",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "description": "A single ticker",
+              "example": "AAPL",
+              "title": "SingleTicker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "expirations[]",
+            "required": true,
+            "schema": {
+              "description": "An array of 1 or more expiry dates.",
+              "example": [
+                "2024-02-02",
+                "2024-01-26"
+              ],
+              "items": {
+                "description": "A single expiry date in ISO date format.",
+                "example": "2024-02-02",
+                "title": "Single expiry date",
+                "type": "string"
+              },
+              "title": "Expiry dates",
+              "type": "array"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+              "example": "2024-01-18",
+              "title": "Optional Market Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+              "example": 10,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Default 500 Max 500 Min 1",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "description": "Page number (use with limit). Starts on page 0.",
+              "example": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_strike",
+            "required": false,
+            "schema": {
+              "description": "The minimum strike. Min: 0.",
+              "example": 120.5,
+              "minimum": 0,
+              "title": "Min Strike",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_strike",
+   

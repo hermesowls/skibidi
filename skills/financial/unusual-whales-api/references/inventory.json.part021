@@ -1,0 +1,1732 @@
+                     "properties": {
+                          "ask_vol": {
+                            "description": "The amount of volume that happened on the ask side.\n\nAsk side is defined as (ask + bid) / 2 < fill price.\n",
+                            "example": 119403,
+                            "title": "Option Contract Ask Volume",
+                            "type": "integer"
+                          },
+                          "bid_vol": {
+                            "description": "The amount of volume that happened on the bid side.\n\nBid side is defined as (ask + bid) / 2 > fill price.\n",
+                            "example": 122789,
+                            "title": "Option Contract Bid Volume",
+                            "type": "integer"
+                          },
+                          "canceled": {
+                            "description": "Whether the option trade was canceled.",
+                            "example": false,
+                            "title": "Canceled",
+                            "type": "boolean"
+                          },
+                          "delta": {
+                            "description": "The delta of the option trade.",
+                            "example": "0.610546281537814",
+                            "title": "Delta",
+                            "type": "string"
+                          },
+                          "er_time": {
+                            "description": "The time when the earnings will be released.",
+                            "enum": [
+                              "unknown",
+                              "afterhours",
+                              "premarket"
+                            ],
+                            "example": "premarket",
+                            "title": "Stock Earnings time",
+                            "type": "string"
+                          },
+                          "ewma_nbbo_ask": {
+                            "description": "The exponentially weighted moving average of the National Best Bid and Offer ask side.",
+                            "example": "21.60",
+                            "title": "EWMA NBBO Ask",
+                            "type": "string"
+                          },
+                          "ewma_nbbo_bid": {
+                            "description": "The exponentially weighted moving average of the National Best Bid and Offer bid side.",
+                            "example": "21.45",
+                            "title": "EWMA NBBO Bid",
+                            "type": "string"
+                          },
+                          "exchange": {
+                            "description": "The exchange the option trade was executed on.",
+                            "example": "MXOP",
+                            "title": "Exchange",
+                            "type": "string"
+                          },
+                          "executed_at": {
+                            "description": "The option trade execution time as an ISO 8601 UTC timestamp. The WebSocket `option_trades` channel represents this field as Unix epoch milliseconds instead.",
+                            "example": "2024-08-21 13:50:52.278302+00:00",
+                            "format": "date-time",
+                            "title": "Executed At",
+                            "type": "string"
+                          },
+                          "expiry": {
+                            "description": "The contract expiry date in ISO format.",
+                            "example": "2023-12-22",
+                            "title": "Option Contract Expiry",
+                            "type": "string"
+                          },
+                          "flow_alert_id": {
+                            "description": "The flow alert ID of the option trade.\n\nIf the flow alert ID is null, it means that there is no flow alert associated with the option trade.\n",
+                            "title": "Flow Alert ID",
+                            "type": "string"
+                          },
+                          "full_name": {
+                            "description": "Full name of the ticker.",
+                            "example": "APPLE",
+                            "title": "Stock Full Name",
+                            "type": "string"
+                          },
+                          "gamma": {
+                            "description": "The gamma of the option trade.",
+                            "example": "0.00775013889662635",
+                            "title": "Gamma",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "The ID of the option trade.",
+                            "example": "8ef90a2d-d881-41de-98c9-c1de4318dcb5",
+                            "title": "Option Trade ID",
+                            "type": "string"
+                          },
+                          "implied_volatility": {
+                            "description": "The implied volatility of the option trade.",
+                            "example": "0.604347250962543",
+                            "title": "Implied Volatility",
+                            "type": "string"
+                          },
+                          "industry_type": {
+                            "description": "The industry type of the ticker.",
+                            "example": "Semiconductors",
+                            "title": "Stock Industry Type",
+                            "type": "string"
+                          },
+                          "is_agg": {
+                            "description": "Whether this response item combines related option transactions executed at the same time into a single transaction.",
+                            "example": true,
+                            "type": "boolean"
+                          },
+                          "issue_type": {
+                            "example": "Common Stock",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "marketcap": {
+                            "description": "The marketcap of the underlying ticker. If the issue type of the ticker is ETF then the marketcap represents the AUM.",
+                            "example": "2965813810400",
+                            "title": "Stock Marketcap AUM",
+                            "type": "string"
+                          },
+                          "mid_vol": {
+                            "description": "The amount of volume that happened in the middle of the ask and bid.\n\nMid is defined as (ask + bid) / 2 == fill price.\n",
+                            "example": 22707,
+                            "title": "Option Contract Mid Volume",
+                            "type": "integer"
+                          },
+                          "multi_vol": {
+                            "description": "The amount of volume that happened as part of a multileg trade with another contract.\nThis can be spreads/rolls/condors/butterflies and more.\n",
+                            "example": 7486,
+                            "title": "Option Contract Multi Leg Volume",
+                            "type": "integer"
+                          },
+                          "nbbo_ask": {
+                            "description": "The National Best Bid and Offer (NBBO) ask price.",
+                            "example": "0.03",
+                            "title": "NBBO Ask",
+                            "type": "string"
+                          },
+                          "nbbo_ask_size": {
+                            "description": "The quoted size in contracts at the NBBO ask price. `null` when quote metadata is unavailable.",
+                            "example": 24,
+                            "format": "int64",
+                            "nullable": true,
+                            "title": "NBBO Ask Size",
+                            "type": "integer"
+                          },
+                          "nbbo_ask_time": {
+                            "description": "The last update time for the NBBO ask quote as an ISO 8601 UTC timestamp. `null` when quote metadata is unavailable. The WebSocket `option_trades` channel represents this field as Unix epoch milliseconds instead.",
+                            "example": "2024-08-21 13:50:52.274302+00:00",
+                            "format": "date-time",
+                            "nullable": true,
+                            "title": "NBBO Ask Time",
+                            "type": "string"
+                          },
+                          "nbbo_bid": {
+                            "description": "The National Best Bid and Offer (NBBO) bid price.",
+                            "example": "0.03",
+                            "title": "NBBO Bid",
+                            "type": "string"
+                          },
+                          "nbbo_bid_size": {
+                            "description": "The quoted size in contracts at the NBBO bid price. `null` when quote metadata is unavailable.",
+                            "example": 17,
+                            "format": "int64",
+                            "nullable": true,
+                            "title": "NBBO Bid Size",
+                            "type": "integer"
+                          },
+                          "nbbo_bid_time": {
+                            "description": "The last update time for the NBBO bid quote as an ISO 8601 UTC timestamp. `null` when quote metadata is unavailable. The WebSocket `option_trades` channel represents this field as Unix epoch milliseconds instead.",
+                            "example": "2024-08-21 13:50:52.271302+00:00",
+                            "format": "date-time",
+                            "nullable": true,
+                            "title": "NBBO Bid Time",
+                            "type": "string"
+                          },
+                          "next_earnings_date": {
+                            "description": "The next earnings date of the ticker. Null if either unknown as of now or if the ticker does not have any earnings such as an ETF",
+                            "example": "2023-10-26",
+                            "format": "date",
+                            "title": "Stock Next Earnings Date",
+                            "type": "string"
+                          },
+                          "no_side_vol": {
+                            "description": "The amount of volume that happened on no identifiable side.\nThis can be late, out of sequence and/or cross transactions.\n",
+                            "example": 0,
+                            "title": "Option Contract No Side Volume",
+                            "type": "integer"
+                          },
+                          "open_interest": {
+                            "description": "The open interest for the contract.",
+                            "example": 18680,
+                            "title": "Option Contract Open interest",
+                            "type": "integer"
+                          },
+                          "option_chain_id": {
+                            "description": "The option symbol of the contract.\n\nYou can use the following regex to extract underlying ticker, option type, expiry & strike:\n`^(?<symbol>[\\w]*)(?<expiry>(\\d{2})(\\d{2})(\\d{2}))(?<type>[PC])(?<strike>\\d{8})$`\n\nKeep in mind that the strike needs to be multiplied by 1,000.\n",
+                            "title": "Option Contract Symbol",
+                            "type": "string"
+                          },
+                          "option_type": {
+                            "description": "The option type of the contract.",
+                            "enum": [
+                              "call",
+                              "put"
+                            ],
+                            "example": "call",
+                            "title": "Option Contract Option Type",
+                            "type": "string"
+                          },
+                          "premium": {
+                            "description": "The premium of the option trade.",
+                            "example": "2150.00",
+                            "title": "Premium",
+                            "type": "string"
+                          },
+                          "price": {
+                            "description": "The fill price of the option trade.",
+                            "example": "21.50",
+                            "title": "Fill Price",
+                            "type": "string"
+                          },
+                          "report_flags": {
+                            "description": "The report flags of the option trade.",
+                            "example": "cross_trade",
+                            "items": {
+                              "type": "string"
+                            },
+                            "title": "Report Flags",
+                            "type": "array"
+                          },
+                          "rho": {
+                            "description": "The rho of the option trade.",
+                            "example": "0.2316546330093438",
+                            "title": "Rho",
+                            "type": "string"
+                          },
+                          "rule_id": {
+                            "description": "The rule ID of the option trade that represents the rule that made up the flow alert\n",
+                            "title": "Rule ID",
+                            "type": "string"
+                          },
+                          "sector": {
+                            "description": "The financial sector of the ticker. Empty if unknown or not applicable such as ETF/Index.",
+                            "enum": [
+                              "Basic Materials",
+                              "Communication Services",
+                              "Consumer Cyclical",
+                              "Consumer Defensive",
+                              "Energy",
+                              "Financial Services",
+                              "Healthcare",
+                              "Industrials",
+                              "Real Estate",
+                              "Technology",
+                              "Utilities"
+                            ],
+                            "example": "Technology",
+                            "title": "Market General Sector",
+                            "type": "string"
+                          },
+                          "size": {
+                            "description": "The size of the option trade.",
+                            "example": 1,
+                            "title": "Option Trade Size",
+                            "type": "integer"
+                          },
+                          "stock_multi_vol": {
+                            "description": "The amount of volume that happened as part of a stock transaction and possibly other option contracts.\nThis can be covered calls and more.\n",
+                            "example": 52,
+                            "title": "Option Contract Stock Multi Leg Volume",
+                            "type": "integer"
+                          },
+                          "strike": {
+                            "description": "The contract strike.",
+                            "example": "375",
+                            "title": "Option Contract Strike",
+                            "type": "string"
+                          },
+                          "tags": {
+                            "description": "Tags related to the institution.",
+                            "example": [
+                              "activist",
+                              "value_investor"
+                            ],
+                            "items": {
+                              "type": "string"
+                            },
+                            "title": "Tags"
+                          },
+                          "theo": {
+                            "description": "The theoretical price of the option trade.",
+                            "example": "21.49999999999999",
+                            "title": "Theoretical Price",
+                            "type": "string"
+                          },
+                          "theta": {
+                            "description": "The theta of the option trade.",
+                            "example": "-0.0640155364004474",
+                            "title": "Theta",
+                            "type": "string"
+                          },
+                          "trade_ids": {
+                            "description": "The component trade IDs for an aggregated trade.",
+                            "items": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "underlying_price": {
+                            "description": "The price of the underlying asset.",
+                            "example": "128.16",
+                            "title": "Underlying Price",
+                            "type": "string"
+                          },
+                          "underlying_symbol": {
+                            "description": "The underlying symbol of the contract.",
+                            "example": "AAPL",
+                            "title": "Option Contract Underlying Symbol",
+                            "type": "string"
+                          },
+                          "upstream_condition_detail": {
+                            "description": "The upstream condition detail/trade code of the option trade.",
+                            "example": "auto",
+                            "title": "Upstream Condition Detail",
+                            "type": "string"
+                          },
+                          "vega": {
+                            "description": "The vega of the option trade.",
+                            "example": "0.3140468475903719",
+                            "title": "Vega",
+                            "type": "string"
+                          },
+                          "volume": {
+                            "description": "The amount of contracts traded till this point.",
+                            "example": 33,
+                            "title": "Option Trade Volume",
+                            "type": "integer"
+                          }
+                        },
+                        "title": "Option Trade",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "title": "Option Trades Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "example": "historical_data_not_supported",
+                          "type": "string"
+                        },
+                        "message": {
+                          "example": "This endpoint only returns data for the latest trading day. Use /api/option-trades/full-tape/:date to download the full market file for a historical trading day.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "title": "Option Trades Error Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Invalid or unsupported option trade request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "example": "historical_data_not_supported",
+                          "type": "string"
+                        },
+                        "message": {
+                          "example": "This endpoint only returns data for the latest trading day. Use /api/option-trades/full-tape/:date to download the full market file for a historical trading day.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "title": "Option Trades Error Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Option trades service unavailable"
+          }
+        },
+        "summary": "Option Trades",
+        "tags": [
+          "option-trade"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/option-trades/exchange-breakdown/{date}",
+      "method": "GET",
+      "path": "/api/option-trades/exchange-breakdown/{date}",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Aggregates the option tape for one or more tickers on a single trading date, grouped by the\n**options exchange** the prints executed on (e.g. `AMXO`, `ARCO`, `BATO`).\n\nFor each ticker × exchange you get the trade count, total contracts, total premium\n(`sum(price × size × 100)`) and the call/put trade split. Set `by_trade_code=true` to additionally\nbreak each row down by the upstream trade condition code (`upstream_condition_detail`, e.g. `auto`,\n`mlat`, `slan`).\n\nUse `min_premium` to drop smaller prints before aggregating.\n\n**Whole-universe mode:** omit `ticker[]` to get the breakdown across the entire option universe.\nIn that mode tickers are ranked by total contracts traded that day (descending) and the response is\npaged by ticker via `limit` (tickers per page) and `page` — so you receive the top names first. When\n`ticker[]` is supplied this paging is ignored and exactly those tickers are returned.\n\nNOTICE: Access to this endpoint is only included in the Advanced API subscription. Data is available\nfor trading days after 2022-01-01.\n",
+        "operationId": "PublicApi.OptionTradeController.exchange_breakdown",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "description": "A trading date in the format of YYYY-MM-DD.\n",
+              "example": "2024-01-18",
+              "format": "date",
+              "title": "Market Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "One or more underlying symbols to aggregate, e.g. `ticker[]=AAPL&ticker[]=NVDA`. Omit for whole-universe mode (top names by volume).",
+            "in": "query",
+            "name": "ticker[]",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          {
+            "description": "Whether to additionally group each row by the upstream trade condition code.",
+            "example": true,
+            "in": "query",
+            "name": "by_trade_code",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Only include individual prints whose premium (price × size × 100) is at least this value, before aggregating. Use to filter out smaller trades.",
+            "example": "10000",
+            "in": "query",
+            "name": "min_premium",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whole-universe mode only: tickers per page (ranked by volume). Default 100, max 500.",
+            "example": 100,
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whole-universe mode only: 1-based page of tickers. Default 1.",
+            "example": 1,
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whole-universe mode only: how to rank tickers — `volume` (total contracts) or `premium` (total premium). Default `volume`.",
+            "example": "premium",
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A single ticker × exchange (× trade code, when `by_trade_code=true`) aggregation of the option\ntape for a trading date.\n",
+                  "example": {
+                    "data": [
+                      {
+                        "call_trades": 3370,
+                        "contracts": 38633,
+                        "exchange": "AMXO",
+                        "premium": 5454330,
+                        "put_trades": 3434,
+                        "trade_code": "slan",
+                        "trade_count": 6804,
+                        "underlying_symbol": "AAPL"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "call_trades": {
+                      "description": "The number of call prints in this group.",
+                      "example": 3370,
+                      "type": "integer"
+                    },
+                    "contracts": {
+                      "description": "The total number of contracts traded in this group.",
+                      "example": 38633,
+                      "type": "integer"
+                    },
+                    "exchange": {
+                      "description": "The exchange the option trade was executed on.",
+                      "example": "MXOP",
+                      "title": "Exchange",
+                      "type": "string"
+                    },
+                    "premium": {
+                      "description": "The total premium of this group, computed as sum(price × size × 100).",
+                      "example": 5454330,
+                      "type": "number"
+                    },
+                    "put_trades": {
+                      "description": "The number of put prints in this group.",
+                      "example": 3434,
+                      "type": "integer"
+                    },
+                    "trade_code": {
+                      "description": "The upstream condition detail/trade code of the option trade.",
+                      "example": "auto",
+                      "title": "Upstream Condition Detail",
+                      "type": "string"
+                    },
+                    "trade_count": {
+                      "description": "The number of option prints in this group.",
+                      "example": 6804,
+                      "type": "integer"
+                    },
+                    "underlying_symbol": {
+                      "description": "The underlying symbol of the contract.",
+                      "example": "AAPL",
+                      "title": "Option Contract Underlying Symbol",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Option Trade Exchange Breakdown",
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Exchange & Trade Code Breakdown",
+        "tags": [
+          "option-trade"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/option-trades/flow-alerts",
+      "method": "GET",
+      "path": "/api/option-trades/flow-alerts",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Flow alerts are rule based aggregations on the full tape of option trades.\n\nWhile there are quite a few different rules and alerts the most used one is the repeated hit family:\nRepeatedHits, RepeatedHitsAscendingFill, RepeatedHitsDescendingFill\n\nEach of those represent an alert when there have been multiple transactions on the same option contract\nwithin a few milliseconds. This can be mean that a single order is being matched across multiple other orders\nand creating multiple transactions. It can also just mean that there are multiple buyers/sellers at the same time.\n\nTrades usually use the repeated hits with other data points to form a picture on whether there is some urgency\nin entering/exiting a position in a contract/ticker.\n\nThe full current options tape including trades that do not form a RepeatedHits alert can be accessed through the\n[Option Trades endpoint](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.index).\nThe difference between the 3 repeated hits alerts are:\n- DescendingFill: Each transaction that comes after another in chronological order has either the same fill price as or a lower fill price than the previous transaction. The last transaction must be lower than the first transaction.\n- AscendingFill: The opposite of DescendingFill. The fill prices increase instead of decreasing.\n- RepeatedHits (neither ascending nor descending): When it does not fit into one of the first two categories.\n\nTo express ascending and descending in a mathmatical notion. Let p₁, p₂, …, pₙ be the fill prices of n transactions ordered chronologically:\n- DescendingFill: pᵢ ≥ pᵢ₊₁ for all i ∈ [1, n−1], and pₙ < p₁.\n- AscendingFill: pᵢ ≤ pᵢ₊₁ for all i ∈ [1, n−1], and pₙ > p₁.\n\nFor the individual flow alert rules and how the aggregation is based on you can\ncheckout out [https://unusualwhales.com/option-flow-alerts/rules](https://unusualwhales.com/option-flow-alerts/rules).\n\nFor any given flow alert you can take a look at the individual trades that are making up the alert by taking the alert's id\nand use [https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.flow_alert](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.flow_alert)\nto retrieve the individual transactions.\n\nFor real time streaming of flow alerts, subscribe to the `flow-alerts` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.flow_alerts](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.flow_alerts).\n\nThe 14-day lookback limit on the custom alerts endpoint (`/api/alerts`) does not apply to this endpoint.\n",
+        "operationId": "PublicApi.OptionTradeController.flow_alerts",
+        "parameters": [
+          {
+            "description": "",
+            "in": "query",
+            "name": "ticker_symbol",
+            "required": false,
+            "schema": {
+              "description": "A comma separated list of tickers. To exclude certain tickers prefix the first ticker with a `-`.",
+              "example": "AAPL,INTC",
+              "title": "Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Convenience preset for \"unusual\" flow, matching the [live options flow](https://unusualwhales.com/live-options-flow) default criteria: volume>OI, size>OI, all-opening, OTM, single-leg, DTE≤60, ask-side≥50%, premium≥$10k, size≥5, issue types ADR/Common Stock/ETF. Applied as defaults, so any of those filters you pass explicitly (e.g. `min_ask_perc=0.9`, `max_dte=40`) overrides the preset.",
+            "in": "query",
+            "name": "unusual",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_premium",
+            "required": false,
+            "schema": {
+              "description": "The minimum premium on that alert. Min: 0.",
+              "example": 12500.5,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_premium",
+            "required": false,
+            "schema": {
+              "description": "The maximum premium on that alert. Min: 0.",
+              "example": 12500.5,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_size",
+            "required": false,
+            "schema": {
+              "description": "The minimum size on that alert. Size is defined as the sum of the sizes of all transactions that make up the alert. Min: 0.",
+              "example": 125,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_size",
+            "required": false,
+            "schema": {
+              "description": "The maximum size on that alert. Min: 0.",
+              "example": 125,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_volume",
+            "required": false,
+            "schema": {
+              "description": "The minimum volume on that alert's contract at the time of the alert. Min: 0.",
+              "example": 125,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_volume",
+            "required": false,
+            "schema": {
+              "description": "The maximum volume on that alert's contract at the time of the alert. Min: 0.",
+              "example": 125,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_open_interest",
+            "required": false,
+            "schema": {
+              "description": "The minimum open interest on that alert's contract at the time of the alert. Min: 0.",
+              "example": 125,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_open_interest",
+            "required": false,
+            "schema": {
+              "description": "The maximum open interest on that alert's contract at the time of the alert. Min: 0.",
+              "example": 125,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "all_opening",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether all transactions are opening transactions based on OI, Size & Volume. Since Flow Alerts with rule_name values of RepeatedHits, RepeatedHitsAscendingFill, and RepeatedHitsDescendingFill are composed of many individual transactions, it is extremely unlikely that the all_opening value will be true, so if you are interested in these Flow Alerts you should not set this query param to true.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_floor",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether a transaction is from the floor.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_sweep",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether a transaction is a intermarket sweep.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_call",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether a transaction is a call.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_put",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether a transaction is a put.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_ask_side",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether a transaction is ask side.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_bid_side",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "Boolean flag whether a transaction is bid side.",
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "rule_name[]",
+            "required": false,
+            "schema": {
+              "description": "An array of 1 or more rule name.",
+              "example": [
+                "RepeatedHits",
+                "RepeatedHitsAscendingFill"
+              ],
+              "items": {
+                "description": "",
+                "enum": [
+                  "FloorTradeSmallCap",
+                  "FloorTradeMidCap",
+                  "RepeatedHits",
+                  "RepeatedHitsAscendingFill",
+                  "RepeatedHitsDescendingFill",
+                  "FloorTradeLargeCap",
+                  "OtmEarningsFloor",
+                  "LowHistoricVolumeFloor",
+                  "SweepsFollowedByFloor"
+                ],
+                "example": "RepeatedHits",
+                "title": "Flow alert rule",
+                "type": "string"
+              },
+              "title": "Rule Name",
+              "type": "array"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_diff",
+            "required": false,
+            "schema": {
+              "description": "The minimum OTM diff of a contract.\nGiven a strike price of 120 and an underlying price of 98\nthe diff for a call option would equal to:\n(120 - 98) / 98 = 0.2245\n\nThe diff for a put option would equal to:\n-1 * (120 - 98) / 98 = -0.2245.\n",
+              "example": 0.53,
+              "title": "Min Contract Diff",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_diff",
+            "required": false,
+            "schema": {
+              "description": "The minimum OTM diff of a contract.\nGiven a strike price of 120 and an underlying price of 98\nthe diff for a call option would equal to:\n(120 - 98) / 98 = 0.2245\n\nThe diff for a put option would equal to:\n-1 * (120 - 98) / 98 = -0.2245.\n",
+              "example": 0.53,
+              "title": "Min Contract Diff",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_volume_oi_ratio",
+            "required": false,
+            "schema": {
+              "description": "The minimum ratio of contract volume to contract open interest. If the open interest of a contract is zero, then this ratio is evaluated as if the open interest of the contract was one (to avoid divide by zero errors). For example, if you set this ratio to 10, then a contract with zero open interest and 7 volume will NOT be included in your results.",
+              "example": 0.32,
+              "minimum": 0,
+              "title": "Min Volume OI Ratio",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_volume_oi_ratio",
+            "required": false,
+            "schema": {
+              "description": "The maximum ratio of contract volume to contract open interest. If the open interest of a contract is zero, then this ratio is evaluated as if the open interest of the contract was one (to avoid divide by zero errors). For example, if you set this ratio to 50, then a contract with zero open interest and 75 volume will NOT be included in your results.",
+              "example": 1.58,
+              "minimum": 0,
+              "title": "Max Volume OI Ratio",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_otm",
+            "required": false,
+            "schema": {
+              "description": "Only include contracts which are currently out of the money.",
+              "example": true,
+              "title": "Is OTM Contract",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "issue_types[]",
+            "required": false,
+            "schema": {
+              "description": "An array of 1 or more issue types.",
+              "example": [
+                "Common Stock",
+                "Index"
+              ],
+              "items": {
+                "description": "A singular issue type.",
+                "enum": [
+                  "Common Stock",
+                  "ETF",
+                  "Index",
+                  "ADR"
+                ],
+                "example": "Common Stock",
+                "title": "Single issue type",
+                "type": "string"
+              },
+              "title": "Issue types",
+              "type": "array"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_dte",
+            "required": false,
+            "schema": {
+              "description": "The minimum days to expiry. Min: 0.",
+              "example": 1,
+              "minimum": 0,
+              "title": "Min DTE",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_dte",
+            "required": false,
+            "schema": {
+              "description": "The maximum days to expiry. Min: 0.",
+              "example": 3,
+              "minimum": 0,
+              "title": "Max DTE",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_ask_perc",
+            "required": false,
+            "schema": {
+              "description": "The minimum ask percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.25,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Min Ask Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_ask_perc",
+            "required": false,
+            "schema": {
+              "description": "The maximum ask percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.75,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Max Ask Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_bid_perc",
+            "required": false,
+            "schema": {
+              "description": "The minimum bid percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.25,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Min Bid Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_bid_perc",
+            "required": false,
+            "schema": {
+              "description": "The maximum bid percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.75,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Max Bid Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_bull_perc",
+            "required": false,
+            "schema": {
+              "description": "The minimum bull percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.5,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Min Bull Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_bull_perc",
+            "required": false,
+            "schema": {
+              "description": "The maximum bull percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.9,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Max Bull Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_bear_perc",
+            "required": false,
+            "schema": {
+              "description": "The minimum bear percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.5,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Min Bear Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_bear_perc",
+            "required": false,
+            "schema": {
+              "description": "The maximum bear percentage. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.9,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Max Bear Percentage",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_skew",
+            "required": false,
+            "schema": {
+              "description": "The minimum skew. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.3,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Min Skew",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_skew",
+            "required": false,
+            "schema": {
+              "description": "The maximum skew. Decimal proxy for percentage (0 to 1). Min: 0. Max: 1.",
+              "example": 0.7,
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flow Alerts Max Skew",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_price",
+            "required": false,
+            "schema": {
+              "description": "The minimum price of the underlying asset. Min: 0.",
+              "example": 10.5,
+              "minimum": 0,
+              "title": "Flow Alerts Min Price",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_price",
+            "required": false,
+            "schema": {
+              "description": "The maximum price of the underlying asset. Min: 0.",
+              "example": 500.75,
+              "minimum": 0,
+              "title": "Flow Alerts Max Price",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_iv_change",
+            "required": false,
+            "schema": {
+              "description": "The minimum IV change. Unbounded decimal proxy for percentage (e.g., 0.01 for minimum +1% change).",
+              "example": 0.01,
+              "title": "Flow Alerts Min IV Change",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_iv_change",
+            "required": false,
+            "schema": {
+              "description": "The maximum IV change. Unbounded decimal proxy for percentage (e.g., 0.05 for maximum +5% change).",
+              "example": 0.05,
+              "title": "Flow Alerts Max IV Change",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_size_vol_ratio",
+            "required": false,
+            "schema": {
+              "description": "The minimum size to volume ratio. Min: 0.",
+              "example": 1.5,
+              "minimum": 0,
+              "title": "Flow Alerts Min Size Volume Ratio",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_size_vol_ratio",
+            "required": false,
+            "schema": {
+              "description": "The maximum size to volume ratio. Min: 0.",
+              "example": 10.0,
+              "minimum": 0,
+              "title": "Flow Alerts Max Size Volume Ratio",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_spread",
+            "required": false,
+            "schema": {
+              "description": "The minimum spread. Min: 0.",
+              "example": 0.05,
+              "minimum": 0,
+              "title": "Flow Alerts Min Spread",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_spread",
+            "required": false,
+            "schema": {
+              "description": "The maximum spread. Min: 0.",
+              "example": 5.0,
+              "minimum": 0,
+              "title": "Flow Alerts Max Spread",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_marketcap",
+            "required": false,
+            "schema": {
+              "description": "The minimum marketcap. Min: 0.",
+              "example": 1000000,
+              "minimum": 0,
+              "title": "Min Marketcap",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_marketcap",
+            "required": false,
+            "schema": {
+              "description": "The maximum marketcap. Min: 0.",
+              "example": 250000000,
+              "minimum": 0,
+              "title": "Max Marketcap",
+              "type": "number"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "is_multi_leg",
+            "required": false,
+            "schema": {
+              "description": "Boolean flag whether the transaction is a multi-leg transaction.",
+              "example": true,
+              "title": "Flow Alerts Is Multi Leg",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "size_greater_oi",
+            "required": false,
+            "schema": {
+              "description": "Only include alerts where the size is greater than the open interest.",
+              "example": true,
+              "title": "Flow Alerts Size Greater Than Open Interest",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "vol_greater_oi",
+            "required": false,
+            "schema": {
+              "description": "Only include alerts where the volume is greater than the open interest.",
+              "example": true,
+              "title": "Flow Alerts Volume Greater Than Open Interest",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "min_days_between_expiry_and_earnings",
+            "required": false,
+            "schema": {
+              "description": "Minimum value of (contract_expiry_date - underlying_next_earnings_date) in days. Negative = contract expires BEFORE earnings; zero = same day; positive = AFTER earnings. Use together with `max_days_between_expiry_and_earnings` to target a window around the next earnings announcement. Examples: to exclude contracts that expire after the next earnings, set `max_days_between_expiry_and_earnings=-1`. To target contracts that expire the same week as (and after) earnings, set `min_days_between_expiry_and_earnings=1&max_days_between_expiry_and_earnings=6`. Contracts whose underlying has no known next earnings date are excluded whenever this filter is used.",
+              "example": 1,
+              "title": "MinDaysBetweenExpiryAndEarnings",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "max_days_between_expiry_and_earnings",
+            "required": false,
+            "schema": {
+              "description": "Maximum value of (contract_expiry_date - underlying_next_earnings_date) in days. Negative = contract expires BEFORE earnings; zero = same day; positive = AFTER earnings. Use together with `min_days_between_expiry_and_earnings` to target a window around the next earnings announcement. Examples: to exclude contracts that expire after the next earnings, set `max_days_between_expiry_and_earnings=-1`. To target contracts that expire the same week as (and after) earnings, set `min_days_between_expiry_and_earnings=1&max_days_between_expiry_and_earnings=6`. Contracts whose underlying has no known next earnings date are excluded whenever this filter is used.",
+              "example": 6,
+              "title": "MaxDaysBetweenExpiryAndEarnings",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "newer_than",
+            "required": false,
+            "schema": {
+              "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+              "example": 1715083417,
+              "title": "NewerThan",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "older_than",
+            "required": false,
+            "schema": {
+              "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+              "example": 1715083417,
+              "title": "OlderThan",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "How many items to return. Default: 100. Max: 200. Min: 1.",
+              "example": 10,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Default 100 Max 200 Min 1",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Representation of a flow alert.\n",
+                  "example": {
+                    "data": [
+                      {
+                        "alert_rule":

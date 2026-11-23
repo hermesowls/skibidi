@@ -1,0 +1,2859 @@
+ema": {
+      "default": 0,
+      "description": "The minimum premium requested trades should have.",
+      "example": 50000,
+      "minimum": 0,
+      "title": "StockTradesMinPremium",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "description": "How many items to return. If no limit is given, returns all matching data. Min: 1.",
+      "example": 10,
+      "minimum": 1,
+      "title": "Min Limit 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/option-contract/{id}/historic
+
+Returns for every trading day historic data for the given option contract.
+
+Data includes open, high, low, close of the contract of fills.
+The percentage of the volume which was part of a multi leg trade, stock multi leg trade, sweep, floor
+and cross. The high and low of the implied volatility is included as well as the volume distributed per sides:
+Ask, bid, mid and neutral. Neutral is volume that is either a cross trade or from trades that came in late.
+
+You can use this endpoint to retrieve for a given chains historical details about how much volume has been traded
+in the past, when the OI did start to build and much more.
+
+Rows are returned under the `chains` key, not `data`.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "description": "How many items to return. If no limit is given, returns all matching data. Min: 1.",
+      "example": 10,
+      "minimum": 1,
+      "title": "Min Limit 1",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/option-contract/{id}/intraday
+
+Returns 1 minute interval intraday data for the given option contract.
+
+You can use this to build volume profile charts for contracts to see when
+volume can in, and which side dominated the volume. The volume and premium
+is segmented into bid, ask, mid and neutral.
+
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/option-contract/{id}/volume-profile
+
+Returns the volume profile (volume - sweep, floor, cross, ask, bid, etc. - per fill price) for an option symbol on a given trading day.
+Date must be the current or a past date. If no date is given, returns data for the current/last market day.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades
+
+Filter the full option trades tape.
+
+This endpoint returns the same data and supports the same filter params as on the unusualwhales website [https://unusualwhales.com/live-options-flow](https://unusualwhales.com/live-options-flow).
+
+This endpoint only returns data for the latest trading day. To retrieve historical option trades,
+use the `/api/option-trades/full-tape/:date` endpoint to download the full market file for a trading day.
+
+List parameters may be supplied using repeated bracket notation, for example
+`tags[]=ask_side&tags[]=bid_side`. Unix timestamps may be supplied in seconds or milliseconds.
+
+Pagination uses the `older_than` and `newer_than` cursors, which accept Unix seconds, Unix milliseconds
+or ISO 8601 values. `page` and `offset` are not supported. `limit` defaults to 50 and has a maximum of
+500. A cursor earlier than the latest trading day returns HTTP 400. Use
+`/api/option-trades/full-tape/{date}` for older history.
+
+The side-volume fields (`ask_vol`, `bid_vol`, `mid_vol` and `no_side_vol`) sum to `volume`.
+`multi_vol` and `stock_multi_vol` are overlapping subsets of `volume`, not separate amounts to subtract.
+
+On this REST endpoint, `executed_at`, `nbbo_bid_time` and `nbbo_ask_time` are ISO 8601 timestamps in UTC.
+On the WebSocket `option_trades` channel, the same fields are Unix epoch timestamps in milliseconds.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 50,
+      "description": "How many items to return. Default: 50. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 50, Max 500 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "volume_greater_oi",
+    "required": false,
+    "schema": {
+      "description": "Only include contracts where the volume is greater than the open interest.",
+      "example": true,
+      "title": "Volume Greater Than Open Interest Contract",
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "include_agg_trades",
+    "required": false,
+    "schema": {
+      "description": "Whether to roll up related option transactions executed at the same time into a single transaction in the response. This allows filters to apply to their combined premium and size. For example, if one $25,000 order is reported as ten $2,500 transactions, it will only match `min_premium=20000` when `include_agg_trades=true`.",
+      "example": true,
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "intraday_only",
+    "required": false,
+    "schema": {
+      "description": "Only return trades from the current trading day.",
+      "example": true,
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "size_greater_oi",
+    "required": false,
+    "schema": {
+      "description": "Filter by whether trade size exceeds open interest.",
+      "example": true,
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "expiry_dates[]",
+    "required": false,
+    "schema": {
+      "description": "An array of 1 or more expiry dates.",
+      "example": [
+        "2024-02-02",
+        "2024-01-26"
+      ],
+      "items": {
+        "description": "A single expiry date in ISO date format.",
+        "example": "2024-02-02",
+        "title": "Single expiry date",
+        "type": "string"
+      },
+      "title": "Expiry dates",
+      "type": "array"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_dte",
+    "required": false,
+    "schema": {
+      "description": "The minimum days to expiry. Min: 0.",
+      "example": 1,
+      "minimum": 0,
+      "title": "Min DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_dte",
+    "required": false,
+    "schema": {
+      "description": "The maximum days to expiry. Min: 0.",
+      "example": 3,
+      "minimum": 0,
+      "title": "Max DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_earnings_dte",
+    "required": false,
+    "schema": {
+      "description": "The minimum days until the next earnings report.",
+      "example": 5,
+      "title": "Min Earnings DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_earnings_dte",
+    "required": false,
+    "schema": {
+      "description": "The maximum days until the next earnings report.",
+      "example": 30,
+      "title": "Max Earnings DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_volume",
+    "required": false,
+    "schema": {
+      "description": "The minimum volume on the option contract. Min: 0.",
+      "example": 12300,
+      "minimum": 0,
+      "title": "Min Contract Volume",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_volume",
+    "required": false,
+    "schema": {
+      "description": "The maximum volume on the option contract. Min: 0.",
+      "example": 55600,
+      "minimum": 0,
+      "title": "Max Contract Volume",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "description": "Minimum trade premium in dollars.",
+      "example": "25000",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_premium",
+    "required": false,
+    "schema": {
+      "description": "Maximum trade premium in dollars.",
+      "example": "25000",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades/exchange-breakdown/{date}
+
+Aggregates the option tape for one or more tickers on a single trading date, grouped by the
+**options exchange** the prints executed on (e.g. `AMXO`, `ARCO`, `BATO`).
+
+For each ticker × exchange you get the trade count, total contracts, total premium
+(`sum(price × size × 100)`) and the call/put trade split. Set `by_trade_code=true` to additionally
+break each row down by the upstream trade condition code (`upstream_condition_detail`, e.g. `auto`,
+`mlat`, `slan`).
+
+Use `min_premium` to drop smaller prints before aggregating.
+
+**Whole-universe mode:** omit `ticker[]` to get the breakdown across the entire option universe.
+In that mode tickers are ranked by total contracts traded that day (descending) and the response is
+paged by ticker via `limit` (tickers per page) and `page` — so you receive the top names first. When
+`ticker[]` is supplied this paging is ignored and exactly those tickers are returned.
+
+NOTICE: Access to this endpoint is only included in the Advanced API subscription. Data is available
+for trading days after 2022-01-01.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "path",
+    "name": "date",
+    "required": true,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\n",
+      "example": "2024-01-18",
+      "format": "date",
+      "title": "Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "Only include individual prints whose premium (price × size × 100) is at least this value, before aggregating. Use to filter out smaller trades.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Whole-universe mode only: tickers per page (ranked by volume). Default 100, max 500.",
+    "example": 100,
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Whole-universe mode only: 1-based page of tickers. Default 1.",
+    "example": 1,
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades/flow-alerts
+
+Flow alerts are rule based aggregations on the full tape of option trades.
+
+While there are quite a few different rules and alerts the most used one is the repeated hit family:
+RepeatedHits, RepeatedHitsAscendingFill, RepeatedHitsDescendingFill
+
+Each of those represent an alert when there have been multiple transactions on the same option contract
+within a few milliseconds. This can be mean that a single order is being matched across multiple other orders
+and creating multiple transactions. It can also just mean that there are multiple buyers/sellers at the same time.
+
+Trades usually use the repeated hits with other data points to form a picture on whether there is some urgency
+in entering/exiting a position in a contract/ticker.
+
+The full current options tape including trades that do not form a RepeatedHits alert can be accessed through the
+[Option Trades endpoint](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.index).
+The difference between the 3 repeated hits alerts are:
+- DescendingFill: Each transaction that comes after another in chronological order has either the same fill price as or a lower fill price than the previous transaction. The last transaction must be lower than the first transaction.
+- AscendingFill: The opposite of DescendingFill. The fill prices increase instead of decreasing.
+- RepeatedHits (neither ascending nor descending): When it does not fit into one of the first two categories.
+
+To express ascending and descending in a mathmatical notion. Let p₁, p₂, …, pₙ be the fill prices of n transactions ordered chronologically:
+- DescendingFill: pᵢ ≥ pᵢ₊₁ for all i ∈ [1, n−1], and pₙ < p₁.
+- AscendingFill: pᵢ ≤ pᵢ₊₁ for all i ∈ [1, n−1], and pₙ > p₁.
+
+For the individual flow alert rules and how the aggregation is based on you can
+checkout out [https://unusualwhales.com/option-flow-alerts/rules](https://unusualwhales.com/option-flow-alerts/rules).
+
+For any given flow alert you can take a look at the individual trades that are making up the alert by taking the alert's id
+and use [https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.flow_alert](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.flow_alert)
+to retrieve the individual transactions.
+
+For real time streaming of flow alerts, subscribe to the `flow-alerts` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.flow_alerts](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.flow_alerts).
+
+The 14-day lookback limit on the custom alerts endpoint (`/api/alerts`) does not apply to this endpoint.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "description": "The minimum premium on that alert. Min: 0.",
+      "example": 12500.5,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_premium",
+    "required": false,
+    "schema": {
+      "description": "The maximum premium on that alert. Min: 0.",
+      "example": 12500.5,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_volume",
+    "required": false,
+    "schema": {
+      "description": "The minimum volume on that alert's contract at the time of the alert. Min: 0.",
+      "example": 125,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_volume",
+    "required": false,
+    "schema": {
+      "description": "The maximum volume on that alert's contract at the time of the alert. Min: 0.",
+      "example": 125,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_volume_oi_ratio",
+    "required": false,
+    "schema": {
+      "description": "The minimum ratio of contract volume to contract open interest. If the open interest of a contract is zero, then this ratio is evaluated as if the open interest of the contract was one (to avoid divide by zero errors). For example, if you set this ratio to 10, then a contract with zero open interest and 7 volume will NOT be included in your results.",
+      "example": 0.32,
+      "minimum": 0,
+      "title": "Min Volume OI Ratio",
+      "type": "number"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_volume_oi_ratio",
+    "required": false,
+    "schema": {
+      "description": "The maximum ratio of contract volume to contract open interest. If the open interest of a contract is zero, then this ratio is evaluated as if the open interest of the contract was one (to avoid divide by zero errors). For example, if you set this ratio to 50, then a contract with zero open interest and 75 volume will NOT be included in your results.",
+      "example": 1.58,
+      "minimum": 0,
+      "title": "Max Volume OI Ratio",
+      "type": "number"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_dte",
+    "required": false,
+    "schema": {
+      "description": "The minimum days to expiry. Min: 0.",
+      "example": 1,
+      "minimum": 0,
+      "title": "Min DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_dte",
+    "required": false,
+    "schema": {
+      "description": "The maximum days to expiry. Min: 0.",
+      "example": 3,
+      "minimum": 0,
+      "title": "Max DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "size_greater_oi",
+    "required": false,
+    "schema": {
+      "description": "Only include alerts where the size is greater than the open interest.",
+      "example": true,
+      "title": "Flow Alerts Size Greater Than Open Interest",
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "vol_greater_oi",
+    "required": false,
+    "schema": {
+      "description": "Only include alerts where the volume is greater than the open interest.",
+      "example": true,
+      "title": "Flow Alerts Volume Greater Than Open Interest",
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 100,
+      "description": "How many items to return. Default: 100. Max: 200. Min: 1.",
+      "example": 10,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Default 100 Max 200 Min 1",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades/flow-alerts/{id}
+
+Returns the trades that made up the specific alert. For multi leg flow alert trades it will
+return all the related multi leg trades.
+For alerts such as RepeatedHits it will return all the transactions that made up that alert.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades/full-tape/{date}
+
+Download all option transactions (the "full tape") for a given trading date.
+
+To filter option transactions for the current trading day use the [Option Trades endpoint](https://api.unusualwhales.com/docs/operations/PublicApi.OptionTradeController.index).
+
+How far back you can download is determined by your plan's historical lookback window with data available since 2022-01-01.
+
+If you are looking to build a data lake with the full tape use this skill with your agent: https://unusualwhales.com/skills/uw-options-data-lake-skill.md
+
+You can download the data as a zip file using wget. For example, to download data for Fri Jul 25th, 2025, if your API key is "abc123":
+```
+wget --header="Authorization: Bearer abc123" https://api.unusualwhales.com/api/option-trades/full-tape/2025-07-25 -O full_tape_20257225.zip
+```
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "path",
+    "name": "date",
+    "required": true,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\n",
+      "example": "2024-01-18",
+      "format": "date",
+      "title": "Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades/multi-leg
+
+A live feed of detected multi-leg option strategies — vertical spreads, iron condors, butterflies,
+calendars, diagonals and more — reconstructed from their individual legs, newest first. Each row summarizes
+the strategy (fill/net price, net bid/ask, net premium, net greeks, strikes, DTE range, breakevens, max profit/loss) across all legs.
+Use the per-strategy `id` with the `legs` endpoint to fetch the individual contracts.
+
+Decimal values are returned as strings. Defaults to the current trading day when no time bounds are given.
+Queries are limited to a 24-hour range. If both bounds span more than 24 hours, `newer_than` is clamped
+to 24 hours before `older_than`.
+
+
+```json
+[
+  {
+    "description": "Rows per page (default 50, max 500).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Rows to skip for pagination (max 500).",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Only strategies executed at/after this UTC timestamp (ISO-8601). Defaults to last market open. The query range is limited to 24 hours.",
+    "in": "query",
+    "name": "newer_than",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Only strategies executed at/before this UTC timestamp (ISO-8601). The query range is limited to 24 hours.",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Minimum net premium (supports abs()).",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Maximum net premium (supports abs()).",
+    "in": "query",
+    "name": "max_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Minimum days-to-expiry.",
+    "in": "query",
+    "name": "min_dte",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Maximum days-to-expiry.",
+    "in": "query",
+    "name": "max_dte",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/option-trades/multi-leg/{id}/legs
+
+Returns the individual option legs that make up a single multi-leg strategy, aggregated by contract with
+size-weighted greeks and prices. Pass the strategy `id` returned by the Multi-Leg Option Trades feed.
+
+
+```json
+[]
+
+```
+
+## GET /api/option-trades/optionable-tickers
+
+Returns the current universe of underlying symbols that have listed options (sourced from the Nasdaq
+option-root locators), sorted alphabetically. Query this daily to track new listings and delistings.
+
+Pass `?ticker=SYMBOL` to check a single company instead — the response then reports whether that
+symbol currently has listed options.
+
+NOTICE: Access to this endpoint is only included in the Advanced API subscription.
+
+
+```json
+[]
+
+```
+
+## GET /api/options-pulse/sectors
+
+Latest Nasdaq Options Pulse sentiment for each sector and industry on a date.
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/options-pulse/top
+
+Cross-symbol scanner: the latest intraday sentiment per ticker on a date, ranked by sentiment.
+`direction` `bullish` ranks highest sentiment first, `bearish` lowest first. Filterable by
+`ticker` (prefix), `min_score`/`max_score`, and `min_txn` (minimum opening-buy transactions).
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "Max rows (default 50, max 500).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/options-pulse/total
+
+The market-wide Nasdaq Options Pulse gauge: latest snapshot + intraday series for a date.
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/politician-portfolios/disclosures
+
+Returns all annual disclosure file records for politicians.
+Can be filtered by politician_id and/or limited to latest per politician.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[]
+
+```
+
+## GET /api/politician-portfolios/holders/{ticker}
+
+Returns all politician portfolio owner names, ID, and holdings for the specified ticker.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "If true, aggregates all of a politicians portfolios into a single portfolio named 'aggregated'. Default is false. Note that this does not aggregate holdings within a portfolio, only across portfolios.",
+    "in": "query",
+    "name": "aggregate_all_portfolios",
+    "required": false,
+    "schema": {
+      "type": "boolean"
+    }
+  }
+]
+
+```
+
+## GET /api/politician-portfolios/people
+
+Returns all politician names and IDs.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[]
+
+```
+
+## GET /api/politician-portfolios/recent_trades
+
+Returns the latest transacted trades by congress members.
+If a date is given, will only return reports, which's transaction date is <= the given input date.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 500,
+      "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 500 Max 500 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "The page number for the data being requested (default is 1).",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a disclosure date >= this date.",
+    "in": "query",
+    "name": "disclosure_newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a disclosure date <= this date.",
+    "in": "query",
+    "name": "disclosure_older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a transaction date >= this date.",
+    "in": "query",
+    "name": "transaction_newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a transaction date <= this date.",
+    "in": "query",
+    "name": "transaction_older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/politician-portfolios/{politician_id}
+
+Returns all portfolios and holdings for a politician.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "If true, aggregates all portfolios into a single portfolio named 'aggregated'. Default is false. Note that this does not aggregate holdings within a portfolio, only across portfolios.",
+    "in": "query",
+    "name": "aggregate_all_portfolios",
+    "required": false,
+    "schema": {
+      "type": "boolean"
+    }
+  }
+]
+
+```
+
+## GET /api/politics/fec/candidates
+
+Federal candidates ranked by company-linked money received in a cycle: PAC-tier totals,
+employee-tier estimates, number of distinct companies, and basic candidate info with the
+linked politician where known.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "Page number (default 1).",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Rows per page (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/politics/fec/companies
+
+Every public company with tracked political activity: confirmed corporate PAC count, PAC-tier
+contribution totals, employee-tier estimates (estimated contributions by self-reported employees, kept separate from PAC numbers), party split, and lobbying spend for the cycle.
+Sorted by PAC total.
+
+
+```json
+[
+  {
+    "description": "Page number (default 1).",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Rows per page (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/politics/fec/company/{ticker}/lobbying
+
+Lobbying spend per quarter for a company from Senate LDA filings, in-house expenses
+(self-filed reports), and outside income (hired-firm reports) as separate series, with the top
+issue codes per period. `include_filings=true` adds the paginated filing list.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "Page number (default 1).",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Rows per page (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/politics/fec/company/{ticker}/people
+
+The people around a public company: candidates funded by its PAC and employees (with totals),
+politicians who traded the stock, and company insiders.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[]
+
+```
+
+## GET /api/politics/fec/contributions
+
+The company-politics contribution feed. With `aggregated=true` (the default) rows are at the
+company × candidate × cycle × tier grain - filter by `ticker` for a company's candidates, or by
+`candidate_id` for a candidate's companies. With `aggregated=false` rows are individual
+contributions, paginated by `cursor` (pass back `next_cursor` from the previous response);
+`tier` selects `pac` (default) or `employee`.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "Default true.",
+    "in": "query",
+    "name": "aggregated",
+    "required": false,
+    "schema": {
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "candidate_id",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Row-level only, ISO date.",
+    "in": "query",
+    "name": "min_date",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Row-level only, ISO date.",
+    "in": "query",
+    "name": "max_date",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Row-level keyset cursor.",
+    "in": "query",
+    "name": "cursor",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "Page number (default 1).",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Rows per page (default 50, max 200).",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/politics/politician/trades
+
+Trades reported by members of congress, with the politician linked where known.
+If a date is given, will only return trades whose transaction date is <= the given input date.
+
+This is an enterprise only endpoint. Contact dev@unusualwhales.com for details about accessing this data.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 500,
+      "description": "How many items to return. Default: 500. Max: 500. Min: 1.",
+      "example": 10,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Default 500 Max 500 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "The page number for the data being requested (default is 1).",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a disclosure date >= this date.",
+    "in": "query",
+    "name": "disclosure_newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a disclosure date <= this date.",
+    "in": "query",
+    "name": "disclosure_older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a transaction date >= this date.",
+    "in": "query",
+    "name": "transaction_newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "If provided, will only return trades with a transaction date <= this date.",
+    "in": "query",
+    "name": "transaction_older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/potus/posts
+
+Returns the President's short-form social media posts (currently Truth Social), newest first.
+
+Use `search_term` to filter posts by text content. Supports pagination via `limit` and `page`
+(page is 0-indexed).
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 200,
+      "description": "How many items to return. Default: 200. Max: 200. Min: 1.",
+      "example": 50,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Default 200 Max 200 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/potus/schedule
+
+Returns the President's public schedule for a given date, newest first by start time.
+
+If no `date` is provided, returns entries for the most recent scheduled date.
+Supports pagination via `limit` and `page` (page is 0-indexed).
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A date in the format of YYYY-MM-DD.\nThis is optional and by default returns the most recent scheduled date.\n",
+      "example": "2026-07-09",
+      "title": "Optional POTUS Schedule Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 200,
+      "description": "How many items to return. Default: 200. Max: 200. Min: 1.",
+      "example": 50,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "Default 200 Max 200 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/predictions/insiders
+
+Returns potential insider activity on prediction markets.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/market/{asset_id}
+
+Returns prediction market details for a given asset ID.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/market/{asset_id}/liquidity
+
+Returns liquidity data for a given prediction market asset.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/market/{asset_id}/positions
+
+Returns positions for a given prediction market asset.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/search-users
+
+Search for prediction market users by query.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/smart-money
+
+Returns profitable prediction market traders. Categories: Crypto, Culture, Finance, Politics, Science, Sports, Technology.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/unusual
+
+Returns prediction markets with unusual activity. Categories: Crypto, Culture, Finance, Politics, Science, Sports, Technology.
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 50,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "default": 0,
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/predictions/user/{user_id}
+
+Returns a prediction market user profile by user/wallet ID.
+
+```json
+[]
+
+```
+
+## GET /api/predictions/whales
+
+Returns large prediction market traders.
+
+```json
+[]
+
+```
+
+## GET /api/private-markets/companies
+
+Returns Nasdaq Private Markets companies, optionally filtered by sector or name. Sorted alphabetically.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 100,
+      "maximum": 500,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "default": 0,
+      "minimum": 0,
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/private-markets/companies/{npm_ticker}
+
+Returns a profile for a single private-markets company including the latest pricing tick,
+total funding raised across known rounds, and the count of disclosed investors.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[]
+
+```
+
+## GET /api/private-markets/companies/{npm_ticker}/funding
+
+Returns the funding round history for a single private-markets company, ordered most-recent first.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/private-markets/companies/{npm_ticker}/investors
+
+Returns the disclosed investors for a single private-markets company, ordered alphabetically.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/private-markets/companies/{npm_ticker}/management
+
+Returns disclosed management/leadership for a single private-markets company.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/private-markets/companies/{npm_ticker}/pricing
+
+Returns historical implied per-share pricing for a single private-markets company.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "Inclusive lower bound on pricing date (ISO 8601).",
+    "in": "query",
+    "name": "start_date",
+    "required": false,
+    "schema": {
+      "format": "date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "Inclusive upper bound on pricing date (ISO 8601).",
+    "in": "query",
+    "name": "end_date",
+    "required": false,
+    "schema": {
+      "format": "date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/private-markets/investors
+
+Returns the most prolific investors across the private-markets dataset, ordered by distinct
+company count (descending).
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/private-markets/investors/{name}
+
+Returns the portfolio of companies for a specific investor (by name).
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[]
+
+```
+
+## GET /api/private-markets/search
+
+Substring-search across private-markets companies and investors.
+
+This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 10,
+      "maximum": 50,
+      "minimum": 1,
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/screener/analysts
+
+Returns the latest analyst ratings, optionally filtered by ticker, action, recommendation, or published timestamp.
+
+
+```json
+[
+  {
+    "description": "How many items to return. Default: 500, Max: 500, Min: 1",
+    "example": 100,
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/screener/option-contracts
+
+A contract screener endpoint to screen the market for contracts by a variety of filter options.
+
+For an example of what can be build with this endpoint check out the [Hottest Contracts](https://unusualwhales.com/hottest-contracts?limit=100&hide_index_etf=true)
+on UnusualWhales.
+
+For real time streaming of the same data, subscribe to the `contract_screener` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.contract_screener](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.contract_screener).
+
+NOTE: Contracts with a volume of less than 200 are not being returned
+
+
+```json
+[
+  {
+    "description": "The minimum days to expiry.",
+    "example": "1",
+    "in": "query",
+    "name": "min_dte",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum days to expiry.",
+    "example": "3",
+    "in": "query",
+    "name": "max_dte",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "expiry_dates[]",
+    "required": false,
+    "schema": {
+      "description": "An array of 1 or more expiry dates.",
+      "example": [
+        "2024-02-02",
+        "2024-01-26"
+      ],
+      "items": {
+        "description": "A single expiry date in ISO date format.",
+        "example": "2024-02-02",
+        "title": "Single expiry date",
+        "type": "string"
+      },
+      "title": "Expiry dates",
+      "type": "array"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_volume",
+    "required": false,
+    "schema": {
+      "description": "The minimum volume on the option contract. Min: 0.",
+      "example": 12300,
+      "minimum": 0,
+      "title": "Min Contract Volume",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_volume",
+    "required": false,
+    "schema": {
+      "description": "The maximum volume on the option contract. Min: 0.",
+      "example": 55600,
+      "minimum": 0,
+      "title": "Max Contract Volume",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum 30-day average stock volume for the underlying ticker.",
+    "example": "1500000",
+    "in": "query",
+    "name": "min_ticker_30_d_avg_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum 30-day average stock volume for the underlying ticker.",
+    "example": "50000000",
+    "in": "query",
+    "name": "max_ticker_30_d_avg_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum 30-day average options contract volume for the underlying ticker.",
+    "example": "500",
+    "in": "query",
+    "name": "min_contract_30_d_avg_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum 30-day average options contract volume for the underlying ticker.",
+    "example": "10000",
+    "in": "query",
+    "name": "max_contract_30_d_avg_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum multi leg volume to contract volume ratio.",
+    "example": "0.3",
+    "in": "query",
+    "name": "min_multileg_volume_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum multi leg volume to contract volume ratio.",
+    "example": "0.5",
+    "in": "query",
+    "name": "max_multileg_volume_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum floor volume to contract volume ratio.",
+    "example": "0.2",
+    "in": "query",
+    "name": "min_floor_volume_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum floor volume to contract volume ratio.",
+    "example": "0.45",
+    "in": "query",
+    "name": "max_floor_volume_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum premium on that contract.",
+    "example": "12500.5",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum premium on that contract.",
+    "example": "53100.32",
+    "in": "query",
+    "name": "max_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum contract volume to open interest ratio.",
+    "example": "0.32",
+    "in": "query",
+    "name": "min_volume_oi_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum contract volume to open interest ratio.",
+    "example": "1.58",
+    "in": "query",
+    "name": "max_volume_oi_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum floor volume on that contract.",
+    "example": "12300",
+    "in": "query",
+    "name": "min_floor_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum floor volume on that contract.",
+    "example": "55800",
+    "in": "query",
+    "name": "max_floor_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Only include contracts where the volume is greater than the open interest.",
+    "in": "query",
+    "name": "vol_greater_oi",
+    "required": false,
+    "schema": {
+      "type": "boolean"
+    }
+  },
+  {
+    "description": "The minimum ratio of contract volume to total option volume of the underlying. Acceptable range: 0.00 to 1.00.",
+    "example": "0.25",
+    "in": "query",
+    "name": "min_volume_ticker_vol_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum ratio of contract volume to total option volume of the underlying. Acceptable range: 0.00 to 1.00.",
+    "example": "0.85",
+    "in": "query",
+    "name": "max_volume_ticker_vol_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum sweep volume ratio. Acceptable range: 0.00 to 1.00.",
+    "example": "0.15",
+    "in": "query",
+    "name": "min_sweep_volume_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum sweep volume ratio. Acceptable range: 0.00 to 1.00.",
+    "example": "0.75",
+    "in": "query",
+    "name": "max_sweep_volume_ratio",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_earnings_dte",
+    "required": false,
+    "schema": {
+      "description": "The minimum days until the next earnings report.",
+      "example": 5,
+      "title": "Min Earnings DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_earnings_dte",
+    "required": false,
+    "schema": {
+      "description": "The maximum days until the next earnings report.",
+      "example": 30,
+      "title": "Max Earnings DTE",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 1,
+      "description": "How many items to return. Default: 50. Max: 250. Min: 1.",
+      "example": 10,
+      "maximum": 250,
+      "minimum": 1,
+      "title": "Default 50, Max 250 Min 1",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "page",
+    "required": false,
+    "schema": {
+      "description": "Page number (use with limit). Starts on page 0.",
+      "example": 1,
+      "title": "Page",
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/screener/stocks
+
+A complet stock market screener which can be used to screen for etfs in-/outflow,
+tickers by various volatility metrics such as steepness, IV rank, realized volatility, expected moves,
+companies where insiders bought shares over 3m, 6m,
+tickers by various option metrics (greek flow, options premium/volume, net call premium,
+amount of new chains, total open interest, flex open interest, etc.) and live stock quotes,
+prices and volume.
+
+The date defaults to the current or last market day. Earlier dates return stored snapshots as of regular market close.
+Live bid and ask quotes are null for historical snapshots.
+
+Rows default to combined call and put volume in descending order.
+
+Decimal values are returned as strings. Fractional returns use 0.05 for 5 percent.
+Unavailable values are null.
+
+## Query language examples
+
+Pass an expression in `query`. It is combined with the other filters. Get the grammar and current field reference from `/api/screener/stocks/dsl`.
+
+Volume based gamma exposure at least twice the magnitude of OI based gamma exposure:
+```text
+where abs(gex_gamma_per_one_percent_move_oi) > 0 and abs(gex_gamma_per_one_percent_move_vol) >= abs(gex_gamma_per_one_percent_move_oi) * 2
+```
+
+Price at least two ATRs above the 20 day EMA:
+```text
+where atr_14 > 0 and price - ema_20 >= atr_14 * 2
+```
+
+Call volume at least twice put volume:
+```text
+where put_volume > 0 and call_volume >= put_volume * 2
+```
+
+Call to put volume ratio at least 10 or at most 0.1:
+```text
+where call_volume > 0 and put_volume > 0 and (call_volume / put_volume >= 10 or call_volume / put_volume <= 0.1)
+```
+
+Ratio of 7 day IV to 30 day IV at least 1.5 or at most 1 / 1.5:
+```text
+where iv7d > 0 and iv30d > 0 and (iv7d / iv30d >= 1.5 or iv7d / iv30d <= 1 / 1.5)
+```
+
+Price in the top 20% of its 52 week range on a logarithmic scale:
+```text
+where week_52_low > 0 and week_52_high > week_52_low and price > 0 and price <= week_52_high and log(price / week_52_low) / log(week_52_high / week_52_low) >= 0.8
+```
+
+The logarithmic position is 0 at the low and 1 at the high. Equal steps represent equal proportional price moves.
+
+Absolute log return since the previous close at least two approximate daily standard deviations using 30 day IV:
+```text
+where change > -1 and iv30d > 0 and abs(ln(1 + change)) >= 2 * iv30d * sqrt(1 / 251)
+```
+
+The same daily return screen using 7 day IV:
+```text
+where change > -1 and iv7d > 0 and abs(ln(1 + change)) >= 2 * iv7d * sqrt(1 / 251)
+```
+
+Distance from the 20 day EMA at least the 7 day expected move:
+```text
+where implied_move_7 > 0 and abs(price - ema_20) >= implied_move_7
+```
+
+Momentum excluding the latest month above 10%, with RSI at or below 30:
+```text
+where one_year_close > 0 and ((one_month_close / one_year_close) - 1) > 0.10 and rsi_14 <= 30
+```
+
+This combines a Gray and Vogel inspired momentum measure with an RSI pullback condition. See [How to Measure Momentum](https://alphaarchitect.com/how-to-measure-momentum/) for background.
+`one_month_close` and `one_year_close` are the latest regular closes on or before one calendar month and one calendar year before the row date. The formula measures the return between those reference closes.
+The `one_year_close > 0` guard keeps the denominator positive. This filter is not the full Quantitative Momentum strategy.
+
+## Gamma-dominance flips
+
+Aggregate gamma provides a view into trader sentiment over short timeframes because near-the-money gamma tends to be highest in the closest expiries.
+
+To screen for bearish trade ideas based on a flip from call gamma-dominance to put gamma-dominance, use these query parameters:
+
+```json
+{
+  "min_open_interest": 50000,
+  "max_gex_perc_change": -1,
+  "max_gex_net_change": 0
+}
+```
+
+Equivalent `query` expression:
+
+```text
+where open_interest >= 50000 and gex_perc_change <= -1 and gex_net_change <= 0
+```
+
+- A minimum total open interest of 50,000 screens for relatively active names, using open interest as a liquidity proxy.
+- `gex_perc_change` is `(current net gamma - previous net gamma) / previous net gamma`. A value below -1 indicates a sign change in either direction, not necessarily a fall in net gamma. `max_gex_net_change: 0` selects the downward direction.
+- `gex_ratio` is absolute put gamma divided by absolute call gamma. A downward net gamma cross corresponds to this ratio crossing upward through 1 into put gamma-dominance, when call gamma is nonzero.
+
+To screen for bullish trade ideas based on the opposite flip, from put gamma-dominance to call gamma-dominance, use these query parameters:
+
+```json
+{
+  "min_open_interest": 50000,
+  "max_gex_perc_change": -1,
+  "min_gex_net_change": 0
+}
+```
+
+Equivalent `query` expression:
+
+```text
+where open_interest >= 50000 and gex_perc_change <= -1 and gex_net_change >= 0
+```
+
+- The open interest and percentage-change thresholds are unchanged because the sign-change test is the same in both directions.
+- `min_gex_net_change: 0` selects the upward direction. Net gamma rising through zero corresponds to `gex_ratio` crossing downward through 1 into call gamma-dominance.
+
+These thresholds are inclusive. A `gex_perc_change` of exactly -1 means net gamma reached zero, so both screens also include that boundary, where `gex_ratio` is 1 when defined. A strict flip has `gex_perc_change < -1`. Percentage change is null when previous net gamma is zero, and the ratio is null when call gamma is zero.
+
+
+```json
+[
+  {
+    "description": "Maximum full rows to return. Defaults to 50 and is capped at 500. Smaller explicit limits are honored.",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 50,
+      "maximum": 500,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "Zero-based page number. The number of skipped rows is offset multiplied by the effective limit.",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "default": 0,
+      "maximum": 500,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum options volume.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum options volume.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum call options volume.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_call_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum call options volume.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_call_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum put options volume.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_put_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The maximum put options volume.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_put_volume",
+    "required": false,
+    "schema": {
+      "type": "integer"
+    }
+  },
+  {
+    "description": "The minimum options premium.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum options premium.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum call options premium.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_call_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum call options premium.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_call_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum put options premium.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_put_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum put options premium.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_put_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum net options premium.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_net_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum net options premium.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_net_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum net call options premium.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_net_call_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum net call options premium.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_net_call_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum net put options premium.",
+    "example": "10000",
+    "in": "query",
+    "name": "min_net_put_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum net put options premium.",
+    "example": "35000",
+    "in": "query",
+    "name": "max_net_put_premium",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The minimum stock volume vs average 30 day volume.",
+    "example": "1.2",
+    "in": "query",
+    "name": "min_stock_volume_vs_avg30_volume",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "The maximum stock volume vs average 30 day volume.",
+    "example": "10.0",
+    "in": "query",
+    "name": "max_avg30_volume",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+      "example": "2024-01-18",
+      "title": "Optional Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/screener/stocks/dsl
+
+Returns an EBNF grammar, syntax notes, examples, function argument counts, supported fields, aliases, types, descriptions, keywords, operators, functions, scopes, and available watchlist names for the stock screener query parameter.
+
+```json
+[]
+
+```
+
+## GET /api/seasonality/market
+
+Returns the average return by month for the tickers SPY, QQQ, IWM, XLE, XLC, XLK, XLV, XLP, XLY, XLRE, XLF, XLI, XLB .
+
+
+```json
+[]
+
+```
+
+## GET /api/seasonality/{month}/performers
+
+Returns the tickers with the highest performance in terms of price change in the month over the years.
+Per default the result is ordered by 'positive_months_perc' descending, then 'median_change' descending, then 'marketcap' descending.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 50,
+      "description": "How many items to return. Default: 50. Min: 1.",
+      "example": 10,
+      "minimum": 1,
+      "title": "Seasonality Performers Limit",
+      "type": "integer"
+    }
+  }
+]
+
+```
+
+## GET /api/seasonality/{ticker}/monthly
+
+Returns the average return by month for the given ticker.
+
+
+```json
+[]
+
+```
+
+## GET /api/seasonality/{ticker}/year-month
+
+Returns the relative price change for all past months over multiple years.
+
+
+```json
+[]
+
+```
+
+## GET /api/short_screener
+
+Returns short interest and float data for percentage calculations based off search params.
+This endpoint provides information about the percentage of float that is shorted,
+the float size, and the days to cover metric.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "limit",
+    "required": false,
+    "schema": {
+      "default": 100,
+      "description": "The limit of results. Default: 100. Max: 500. Min: 0.",
+      "example": 125,
+      "maximum": 500,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "offset",
+    "required": false,
+    "schema": {
+      "default": 0,
+      "description": "The offset of results. Default: 0. Min: 0.",
+      "example": 100,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "min_market_date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\n",
+      "example": "2024-01-18",
+      "format": "date",
+      "title": "Market Date",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "max_market_date",
+    "required": false,
+    "schema": {
+      "description": "A trading date in the format of YYYY-MM-DD.\n",
+      "example": "2024-01-18",
+      "format": "date",
+      "title": "Market Date",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/shorts/{ticker}/data
+
+Returns short data including rebate rate and short shares available for a ticker.
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/shorts/{ticker}/ftds
+
+Returns the short failures to deliver per day for the given ticker starting from the given date.
+If no date is given, returns the data for the current/last market day.
+
+
+```json
+[]
+
+```
+
+## GET /api/shorts/{ticker}/interest-float
+
+Deprecated. Use `/api/shorts/{ticker}/interest-float/v2`.
+
+Returns short interest and float data for percentage calculations for a ticker.
+This endpoint provides information about the percentage of float that is shorted,
+the float size, and the days to cover metric.
+
+
+```json
+[]
+
+```
+
+## GET /api/shorts/{ticker}/interest-float/v2
+
+Returns short interest, float size, days-to-cover, and related percentage calculations for a given ticker.
+
+Broker-dealers report short interest to FINRA twice per month then FINRA publishes the aggregated results approximately one week after each submission window closes. Because updates arrive on this fixed schedule, data in the response from this endpoint can lag the current date by several weeks. This is a FINRA reporting constraint, not a data delivery issue or bug.
+
+This endpoint updates twice a month and pulls data from FINRA. The update schedule can be viewed on the FINRA website [here](https://www.finra.org/filing-reporting/regulatory-filing-systems/short-interest)
+
+
+```json
+[]
+
+```
+
+## GET /api/shorts/{ticker}/volume-and-ratio
+
+Returns short volume and short ratio data for a ticker.
+
+Rows are returned under the `si` key, not `data`.
+
+
+```json
+[]
+
+```
+
+## GET /api/shorts/{ticker}/volumes-by-exchange
+
+Returns short volume data broken down by exchange for a ticker.
+
+If no date range is given the default is the last 2 years. The max lookback range is 5 years;
+requests for a wider range are clamped to the most recent 5 years ending at `older_than`.
+
+The `newer_than` and `older_than` query params accept Unix-format timestamps (milliseconds or seconds) as well as ISO-format dates (`YYYY-MM-DD`).
+
+
+```json
+[
+  {
+    "description": "",
+    "in": "query",
+    "name": "newer_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no older results will be returned. Can be used with `older_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "NewerThan",
+      "type": "string"
+    }
+  },
+  {
+    "description": "",
+    "in": "query",
+    "name": "older_than",
+    "required": false,
+    "schema": {
+      "description": "The unix time in milliseconds or seconds at which no newer results will be returned. Can be used with `newer_than` to paginate by time. Also accepts an ISO date or RFC 3339 datetime (example: 2024-01-25).",
+      "example": 1715083417,
+      "title": "OlderThan",
+      "type": "string"
+    }
+  }
+]
+
+```
+
+## GET /api/socket
+
+Returns the available WebSocket channels for connections.
+
+## Websocket Guide
+#You can find fully-functional examples that stream data from many channels here:
+
+- Python: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output)
+- Javascript: [https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs](https://github.com/unusual-whales/api-examples/tree/main/examples/ws-multi-channel-multi-output-nodejs)
+
+
+
+If you are an AI or work with AI there is an available websocket skill at: https://unusualwhales.com/skills/websocket.md
+
+The following channels are available:
+| Channel                     | Description                                                                                                           |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| option_trades               | Receive live option trades throughout the trading session. Expect 6-10M records per day.                              |
+| option_trades:TICKER        | Similar to `option_trades` but receive all trades only for the specified ticker.                                      |
+| flow-alerts                 | Receive live flow alerts (all of them unfiltered). This data can be used to build views like [https://unusualwhales.com/option-flow-alerts](https://unusualwhales.com/option-flow-alerts). |
+| price                       | Receive live price updates for every ticker at once.                                                                  |
+| price:TICKER                | Receive live price updates for the given ticker.                                                                      |
+| news                        | Receive live headline news (Truth Social posts + aggregator news).                                                    |
+| lit_trades                  | Receive live lit (exchange-based) trades throughout the trading session.                                              |
+| off_lit_trades              | Receive live off-lit (dark pool) trades throughout the trading session.                                               |
+| gex                         | Receive live gex updates for every ticker at once.                                                                    |
+| gex:TICKER                  | Receive live gex update for the given ticker.                                                                         |
+| gex_strike                  | Receive live gex strike updates for every strike of every ticker.                                                     |
+| gex_strike:TICKER           | Receive live gex strike updates for every strike of the given ticker.                                                 |
+| gex_strike_expiry           | Receive live gex strike updates for every strike & expiry of every ticker.                                            |
+| gex_strike_expiry:TICKER    | Receive live gex strike updates for every strike & expiry of the given ticker.                                        |
+| periscope                   | Receive live periscope market-maker greek exposures (gamma/charm/vanna) per strike & expiry for every index ticker (SPX, VIX, XSP, NANOS). Not available on the enterprise and enterprise startup plans. |
+| periscope:TICKER            | Receive live periscope market-maker greek exposures per strike & expiry for the given index ticker. Not available on the enterprise and enterprise startup plans. |
+| greeks                      | Receive live per-contract option greeks (first- and second-order) for every contract of every underlying.             |
+| greeks:TICKER               | Receive live per-contract option greeks (first- and second-order) for every contract of the given underlying.         |
+| market_tide                 | Receive live updates of both the market tide and the otm market tide.                                                 |
+| net_flow:TICKER             | Receive live net call/put premium and volume aggregates for the specified ticker to build a net prem view.            |
+| interval_flow               | Receive per interval option flow statistics for a ticker (sweeps, floors, multilegs, Greek flows, IV, net prem). Use this to build alert systems to spot spikes in tickers   |
+| contract_screener           | Receive live option contract snapshots (Greeks, side volumes, OI growth indicators). This your entry point to build a screener on top of option contracts.                   |
+| trading_halts               | Receive live trading state changes (halts, resumes, LULD pauses) for individual tickers.                              |
+| custom_alerts               | Receive notifications matching the alert configurations on your own Unusual Whales account.                           |
+| futures_trades              | Receive live CME futures trade prints across all contracts. Available on the Advanced API tier, or with the `futures` add-on — email oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com for access. |
+| futures:TICKER              | Similar to `futures_trades` but only for the specified dated contract, e.g. `futures:ESU6`. Available on the Advanced API tier, or with the `futures` add-on. |
+| interpolated_iv             | Receive live interpolated IV and expected move updates at fixed horizons (1-365 days) for every ticker at once.       |
+| interpolated_iv:TICKER      | Receive live interpolated IV and expected move updates at fixed horizons for the given ticker.                        |
+| iv_term_structure           | Receive live ATM IV and expected move updates per real option expiry for every ticker at once.                        |
+| iv_term_structure:TICKER   

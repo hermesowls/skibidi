@@ -1,0 +1,1707 @@
+023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Prediction Smart Money",
+        "tags": [
+          "predictions"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/predictions/unusual",
+      "method": "GET",
+      "path": "/api/predictions/unusual",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns prediction markets with unusual activity. Categories: Crypto, Culture, Finance, Politics, Science, Sports, Technology.",
+        "operationId": "PublicApi.PredictionController.unusual",
+        "parameters": [
+          {
+            "description": "",
+            "in": "query",
+            "name": "categories",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "categories": {
+                          "example": [
+                            "Crypto",
+                            "Culture",
+                            "Finance",
+                            "Games",
+                            "Mentions",
+                            "Other",
+                            "Politics",
+                            "Sports",
+                            "Weather"
+                          ],
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "data": {
+                          "items": {
+                            "properties": {
+                              "asset_id": {
+                                "example": "78699665722135183571140787397681621204678465342167575193369860798796866652931",
+                                "type": "string"
+                              },
+                              "category": {
+                                "example": "Sports",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "current": {
+                                "description": "Current price of the outcome, quoted 0-1.",
+                                "example": "0.62",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "image": {
+                                "example": "https://cdn.unusualwhales.com/predictions/lakers.png",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "market": {
+                                "example": "Will the Lakers win the 2026 NBA Championship?",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "outcome": {
+                                "example": true,
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "resolves": {
+                                "example": "2026-08-15 00:00:00+00:00",
+                                "format": "date-time",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "smart_volume": {
+                                "example": "340000",
+                                "type": "string"
+                              },
+                              "tags": {
+                                "items": {
+                                  "properties": {
+                                    "normalized": {
+                                      "example": "10.5",
+                                      "type": "string"
+                                    },
+                                    "tag": {
+                                      "enum": [
+                                        "contrarian_whales",
+                                        "momentum",
+                                        "closing_soon",
+                                        "insider_trades",
+                                        "smart_money"
+                                      ],
+                                      "example": "smart_money",
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "example": "25",
+                                      "type": "string"
+                                    },
+                                    "weighted": {
+                                      "example": "3.15",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "Prediction Asset Tag Score",
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "top_insiders": {
+                                "items": {
+                                  "properties": {
+                                    "avg_price": {
+                                      "example": "0.41",
+                                      "type": "string"
+                                    },
+                                    "first_trade_at": {
+                                      "example": "2026-07-17 09:15:00+00:00",
+                                      "format": "date-time",
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "total_invested_usd": {
+                                      "example": "25000",
+                                      "type": "string"
+                                    },
+                                    "user_address": {
+                                      "example": "0x5140e6529f2108469c9386ad5acd7acb8cddae0c",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "Prediction Insider Detail",
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "unusual_score": {
+                                "example": "4.65",
+                                "type": "string"
+                              },
+                              "volume": {
+                                "example": "1250000.50",
+                                "type": "string"
+                              }
+                            },
+                            "title": "Unusual Prediction Market",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "title": "Unusual Prediction Markets Data",
+                      "type": "object"
+                    }
+                  },
+                  "title": "Unusual Prediction Markets Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unusual Prediction Markets"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Unusual Prediction Markets",
+        "tags": [
+          "predictions"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/predictions/user/{user_id}",
+      "method": "GET",
+      "path": "/api/predictions/user/{user_id}",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns a prediction market user profile by user/wallet ID.",
+        "operationId": "PublicApi.PredictionController.user",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "address_tags": {
+                          "example": [],
+                          "items": {
+                            "enum": [
+                              "bot",
+                              "polymarket_smart_contract"
+                            ],
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "categories": {
+                          "example": [
+                            "Crypto",
+                            "Culture",
+                            "Finance",
+                            "Games",
+                            "Mentions",
+                            "Other",
+                            "Politics",
+                            "Sports",
+                            "Weather"
+                          ],
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "category_scores": {
+                          "items": {
+                            "properties": {
+                              "category": {
+                                "example": "Politics",
+                                "type": "string"
+                              },
+                              "num_markets": {
+                                "example": 5,
+                                "type": "integer"
+                              },
+                              "smart_score": {
+                                "example": "7.5",
+                                "type": "string"
+                              },
+                              "sum_pnl": {
+                                "example": "9200.00",
+                                "type": "string"
+                              },
+                              "win_rate": {
+                                "example": "0.80",
+                                "type": "string"
+                              }
+                            },
+                            "title": "Prediction Market User Category Score",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "positions": {
+                          "items": {
+                            "properties": {
+                              "amount": {
+                                "example": "5000",
+                                "type": "string"
+                              },
+                              "asset_id": {
+                                "example": "78699665722135183571140787397681621204678465342167575193369860798796866652931",
+                                "type": "string"
+                              },
+                              "avg_price": {
+                                "example": "0.42",
+                                "type": "string"
+                              },
+                              "category": {
+                                "example": "Sports",
+                                "type": "string"
+                              },
+                              "current_price": {
+                                "example": "0.68",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "image": {
+                                "example": "https://cdn.unusualwhales.com/predictions/lakers.png",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "invested_usd": {
+                                "example": "2100",
+                                "type": "string"
+                              },
+                              "outcome": {
+                                "example": true,
+                                "type": "string"
+                              },
+                              "overall_pnl": {
+                                "example": "1650.25",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "overall_pnl_pct": {
+                                "example": "65.5",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "position_value": {
+                                "example": "3400",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "question": {
+                                "example": "Will the Lakers win the 2026 NBA Championship?",
+                                "type": "string"
+                              },
+                              "realized_pnl": {
+                                "example": "350.25",
+                                "type": "string"
+                              },
+                              "status": {
+                                "enum": [
+                                  "active",
+                                  "finished"
+                                ],
+                                "example": "active",
+                                "type": "string"
+                              },
+                              "tags": {
+                                "example": [
+                                  "smart_money"
+                                ],
+                                "items": {
+                                  "enum": [
+                                    "contrarian_whales",
+                                    "momentum",
+                                    "closing_soon",
+                                    "insider_trades",
+                                    "smart_money"
+                                  ],
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "tags_score": {
+                                "example": "1.00",
+                                "type": "string"
+                              },
+                              "total_bought": {
+                                "example": "6000",
+                                "type": "string"
+                              },
+                              "total_invested_usd": {
+                                "example": "2520",
+                                "type": "string"
+                              },
+                              "unrealized_pnl": {
+                                "example": "1300",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "updated_at": {
+                                "example": "2026-07-29 18:32:11+00:00",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "title": "Prediction Market User Position",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "score": {
+                          "properties": {
+                            "is_smart": {
+                              "description": "True when smart_score >= 5 and num_markets >= 10.",
+                              "example": false,
+                              "type": "boolean"
+                            },
+                            "num_markets": {
+                              "example": 10,
+                              "type": "integer"
+                            },
+                            "smart_score": {
+                              "example": "4.525",
+                              "type": "string"
+                            },
+                            "sum_pnl": {
+                              "example": "18500.75",
+                              "type": "string"
+                            },
+                            "win_rate": {
+                              "example": "0.65",
+                              "type": "string"
+                            }
+                          },
+                          "title": "Prediction Market User Score",
+                          "type": "object",
+                          "description": "Aggregate score across all categories, or null if not yet scored.",
+                          "nullable": true
+                        },
+                        "tag_info": {
+                          "items": {
+                            "description": "Weight of each tag used when scoring a market. Always includes all five tags.",
+                            "properties": {
+                              "score": {
+                                "example": "0.35",
+                                "type": "string"
+                              },
+                              "tag": {
+                                "enum": [
+                                  "contrarian_whales",
+                                  "momentum",
+                                  "closing_soon",
+                                  "insider_trades",
+                                  "smart_money"
+                                ],
+                                "example": "insider_trades",
+                                "type": "string"
+                              }
+                            },
+                            "title": "Prediction Tag Info",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "total_trades": {
+                          "example": 128,
+                          "type": "integer"
+                        },
+                        "trades": {
+                          "items": {
+                            "properties": {
+                              "amount_filled": {
+                                "example": "1000",
+                                "type": "string"
+                              },
+                              "asset_id": {
+                                "example": "78699665722135183571140787397681621204678465342167575193369860798796866652931",
+                                "type": "string"
+                              },
+                              "counterparty_address": {
+                                "example": "0x8b3f2c1d0e9a7b6c5d4e3f2a1b0c9d8e7f6a5b4c",
+                                "type": "string"
+                              },
+                              "executed_at": {
+                                "example": "2026-07-29 18:32:11+00:00",
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "fee": {
+                                "example": "0.50",
+                                "type": "string"
+                              },
+                              "id": {
+                                "example": "trade-1a2b3c",
+                                "type": "string"
+                              },
+                              "image": {
+                                "example": "https://cdn.unusualwhales.com/predictions/lakers.png",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "question": {
+                                "example": "Will the Lakers win the 2026 NBA Championship?",
+                                "type": "string"
+                              },
+                              "side": {
+                                "enum": [
+                                  "buyer",
+                                  "seller"
+                                ],
+                                "example": "buyer",
+                                "type": "string"
+                              },
+                              "transaction_hash": {
+                                "example": "0x5c8f1e2d3a4b5c6d7e8f90a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d",
+                                "type": "string"
+                              }
+                            },
+                            "title": "Prediction Market User Trade",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "user_address": {
+                          "example": "0x5140e6529f2108469c9386ad5acd7acb8cddae0c",
+                          "type": "string"
+                        },
+                        "user_name": {
+                          "example": "whale_watcher",
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "title": "Prediction Market User",
+                      "type": "object"
+                    }
+                  },
+                  "title": "Prediction Market User Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Prediction Market User"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A message containing an empty JSON response, indicating that the requested element was not found causing an empty result to be generated.",
+                  "example": "{}",
+                  "title": "Error Message stating that the requested element was not found causing an empty result to be generated.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Prediction Market User",
+        "tags": [
+          "predictions"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/predictions/whales",
+      "method": "GET",
+      "path": "/api/predictions/whales",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns large prediction market traders.",
+        "operationId": "PublicApi.PredictionController.whales",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "categories": {
+                          "example": [
+                            "Crypto",
+                            "Culture",
+                            "Finance",
+                            "Games",
+                            "Mentions",
+                            "Other",
+                            "Politics",
+                            "Sports",
+                            "Weather"
+                          ],
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "data": {
+                          "items": {
+                            "properties": {
+                              "amount": {
+                                "example": "16000",
+                                "type": "string"
+                              },
+                              "asset_id": {
+                                "example": "78699665722135183571140787397681621204678465342167575193369860798796866652931",
+                                "type": "string"
+                              },
+                              "avg_price": {
+                                "example": "0.62",
+                                "type": "string"
+                              },
+                              "category": {
+                                "example": "Sports",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "current_price": {
+                                "example": "0.68",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "image": {
+                                "example": "https://cdn.unusualwhales.com/predictions/lakers.png",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "invested_usd": {
+                                "example": "10000",
+                                "type": "string"
+                              },
+                              "outcome": {
+                                "example": true,
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "prices": {
+                                "items": {
+                                  "description": "A single day's closing price for an outcome, quoted 0-1 as a numeric string.",
+                                  "properties": {
+                                    "date": {
+                                      "example": "2026-07-27",
+                                      "format": "date",
+                                      "type": "string"
+                                    },
+                                    "price": {
+                                      "example": "0.62",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "Prediction Price Point",
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "purchased_at": {
+                                "example": "2026-07-20 11:47:00+00:00",
+                                "format": "date-time",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "question": {
+                                "example": "Will the Lakers win the 2026 NBA Championship?",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "realized_pnl": {
+                                "example": "0",
+                                "type": "string"
+                              },
+                              "resolves": {
+                                "example": "2026-08-15 00:00:00+00:00",
+                                "format": "date-time",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "tags": {
+                                "items": {
+                                  "properties": {
+                                    "normalized": {
+                                      "example": "10.5",
+                                      "type": "string"
+                                    },
+                                    "tag": {
+                                      "enum": [
+                                        "contrarian_whales",
+                                        "momentum",
+                                        "closing_soon",
+                                        "insider_trades",
+                                        "smart_money"
+                                      ],
+                                      "example": "smart_money",
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "example": "25",
+                                      "type": "string"
+                                    },
+                                    "weighted": {
+                                      "example": "3.15",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "Prediction Asset Tag Score",
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "unusual_score": {
+                                "example": "6.8",
+                                "type": "string"
+                              },
+                              "user_address": {
+                                "example": "0x5140e6529f2108469c9386ad5acd7acb8cddae0c",
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "wallet_age_days": {
+                                "example": 420,
+                                "nullable": true,
+                                "type": "integer"
+                              }
+                            },
+                            "title": "Prediction Market Whale Position",
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "title": "Prediction Market Whales Data",
+                      "type": "object"
+                    }
+                  },
+                  "title": "Prediction Market Whales Response",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Prediction Market Whales"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+                  },
+                  "properties": {
+                    "msg": {
+                      "description": "An error message containing information about the faulty input.",
+                      "type": "string"
+                    },
+                    "path": {
+                      "description": "The URL path segment.",
+                      "type": "string"
+                    },
+                    "query": {
+                      "description": "The URL query segment.",
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "The full URL causing the error.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Error Message",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+                  "example": "Something went wrong",
+                  "title": "Error Message on an internal server error.",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Prediction Market Whales",
+        "tags": [
+          "predictions"
+        ],
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://api.unusualwhales.com",
+            "variables": {}
+          }
+        ]
+      }
+    },
+    {
+      "key": "GET /api/private-markets/companies",
+      "method": "GET",
+      "path": "/api/private-markets/companies",
+      "transport": "http-rest",
+      "operation": {
+        "callbacks": {},
+        "description": "Returns Nasdaq Private Markets companies, optionally filtered by sector or name. Sorted alphabetically.\n\nThis is a premium endpoint. Contact dev@unusualwhales.com to request access.\n",
+        "operationId": "PublicApi.PrivateMarketsController.companies",
+        "parameters": [
+          {
+            "description": "Exact-match sector filter (e.g. \"Technology\").",
+            "in": "query",
+            "name": "sector",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Case-insensitive substring match against company name.",
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "description": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "doing_business_as": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "headquarters": {
+                            "example": "San Francisco, CA",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "marketing_url": {
+                            "example": "https://openai.com",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "name": {
+                            "example": "OpenAI",
+                            "type": "string"
+                          },
+                          "npm_ticker": {
+                            "description": "Nasdaq Private Markets ticker for the company.",
+                            "example": "OPENAI",
+                            "type": "string"
+                          },
+                          "sector": {
+                            "example": "Technology",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "sub_sectors": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "nullable": true,
+                            "type": "array"
+                          },
+                          "year_founded": {
+                            "example": 2015,
+                            "nullable": true,
+                            "type": "integer"
+                          }
+                        },
+                        "title": "Private Markets Company",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "title": "Private Markets Companies",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Private Markets Companies"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+                  "example": {
+                    "code": "authentication_required",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "expected_format": "uuid",
+                    "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                    "reason": "malformed_token",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Always `authentication_required`.",
+                      "enum": [
+                        "authentication_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "expected_format": {
+                      "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                      "enum": [
+                        "uuid"
+                      ],
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of the failure, written for a person.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                      "enum": [
+                        "missing_token",
+                        "malformed_token",
+                        "unrecognized_token"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "title": "Authentication Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+                  "example": {
+                    "code": "missing_access",
+                    "documentation_url": "https://api.unusualwhales.com/docs",
+                    "message": "The API token provided is valid but is not permitted to access this route.",
+                    "reason": "route_not_permitted",
+                    "request_id": "GNI_YTC1CRnw2LACGBvE",
+                    "retryable": false,
+                    "support_email": "dev@unusualwhales.com",
+                    "token_url": "https://unusualwhales.com/dashboard/api"
+                  },
+                  "properties": {
+                    "code": {
+                      "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                      "enum": [
+                        "missing_access",
+                        "historic_data_access_missing",
+                        "advanced_tier_required",
+                        "futures_access_required",
+                        "politics_scope_required",
+                        "volatility_scope_required",
+                        "admin_required"
+                      ],
+                      "type": "string"
+                    },
+                    "documentation_url": {
+                      "description": "Where to read this API documentation.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                      "type": "string"
+                    },
+                    "reason": {
+                      "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                      "enum": [
+                        "route_not_permitted"
+                      ],
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                      "enum": [
+                        false
+                      ],
+                      "type": "boolean"
+                    },
+                    "support_email": {
+                      "description": "Where to send questions about API access.",
+                      "type": "string"
+                    },
+                    "token_url": {
+                      "description": "Where to create and manage API tokens.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Forbidden Error",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A json object containing information on the error cause.",
+                  "example": {
+                    "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                    "path": "/api/darkpool/MSFT12",
+                    "query": "date=2023-02-140",
+                    "url":

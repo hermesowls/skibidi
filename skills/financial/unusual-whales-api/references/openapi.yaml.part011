@@ -1,0 +1,2400 @@
+as/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: President's Schedule
+      tags:
+        - potus
+  /api/predictions/insiders:
+    get:
+      callbacks: {}
+      description: Returns potential insider activity on prediction markets.
+      operationId: PublicApi.PredictionController.insiders
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Market_Insiders_Response'
+          description: Prediction Market Insiders
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Market Insiders
+      tags:
+        - predictions
+  /api/predictions/market/{asset_id}:
+    get:
+      callbacks: {}
+      description: Returns prediction market details for a given asset ID.
+      operationId: PublicApi.PredictionController.market
+      parameters:
+        - description: ''
+          in: path
+          name: asset_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Market_Detail_Response'
+          description: Prediction Market Details
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Market Details
+      tags:
+        - predictions
+  /api/predictions/market/{asset_id}/liquidity:
+    get:
+      callbacks: {}
+      description: Returns liquidity data for a given prediction market asset.
+      operationId: PublicApi.PredictionController.liquidity
+      parameters:
+        - description: ''
+          in: path
+          name: asset_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Market_Liquidity_Response'
+          description: Prediction Market Liquidity
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Market Liquidity
+      tags:
+        - predictions
+  /api/predictions/market/{asset_id}/positions:
+    get:
+      callbacks: {}
+      description: Returns positions for a given prediction market asset.
+      operationId: PublicApi.PredictionController.positions
+      parameters:
+        - description: ''
+          in: path
+          name: asset_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Market_Positions_Response'
+          description: Prediction Market Positions
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Market Positions
+      tags:
+        - predictions
+  /api/predictions/search-users:
+    get:
+      callbacks: {}
+      description: Search for prediction market users by query.
+      operationId: PublicApi.PredictionController.search_users
+      parameters:
+        - description: ''
+          in: query
+          name: q
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Search_Prediction_Market_Users_Response'
+          description: Search Prediction Market Users
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Search Prediction Market Users
+      tags:
+        - predictions
+  /api/predictions/smart-money:
+    get:
+      callbacks: {}
+      description: 'Returns profitable prediction market traders. Categories: Crypto, Culture, Finance, Politics, Science, Sports, Technology.'
+      operationId: PublicApi.PredictionController.smart_money
+      parameters:
+        - description: ''
+          in: query
+          name: categories
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: min_price
+          required: false
+          schema:
+            type: number
+        - description: ''
+          in: query
+          name: max_price
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Smart_Money_Response'
+          description: Prediction Smart Money
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Smart Money
+      tags:
+        - predictions
+  /api/predictions/unusual:
+    get:
+      callbacks: {}
+      description: 'Returns prediction markets with unusual activity. Categories: Crypto, Culture, Finance, Politics, Science, Sports, Technology.'
+      operationId: PublicApi.PredictionController.unusual
+      parameters:
+        - description: ''
+          in: query
+          name: categories
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 50
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unusual_Prediction_Markets_Response'
+          description: Unusual Prediction Markets
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Unusual Prediction Markets
+      tags:
+        - predictions
+  /api/predictions/user/{user_id}:
+    get:
+      callbacks: {}
+      description: Returns a prediction market user profile by user/wallet ID.
+      operationId: PublicApi.PredictionController.user
+      parameters:
+        - description: ''
+          in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Market_User_Response'
+          description: Prediction Market User
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Market User
+      tags:
+        - predictions
+  /api/predictions/whales:
+    get:
+      callbacks: {}
+      description: Returns large prediction market traders.
+      operationId: PublicApi.PredictionController.whales
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prediction_Market_Whales_Response'
+          description: Prediction Market Whales
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Prediction Market Whales
+      tags:
+        - predictions
+  /api/private-markets/companies:
+    get:
+      callbacks: {}
+      description: |
+        Returns Nasdaq Private Markets companies, optionally filtered by sector or name. Sorted alphabetically.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.companies
+      parameters:
+        - description: Exact-match sector filter (e.g. "Technology").
+          in: query
+          name: sector
+          required: false
+          schema:
+            type: string
+        - description: Case-insensitive substring match against company name.
+          in: query
+          name: name
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            maximum: 500
+            minimum: 1
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Companies'
+          description: Private Markets Companies
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: List Private Markets Companies
+      tags:
+        - private_markets
+  /api/private-markets/companies/{npm_ticker}:
+    get:
+      callbacks: {}
+      description: |
+        Returns a profile for a single private-markets company including the latest pricing tick,
+        total funding raised across known rounds, and the count of disclosed investors.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.company_profile
+      parameters:
+        - description: Nasdaq Private Markets ticker (e.g. "OPENAI").
+          in: path
+          name: npm_ticker
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Company_Profile_Response'
+          description: Private Markets Company Profile
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Private Markets Company Profile
+      tags:
+        - private_markets
+  /api/private-markets/companies/{npm_ticker}/funding:
+    get:
+      callbacks: {}
+      description: |
+        Returns the funding round history for a single private-markets company, ordered most-recent first.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.funding
+      parameters:
+        - description: ''
+          in: path
+          name: npm_ticker
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Funding_Rounds'
+          description: Private Markets Funding Rounds
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Private Markets Funding Rounds
+      tags:
+        - private_markets
+  /api/private-markets/companies/{npm_ticker}/investors:
+    get:
+      callbacks: {}
+      description: |
+        Returns the disclosed investors for a single private-markets company, ordered alphabetically.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.investors
+      parameters:
+        - description: ''
+          in: path
+          name: npm_ticker
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Investors'
+          description: Private Markets Investors
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Private Markets Investors for Company
+      tags:
+        - private_markets
+  /api/private-markets/companies/{npm_ticker}/management:
+    get:
+      callbacks: {}
+      description: |
+        Returns disclosed management/leadership for a single private-markets company.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.management
+      parameters:
+        - description: ''
+          in: path
+          name: npm_ticker
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Management'
+          description: Private Markets Management
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Private Markets Management
+      tags:
+        - private_markets
+  /api/private-markets/companies/{npm_ticker}/pricing:
+    get:
+      callbacks: {}
+      description: |
+        Returns historical implied per-share pricing for a single private-markets company.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.pricing
+      parameters:
+        - description: ''
+          in: path
+          name: npm_ticker
+          required: true
+          schema:
+            type: string
+        - description: Inclusive lower bound on pricing date (ISO 8601).
+          in: query
+          name: start_date
+          required: false
+          schema:
+            format: date
+            type: string
+        - description: Inclusive upper bound on pricing date (ISO 8601).
+          in: query
+          name: end_date
+          required: false
+          schema:
+            format: date
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Pricing_History'
+          description: Private Markets Pricing
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Private Markets Pricing History
+      tags:
+        - private_markets
+  /api/private-markets/investors:
+    get:
+      callbacks: {}
+      description: |
+        Returns the most prolific investors across the private-markets dataset, ordered by distinct
+        company count (descending).
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.top_investors
+      parameters:
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top_Private_Markets_Investors'
+          description: Top Private Markets Investors
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Top Private Markets Investors
+      tags:
+        - private_markets
+  /api/private-markets/investors/{name}:
+    get:
+      callbacks: {}
+      description: |
+        Returns the portfolio of companies for a specific investor (by name).
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.investor_profile
+      parameters:
+        - description: The investor's name (URL-encoded).
+          in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Investor_Profile_Response'
+          description: Private Markets Investor Profile
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message_stating_that_the_requested_element_was_not_found_causing_an_empty_result_to_be_generated.'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Private Markets Investor Profile
+      tags:
+        - private_markets
+  /api/private-markets/search:
+    get:
+      callbacks: {}
+      description: |
+        Substring-search across private-markets companies and investors.
+
+        This is a premium endpoint. Contact dev@unusualwhales.com to request access.
+      operationId: PublicApi.PrivateMarketsController.search
+      parameters:
+        - description: Search string (case-insensitive substring match).
+          in: query
+          name: query
+          required: true
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            maximum: 50
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Private_Markets_Search'
+          description: Private Markets Search
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Search Private Markets
+      tags:
+        - private_markets
+  /api/screener/analysts:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest analyst ratings, optionally filtered by ticker, action, recommendation, or published timestamp.
+      operationId: PublicApi.ScreenerController.analyst_ratings
+      parameters:
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/SingleTicker'
+        - description: 'How many items to return. Default: 500, Max: 500, Min: 1'
+          example: 100
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - description: ''
+          in: query
+          name: action
+          required: false
+          schema:
+            $ref: '#/components/schemas/Analyst_Action'
+        - description: ''
+          in: query
+          name: recommendation
+          required: false
+          schema:
+            $ref: '#/components/schemas/Analyst_Recommendation'
+        - description: ''
+          in: query
+          name: newer_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/NewerThan'
+        - description: ''
+          in: query
+          name: older_than
+          required: false
+          schema:
+            $ref: '#/components/schemas/OlderThan'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analyst_Rating'
+          description: Analyst rating response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Analyst Rating
+      tags:
+        - screener
+  /api/screener/option-contracts:
+    get:
+      callbacks: {}
+      description: |
+        A contract screener endpoint to screen the market for contracts by a variety of filter options.
+
+        For an example of what can be build with this endpoint check out the [Hottest Contracts](https://unusualwhales.com/hottest-contracts?limit=100&hide_index_etf=true)
+        on UnusualWhales.
+
+        For real time streaming of the same data, subscribe to the `contract_screener` websocket channel, see [https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.contract_screener](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.contract_screener).
+
+        NOTE: Contracts with a volume of less than 200 are not being returned
+      operationId: PublicApi.ScreenerController.contract_screener
+      parameters:
+        - description: ''
+          in: query
+          name: ticker_symbol
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: ''
+          in: query
+          name: sectors[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Sectors'
+        - description: 'Convenience preset that returns only "unusual" contracts by applying the contract-expressible subset of the [live options flow](https://unusualwhales.com/live-options-flow) criteria: volume>OI, OTM, DTE≤60, ask-side≥50%, premium≥$10k, issue types ADR/Common Stock/ETF. These are applied as defaults, so any of those filters you pass explicitly (e.g. `max_dte=30`, `min_premium=25000`) overrides the preset.'
+          in: query
+          name: unusual
+          required: false
+          schema:
+            type: boolean
+        - description: The minimum stock price.
+          example: '5.23'
+          in: query
+          name: min_underlying_price
+          required: false
+          schema:
+            type: string
+        - description: The maximum stock price.
+          example: '10.53'
+          in: query
+          name: max_underlying_price
+          required: false
+          schema:
+            type: string
+        - description: Only include contracts which are currently out of the money.
+          in: query
+          name: is_otm
+          required: false
+          schema:
+            type: boolean
+        - description: Only include contracts which are currently in the money. Calls are ITM when strike is below the underlying price; puts are ITM when strike is above the underlying price.
+          in: query
+          name: is_itm
+          required: false
+          schema:
+            type: boolean
+        - description: When set to true, all tickers that trade ex-dividend today will be excluded. This is useful since on the day prior to the ex-dividend date, there will be above-average ITM call flow due to dividend arbitrage traders.
+          in: query
+          name: exclude_ex_div_ticker
+          required: false
+          schema:
+            type: boolean
+        - description: The minimum days to expiry.
+          example: '1'
+          in: query
+          name: min_dte
+          required: false
+          schema:
+            type: integer
+        - description: The maximum days to expiry.
+          example: '3'
+          in: query
+          name: max_dte
+          required: false
+          schema:
+            type: integer
+        - description: The minimum OTM diff of a contract.
+          example: '0.53'
+          in: query
+          name: min_diff
+          required: false
+          schema:
+            type: string
+        - description: The maximum OTM diff of a contract.
+          example: '1.34'
+          in: query
+          name: max_diff
+          required: false
+          schema:
+            type: string
+        - description: The minimum strike.
+          example: '120.5'
+          in: query
+          name: min_strike
+          required: false
+          schema:
+            type: string
+        - description: The maximum strike.
+          example: '1200'
+          in: query
+          name: max_strike
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: type
+          required: false
+          schema:
+            $ref: '#/components/schemas/OptionType'
+        - description: ''
+          in: query
+          name: expiry_dates[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Expiry_dates'
+        - description: The minimum marketcap.
+          example: '1000000'
+          in: query
+          name: min_marketcap
+          required: false
+          schema:
+            type: string
+        - description: The maximum marketcap.
+          example: '250000000'
+          in: query
+          name: max_marketcap
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Contract_Volume'
+        - description: ''
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Contract_Volume'
+        - description: The minimum 30-day average stock volume for the underlying ticker.
+          example: '1500000'
+          in: query
+          name: min_ticker_30_d_avg_volume
+          required: false
+          schema:
+            type: integer
+        - description: The maximum 30-day average stock volume for the underlying ticker.
+          example: '50000000'
+          in: query
+          name: max_ticker_30_d_avg_volume
+          required: false
+          schema:
+            type: integer
+        - description: The minimum 30-day average options contract volume for the underlying ticker.
+          example: '500'
+          in: query
+          name: min_contract_30_d_avg_volume
+          required: false
+          schema:
+            type: integer
+        - description: The maximum 30-day average options contract volume for the underlying ticker.
+          example: '10000'
+          in: query
+          name: max_contract_30_d_avg_volume
+          required: false
+          schema:
+            type: integer
+        - description: The minimum multi leg volume to contract volume ratio.
+          example: '0.3'
+          in: query
+          name: min_multileg_volume_ratio
+          required: false
+          schema:
+            type: string
+        - description: The maximum multi leg volume to contract volume ratio.
+          example: '0.5'
+          in: query
+          name: max_multileg_volume_ratio
+          required: false
+          schema:
+            type: string
+        - description: The minimum floor volume to contract volume ratio.
+          example: '0.2'
+          in: query
+          name: min_floor_volume_ratio
+          required: false
+          schema:
+            type: string
+        - description: The maximum floor volume to contract volume ratio.
+          example: '0.45'
+          in: query
+          name: max_floor_volume_ratio
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum % price change of the contract to the previous day. Acceptable range: -1.00 to +inf.'
+          example: '0.5'
+          in: query
+          name: min_perc_change
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum % price change of the contract to the previous day. Acceptable range: -1.00 to +inf.'
+          example: '0.68'
+          in: query
+          name: max_perc_change
+          required: false
+          schema:
+            type: string
+        - description: The minimum intraday price change of the contract from open till now.
+          example: '0.2'
+          in: query
+          name: min_daily_perc_change
+          required: false
+          schema:
+            type: string
+        - description: The maximum intraday price change for the contract since market open.
+          example: '0.6'
+          in: query
+          name: max_daily_perc_change
+          required: false
+          schema:
+            type: string
+        - description: The minimum premium on that contract.
+          example: '12500.5'
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            type: string
+        - description: The maximum premium on that contract.
+          example: '53100.32'
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum average price of the contract.
+          example: '1.50'
+          in: query
+          name: min_avg_price
+          required: false
+          schema:
+            type: string
+        - description: The maximum average price of the contract.
+          example: '25.00'
+          in: query
+          name: max_avg_price
+          required: false
+          schema:
+            type: string
+        - description: The minimum contract volume to open interest ratio.
+          example: '0.32'
+          in: query
+          name: min_volume_oi_ratio
+          required: false
+          schema:
+            type: string
+        - description: The maximum contract volume to open interest ratio.
+          example: '1.58'
+          in: query
+          name: max_volume_oi_ratio
+          required: false
+          schema:
+            type: string
+        - description: The minimum open interest on that contract.
+          example: '12300'
+          in: query
+          name: min_open_interest
+          required: false
+          schema:
+            type: integer
+        - description: The maximum open interest on that contract.
+          example: '55600'
+          in: query
+          name: max_open_interest
+          required: false
+          schema:
+            type: integer
+        - description: The minimum floor volume on that contract.
+          example: '12300'
+          in: query
+          name: min_floor_volume
+          required: false
+          schema:
+            type: integer
+        - description: The maximum floor volume on that contract.
+          example: '55800'
+          in: query
+          name: max_floor_volume
+          required: false
+          schema:
+            type: integer
+        - description: Only include contracts where the volume is greater than the open interest.
+          in: query
+          name: vol_greater_oi
+          required: false
+          schema:
+            type: boolean
+        - description: ''
+          in: query
+          name: issue_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Issue_types'
+        - description: The minimum ask percentage of volume that transacted on the ask.
+          example: '0.19'
+          in: query
+          name: min_ask_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum ask percentage of volume that transacted on the ask.
+          example: '0.45'
+          in: query
+          name: max_ask_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum bid percentage of volume that transacted on the bid.
+          example: '0.19'
+          in: query
+          name: min_bid_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum bid percentage of volume that transacted on the bid.
+          example: '0.45'
+          in: query
+          name: max_bid_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum skew percentage. Setting this to 0.8 would return all contracts where either 80% of vol transacted on the ask or bid side
+          example: '0.19'
+          in: query
+          name: min_skew_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum skew percentage.Setting this to 0.8 would return all contracts where max 80% of vol transacted on the ask or bid side
+          example: '0.45'
+          in: query
+          name: max_skew_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum bull percentage.
+          example: '0.19'
+          in: query
+          name: min_bull_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum bull percentage.
+          example: '0.45'
+          in: query
+          name: max_bull_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum bear percentage.
+          example: '0.19'
+          in: query
+          name: min_bear_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum bear percentage.
+          example: '0.45'
+          in: query
+          name: max_bear_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum percentage of days over the last 7 days where the contract traded primarily on the bid side
+          example: '0.19'
+          in: query
+          name: min_bid_side_perc_7_day
+          required: false
+          schema:
+            type: string
+        - description: The maximum percentage of days over the last 7 days where the contract traded primarily on the bid side
+          example: '0.45'
+          in: query
+          name: max_bid_side_perc_7_day
+          required: false
+          schema:
+            type: string
+        - description: The minimum percentage of days over the last 7 days where the contract traded primarily on the ask side
+          example: '0.19'
+          in: query
+          name: min_ask_side_perc_7_day
+          required: false
+          schema:
+            type: string
+        - description: The maximum percentage of days over the last 7 days where the contract traded primarily on the ask side
+          example: '0.45'
+          in: query
+          name: max_ask_side_perc_7_day
+          required: false
+          schema:
+            type: string
+        - description: The minimum days of consecutive trading days where the open interest increased
+          example: '3'
+          in: query
+          name: min_days_of_oi_increases
+          required: false
+          schema:
+            type: integer
+        - description: The maximum days of consecutive trading days where the open interest increased
+          example: '10'
+          in: query
+          name: max_days_of_oi_increases
+          required: false
+          schema:
+            type: integer
+        - description: The minimum days of consecutive days where volume was greater than open interest.
+          example: '2'
+          in: query
+          name: min_days_of_vol_greater_than_oi
+          required: false
+          schema:
+            type: integer
+        - description: The maximum days of consecutive days where volume was greater than open interest.
+          example: '7'
+          in: query
+          name: max_days_of_vol_greater_than_oi
+          required: false
+          schema:
+            type: integer
+        - description: The minimum implied volatility percentage.
+          example: '0.19'
+          in: query
+          name: min_iv_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum implied volatility percentage.
+          example: '0.45'
+          in: query
+          name: max_iv_perc
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum delta. Acceptable range: -1.00 to +1.00.'
+          example: '-0.50'
+          in: query
+          name: min_delta
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum delta. Acceptable range: -1.00 to +1.00.'
+          example: '0.80'
+          in: query
+          name: max_delta
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum gamma. Acceptable range: 0.00 to +inf.'
+          example: '0.01'
+          in: query
+          name: min_gamma
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum gamma. Acceptable range: 0.00 to +inf.'
+          example: '0.15'
+          in: query
+          name: max_gamma
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum theta. Acceptable range: -inf to 0.00.'
+          example: '-0.10'
+          in: query
+          name: min_theta
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum theta. Acceptable range: -inf to 0.00.'
+          example: '-0.01'
+          in: query
+          name: max_theta
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum vega. Acceptable range: 0.00 to +inf.'
+          example: '0.05'
+          in: query
+          name: min_vega
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum vega. Acceptable range: 0.00 to +inf.'
+          example: '0.25'
+          in: query
+          name: max_vega
+          required: false
+          schema:
+            type: string
+        - description: The minimum return on capital percentage (ROC).
+          example: '0.19'
+          in: query
+          name: min_return_on_capital_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum return on capital percentage (ROC).
+          example: '0.45'
+          in: query
+          name: max_return_on_capital_perc
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum open interest change percentage. Acceptable range: -1.00 to +inf.'
+          example: '-0.25'
+          in: query
+          name: min_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum open interest change percentage. Acceptable range: -1.00 to +inf.'
+          example: '0.50'
+          in: query
+          name: max_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum open interest change as an absolute change.
+          example: '-1000'
+          in: query
+          name: min_oi_change
+          required: false
+          schema:
+            type: integer
+        - description: The maximum open interest change as an absolute change.
+          example: '5000'
+          in: query
+          name: max_oi_change
+          required: false
+          schema:
+            type: integer
+        - description: 'The minimum ratio of contract volume to total option volume of the underlying. Acceptable range: 0.00 to 1.00.'
+          example: '0.25'
+          in: query
+          name: min_volume_ticker_vol_ratio
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum ratio of contract volume to total option volume of the underlying. Acceptable range: 0.00 to 1.00.'
+          example: '0.85'
+          in: query
+          name: max_volume_ticker_vol_ratio
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum sweep volume ratio. Acceptable range: 0.00 to 1.00.'
+          example: '0.15'
+          in: query
+          name: min_sweep_volume_ratio
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum sweep volume ratio. Acceptable range: 0.00 to 1.00.'
+          example: '0.75'
+          in: query
+          name: max_sweep_volume_ratio
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum percentage change of the current price from todays low. Acceptable range: -1.00 to +inf.'
+          example: '0.19'
+          in: query
+          name: min_from_low_perc
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum percentage change of the current price from todays low. Acceptable range: -1.00 to +inf.'
+          example: '0.45'
+          in: query
+          name: max_from_low_perc
+          required: false
+          schema:
+            type: string
+        - description: 'The minimum percentage change of the current price from todays high. Acceptable range: -1.00 to +inf.'
+          example: '0.19'
+          in: query
+          name: min_from_high_perc
+          required: false
+          schema:
+            type: string
+        - description: 'The maximum percentage change of the current price from todays high. Acceptable range: -1.00 to +inf.'
+          example: '0.45'
+          in: query
+          name: max_from_high_perc
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: min_earnings_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Min_Earnings_DTE'
+        - description: ''
+          in: query
+          name: max_earnings_dte
+          required: false
+          schema:
+            $ref: '#/components/schemas/Max_Earnings_DTE'
+        - description: ''
+          in: query
+          name: min_days_between_expiry_and_earnings
+          required: false
+          schema:
+            $ref: '#/components/schemas/MinDaysBetweenExpiryAndEarnings'
+        - description: ''
+          in: query
+          name: max_days_between_expiry_and_earnings
+          required: false
+          schema:
+            $ref: '#/components/schemas/MaxDaysBetweenExpiryAndEarnings'
+        - description: The minimum number of transactions.
+          example: '10'
+          in: query
+          name: min_transactions
+          required: false
+          schema:
+            type: integer
+        - description: The maximum number of transactions.
+          example: '500'
+          in: query
+          name: max_transactions
+          required: false
+          schema:
+            type: integer
+        - description: The minimum contract price (not underlying price).
+          example: '1.50'
+          in: query
+          name: min_close
+          required: false
+          schema:
+            type: string
+        - description: The maximum contract price (not underlying price).
+          example: '25.00'
+          in: query
+          name: max_close
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: order
+          required: false
+          schema:
+            $ref: '#/components/schemas/Screener_contract_order_by_field'
+        - description: ''
+          in: query
+          name: order_direction
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderDirection'
+        - description: ''
+          in: query
+          name: limit
+          required: false
+          schema:
+            $ref: '#/components/schemas/Default_50_Max_250_Min_1'
+        - description: ''
+          in: query
+          name: page
+          required: false
+          schema:
+            $ref: '#/components/schemas/Page'
+        - description: ''
+          in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Optional_Market_Date'
+        - description: Return only new option contracts
+          example: 'true'
+          in: query
+          name: is_new
+          required: false
+          schema:
+            type: boolean
+        - description: Return only monthly option expirations
+          example: 'true'
+          in: query
+          name: opex_only
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Option_Contract_Screener_response.'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication_Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden_Error'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_Message'
+          description: Unprocessable Entity
+        '500':
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error_Message_on_an_internal_server_error.'
+          description: Internal Server Error
+      summary: Hottest Chains
+      tags:
+        - screener
+  /api/screener/stocks:
+    get:
+      callbacks: {}
+      description: |
+        A complet stock market screener which can be used to screen for etfs in-/outflow,
+        tickers by various volatility metrics such as steepness, IV rank, realized volatility, expected moves,
+        companies where insiders bought shares over 3m, 6m,
+        tickers by various option metrics (greek flow, options premium/volume, net call premium,
+        amount of new chains, total open interest, flex open interest, etc.) and live stock quotes,
+        prices and volume.
+
+        The date defaults to the current or last market day. Earlier dates return stored snapshots as of regular market close.
+        Live bid and ask quotes are null for historical snapshots.
+
+        Rows default to combined call and put volume in descending order.
+
+        Decimal values are returned as strings. Fractional returns use 0.05 for 5 percent.
+        Unavailable values are null.
+
+        ## Query language examples
+
+        Pass an expression in `query`. It is combined with the other filters. Get the grammar and current field reference from `/api/screener/stocks/dsl`.
+
+        Volume based gamma exposure at least twice the magnitude of OI based gamma exposure:
+        ```text
+        where abs(gex_gamma_per_one_percent_move_oi) > 0 and abs(gex_gamma_per_one_percent_move_vol) >= abs(gex_gamma_per_one_percent_move_oi) * 2
+        ```
+
+        Price at least two ATRs above the 20 day EMA:
+        ```text
+        where atr_14 > 0 and price - ema_20 >= atr_14 * 2
+        ```
+
+        Call volume at least twice put volume:
+        ```text
+        where put_volume > 0 and call_volume >= put_volume * 2
+        ```
+
+        Call to put volume ratio at least 10 or at most 0.1:
+        ```text
+        where call_volume > 0 and put_volume > 0 and (call_volume / put_volume >= 10 or call_volume / put_volume <= 0.1)
+        ```
+
+        Ratio of 7 day IV to 30 day IV at least 1.5 or at most 1 / 1.5:
+        ```text
+        where iv7d > 0 and iv30d > 0 and (iv7d / iv30d >= 1.5 or iv7d / iv30d <= 1 / 1.5)
+        ```
+
+        Price in the top 20% of its 52 week range on a logarithmic scale:
+        ```text
+        where week_52_low > 0 and week_52_high > week_52_low and price > 0 and price <= week_52_high and log(price / week_52_low) / log(week_52_high / week_52_low) >= 0.8
+        ```
+
+        The logarithmic position is 0 at the low and 1 at the high. Equal steps represent equal proportional price moves.
+
+        Absolute log return since the previous close at least two approximate daily standard deviations using 30 day IV:
+        ```text
+        where change > -1 and iv30d > 0 and abs(ln(1 + change)) >= 2 * iv30d * sqrt(1 / 251)
+        ```
+
+        The same daily return screen using 7 day IV:
+        ```text
+        where change > -1 and iv7d > 0 and abs(ln(1 + change)) >= 2 * iv7d * sqrt(1 / 251)
+        ```
+
+        Distance from the 20 day EMA at least the 7 day expected move:
+        ```text
+        where implied_move_7 > 0 and abs(price - ema_20) >= implied_move_7
+        ```
+
+        Momentum excluding the latest month above 10%, with RSI at or below 30:
+        ```text
+        where one_year_close > 0 and ((one_month_close / one_year_close) - 1) > 0.10 and rsi_14 <= 30
+        ```
+
+        This combines a Gray and Vogel inspired momentum measure with an RSI pullback condition. See [How to Measure Momentum](https://alphaarchitect.com/how-to-measure-momentum/) for background.
+        `one_month_close` and `one_year_close` are the latest regular closes on or before one calendar month and one calendar year before the row date. The formula measures the return between those reference closes.
+        The `one_year_close > 0` guard keeps the denominator positive. This filter is not the full Quantitative Momentum strategy.
+
+        ## Gamma-dominance flips
+
+        Aggregate gamma provides a view into trader sentiment over short timeframes because near-the-money gamma tends to be highest in the closest expiries.
+
+        To screen for bearish trade ideas based on a flip from call gamma-dominance to put gamma-dominance, use these query parameters:
+
+        ```json
+        {
+          "min_open_interest": 50000,
+          "max_gex_perc_change": -1,
+          "max_gex_net_change": 0
+        }
+        ```
+
+        Equivalent `query` expression:
+
+        ```text
+        where open_interest >= 50000 and gex_perc_change <= -1 and gex_net_change <= 0
+        ```
+
+        - A minimum total open interest of 50,000 screens for relatively active names, using open interest as a liquidity proxy.
+        - `gex_perc_change` is `(current net gamma - previous net gamma) / previous net gamma`. A value below -1 indicates a sign change in either direction, not necessarily a fall in net gamma. `max_gex_net_change: 0` selects the downward direction.
+        - `gex_ratio` is absolute put gamma divided by absolute call gamma. A downward net gamma cross corresponds to this ratio crossing upward through 1 into put gamma-dominance, when call gamma is nonzero.
+
+        To screen for bullish trade ideas based on the opposite flip, from put gamma-dominance to call gamma-dominance, use these query parameters:
+
+        ```json
+        {
+          "min_open_interest": 50000,
+          "max_gex_perc_change": -1,
+          "min_gex_net_change": 0
+        }
+        ```
+
+        Equivalent `query` expression:
+
+        ```text
+        where open_interest >= 50000 and gex_perc_change <= -1 and gex_net_change >= 0
+        ```
+
+        - The open interest and percentage-change thresholds are unchanged because the sign-change test is the same in both directions.
+        - `min_gex_net_change: 0` selects the upward direction. Net gamma rising through zero corresponds to `gex_ratio` crossing downward through 1 into call gamma-dominance.
+
+        These thresholds are inclusive. A `gex_perc_change` of exactly -1 means net gamma reached zero, so both screens also include that boundary, where `gex_ratio` is 1 when defined. A strict flip has `gex_perc_change < -1`. Percentage change is null when previous net gamma is zero, and the ratio is null when call gamma is zero.
+      operationId: PublicApi.ScreenerController.stock_screener
+      parameters:
+        - description: Query language expression combined with the other filters. Get supported fields, operators, and scopes from /api/screener/stocks/dsl.
+          example: where price * 0.75 <= week_52_low and insider_buy_volume12m >= 10000 and insider_sell_volume12m <= 1000 and marketcap >= 1B
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+        - description: ''
+          in: query
+          name: ticker
+          required: false
+          schema:
+            $ref: '#/components/schemas/Ticker'
+        - description: Maximum full rows to return. Defaults to 50 and is capped at 500. Smaller explicit limits are honored.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 50
+            maximum: 500
+            minimum: 1
+            type: integer
+        - description: Zero-based page number. The number of skipped rows is offset multiplied by the effective limit.
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            maximum: 500
+            minimum: 0
+            type: integer
+        - description: ''
+          in: query
+          name: issue_types[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Issue_types'
+        - description: The minimum % change to the previous trading day.
+          example: '-0.45'
+          in: query
+          name: min_change
+          required: false
+          schema:
+            type: string
+        - description: The maximum % change to the previous trading day.
+          example: '0.2'
+          in: query
+          name: max_change
+          required: false
+          schema:
+            type: string
+        - description: The minimum stock price.
+          example: '5.23'
+          in: query
+          name: min_underlying_price
+          required: false
+          schema:
+            type: string
+        - description: The maximum stock price.
+          example: '10.53'
+          in: query
+          name: max_underlying_price
+          required: false
+          schema:
+            type: string
+        - description: Boolean whether to only include stocks which are part of the S&P 500. Setting this to false has no effect.
+          in: query
+          name: is_s_p_500
+          required: false
+          schema:
+            type: boolean
+        - description: Boolean wheter to only include stocks which pay dividends. Setting this to false has no effect.
+          in: query
+          name: has_dividends
+          required: false
+          schema:
+            type: boolean
+        - description: ''
+          in: query
+          name: sectors[]
+          required: false
+          schema:
+            $ref: '#/components/schemas/Sectors'
+        - description: The minimum marketcap.
+          example: '1000000'
+          in: query
+          name: min_marketcap
+          required: false
+          schema:
+            type: string
+        - description: The maximum marketcap.
+          example: '250000000'
+          in: query
+          name: max_marketcap
+          required: false
+          schema:
+            type: string
+        - description: The minimum ratio of options volume vs 3 day avg options volume.
+          example: '0.25'
+          in: query
+          name: min_perc_3_day_total
+          required: false
+          schema:
+            type: string
+        - description: The maximum ratio of options volume vs 3 day avg options volume.
+          example: '1.72'
+          in: query
+          name: max_perc_3_day_total
+          required: false
+          schema:
+            type: string
+        - description: The minimum ratio of call options volume vs 3 day avg call options volume.
+          example: '0.25'
+          in: query
+          name: min_perc_3_day_call
+          required: false
+          schema:
+            type: string
+        - description: The maximum ratio of call options volume vs 3 day avg call options volume.
+          example: '1.72'
+          in: query
+          name: max_perc_3_day_call
+          required: false
+          schema:
+            type: string
+        - description: The minimum ratio of put options volume vs 3 day avg put options volume.
+          example: '0.25'
+          in: query
+          name: min_perc_3_day_put
+          required: false
+          schema:
+            type: string
+        - description: The maximum ratio of put options volume vs 3 day avg put options volume.
+          example: '1.72'
+          in: query
+          name: max_perc_3_day_put
+          required: false
+          schema:
+            type: string
+        - description: The minimum ratio of options volume vs 30 day avg options volume.
+          example: '0.25'
+          in: query
+          name: min_perc_30_day_total
+          required: false
+          schema:
+            type: string
+        - description: The maximum ratio of options volume vs 30 day avg options volume.
+          example: '1.72'
+          in: query
+          name: max_perc_30_day_total
+          required: false
+          schema:
+            type: string
+        - description: The minimum ratio of call options volume vs 30 day avg call options volume.
+          example: '0.25'
+          in: query
+          name: min_perc_30_day_call
+          required: false
+          schema:
+            type: string
+        - description: The maximum ratio of call options volume vs 30 day avg call options volume.
+          example: '1.72'
+          in: query
+          name: max_perc_30_day_call
+          required: false
+          schema:
+            type: string
+        - description: The minimum ratio of put options volume vs 30 day avg put options volume.
+          example: '0.25'
+          in: query
+          name: min_perc_30_day_put
+          required: false
+          schema:
+            type: string
+        - description: The maximum ratio of put options volume vs 30 day avg put options volume.
+          example: '1.72'
+          in: query
+          name: max_perc_30_day_put
+          required: false
+          schema:
+            type: string
+        - description: The minimum open interest change compared to the previous day.
+          example: '-0.45'
+          in: query
+          name: min_total_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum open interest change compared to the previous day.
+          example: '0.2'
+          in: query
+          name: max_total_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum open interest change of call contracts compared to the previous day.
+          example: '-0.45'
+          in: query
+          name: min_call_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum open interest change of call contracts compared to the previous day.
+          example: '0.2'
+          in: query
+          name: max_call_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum open interest change of put contracts compared to the previous day.
+          example: '-0.45'
+          in: query
+          name: min_put_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum open interest change of put contracts compared to the previous day.
+          example: '0.2'
+          in: query
+          name: max_put_oi_change_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum implied move.
+          example: '0.45'
+          in: query
+          name: min_implied_move
+          required: false
+          schema:
+            type: string
+        - description: The maximum implied move.
+          example: '1.4'
+          in: query
+          name: max_implied_move
+          required: false
+          schema:
+            type: string
+        - description: The minimum implied move perc.
+          example: '0.15'
+          in: query
+          name: min_implied_move_perc
+          required: false
+          schema:
+            type: string
+        - description: The maximum implied move perc.
+          example: '0.6'
+          in: query
+          name: max_implied_move_perc
+          required: false
+          schema:
+            type: string
+        - description: The minimum volatility.
+          example: '0.15'
+          in: query
+          name: min_volatility
+          required: false
+          schema:
+            type: string
+        - description: The maximum volatility.
+          example: '0.6'
+          in: query
+          name: max_volatility
+          required: false
+          schema:
+            type: string
+        - description: The minimum iv rank.
+          example: '0.15'
+          in: query
+          name: min_iv_rank
+          required: false
+          schema:
+            type: string
+        - description: The maximum iv rank.
+          example: '22.6'
+          in: query
+          name: max_iv_rank
+          required: false
+          schema:
+            type: string
+        - description: The minimum options volume.
+          example: '10000'
+          in: query
+          name: min_volume
+          required: false
+          schema:
+            type: integer
+        - description: The maximum options volume.
+          example: '35000'
+          in: query
+          name: max_volume
+          required: false
+          schema:
+            type: integer
+        - description: The minimum call options volume.
+          example: '10000'
+          in: query
+          name: min_call_volume
+          required: false
+          schema:
+            type: integer
+        - description: The maximum call options volume.
+          example: '35000'
+          in: query
+          name: max_call_volume
+          required: false
+          schema:
+            type: integer
+        - description: The minimum put options volume.
+          example: '10000'
+          in: query
+          name: min_put_volume
+          required: false
+          schema:
+            type: integer
+        - description: The maximum put options volume.
+          example: '35000'
+          in: query
+          name: max_put_volume
+          required: false
+          schema:
+            type: integer
+        - description: The minimum options premium.
+          example: '10000'
+          in: query
+          name: min_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum options premium.
+          example: '35000'
+          in: query
+          name: max_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum call options premium.
+          example: '10000'
+          in: query
+          name: min_call_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum call options premium.
+          example: '35000'
+          in: query
+          name: max_call_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum put options premium.
+          example: '10000'
+          in: query
+          name: min_put_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum put options premium.
+          example: '35000'
+          in: query
+          name: max_put_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum net options premium.
+          example: '10000'
+          in: query
+          name: min_net_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum net options premium.
+          example: '35000'
+          in: query
+          name: max_net_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum net call options premium.
+          example: '10000'
+          in: query
+          name: min_net_call_premium
+          required: false
+          schema:
+            type: string
+        - description: The maximum net call options premium.
+          example: '35000'
+          in: query
+          name: max_net_call_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum net put options premium.
+          example: '10000'
+          in: query
+          name: min_net_put_premium
+          required: false
+          schema:
+            type: string
+        - description: The maximum net put options premium.
+          example: '35000'
+          in: query
+          name: max_net_put_premium
+          required: false
+          schema:
+            type: string
+        - description: The minimum open interest.
+          example: '10000'
+          in: query
+          name: min_oi
+          required: false
+          schema:
+            type: integer
+        - description: The maximum open interest.
+          example: '35000'
+          in: query
+          name: max_oi
+          required: false
+          schema:
+            type: integer
+        - description: The minimum open interest vs options volume ratio.
+          example: '0.5'
+          in: query
+          name: min_oi_vs_vol
+          required: false
+          schema:
+            type: string
+        - description: The maximum open interest vs options volume ratio.
+          example: '1.5'
+          in: query
+          name: max_oi_vs_vol
+          required: false
+          schema:
+            type: string
+        - description: The minimum put to call ratio.
+          example: '0.5'
+          in: query
+          name: min_put_call_ratio
+          required: false
+ 

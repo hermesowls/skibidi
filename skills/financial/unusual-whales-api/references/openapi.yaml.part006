@@ -1,0 +1,1834 @@
+    nullable: true
+                type: string
+              gex_gamma_per_one_percent_move_vol:
+                description: Sum of gamma weighted by session option volume. Put gamma is negated. Multiplied by the underlying price squared.
+                nullable: true
+                type: string
+              gex_net_change:
+                description: Current daily net gamma minus the previous trading-date value. Null unless both values are available. Intraday exposure updates do not recalculate this comparison.
+                nullable: true
+                type: string
+              gex_perc_change:
+                description: 'Fractional daily net gamma change: (current - previous) / previous. Null when the previous value is zero or either value is missing. Intraday exposure updates do not recalculate this comparison.'
+                nullable: true
+                type: string
+              gex_ratio:
+                description: Absolute daily put gamma divided by daily call gamma. Null when either side is missing or call gamma is zero. Intraday exposure updates do not recalculate this ratio.
+                nullable: true
+                type: string
+              gex_vanna_per_one_percent_move_dir:
+                description: Sum of vanna weighted by directional session volume. Ask-side volume is negative and bid-side volume is positive. Mid-side volume is excluded. Multiplied by same-date 30-day implied volatility and the underlying price. Zero when same-date implied volatility is unavailable.
+                nullable: true
+                type: string
+              gex_vanna_per_one_percent_move_oi:
+                description: Sum of vanna weighted by open interest. Put vanna is negated. Multiplied by same-date 30-day implied volatility and the underlying price. Zero when same-date implied volatility is unavailable.
+                nullable: true
+                type: string
+              gex_vanna_per_one_percent_move_vol:
+                description: Sum of vanna weighted by session option volume. Put vanna is negated. Multiplied by same-date 30-day implied volatility and the underlying price. Zero when same-date implied volatility is unavailable.
+                nullable: true
+                type: string
+              has_options:
+                description: Whether the security has listed equity options.
+                nullable: true
+                type: boolean
+              high:
+                description: Highest price in the latest accepted trading session, in the instrument's quoted price units. May be null when index-price access rules hide prices.
+                nullable: true
+                type: string
+              implied_move:
+                description: Expected absolute move for the 30-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_1:
+                description: Expected absolute move. Fixed 1-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_14:
+                description: Expected absolute move. Fixed 14-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_180:
+                description: Expected absolute move. Fixed 180-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_30:
+                description: Expected absolute move. Fixed 30-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_365:
+                description: Expected absolute move. Fixed 365-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_5:
+                description: Expected absolute move. Fixed 5-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_60:
+                description: Expected absolute move. Fixed 60-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_7:
+                description: Expected absolute move. Fixed 7-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_90:
+                description: Expected absolute move. Fixed 90-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc:
+                description: Expected 30-calendar-day move as a fraction of the underlying price. A value of 0.05 means 5 percent.
+                nullable: true
+                type: string
+              implied_move_perc_1:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 1-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_14:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 14-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_180:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 180-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_30:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 30-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_365:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 365-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_5:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 5-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_60:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 60-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_7:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 7-calendar-day horizon.
+                nullable: true
+                type: string
+              implied_move_perc_90:
+                description: Expected move as a fraction of the underlying price. A value of 0.05 means 5 percent. Fixed 90-calendar-day horizon.
+                nullable: true
+                type: string
+              industry_type:
+                description: Company industry label.
+                nullable: true
+                type: string
+              insider_buy_volume_12m:
+                description: Insider buy share-volume aggregate for the trailing 12 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.
+                format: int64
+                nullable: false
+                type: integer
+              insider_buy_volume_3m:
+                description: Insider buy share-volume aggregate for the trailing 3 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.
+                format: int64
+                nullable: false
+                type: integer
+              insider_buy_volume_6m:
+                description: Insider buy share-volume aggregate for the trailing 6 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.
+                format: int64
+                nullable: false
+                type: integer
+              insider_sell_volume_12m:
+                description: Insider sell share-volume aggregate for the trailing 12 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.
+                format: int64
+                nullable: false
+                type: integer
+              insider_sell_volume_3m:
+                description: Insider sell share-volume aggregate for the trailing 3 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.
+                format: int64
+                nullable: false
+                type: integer
+              insider_sell_volume_6m:
+                description: Insider sell share-volume aggregate for the trailing 6 calendar months, after subtracting reported 10b5 volume. The window includes its cutoff and the source snapshot's as-of date. Zero may mean no qualifying volume or no matching source rows.
+                format: int64
+                nullable: false
+                type: integer
+              intraday_change:
+                description: 'Fractional session price change: (close - open) / open. A value of 0.05 means 5 percent. Null when open is zero or an input is missing.'
+                nullable: true
+                type: string
+              is_index:
+                description: Whether the returned issue_type is Index. False when issue_type is absent or null.
+                type: boolean
+              issue_type:
+                description: Security issue type, such as Common Stock, ETF, or Index.
+                nullable: true
+                type: string
+              iv30d:
+                description: Alias of the current 30-calendar-day implied volatility.
+                nullable: true
+                type: string
+              iv30d_1d:
+                description: Thirty-day implied volatility from exactly the previous trading date. Null when that date's value is unavailable.
+                nullable: true
+                type: string
+              iv30d_1m:
+                description: Thirty-day implied volatility from exactly 21 trading dates before the row's date. Null when that date's value is unavailable.
+                nullable: true
+                type: string
+              iv30d_1w:
+                description: Thirty-day implied volatility from exactly five trading dates before the row's date. Null when that date's value is unavailable.
+                nullable: true
+                type: string
+              iv_percentile_1m:
+                description: Percent rank of IV over observations later than 30 calendar days before the row's date, multiplied by 100. Tied values share a rank.
+                nullable: true
+                type: string
+              iv_percentile_1y:
+                description: Percent rank of IV over observations later than one calendar year before the row's date, multiplied by 100. Tied values share a rank.
+                nullable: true
+                type: string
+              iv_rank:
+                description: "One-year IV rank: 100 * (current - minimum) / (maximum - minimum), using observations later than one calendar year before the row's date. Null when maximum equals minimum or source data is missing."
+                nullable: true
+                type: string
+              iv_rank_1m:
+                description: "IV rank over observations later than 30 calendar days before the row's date: 100 * (current - minimum) / (maximum - minimum). Null when maximum equals minimum or source data is missing."
+                nullable: true
+                type: string
+              last_earnings_date:
+                description: 'Latest known earnings report date. Format: YYYY-MM-DD.'
+                format: date
+                nullable: true
+                type: string
+              last_earnings_price:
+                description: Reference price for earnings_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              latest_dividend:
+                description: Split-adjusted dividend per share from the latest selected dividend record.
+                nullable: true
+                type: string
+              latest_dividend_date:
+                description: 'Ex-dividend date of the latest selected dividend record. Format: YYYY-MM-DD.'
+                format: date
+                nullable: true
+                type: string
+              latest_dividend_payment_date:
+                description: 'Payment date of the latest selected dividend record. Format: YYYY-MM-DD.'
+                format: date
+                nullable: true
+                type: string
+              low:
+                description: Lowest price in the latest accepted trading session, in the instrument's quoted price units. May be null when index-price access rules hide prices.
+                nullable: true
+                type: string
+              macd_12_26_9:
+                description: MACD line with fast period 12, slow period 26 and signal period 9. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              macd_12_26_9_histogram:
+                description: Histogram of MACD configured with periods 12, 26 and 9. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              macd_12_26_9_signal:
+                description: Signal line of MACD configured with periods 12, 26 and 9. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              marketcap:
+                description: Shares outstanding multiplied by the latest accepted stock price, rounded to whole dollars. Uses the stored company market value when shares or price are unavailable.
+                nullable: true
+                type: string
+              mfi_14:
+                description: Money flow index over 14 periods using price and volume, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              missing_periscope:
+                description: Present and true when index-price access rules hide the returned price fields.
+                type: boolean
+              net_call_premium:
+                description: Call ask-side premium minus bid-side premium, in US dollars. Each contributing trade is capped at 2,000,000 dollars before aggregation.
+                nullable: true
+                type: string
+              net_premium:
+                description: Net call premium minus net put premium, in US dollars. Null when either input is unavailable.
+                nullable: true
+                type: string
+              net_put_premium:
+                description: Put ask-side premium minus bid-side premium, in US dollars. Each contributing trade is capped at 2,000,000 dollars before aggregation.
+                nullable: true
+                type: string
+              next_dividend_date:
+                description: 'Next scheduled ex-dividend date. Format: YYYY-MM-DD.'
+                format: date
+                nullable: true
+                type: string
+              next_earnings_date:
+                description: 'Next scheduled earnings date. Format: YYYY-MM-DD.'
+                format: date
+                nullable: true
+                type: string
+              obv:
+                description: On balance volume, a cumulative signed volume measure in shares. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              one_day_perc:
+                description: Fractional price return from the previous trading session's regular close, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              one_month_close:
+                description: Reference price for one_month_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              one_month_perc:
+                description: Fractional price return from the latest regular close on or before one calendar month earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              one_week_close:
+                description: Reference price for one_week_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              one_week_perc:
+                description: Fractional price return from the latest regular close on or before seven calendar days earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              one_year_close:
+                description: Reference price for one_year_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              one_year_perc:
+                description: Fractional price return from the latest regular close on or before one calendar year earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              open:
+                description: Opening price of the latest accepted trading session, in the instrument's quoted price units.
+                nullable: true
+                type: string
+              prev_call_oi:
+                description: Call open interest from the previous trading-date state.
+                format: int64
+                nullable: true
+                type: integer
+              prev_call_volume:
+                description: Call contract volume from the prior available option-flow state.
+                format: int64
+                nullable: true
+                type: integer
+              prev_close:
+                description: Regular-session close from the prior available screener state, in the instrument's quoted price units.
+                nullable: true
+                type: string
+              prev_put_oi:
+                description: Put open interest from the previous trading-date state.
+                format: int64
+                nullable: true
+                type: integer
+              prev_put_volume:
+                description: Put contract volume from the prior available option-flow state.
+                format: int64
+                nullable: true
+                type: integer
+              put_call_ratio:
+                description: Put contract volume divided by call contract volume. Null when call volume is zero.
+                nullable: true
+                type: string
+              put_open_interest:
+                description: Put option open interest for the represented trading date.
+                format: int64
+                nullable: true
+                type: integer
+              put_premium:
+                description: Total put option premium in US dollars on the row's date.
+                nullable: false
+                type: string
+              put_premium_mid_side:
+                description: put premium in US dollars classified between the bid and ask.
+                nullable: true
+                type: string
+              put_volume:
+                description: Put option contracts traded on the row's date.
+                format: int64
+                nullable: false
+                type: integer
+              put_volume_ask_side:
+                description: put option contracts classified on the ask side.
+                format: int64
+                nullable: true
+                type: integer
+              put_volume_bid_side:
+                description: put option contracts classified on the bid side.
+                format: int64
+                nullable: true
+                type: integer
+              put_volume_mid_side:
+                description: put option contracts classified on the mid side.
+                format: int64
+                nullable: true
+                type: integer
+              quote_time:
+                description: Quote source time as a Unix timestamp in milliseconds. Null for historical snapshots.
+                format: int64
+                nullable: true
+                type: integer
+              realized_volatility:
+                description: Annualized sample standard deviation of daily log returns from 20 market opens before the row's date through that date. Calculated as stddev(daily_log_returns) * sqrt(252), rounded to six decimal places.
+                nullable: true
+                type: string
+              relative_volume:
+                description: Trading-date share volume divided by avg30_volume. A value of 1 equals the average. Null when the average is zero or an input is missing.
+                nullable: true
+                type: string
+              rsi_14:
+                description: Relative strength index of the close over 14 periods, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              rv_1d_last_12q:
+                description: Mean absolute one-day post-earnings return divided by the expected-move fraction over up to 12 preceding earnings reports. A value of 1 means the absolute move equaled the expected move on average.
+                nullable: true
+                type: string
+              sector:
+                description: Company sector.
+                nullable: true
+                type: string
+              shares_outstanding:
+                description: Latest available shares outstanding as a share count. Uses company metadata when the selected report has no value.
+                nullable: true
+                type: string
+              shares_outstanding_growth_12q:
+                description: 'Fractional share-count growth: (current shares - shares 12 reports earlier) / abs(shares 12 reports earlier). Null when an input is missing or the comparison share count is zero.'
+                nullable: true
+                type: string
+              shares_outstanding_growth_4q:
+                description: 'Fractional share-count growth: (current shares - shares 4 reports earlier) / abs(shares 4 reports earlier). Null when an input is missing or the comparison share count is zero.'
+                nullable: true
+                type: string
+              shares_outstanding_growth_8q:
+                description: 'Fractional share-count growth: (current shares - shares 8 reports earlier) / abs(shares 8 reports earlier). Null when an input is missing or the comparison share count is zero.'
+                nullable: true
+                type: string
+              short_int:
+                description: Short interest as a fraction of public float. A value of 0.086 means 8.6 percent.
+                nullable: true
+                type: string
+              six_month_close:
+                description: Reference price for six_month_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              six_month_perc:
+                description: Fractional price return from the latest regular close on or before six calendar months earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              sma_10:
+                description: Simple moving average of the close over 10 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              sma_14:
+                description: Simple moving average of the close over 14 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              sma_20:
+                description: Simple moving average of the close over 20 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              sma_200:
+                description: Simple moving average of the close over 200 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              sma_50:
+                description: Simple moving average of the close over 50 periods. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              steepness_180_30:
+                description: volatility_180 divided by volatility_30. Null when an input is missing or volatility_30 is zero.
+                nullable: true
+                type: string
+              stoch_5_3_3_d:
+                description: Slow D line of the stochastic oscillator with fast K period 5 and simple moving average smoothing periods 3 and 3, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              stoch_5_3_3_k:
+                description: Slow K line of the stochastic oscillator with fast K period 5 and simple moving average smoothing periods 3 and 3, from 0 to 100. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              stock_volume:
+                description: Cumulative shares traded across the New York trading date.
+                format: int64
+                nullable: true
+                type: integer
+              three_month_close:
+                description: Reference price for three_month_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              three_month_perc:
+                description: Fractional price return from the latest regular close on or before three calendar months earlier, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              ticker:
+                description: Ticker symbol.
+                example: AAPL
+                type: string
+              total_open_interest:
+                description: Total option open interest, normally the sum of call and put open interest.
+                format: int64
+                nullable: true
+                type: integer
+              ttm_dividend:
+                description: Sum of split-adjusted dividends per share during the 12 months ending on the source snapshot's as-of date. That as-of date is not included in the response.
+                nullable: true
+                type: string
+              variance_risk_premium:
+                description: Thirty-day implied volatility observed at the start of the realized-volatility window minus realized_volatility.
+                nullable: true
+                type: string
+              volatility:
+                description: Current 30-calendar-day implied volatility as a decimal value.
+                nullable: true
+                type: string
+              volatility_1:
+                description: Implied volatility as a decimal value. Fixed 1-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_14:
+                description: Implied volatility as a decimal value. Fixed 14-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_180:
+                description: Implied volatility as a decimal value. Fixed 180-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_30:
+                description: Implied volatility as a decimal value. Fixed 30-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_365:
+                description: Implied volatility as a decimal value. Fixed 365-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_5:
+                description: Implied volatility as a decimal value. Fixed 5-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_60:
+                description: Implied volatility as a decimal value. Fixed 60-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_7:
+                description: Implied volatility as a decimal value. Fixed 7-calendar-day horizon.
+                nullable: true
+                type: string
+              volatility_90:
+                description: Implied volatility as a decimal value. Fixed 90-calendar-day horizon.
+                nullable: true
+                type: string
+              week_52_high:
+                description: Maximum split-adjusted regular-session high over the preceding calendar year.
+                nullable: true
+                type: string
+              week_52_low:
+                description: Minimum split-adjusted regular-session low over the preceding calendar year.
+                nullable: true
+                type: string
+              willr_14:
+                description: Williams %R over 14 periods, from -100 to 0. Each period is one regular session daily candle. Null when the source value is unavailable or there is insufficient history for the indicator.
+                format: double
+                nullable: true
+                type: number
+              ytd_close:
+                description: Reference price for ytd_perc. Null when the reference price is unavailable.
+                nullable: true
+                type: string
+              ytd_perc:
+                description: Fractional price return from the latest regular close on or before January 1 of the row's year, relative to the row's date. A value of 0.05 means 5 percent. Null when the reference price is zero or an input is missing.
+                nullable: true
+                type: string
+              z_score:
+                description: ((close - prev_close) / prev_close) * sqrt(251) / volatility_30. Null when an input is missing or a denominator is zero.
+                nullable: true
+                type: string
+            type: object
+          type: array
+      required:
+        - data
+      title: Stock Screener response
+      type: object
+    Stock_Short_Description:
+      description: Short description about what the stock does.
+      example: Apple Inc. is an American multinational technology company headquartered in Cupertino, California. Apple is the worlds largest technology company by ...
+      title: Stock Short Description
+      type: string
+    Stock_Split_Event:
+      properties:
+        effective_date:
+          format: date
+          nullable: true
+          type: string
+        split_factor:
+          nullable: true
+          type: number
+      title: Stock Split Event
+      type: object
+    Stock_Ticker:
+      description: The stock ticker.
+      example: AAPL
+      title: Stock Ticker
+      type: string
+    Stock_Total_Volume:
+      description: The total amount of options volume for the given ticker.
+      title: Stock Total Volume
+      type: integer
+    Stock_Volatility:
+      description: The implied volatility average of the at the money put and call option contracts. If no expiry date is included, then the volatility is of the nearest end of the week expiration (the nearest monthly expiration if there are no weekly contracts).
+      example: '0.18338055163621902'
+      title: Stock Volatility
+      type: string
+    Stock_Volume:
+      description: |
+          The cumulative total volume of the underlying stock traded.
+      example: 12348
+      title: Stock Volume
+      type: integer
+    Stock_Week_52_High:
+      description: The 52 week high stock price of the ticker.
+      example: '198.23'
+      title: Stock Week 52 High
+      type: string
+    Stock_Week_52_low:
+      description: The 52 week low stock price of the ticker.
+      example: '124.17'
+      title: Stock Week 52 low
+      type: string
+    Stock_state:
+      description: The last stock price ticker for the given ticker
+      example:
+        data:
+          close: '56.79'
+          high: '56.79'
+          low: '56.79'
+          market_time: postmarket
+          open: '56.79'
+          prev_close: '55.69'
+          tape_time: 2023-09-07T20:11:00Z
+          total_volume: 13774488
+          volume: 500000
+      properties:
+        close:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        high:
+          $ref: '#/components/schemas/Stock_High_Price'
+        low:
+          $ref: '#/components/schemas/Stock_Low_Price'
+        market_time:
+          $ref: '#/components/schemas/Market_Time'
+        open:
+          $ref: '#/components/schemas/Stock_Open_Price'
+        prev_close:
+          $ref: '#/components/schemas/Stock_Prev_Close_Price'
+        tape_time:
+          $ref: '#/components/schemas/Stock_Last_Tape_Time'
+        total_volume:
+          $ref: '#/components/schemas/Cumulative_Volume'
+        volume:
+          $ref: '#/components/schemas/Stock_Volume'
+      title: Stock state
+      type: object
+    Street_Mean_Est:
+      description: The Street mean EPS estimates.
+      example: '1.34'
+      title: Street Mean Est
+      type: string
+    Strike:
+      description: The strike price of an option contract.
+      example: '150.0'
+      title: Strike
+      type: string
+    Succession:
+      description: Whether this institution's 13F reporting moved to or from another CIK, and which institutions are involved. It is `null` when the institution has neither a successor nor predecessors. The description of the institutions list endpoint shows all five possible shapes.
+      example:
+        current_holder:
+        predecessors:
+          - cik: '0001569785'
+            effective_report_date: 2017-06-30
+            name: BTG PACTUAL ASSET MANAGEMENT S.A. DTVM
+        succeeded_by:
+          cik: '0001569579'
+          effective_report_date: 2024-06-30
+          name: BTG PACTUAL ASSET MANAGEMENT US LLC
+      nullable: true
+      properties:
+        current_holder:
+          description: The last institution in the chain of successors. It is set only when the reporting moved again after `succeeded_by` took over, and it is `null` otherwise.
+          nullable: true
+          properties:
+            cik:
+              description: The institution's CIK.
+              example: '0001569579'
+              type: string
+            name:
+              description: The institution's name.
+              example: BTG PACTUAL ASSET MANAGEMENT US LLC
+              type: string
+          type: object
+        predecessors:
+          description: The institutions whose reporting this institution took over directly, oldest `effective_report_date` first. The array is empty when there are none.
+          items:
+            properties:
+              cik:
+                description: The institution's CIK.
+                example: '0002026053'
+                type: string
+              effective_report_date:
+                description: The end date, in ISO format, of the first quarter for which the successor reports the predecessor's holdings.
+                example: 2026-06-30
+                type: string
+              name:
+                description: The institution's name.
+                example: PERSHING SQUARE INC.
+                type: string
+            type: object
+          type: array
+        succeeded_by:
+          description: The institution that reports this institution's holdings starting with the quarter ending `effective_report_date`. It is `null` if this institution's reporting has not moved.
+          nullable: true
+          properties:
+            cik:
+              description: The institution's CIK.
+              example: '0002026053'
+              type: string
+            effective_report_date:
+              description: The end date, in ISO format, of the first quarter for which the successor reports the predecessor's holdings.
+              example: 2026-06-30
+              type: string
+            name:
+              description: The institution's name.
+              example: PERSHING SQUARE INC.
+              type: string
+          type: object
+      title: Succession
+      type: object
+    Tags:
+      description: Tags related to the institution.
+      example:
+        - activist
+        - value_investor
+      items:
+        type: string
+      title: Tags
+    Technical_Indicator_Point:
+      description: One data point for a technical indicator. Indicator values are numeric strings under `values`.
+      properties:
+        date:
+          example: 2026-01-03
+          format: date
+          type: string
+        indicator:
+          example: MACD
+          type: string
+        interval:
+          example: daily
+          type: string
+        series_type:
+          example: close
+          type: string
+        ticker:
+          example: AAPL
+          type: string
+        time_period:
+          example: 14
+          type: integer
+        values:
+          additionalProperties:
+            type: string
+          description: Indicator output values keyed by AlphaVantage's labels for the requested function. Keys vary by function (e.g. a single "RSI", or "MACD"/"MACD_Signal"/"MACD_Hist").
+          example:
+            MACD: '1.2345'
+            MACD_Hist: '0.2469'
+            MACD_Signal: '0.9876'
+          type: object
+      title: Technical Indicator Point
+      type: object
+    Technical_Indicator_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Technical_Indicator_Point'
+          type: array
+      title: Technical Indicator Response
+      type: object
+    The_alert_id:
+      description: ''
+      example: ebe24953-a0bf-4b4d-98be-14f721a1199a
+      title: The alert id
+      type: string
+    The_configuration_of_an_alert.:
+      description: An alert configuration, there is no fixed schema for this as each alert will have a different configuration.
+      example:
+        config:
+          option_symbols:
+            - TGT241122C00177500
+          symbols: all
+      title: The configuration of an alert.
+      type: object
+    The_creation_timestamp:
+      description: ''
+      example: 2024-11-19T18:19:14Z
+      title: The creation timestamp
+      type: string
+    The_name_of_the_alert:
+      description: ''
+      example: 'Chain OI Chg: TGT241122C00177500'
+      title: The name of the alert
+      type: string
+    The_raw_data_of_the_alert:
+      description: The data of the alert. There is no fixed schema as the data depends on the alert type.
+      title: The raw data of the alert
+      type: object
+    The_status_of_the_alert:
+      description: ''
+      enum:
+        - active
+        - rate_limit
+        - paused
+      example: active
+      title: The status of the alert
+      type: string
+    The_stock_ticker_or_option_contract_of_the_alert:
+      description: Depending on the type of the alert this is either a stock ticker or an option contract.
+      example: TGT
+      title: The stock ticker or option contract of the alert
+      type: string
+    The_type_of_the_alert:
+      description: ''
+      example: chain_oi_change
+      title: The type of the alert
+      type: string
+    Theoretical_Price:
+      description: The theoretical price of the option trade.
+      example: '21.49999999999999'
+      title: Theoretical Price
+      type: string
+    Theta:
+      description: The theta of the option trade.
+      example: '-0.0640155364004474'
+      title: Theta
+      type: string
+    Ticker:
+      description: A comma separated list of tickers. To exclude certain tickers prefix the first ticker with a `-`.
+      example: AAPL,INTC
+      title: Ticker
+      type: string
+    Ticker_Exchange:
+      description: A mapping of a ticker to its exchange.
+      example:
+        exchange: nasdaq
+        ticker: AAPL
+      properties:
+        exchange:
+          description: The exchange where the ticker is listed.
+          enum:
+            - nasdaq
+            - nyse
+            - bats
+            - investors_exchange
+          type: string
+        ticker:
+          description: The ticker symbol.
+          type: string
+      title: Ticker Exchange
+      type: object
+    Ticker_Exchanges:
+      description: A list of ticker to exchange mappings.
+      example:
+        data:
+          - exchange: nasdaq
+            ticker: AAPL
+          - exchange: nasdaq
+            ticker: MSFT
+          - exchange: nyse
+            ticker: JPM
+          - exchange: nyse
+            ticker: BAC
+      properties:
+        data:
+          description: List of ticker exchange mappings.
+          items:
+            $ref: '#/components/schemas/Ticker_Exchange'
+          type: array
+      title: Ticker Exchanges
+      type: object
+    Ticker_Info:
+      description: General information about the given ticker.
+      example:
+        data:
+          announce_time: unknown
+          avg30_volume: '55973002'
+          beta: '1.25'
+          full_name: APPLE
+          has_dividend: true
+          has_earnings_history: true
+          has_investment_arm: false
+          has_options: true
+          issue_type: Common Stock
+          marketcap: '2776014233920'
+          marketcap_size: big
+          next_earnings_date: 2023-10-26
+          sector: Technology
+          short_description: Apple Inc. is an American multinational technology company headquartered in Cupertino, California. Apple is the worlds largest technology company by ...
+          symbol: AAPL
+          uw_tags: []
+      properties:
+        announce_time:
+          $ref: '#/components/schemas/Stock_Earnings_time'
+        avg30_volume:
+          $ref: '#/components/schemas/Stock_Average_30_Day_Volume'
+        beta:
+          $ref: '#/components/schemas/Stock_Beta'
+        full_name:
+          $ref: '#/components/schemas/Stock_Full_Name'
+        has_dividend:
+          $ref: '#/components/schemas/Stock_Has_Dividend'
+        has_earnings_history:
+          $ref: '#/components/schemas/Stock_Has_Earnings_History'
+        has_investment_arm:
+          $ref: '#/components/schemas/Stock_Has_Investment_Arm'
+        has_options:
+          $ref: '#/components/schemas/Stock_Has_Options'
+        issue_type:
+          $ref: '#/components/schemas/Stock_Issue_Type'
+        logo:
+          $ref: '#/components/schemas/Logo'
+        marketcap:
+          $ref: '#/components/schemas/Stock_Marketcap_AUM'
+        next_earnings_date:
+          $ref: '#/components/schemas/Stock_Next_Earnings_Date'
+        sector:
+          $ref: '#/components/schemas/Market_General_Sector'
+        short_description:
+          $ref: '#/components/schemas/Stock_Short_Description'
+      title: Ticker Info
+      type: object
+    Ticker_Options_Volume:
+      description: ''
+      example:
+        data:
+          - avg_30_day_call_volume: '658450.333333333333'
+            avg_30_day_put_volume: '481505.300000000000'
+            avg_3_day_call_volume: '949763.000000000000'
+            avg_3_day_put_volume: '756387.333333333333'
+            avg_7_day_call_volume: '878336.000000000000'
+            avg_7_day_put_volume: '580650.857142857143'
+            bearish_premium: '138449839'
+            bullish_premium: '152015294'
+            call_open_interest: 4358631
+            call_premium: '208699280'
+            call_volume: 1071546
+            call_volume_ask_side: 486985
+            call_volume_bid_side: 514793
+            date: 2023-09-08
+            net_call_premium: '122015294'
+            net_put_premium: '108449839'
+            put_open_interest: 3771656
+            put_premium: '125472872'
+            put_volume: 666386
+            put_volume_ask_side: 298282
+            put_volume_bid_side: 318834
+      properties:
+        avg_30_day_call_volume:
+          $ref: '#/components/schemas/Market_General_Avg_30_Day_Call_Volume'
+        avg_30_day_put_volume:
+          $ref: '#/components/schemas/Market_General_Avg_30_Day_Put_Volume'
+        avg_3_day_call_volume:
+          $ref: '#/components/schemas/Market_General_Avg_3_Day_Call_Volume'
+        avg_3_day_put_volume:
+          $ref: '#/components/schemas/Market_General_Avg_3_Day_Put_Volume'
+        avg_7_day_call_volume:
+          $ref: '#/components/schemas/Market_General_Avg_7_Day_Call_Volume'
+        avg_7_day_put_volume:
+          $ref: '#/components/schemas/Market_General_Avg_7_Day_Put_Volume'
+        bearish_premium:
+          $ref: '#/components/schemas/Market_General_Bearish_Premium'
+        bullish_premium:
+          $ref: '#/components/schemas/Market_General_Bullish_Premium'
+        call_open_interest:
+          $ref: '#/components/schemas/Market_General_Call_Open_Interest'
+        call_premium:
+          $ref: '#/components/schemas/Market_General_Call_Premium'
+        call_volume:
+          $ref: '#/components/schemas/Market_General_Call_Volume'
+        call_volume_ask_side:
+          $ref: '#/components/schemas/Market_General_Call_Volume_Ask_Side'
+        call_volume_bid_side:
+          $ref: '#/components/schemas/Market_General_Call_Volume_Bid_Side'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        net_call_premium:
+          $ref: '#/components/schemas/Market_General_Net_Call_Premium'
+        net_put_premium:
+          $ref: '#/components/schemas/Market_General_Net_Put_Premium'
+        put_open_interest:
+          $ref: '#/components/schemas/Market_General_Put_Open_Interest'
+        put_premium:
+          $ref: '#/components/schemas/Market_General_Put_Premium'
+        put_volume:
+          $ref: '#/components/schemas/Market_General_Put_Volume'
+        put_volume_ask_side:
+          $ref: '#/components/schemas/Market_General_Put_Volume_Ask_Side'
+        put_volume_bid_side:
+          $ref: '#/components/schemas/Market_General_Put_Volume_Bid_Side'
+      title: Ticker Options Volume
+      type: object
+    Ticker_Symbol:
+      description: ''
+      example: MSFT
+      title: Ticker Symbol
+      type: string
+    Time_frame:
+      default: 1Y
+      description: |
+        The timeframe of the data to return.
+        Can be one of the following formats:
+        - YTD
+        - 1D, 2D, etc.
+        - 1W, 2W, etc.
+        - 1M, 2M, etc.
+        - 1Y, 2Y, etc.
+      example: 2M
+      title: Time frame
+      type: string
+    Timestamp:
+      description: The (start of minute) timestamp of the data.
+      example: 2024-10-28T18:46:00Z
+      format: date-time
+      title: Timestamp
+      type: string
+    ToBeDone:
+      description: ''
+      title: ToBeDone
+    Top_Net_Impact:
+      description: Top tickers by net premium (bullish and bearish).
+      example:
+        data:
+          - net_premium: 2.5e6
+            ticker: AAPL
+          - net_premium: 1.2e6
+            ticker: MSFT
+          - net_premium: -1.8e6
+            ticker: TSLA
+          - net_premium: -9.0e5
+            ticker: QQQ
+      properties:
+        net_premium:
+          description: Net premium (net_call_premium - net_put_premium)
+          example: 123456.78
+          format: float
+          type: number
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+      title: Top Net Impact
+      type: object
+    Top_Private_Markets_Investor:
+      properties:
+        company_count:
+          description: Distinct number of companies this investor has backed.
+          example: 14
+          type: integer
+        name:
+          example: Sequoia Capital
+          type: string
+      title: Top Private Markets Investor
+      type: object
+    Top_Private_Markets_Investors:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Top_Private_Markets_Investor'
+          type: array
+      title: Top Private Markets Investors
+      type: object
+    Total_Call_Open_interest:
+      description: The total call open interest.
+      example: 3994750
+      title: Total Call Open interest
+      type: integer
+    Total_Delta_Flow:
+      description: The total delta flow.
+      example: '-21257.36'
+      title: Total Delta Flow
+      type: string
+    Total_Put_Open_interest:
+      description: The total put open interest.
+      example: 3679410
+      title: Total Put Open interest
+      type: integer
+    Total_Value:
+      description: The rounded total value of the institution's portfolio.
+      example: '2394292.0'
+      title: Total Value
+      type: string
+    Total_Vega_Flow:
+      description: The total vega flow.
+      example: '350944.58'
+      title: Total Vega Flow
+      type: string
+    Transaction_Side:
+      description: Whether the insider bought or sold.
+      enum:
+        - buy
+        - sell
+      example: buy
+      title: Transaction Side
+      type: string
+    Transactions:
+      description: The amount of transactions.
+      example: 1188
+      title: Transactions
+      type: integer
+    Transcript_Response:
+      properties:
+        data:
+          properties:
+            quarter:
+              type: string
+            statements:
+              items:
+                $ref: '#/components/schemas/Transcript_Statement'
+              type: array
+            ticker:
+              type: string
+          type: object
+      title: Transcript Response
+      type: object
+    Transcript_Statement:
+      properties:
+        content:
+          nullable: true
+          type: string
+        sentiment:
+          nullable: true
+          type: number
+        speaker:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
+      title: Transcript Statement
+      type: object
+    Underlying_Price:
+      description: The price of the underlying asset.
+      example: '128.16'
+      title: Underlying Price
+      type: string
+    Units:
+      description: ''
+      example: 4103
+      title: Units
+      type: integer
+    Units_Change:
+      description: The change in units
+      example: -320
+      title: Units Change
+      type: integer
+    Unshifted_RV_Date:
+      description: The latest date used to calculate the realized volatility.
+      example: 2024-12-01
+      title: Unshifted RV Date
+      type: string
+    Unusual_Congressional_Trade:
+      properties:
+        amount:
+          description: The disclosed amount range as a string.
+          example: $1,001 - $15,000
+          type: string
+        asset:
+          description: Asset description as disclosed.
+          example: NVIDIA Corp - Common Stock
+          type: string
+        asset_type:
+          description: The asset type.
+          example: stock
+          type: string
+        company_name:
+          description: The full company name behind the traded ticker.
+          example: NVIDIA Corp
+          type: string
+        description:
+          description: Additional disclosure description, if any.
+          nullable: true
+          type: string
+        filing_date:
+          description: The date the trade was disclosed.
+          example: 2025-10-04
+          format: date
+          type: string
+        id:
+          description: The trade's unique ID.
+          example: 5fbe81ac-1157-4bc8-9d76-c77e6164fe25
+          format: uuid
+          type: string
+        politician_id:
+          description: The politician's ID.
+          example: e138f347-ae92-4cfb-8f41-7036ff09a213
+          format: uuid
+          type: string
+        politician_name:
+          description: The politician's full name.
+          example: Nancy Pelosi
+          type: string
+        ticker:
+          description: The traded ticker symbol.
+          example: NVDA
+          type: string
+        transaction_date:
+          description: The date the transaction occurred.
+          example: 2025-09-12
+          format: date
+          type: string
+        transaction_type:
+          description: The type of transaction (e.g., Buy, Sell, Sale Partial).
+          example: Buy
+          type: string
+        unusual_activity_meta:
+          description: Per-tag metadata explaining why each flag was applied.
+          items:
+            type: object
+          type: array
+        unusual_activity_tags:
+          description: Reason tags this trade was flagged as unusual.
+          example:
+            - committee_conflict
+          items:
+            enum:
+              - committee_conflict
+              - first_person_to_trade
+              - low_marketcap
+              - unusual_industry
+              - unusually_large_trade
+              - fec_donation_conflict
+            type: string
+          type: array
+      title: Unusual Congressional Trade
+      type: object
+    Unusual_Prediction_Market:
+      properties:
+        asset_id:
+          example: '78699665722135183571140787397681621204678465342167575193369860798796866652931'
+          type: string
+        category:
+          example: Sports
+          nullable: true
+          type: string
+        current:
+          description: Current price of the outcome, quoted 0-1.
+          example: '0.62'
+          nullable: true
+          type: string
+        image:
+          example: https://cdn.unusualwhales.com/predictions/lakers.png
+          nullable: true
+          type: string
+        market:
+          example: Will the Lakers win the 2026 NBA Championship?
+          nullable: true
+          type: string
+        outcome:
+          example: Yes
+          nullable: true
+          type: string
+        resolves:
+          example: 2026-08-15T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        smart_volume:
+          example: '340000'
+          type: string
+        tags:
+          items:
+            $ref: '#/components/schemas/Prediction_Asset_Tag_Score'
+          type: array
+        top_insiders:
+          items:
+            $ref: '#/components/schemas/Prediction_Insider_Detail'
+          type: array
+        unusual_score:
+          example: '4.65'
+          type: string
+        volume:
+          example: '1250000.50'
+          type: string
+      title: Unusual Prediction Market
+      type: object
+    Unusual_Prediction_Markets_Data:
+      properties:
+        categories:
+          example:
+            - Crypto
+            - Culture
+            - Finance
+            - Games
+            - Mentions
+            - Other
+            - Politics
+            - Sports
+            - Weather
+          items:
+            type: string
+          type: array
+        data:
+          items:
+            $ref: '#/components/schemas/Unusual_Prediction_Market'
+          type: array
+      title: Unusual Prediction Markets Data
+      type: object
+    Unusual_Prediction_Markets_Response:
+      properties:
+        data:
+          $ref: '#/components/schemas/Unusual_Prediction_Markets_Data'
+      title: Unusual Prediction Markets Response
+      type: object
+    Unusual_Trade_Chart_Point:
+      properties:
+        amount:
+          type: string
+        asset_type:
+          example: stock
+          type: string
+        company_name:
+          example: NVIDIA Corp
+          type: string
+        filing_date:
+          format: date
+          type: string
+        id:
+          format: uuid
+          type: string
+        is_unusual:
+          type: boolean
+        mid_value:
+          nullable: true
+          type: number
+        politician_name:
+          example: Nancy Pelosi
+          type: string
+        price_at_trade:
+          nullable: true
+          type: number
+        price_current:
+          nullable: true
+          type: number
+        sector:
+          example: Technology
+          nullable: true
+          type: string
+        ticker:
+          example: NVDA
+          type: string
+        transaction_date:
+          format: date
+          type: string
+        transaction_type:
+          example: Buy
+          type: string
+        unusual_activity_tags:
+          items:
+            type: string
+          type: array
+      title: Unusual Trade Chart Point
+      type: object
+    Unusual_Trades:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Unusual_Congressional_Trade'
+          type: array
+      title: Unusual Trades
+      type: object
+    Unusual_Trades_Chart_Data:
+      properties:
+        spy_prices:
+          items:
+            $ref: '#/components/schemas/SPY_Daily_Close'
+          type: array
+        trades:
+          items:
+            $ref: '#/components/schemas/Unusual_Trade_Chart_Point'
+          type: array
+      title: Unusual Trades Chart Data
+      type: object
+    Unusual_Trades_Stats:
+      properties:
+        data:
+          description: Aggregated unusual-trade statistics. Includes top politicians, party/chamber breakdowns, committee groups, industry groups, top tickers, biggest trades, and per-day trade volumes (with SPY benchmark).
+          type: object
+        date:
+          format: date
+          type: string
+        type:
+          example: overview
+          type: string
+      title: Unusual Trades Stats
+      type: object
+    Upcoming_IPO:
+      properties:
+        currency:
+          nullable: true
+          type: string
+        exchange:
+          nullable: true
+          type: string
+        ipo_date:
+          format: date
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        price_range_high:
+          nullable: true
+          type: number
+        price_range_low:
+          nullable: true
+          type: number
+        ticker:
+          nullable: true
+          type: string
+      title: Upcoming IPO
+      type: object
+    Upstream_Condition_Detail:
+      description: The upstream condition detail/trade code of the option trade.
+      example: auto
+      title: Upstream Condition Detail
+      type: string
+    Use5mCandles:
+      default: true
+      description: Return data in 5 minutes intervals.
+      example: false
+      title: Use5mCandles
+      type: boolean
+    UseOtmOnly:
+      default: false
+      description: Only include out of the money transactions.
+      example: true
+      title: UseOtmOnly
+      type: boolean
+    V1_Short_Interest_and_Float_Deprecated:
+      description: |
+        Short interest data and float information for percentage calculations for a specific ticker.
+        This endpoint provides information about the relationship between short interest and the float,
+        including the percentage of the float that is shorted and the days to cover metric.
+      example:
+        data:
+          created_at: 2023-04-15T16:30:00Z
+          days_to_cover_returned: '2.1'
+          market_date: 2023-04-15
+          percent_returned: '5.67'
+          si_float_returned: 4250000
+          symbol: EXMP
+          total_float_returned: 75000000
+      properties:
+        created_at:
+          description: The datetime the record was created.
+          format: date_time
+          type: string
+        days_to_cover_returned:
+          description: The estimated number of days to cover all short positions based on average daily trading volume.
+          type: string
+        market_date:
+          description: The date of the short interest data.
+          format: date
+          type: string
+        percent_returned:
+          description: The percentage of float that is shorted.
+          type: string
+        si_float_returned:
+          description: The number of shares shorted.
+          type: integer
+        symbol:
+          description: The ticker symbol.
+          type: string
+        total_float_returned:
+          description: The float (available shares for trading).
+          type: integer
+      title: V1 Short Interest and Float (Deprecated)
+      type: object
+    V2_Short_Interest_and_Float:
+      description: |
+        Short interest data and float information for percentage calculations for a specific ticker.
+        This endpoint provides information about the relationship between short interest and the float,
+        including the percentage of the float that is shorted and the days to cover metric.
+      example:
+        data:
+          days_to_cover: '2.1'
+          fee_rate: '0.2782'
+          market_date: 2023-04-15
+          rebate_rate: '3.3518'
+          short_interest: 75000
+          short_shares_available: 10000000
+          si_float: '0.017647058'
+          si_float_with_synth_long_pct_of_total_shares: '0.01734104046'
+          symbol: EXMP
+          total_float: 4250000
+      properties:
+        days_to_cover:
+          description: The estimated number of days to cover all short positions based on average daily trading volume.
+          type: string
+        fee_rate:
+          description: The fee rate.
+          format: date
+          type: string
+        market_date:
+          description: The date of the short interest data.
+          format: date
+          type: string
+        rebate_rate:
+          description: The rebate rate.
+          format: date
+          type: string
+        short_interest:
+          description: The total number of shares sold short.
+          type: integer
+        short_shares_available:
+          description: The short shares available.
+          format: date
+          type: string
+        si_float:
+          description: The short interest float ratio.
+          type: string
+        si_float_with_synth_long_pct_of_total_shares:
+          description: The short interest float ratio with volume of shares sold short added to total float.
+          type: string
+        symbol:
+          description: The ticker symbol.
+          type: string
+        total_float:
+          description: The float (available shares for trading).
+          type: integer
+      title: V2 Short Interest and Float
+      type: object
+    VEX_Per_One_Percent_Move_Directionalized_Volume:
+      description: |
+        The vanna 1% move based on directionalized volume
+      example: '-5559678859.12'
+      title: VEX Per One Percent Move Directionalized Volume
+      type: string
+    VEX_Per_One_Percent_Move_OI:
+      description: |
+        The vanna 1% move based on OI:
+        This is calculated as vanna * open interest
+      example: '-54622844772.90'
+      title: VEX Per One Percent Move OI
+      type: string
+    VEX_Per_One_Percent_Move_Volume:
+      description: |
+        The vanna 1% move based on volume:
+        This is calculated as vanna * volume
+      example: '-5559678859.12'
+      title: VEX Per One Percent Move Volume
+      type: string
+    Value:
+      description: The rounded total value on the reporting date.
+      example: 2429329
+      title: Value
+      type: integer
+    Vanna:
+      description: ''
+      example: '-0.9'
+      title: Vanna
+      type: string
+    Variance_Risk_Premium_Window:
+      description: A variance risk premium calculated as implied volatility minus realized volatility for mapped horizons.
+      properties:
+        date:
+          example: 2026-08-10
+          format: date
+          type: string
+        implied_volatility:
+          example: '0.263456'
+          type: string
+        implied_volatility_days:
+          example: 30
+          type: integer
+        rank:
+          description: The percentile rank among values for the same ticker and horizon pair that completed during the preceding year. Values range from 0 to 1. The value is null when a rank has not been calculated.
+          example: '0.75'
+          nullable: true
+          type: string
+        realized_date:
+          example: 2026-09-08
+          format: date
+          type: string
+        realized_volatility:
+          example: '0.213456'
+          type: string
+        realized_volatility_days:
+          example: 21
+          type: integer
+        risk_premium:
+          example: '0.05'
+          type: string
+        ticker:
+          example: AAPL
+          type: string
+      title: Variance Risk Premium Window
+      type: object
+    Vega:
+      description: The vega of the option trade.
+      example: '0.3140468475903719'
+      title: Vega
+      type: string
+    VolatilityWindowHistoryDays:
+      default: 365
+      description: Return volatility window rows from this many calendar days before the requested date.
+      example: 30
+      maximum: 365
+      minimum: 1
+      title: VolatilityWindowHistoryDays
+      type: integer
+    Volatility_Result:
+      additionalProperties: true
+      description: |
+        Volatility analytics payload. The exact shape depends on the endpoint.
+        Variance risk premium, volatility windows, anomaly top, and character top return arrays of daily or ticker rows.
+        Anomaly, character, and VIX term structure return `{ latest, history }` objects.
+      title: Volatility Result
+      type: object
+    Volatility_Statistics:
+      description: |
+        Comprehensive volatility statistics for a ticker on a specific date, including
+        implied volatility data, realized volatility data, and their respective high/low values
+        for the past year.
+      example:
+        data:
+          date: 2024-01-22
+          iv: '0.23'
+          iv_high: '0.35'
+          iv_low: '0.18'
+          iv_rank: '0.45'
+          rv: '0.21'
+          rv_high: '0.34'
+          rv_low: '0.16'
+          ticker: AAPL
+      properties:
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        iv:
+          $ref: '#/components/schemas/Market_General_Volatility'
+        iv_high:
+          $ref: '#/components/schemas/Market_General_Volatility'
+        iv_low:
+          $ref: '#/components/schemas/Market_General_Volatility'
+        iv_rank:
+          $ref: '#/components/schemas/Market_General_IV_Rank'
+        rv:
+          $ref: '#/components/schemas/Market_General_Volatility'
+        rv_high:
+          $ref: '#/components/schemas/Market_General_Volatility'
+        rv_low:
+          $ref: '#/components/schemas/Market_General_Volatility'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+      title: Volatility Statistics
+      type: object
+    Volume:
+      description: The total options volume.
+      example: 12348
+      title: Volume
+      type: integer
+    Volume_Greater_Than_Open_Interest_Contract:
+      description: Only include contracts where the volume is greater than the open interest.
+      example: true
+      title: Volume Greater Than Open Interest Contract
+      type: boolean
+    Volume_Unusualness:
+      description: |
+        How unusual a ticker's volume is today, standardised against its own trailing ~90 trading days.
+        Each metric is expressed as a percentile (0-100) and a decile (1-10) — outlier-robust and comparable
+        across names, unlike a raw volume-vs-average ratio. `stock` covers regular-session share volume;
+        `option` covers total (call + put) option volume. `samples` is the number of trailing days used
+        (a metric is null when fewer than 30 days of history are available).
+      example:
+        data:
+          date: 2026-09-02
+          opt_samples: 91
+          opt_vol_decile: 4
+          opt_vol_pctile: 34.1
+          stock_samples: 91
+          stock_vol_decile: 9
+          stock_vol_pctile: 81.3
+      properties:
+        date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        opt_samples:
+          description: Trailing days used for the option-volume percentile.
+          type: integer
+        opt_vol_decile:
+          description: Option-volume decile (1-10).
+          type: integer
+        opt_vol_pctile:
+          description: Option-volume (call+put) percentile (0-100) vs the ticker's own ~90-day history.
+          type: number
+        stock_samples:
+          description: Trailing days used for the stock-volume percentile.
+          type: integer
+        stock_vol_decile:
+          description: Stock-volume decile (1-10).
+          type: integer
+        stock_vol_pctile:
+          description: Stock-volume percentile (0-100) vs the ticker's own ~90-day history.
+          type: number
+      title: Volume Unusualness
+      type: object
+    Volume_and_OI_per_Expiry:
+      description: The volume and open interest per expiry.
+      example:
+        data:
+          - expires: 2023-09-08
+            oi: 451630
+            volume: 962332
+          - expires: 2023-09-15
+            oi: 1422982
+            volume: 631608
+          - expires: 2023-09-22
+            oi: 144938
+            volume: 111177
+          - expires: 2023-09-29
+            oi: 144629
+            volume: 78604
+          - expires: 2023-10-06
+            oi: 38090
+            volume: 42405
+          - expires: 2023-10-13
+            oi: 14371
+            volume: 18694
+          - expires: 2023-10-20
+            oi: 837270
+            volume: 244837
+          - expires: 2023-10-27
+            oi: 0
+            volume: 6004
+          - expires: 2023-11-17
+            oi: 524204
+            volume: 62599
+          - expires: 2023-12-15
+            oi: 723533
+            volume: 72616
+          - expires: 2024-01-19
+            oi: 1658337
+            volume: 98483
+          - expires: 2024-02-16
+            oi: 34994
+            volume: 8947
+          - expires: 2024-03-15
+            oi: 304973
+            volume: 22281
+          - expires: 2024-04-19
+            oi: 21399
+            volume: 5905
+          - expires: 2024-06-21
+            oi: 560682
+            volume: 23783
+          - expires: 2024-09-20
+            oi: 122030
+            volume: 17994
+          - expires: 2024-12-20
+            oi: 63646
+            volume: 5170
+          - expires: 2025-01-17
+            oi: 472809
+            volume: 9144
+          - expires: 2025-06-20
+            oi: 89229
+            volume: 3194
+          - expires: 2025-12-19
+            oi: 116365
+            volume: 5856
+      properties:
+        expires:
+          $ref: '#/components/schemas/Stock_Expiry'
+        oi:
+          $ref: '#/components/schemas/Stock_Open_Interest'
+        volume:
+          $ref: '#/components/schemas/Stock_Options_Volume'
+      title: Volume & OI per Expiry
+      type: object
+    Warrant_Holding_Units:
+      description: The number of warrant units in the institution's portfolio.
+      example: '2394292.0'
+      title: Warrant Holding Units
+      type: string
+    Warrant_Value:
+      description: The rounded total warrant value in the institution's portfolio.
+      example: '2394292.0'
+      title: Warrant Value
+      type: string
+    Website:
+      description: The institution's website.
+      example: https://www.elliottmgmt.com/
+      title: Website
+      type: string
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http
+info:
+  description: |
+    For API Support or any questions email: support@unusualwhales.com
+
+    Documentation for the official [UnusualWhales](https://unusualwhales.com) api
+
+    ## Startup Tier
+    Building a product on our data? Get started immediately with our self-serve Startup tier at $750/mo — 500 req/min, 80K daily requests, 90-day lookback, and commercial use included. Annual plan available at $7,500/yr (2 months free) with 1,000 req/min and 10 concurrent requests for market-open bursts. [Start building →](https://unusualwhales.com/checkout?plan=enterprise_startup&interval=monthly)
+
+    Need Kafka streaming? Our Startup + Kafka tier at $3,000/mo adds real-time Kafka cluster access. Annual plan available at $30,000/yr (2 months free) with the same 1,000 req/min burst allowance. [Start building →](https://unusualwhales.com/checkout?plan=enterprise_startup_kafka&interval=monthly)
+
+    ## Enterprise/Professional Subscribers
+    For custom enterprise pricing, redistribution licenses, or bespoke solutions, email [oskar@unusualwhales.com, enterprise@unusualwhales.com or nastja.petrovic@unusualwhales.com](mailto:oskar@unusualwhales.com?cc=enterprise@unusualwhales.com,nastja.petrovic@unusualwhales.com).
+
+    ## Changelog
+
+    # 2026.09.12
+    - Added a new websocket channel [`ta_1d_live:{TICKER}`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.ta_1d_live). The channel streams technical-analysis indicator values (moving averages, RSI, MACD, Bollinger bands, ADX, Aroon, ATR, CCI, MFI, OBV, stochastics and Williams %R) computed on daily candles for one ticker. During regular trading hours it resends the day that is still forming as the price moves, so the newest message for a `date` replaces the ones before it. An indicator reads as `null` until enough daily history exists to compute it. The `1d` in the name is the candle interval and `live` means the values track the open session.
+
+    # 2026.09.04
+    - Added new websocket channels [`quotes` and `quotes:{TICKER}`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.quotes). They stream the live best bid and ask - for every ticker at once, or for a single ticker - and are the live counterpart of [`/stock/:ticker/quote`](https://api.unusualwhales.com/docs/operations/PublicApi.StockQuoteController.show).
+
+    # 2026.09.01
+    - Added a global [`greeks`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.greeks) websocket channel. It streams the same per-contract option greeks as `greeks:<TICKER>`, but for every underlying at once. This is a high volume firehose - prefer the per-ticker channel unless you need the full tape.
+
+    # 2026.08.30
+    - MCP now advertises build guidance: `instructions` on initialize; builder prompts `build_dashboard_app`, `build_confluence_alert`, `build_trading_bot`, `build_data_stream`, `start_from_example`, and `setup_api_project`; tools `get_build_recipe` and `get_api_examples` (scripts from [https://github.com/unusual-whales/api-examples](https://github.com/unusual-whales/api-examples)); and `resources/list` / `resources/templates/list` / `resources/read` for playbooks and example files.
+
+    # 2026.08.28
+    - Added a new websocket channel [`risk_reversal_skew`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.risk_reversal_skew). The channel streams live 25- and 10-delta risk reversal skew (put implied volatility minus call implied volatility) per expiry across every ticker, the live counterpart of [`/stock/:ticker/historical-risk-reversal-skew`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.historical_risk_reversal_skew). The channel is global only; there is no per-ticker variant.
+
+    # 2026.08.22
+    - Updated [`/stock/:ticker/gex-levels`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.gex_levels) to derive its levels from spot directionalized volume — instead of a cumulative total over the static open-interest snapshot.
+    - Added `date`, `time`, `source`, and `nearby_flips` to the [`/stock/:ticker/gex-levels`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.gex_levels) response. `nearby_flips` lists the five zero-gamma crossings nearest spot, ordered by distance from it. `time` is when the underlying exposure snapshot was calculated.
+
+    # 2026.08.21
+    - Added new websocket channels [`interpolated_iv` and `interpolated_iv:TICKER`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.interpolated_iv). The channels stream interpolated implied volatility and expected moves at fixed horizons (1-365 trading days), the live counterpart of [`/stock/:ticker/interpolated-iv`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.interpolated_iv).
+    - Added new websocket channels [`iv_term_structure` and `iv_term_structure:TICKER`](https://api.unusualwhales.com/docs/operations/PublicApi.SocketController.iv_term_structure). The channels stream ATM implied volatility and expected moves per real option expiry — the raw entries behind `interpolated_iv` — the live counterpart of [`/stock/:ticker/volatility/term-structure`](https://api.unusualwhales.com/docs/operations/PublicApi.TickerController.implied_volatility_term_structure).
+
+    # 2026.04.30
+    Added a new advanced-tier endpoint group. All routes below require API Advanced, Enterprise Startup, Enterprise Startup + Kafka, or Enterprise tier.
+
+    ### Company fundamentals
+    - Added [`/companies/:ticker/profile`](https://api.unusualwhales.com/docs/operations/PublicApi.CompaniesController.profile) for sector, industry, market cap, P/E, EPS, dividend yield, analyst targets, 52-week range, moving averages, and the full analyst rating breakdown.
+    - Added [`/companies/:ticker/dividends`](https://api.unusualwhales.com/docs/operations/PublicApi.CompaniesController.dividends) for historical dividend events.
+    - Added [`/companies/:ticker/splits`](https://api.unusualwhales.com/docs/operations/PublicApi.CompaniesController.splits) for historical stock-split events.
+    - Added [`/companies/:ticker/earnings-estimates`](https://api.unusualwhales.com/docs/operations/PublicApi.CompaniesController.earnings_estimates) for forward analyst earnings and revenue estimates by quarter and year.
+    - Added [`/companies/:ticker/transcripts/:quarter`](https://api.unusualwhales.com/docs/operations/PublicApi.CompaniesController.transcript) for earnings-call transcripts with speakers, statements, and per-statement sentiment.
+    - Added [`/companies/listings`](https://api.unusualwhales.com/docs/operations/PublicApi.IntelController.listings) for the master list of US-traded securities (active or delisted).
+
+    ### Macro
+    - Added [`/commodities/:name`](https://api.unusualwhales.com/docs/operations/PublicApi.CommoditiesController.show) for long-running price series across WTI, Brent, natural gas, copper, aluminum, wheat, corn, 

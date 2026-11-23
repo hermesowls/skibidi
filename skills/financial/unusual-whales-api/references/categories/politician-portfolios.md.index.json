@@ -1,0 +1,10 @@
+{
+  "logical_path": "references/categories/politician-portfolios.md",
+  "parts": [
+    "references/categories/politician-portfolios.md.part000",
+    "references/categories/politician-portfolios.md.part001"
+  ],
+  "sha256": "6ae4ac27154cd3cdc3f2c71248d3948879d85b5a2057060d004b094c3e8de4e6",
+  "bytes": 82867,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}

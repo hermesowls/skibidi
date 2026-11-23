@@ -1,0 +1,1825 @@
+    "type": "string"
+                },
+                "put_trades": {
+                  "description": "The amount of put transactions that executed.",
+                  "example": 841,
+                  "title": "Market General Put Trades",
+                  "type": "integer"
+                },
+                "put_volume": {
+                  "description": "The sum of the size of all the put transactions that executed.",
+                  "example": 808326,
+                  "title": "Market General Put Volume",
+                  "type": "integer"
+                },
+                "put_volume_ask_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the ask side.",
+                  "example": 431791,
+                  "title": "Market General Put Volume Ask Side",
+                  "type": "integer"
+                },
+                "put_volume_bid_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the bid side.",
+                  "example": 314160,
+                  "title": "Market General Put Volume Bid Side",
+                  "type": "integer"
+                },
+                "ticker": {
+                  "description": "The stock ticker.",
+                  "example": "AAPL",
+                  "title": "Stock Ticker",
+                  "type": "string"
+                }
+              },
+              "title": "Flow per expiry",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      }
+    },
+    "summary": "Flow per expiry",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/flow-per-strike
+
+Flow per strike
+
+Returns the option flow per strike for a given trading day.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/flow-per-strike",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/flow-per-strike",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the option flow per strike for a given trading day.\n",
+    "operationId": "PublicApi.TickerController.flow_per_strike",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "date",
+        "required": false,
+        "schema": {
+          "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+          "example": "2024-01-18",
+          "title": "Optional Market Date",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "The flow data per strike for a trading day.\n",
+              "example": [
+                {
+                  "call_premium": "9908777.0",
+                  "call_premium_ask_side": "5037703.0",
+                  "call_premium_bid_side": "4055973.0",
+                  "call_trades": 6338,
+                  "call_volume": 40385,
+                  "call_volume_ask_side": 20145,
+                  "call_volume_bid_side": 16923,
+                  "date": "2024-01-22",
+                  "put_premium": "2746872.0",
+                  "put_premium_ask_side": "799873.0",
+                  "put_premium_bid_side": "1614848.0",
+                  "put_trades": 841,
+                  "put_volume": 4306,
+                  "put_volume_ask_side": 1398,
+                  "put_volume_bid_side": 2323,
+                  "strike": "70.0",
+                  "ticker": "BABA",
+                  "timestamp": "2023-09-07 09:30:00-04:00"
+                },
+                {
+                  "call_premium": "4208428.0",
+                  "call_premium_ask_side": "1543361.0",
+                  "call_premium_bid_side": "1589925.0",
+                  "call_trades": 2875,
+                  "call_volume": 28218,
+                  "call_volume_ask_side": 14048,
+                  "call_volume_bid_side": 10418,
+                  "date": "2024-01-22",
+                  "put_premium": "1996364.0",
+                  "put_premium_ask_side": "432005.0",
+                  "put_premium_bid_side": "1317894.0",
+                  "put_trades": 323,
+                  "put_volume": 2270,
+                  "put_volume_ask_side": 482,
+                  "put_volume_bid_side": 1545,
+                  "strike": "75.0",
+                  "ticker": "BABA",
+                  "timestamp": "2023-09-07 09:29:25-04:00"
+                }
+              ],
+              "properties": {
+                "call_premium": {
+                  "description": "The sum of the premium of all the call transactions that executed.",
+                  "example": "9908777.0",
+                  "title": "Market General Call Premium",
+                  "type": "string"
+                },
+                "call_premium_ask_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the ask side.",
+                  "example": "5037703.0",
+                  "title": "Market General Call Premium Ask Side",
+                  "type": "string"
+                },
+                "call_premium_bid_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Call Premium Bid Side",
+                  "type": "string"
+                },
+                "call_trades": {
+                  "description": "The amount of call transactions that executed.",
+                  "example": 6338,
+                  "title": "Market General Call Trades",
+                  "type": "integer"
+                },
+                "call_volume": {
+                  "description": "The sum of the size of all the call transactions that executed.",
+                  "example": 990943,
+                  "title": "Market General Call Volume",
+                  "type": "integer"
+                },
+                "call_volume_ask_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the ask side.",
+                  "example": 417251,
+                  "title": "Market General Call Volume Ask Side",
+                  "type": "integer"
+                },
+                "call_volume_bid_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the bid side.",
+                  "example": 498271,
+                  "title": "Market General Call Volume Bid Side",
+                  "type": "integer"
+                },
+                "date": {
+                  "description": "A trading date in ISO format.\n",
+                  "example": "2023-09-08",
+                  "title": "Market General Trading day",
+                  "type": "string"
+                },
+                "put_premium": {
+                  "description": "The sum of the premium of all the put transactions that executed.",
+                  "example": "163537151",
+                  "title": "Market General Put Premium",
+                  "type": "string"
+                },
+                "put_premium_ask_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the ask side.",
+                  "example": "799873.0",
+                  "title": "Market General Put Premium Ask Side",
+                  "type": "string"
+                },
+                "put_premium_bid_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Put Premium Bid Side",
+                  "type": "string"
+                },
+                "put_trades": {
+                  "description": "The amount of put transactions that executed.",
+                  "example": 841,
+                  "title": "Market General Put Trades",
+                  "type": "integer"
+                },
+                "put_volume": {
+                  "description": "The sum of the size of all the put transactions that executed.",
+                  "example": 808326,
+                  "title": "Market General Put Volume",
+                  "type": "integer"
+                },
+                "put_volume_ask_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the ask side.",
+                  "example": 431791,
+                  "title": "Market General Put Volume Ask Side",
+                  "type": "integer"
+                },
+                "put_volume_bid_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the bid side.",
+                  "example": 314160,
+                  "title": "Market General Put Volume Bid Side",
+                  "type": "integer"
+                },
+                "strike": {
+                  "description": "The contract strike.",
+                  "example": "375",
+                  "title": "Option Contract Strike",
+                  "type": "string"
+                },
+                "ticker": {
+                  "description": "The stock ticker.",
+                  "example": "AAPL",
+                  "title": "Stock Ticker",
+                  "type": "string"
+                },
+                "timestamp": {
+                  "description": "A UTC timestamp.",
+                  "example": "2023-12-12 16:35:52.168490+00:00",
+                  "title": "General UTC Timestamp",
+                  "type": "string"
+                }
+              },
+              "title": "Flow per strike",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Flow per strike",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/flow-per-strike-intraday
+
+Flow per strike intraday
+
+Returns the options flow for a given date in one minute intervals (the one minute intervals are not aggregated with each other).
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/flow-per-strike-intraday",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/flow-per-strike-intraday",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the options flow for a given date in one minute intervals (the one minute intervals are not aggregated with each other).\n",
+    "operationId": "PublicApi.TickerController.flow_per_strike_intraday",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "date",
+        "required": false,
+        "schema": {
+          "description": "A trading date in the format of YYYY-MM-DD.\nThis is optional and by default the last trading date.\n",
+          "example": "2024-01-18",
+          "title": "Optional Market Date",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "filter",
+        "required": false,
+        "schema": {
+          "default": "NetPremium",
+          "description": "Retrieve the strikes with the highest filter parameter.",
+          "enum": [
+            "NetPremium",
+            "Volume",
+            "Trades"
+          ],
+          "example": "Volume",
+          "title": "Filter",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "The flow data per strike for a trading day.\n",
+              "example": [
+                {
+                  "call_premium": "9908777.0",
+                  "call_premium_ask_side": "5037703.0",
+                  "call_premium_bid_side": "4055973.0",
+                  "call_trades": 6338,
+                  "call_volume": 40385,
+                  "call_volume_ask_side": 20145,
+                  "call_volume_bid_side": 16923,
+                  "date": "2024-01-22",
+                  "put_premium": "2746872.0",
+                  "put_premium_ask_side": "799873.0",
+                  "put_premium_bid_side": "1614848.0",
+                  "put_trades": 841,
+                  "put_volume": 4306,
+                  "put_volume_ask_side": 1398,
+                  "put_volume_bid_side": 2323,
+                  "strike": "70.0",
+                  "ticker": "BABA",
+                  "timestamp": "2023-09-07 09:30:00-04:00"
+                },
+                {
+                  "call_premium": "4208428.0",
+                  "call_premium_ask_side": "1543361.0",
+                  "call_premium_bid_side": "1589925.0",
+                  "call_trades": 2875,
+                  "call_volume": 28218,
+                  "call_volume_ask_side": 14048,
+                  "call_volume_bid_side": 10418,
+                  "date": "2024-01-22",
+                  "put_premium": "1996364.0",
+                  "put_premium_ask_side": "432005.0",
+                  "put_premium_bid_side": "1317894.0",
+                  "put_trades": 323,
+                  "put_volume": 2270,
+                  "put_volume_ask_side": 482,
+                  "put_volume_bid_side": 1545,
+                  "strike": "75.0",
+                  "ticker": "BABA",
+                  "timestamp": "2023-09-07 09:29:25-04:00"
+                }
+              ],
+              "properties": {
+                "call_premium": {
+                  "description": "The sum of the premium of all the call transactions that executed.",
+                  "example": "9908777.0",
+                  "title": "Market General Call Premium",
+                  "type": "string"
+                },
+                "call_premium_ask_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the ask side.",
+                  "example": "5037703.0",
+                  "title": "Market General Call Premium Ask Side",
+                  "type": "string"
+                },
+                "call_premium_bid_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Call Premium Bid Side",
+                  "type": "string"
+                },
+                "call_trades": {
+                  "description": "The amount of call transactions that executed.",
+                  "example": 6338,
+                  "title": "Market General Call Trades",
+                  "type": "integer"
+                },
+                "call_volume": {
+                  "description": "The sum of the size of all the call transactions that executed.",
+                  "example": 990943,
+                  "title": "Market General Call Volume",
+                  "type": "integer"
+                },
+                "call_volume_ask_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the ask side.",
+                  "example": 417251,
+                  "title": "Market General Call Volume Ask Side",
+                  "type": "integer"
+                },
+                "call_volume_bid_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the bid side.",
+                  "example": 498271,
+                  "title": "Market General Call Volume Bid Side",
+                  "type": "integer"
+                },
+                "date": {
+                  "description": "A trading date in ISO format.\n",
+                  "example": "2023-09-08",
+                  "title": "Market General Trading day",
+                  "type": "string"
+                },
+                "put_premium": {
+                  "description": "The sum of the premium of all the put transactions that executed.",
+                  "example": "163537151",
+                  "title": "Market General Put Premium",
+                  "type": "string"
+                },
+                "put_premium_ask_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the ask side.",
+                  "example": "799873.0",
+                  "title": "Market General Put Premium Ask Side",
+                  "type": "string"
+                },
+                "put_premium_bid_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Put Premium Bid Side",
+                  "type": "string"
+                },
+                "put_trades": {
+                  "description": "The amount of put transactions that executed.",
+                  "example": 841,
+                  "title": "Market General Put Trades",
+                  "type": "integer"
+                },
+                "put_volume": {
+                  "description": "The sum of the size of all the put transactions that executed.",
+                  "example": 808326,
+                  "title": "Market General Put Volume",
+                  "type": "integer"
+                },
+                "put_volume_ask_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the ask side.",
+                  "example": 431791,
+                  "title": "Market General Put Volume Ask Side",
+                  "type": "integer"
+                },
+                "put_volume_bid_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the bid side.",
+                  "example": 314160,
+                  "title": "Market General Put Volume Bid Side",
+                  "type": "integer"
+                },
+                "strike": {
+                  "description": "The contract strike.",
+                  "example": "375",
+                  "title": "Option Contract Strike",
+                  "type": "string"
+                },
+                "ticker": {
+                  "description": "The stock ticker.",
+                  "example": "AAPL",
+                  "title": "Stock Ticker",
+                  "type": "string"
+                },
+                "timestamp": {
+                  "description": "A UTC timestamp.",
+                  "example": "2023-12-12 16:35:52.168490+00:00",
+                  "title": "General UTC Timestamp",
+                  "type": "string"
+                }
+              },
+              "title": "Flow per strike",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Flow per strike intraday",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/flow-recent
+
+Recent flows
+
+Returns the latest flows for the given ticker. Optionally a min premium and a side can be supplied in the query for further filtering.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/flow-recent",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/flow-recent",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the latest flows for the given ticker. Optionally a min premium and a side can be supplied in the query for further filtering.\n",
+    "operationId": "PublicApi.TickerController.flow_recent",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "side",
+        "required": false,
+        "schema": {
+          "default": "ALL",
+          "description": "The side of a stock trade. Must be one of ASK, BID, MID. If not set, will return all side's trades.",
+          "enum": [
+            "ALL",
+            "ASK",
+            "BID",
+            "MID"
+          ],
+          "example": "ASK",
+          "title": "Side",
+          "type": "string"
+        }
+      },
+      {
+        "description": "",
+        "in": "query",
+        "name": "min_premium",
+        "required": false,
+        "schema": {
+          "default": 0,
+          "description": "The minimum premium requested trades should have.",
+          "example": 50000,
+          "minimum": 0,
+          "title": "StockTradesMinPremium",
+          "type": "integer"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "The flow data per expiry for a trading day.\n",
+              "example": {
+                "data": [
+                  {
+                    "call_otm_premium": "3885339",
+                    "call_otm_trades": 10213,
+                    "call_otm_volume": 81598,
+                    "call_premium": "5839180",
+                    "call_premium_ask_side": "2615356",
+                    "call_premium_bid_side": "2722619",
+                    "call_trades": 11383,
+                    "call_volume": 89177,
+                    "call_volume_ask_side": 43669,
+                    "call_volume_bid_side": 40164,
+                    "date": "2024-01-22",
+                    "expiry": "2024-01-26",
+                    "put_otm_premium": "632247",
+                    "put_otm_trades": 2077,
+                    "put_otm_volume": 12164,
+                    "put_premium": "4802145",
+                    "put_premium_ask_side": "3593584",
+                    "put_premium_bid_side": "690572",
+                    "put_trades": 2744,
+                    "put_volume": 20101,
+                    "put_volume_ask_side": 7396,
+                    "put_volume_bid_side": 8113,
+                    "ticker": "BABA"
+                  },
+                  {
+                    "call_otm_premium": "1264038",
+                    "call_otm_trades": 2550,
+                    "call_otm_volume": 17525,
+                    "call_premium": "1869073",
+                    "call_premium_ask_side": "885103",
+                    "call_premium_bid_side": "832727",
+                    "call_trades": 2936,
+                    "call_volume": 19268,
+                    "call_volume_ask_side": 7778,
+                    "call_volume_bid_side": 9875,
+                    "date": "2024-01-22",
+                    "expiry": "2024-02-02",
+                    "put_otm_premium": "206709",
+                    "put_otm_trades": 588,
+                    "put_otm_volume": 3581,
+                    "put_premium": "627117",
+                    "put_premium_ask_side": "191982",
+                    "put_premium_bid_side": "354687",
+                    "put_trades": 847,
+                    "put_volume": 4709,
+                    "put_volume_ask_side": 1238,
+                    "put_volume_bid_side": 3004,
+                    "ticker": "BABA"
+                  }
+                ],
+                "date": "2024-01-22"
+              },
+              "properties": {
+                "call_otm_premium": {
+                  "description": "The sum of the premium of all the out the money (OTM) call transactions that executed.",
+                  "example": "9908777.0",
+                  "title": "Market General Call OTM Premium",
+                  "type": "string"
+                },
+                "call_otm_trades": {
+                  "description": "The amount of out the money (OTM) call transactions that executed.",
+                  "example": 6338,
+                  "title": "Market General Call OTM Trades",
+                  "type": "integer"
+                },
+                "call_otm_volume": {
+                  "description": "The sum of the size of all the out the money (OTM) call transactions that executed.",
+                  "example": 40385,
+                  "title": "Market General Call OTM Volume",
+                  "type": "integer"
+                },
+                "call_premium": {
+                  "description": "The sum of the premium of all the call transactions that executed.",
+                  "example": "9908777.0",
+                  "title": "Market General Call Premium",
+                  "type": "string"
+                },
+                "call_premium_ask_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the ask side.",
+                  "example": "5037703.0",
+                  "title": "Market General Call Premium Ask Side",
+                  "type": "string"
+                },
+                "call_premium_bid_side": {
+                  "description": "The sum of the premium of all the call transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Call Premium Bid Side",
+                  "type": "string"
+                },
+                "call_trades": {
+                  "description": "The amount of call transactions that executed.",
+                  "example": 6338,
+                  "title": "Market General Call Trades",
+                  "type": "integer"
+                },
+                "call_volume": {
+                  "description": "The sum of the size of all the call transactions that executed.",
+                  "example": 990943,
+                  "title": "Market General Call Volume",
+                  "type": "integer"
+                },
+                "call_volume_ask_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the ask side.",
+                  "example": 417251,
+                  "title": "Market General Call Volume Ask Side",
+                  "type": "integer"
+                },
+                "call_volume_bid_side": {
+                  "description": "The sum of the size of all the call transactions that executed on the bid side.",
+                  "example": 498271,
+                  "title": "Market General Call Volume Bid Side",
+                  "type": "integer"
+                },
+                "date": {
+                  "description": "A trading date in ISO format.\n",
+                  "example": "2023-09-08",
+                  "title": "Market General Trading day",
+                  "type": "string"
+                },
+                "expiry": {
+                  "description": "The contract expiry date in ISO format.",
+                  "example": "2023-12-22",
+                  "title": "Option Contract Expiry",
+                  "type": "string"
+                },
+                "put_otm_premium": {
+                  "description": "The sum of the premium of all the out the money (OTM) put transactions that executed.",
+                  "example": "1204570.0",
+                  "title": "Market General Put OTM Premium",
+                  "type": "string"
+                },
+                "put_otm_trades": {
+                  "description": "The amount of out the money (OTM) put transactions that executed.",
+                  "example": 4270,
+                  "title": "Market General Put OTM Trades",
+                  "type": "integer"
+                },
+                "put_otm_volume": {
+                  "description": "The sum of the size of all the out the money (OTM) put transactions that executed.",
+                  "example": 12638,
+                  "title": "Market General Put OTM Volume",
+                  "type": "integer"
+                },
+                "put_premium": {
+                  "description": "The sum of the premium of all the put transactions that executed.",
+                  "example": "163537151",
+                  "title": "Market General Put Premium",
+                  "type": "string"
+                },
+                "put_premium_ask_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the ask side.",
+                  "example": "799873.0",
+                  "title": "Market General Put Premium Ask Side",
+                  "type": "string"
+                },
+                "put_premium_bid_side": {
+                  "description": "The sum of the premium of all the put transactions that executed on the bid side.",
+                  "example": "4055973.0",
+                  "title": "Market General Put Premium Bid Side",
+                  "type": "string"
+                },
+                "put_trades": {
+                  "description": "The amount of put transactions that executed.",
+                  "example": 841,
+                  "title": "Market General Put Trades",
+                  "type": "integer"
+                },
+                "put_volume": {
+                  "description": "The sum of the size of all the put transactions that executed.",
+                  "example": 808326,
+                  "title": "Market General Put Volume",
+                  "type": "integer"
+                },
+                "put_volume_ask_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the ask side.",
+                  "example": 431791,
+                  "title": "Market General Put Volume Ask Side",
+                  "type": "integer"
+                },
+                "put_volume_bid_side": {
+                  "description": "The sum of the size of all the put transactions that executed on the bid side.",
+                  "example": 314160,
+                  "title": "Market General Put Volume Bid Side",
+                  "type": "integer"
+                },
+                "ticker": {
+                  "description": "The stock ticker.",
+                  "example": "AAPL",
+                  "title": "Stock Ticker",
+                  "type": "string"
+                }
+              },
+              "title": "Flow per expiry",
+              "type": "object"
+            }
+          }
+        },
+        "description": ""
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 401 when a request carries no API token, or carries one the API cannot use. The response also carries a `WWW-Authenticate` header with the `Bearer` challenge. Branch on `reason` rather than on `message`, whose wording can change.",
+              "example": {
+                "code": "authentication_required",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "expected_format": "uuid",
+                "message": "The API token provided is not in the expected format. Unusual Whales API tokens are UUIDs, such as 123e4567-e89b-12d3-a456-426614174000.",
+                "reason": "malformed_token",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Always `authentication_required`.",
+                  "enum": [
+                    "authentication_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "expected_format": {
+                  "description": "Present only when `reason` is `malformed_token`. The format the token must take.",
+                  "enum": [
+                    "uuid"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of the failure, written for a person.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Which authentication failure occurred. `missing_token` means the request carried no token. `malformed_token` means a token was supplied but is not a UUID. `unrecognized_token` means the token is a UUID that no active token matches, which happens after a token is revoked or regenerated, or when it belongs to a different account.",
+                  "enum": [
+                    "missing_token",
+                    "malformed_token",
+                    "unrecognized_token"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "Always `false`. Replaying the same request unchanged returns the same error. Retrying with a corrected token can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "title": "Authentication Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unauthorized"
+      },
+      "403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Returned with HTTP 403 when the API token is valid and recognized, but is not entitled to what the request asked for. Branch on `code`, which names the entitlement that is missing; `message` is written for a person and its wording can change. Unlike a 401 this response carries no `WWW-Authenticate` header, because presenting different credentials for the same token does not change the outcome.\n\nOnly `code` and `message` are guaranteed. The remaining fields are sent by some checks and not others, so treat every one of them as optional.\n\nA 403 whose body is not JSON, or is JSON without a `code` field, did not come from this API. Those are produced by Cloudflare in front of the API, or by a proxy on the caller's own network, and neither says anything about the token or the subscription.",
+              "example": {
+                "code": "missing_access",
+                "documentation_url": "https://api.unusualwhales.com/docs",
+                "message": "The API token provided is valid but is not permitted to access this route.",
+                "reason": "route_not_permitted",
+                "request_id": "GNI_YTC1CRnw2LACGBvE",
+                "retryable": false,
+                "support_email": "dev@unusualwhales.com",
+                "token_url": "https://unusualwhales.com/dashboard/api"
+              },
+              "properties": {
+                "code": {
+                  "description": "Which entitlement is missing. `missing_access` means the token is restricted to a set of routes that excludes the requested one. `historic_data_access_missing` means a date in the request predates the earliest date the token may query. `advanced_tier_required`, `futures_access_required`, `politics_scope_required` and `volatility_scope_required` each mean the endpoint needs a subscription tier or data add-on the account does not have. `admin_required` means the endpoint is internal to Unusual Whales.",
+                  "enum": [
+                    "missing_access",
+                    "historic_data_access_missing",
+                    "advanced_tier_required",
+                    "futures_access_required",
+                    "politics_scope_required",
+                    "volatility_scope_required",
+                    "admin_required"
+                  ],
+                  "type": "string"
+                },
+                "documentation_url": {
+                  "description": "Where to read this API documentation.",
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A plain description of what is missing and how to obtain it, written for a person. Do not branch on this string.",
+                  "type": "string"
+                },
+                "reason": {
+                  "description": "Present only when `code` is `missing_access`. Narrows the cause within that code.",
+                  "enum": [
+                    "route_not_permitted"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Identifies this request in Unusual Whales logs. Quote it when contacting support. It matches the `x-request-id` response header, and is absent when no request id was assigned.",
+                  "type": "string"
+                },
+                "retryable": {
+                  "description": "When present, always `false`. Replaying the same request unchanged returns the same error. Changing the request, the token, or the subscription can succeed.",
+                  "enum": [
+                    false
+                  ],
+                  "type": "boolean"
+                },
+                "support_email": {
+                  "description": "Where to send questions about API access.",
+                  "type": "string"
+                },
+                "token_url": {
+                  "description": "Where to create and manage API tokens.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "title": "Forbidden Error",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Forbidden"
+      },
+      "422": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "A json object containing information on the error cause.",
+              "example": {
+                "msg": "Invalid path input: MSFT12 (valid example: AAPL) - Invalid query input(s): date=2023-02-140 (valid example: date=2024-01-18)",
+                "path": "/api/darkpool/MSFT12",
+                "query": "date=2023-02-140",
+                "url": "localhost:4000/api/darkpool/MSFT12?date=2023-02-140"
+              },
+              "properties": {
+                "msg": {
+                  "description": "An error message containing information about the faulty input.",
+                  "type": "string"
+                },
+                "path": {
+                  "description": "The URL path segment.",
+                  "type": "string"
+                },
+                "query": {
+                  "description": "The URL query segment.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The full URL causing the error.",
+                  "type": "string"
+                }
+              },
+              "title": "Error Message",
+              "type": "object"
+            }
+          }
+        },
+        "description": "Unprocessable Entity"
+      },
+      "500": {
+        "content": {
+          "text/plain": {
+            "schema": {
+              "description": "A plain message informing, that an internal server error occured. In this case please send a mail with the full URL that caused the issue to support@unusualwhales.com.",
+              "example": "Something went wrong",
+              "title": "Error Message on an internal server error.",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Internal Server Error"
+      }
+    },
+    "summary": "Recent flows",
+    "tags": [
+      "stock"
+    ],
+    "security": [
+      {
+        "authorization": []
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://api.unusualwhales.com",
+        "variables": {}
+      }
+    ]
+  }
+}
+
+```
+
+## GET /api/stock/{ticker}/fundamental-breakdown
+
+Fundamental Breakdown
+
+Returns the fundamental financial data for the given ticker, including earnings per share,
+revenue, dividends, share counts, RSU data, and revenue breakdowns by product and geography.
+
+
+### Fully resolved operation
+```json
+{
+  "key": "GET /api/stock/{ticker}/fundamental-breakdown",
+  "method": "GET",
+  "path": "/api/stock/{ticker}/fundamental-breakdown",
+  "transport": "http-rest",
+  "operation": {
+    "callbacks": {},
+    "description": "Returns the fundamental financial data for the given ticker, including earnings per share,\nrevenue, dividends, share counts, RSU data, and revenue breakdowns by product and geography.\n",
+    "operationId": "PublicApi.FundamentalController.show",
+    "parameters": [
+      {
+        "description": "",
+        "in": "path",
+        "name": "ticker",
+        "required": true,
+        "schema": {
+          "description": "A single ticker",
+          "example": "AAPL",
+          "title": "SingleTicker",
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "data": {
+                  "properties": {
+                    "annual_only": {
+                      "description": "True when every report in `general` is an annual filing.",
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "general": {
+                      "items": {
+                        "description": "One financial report / period. Monetary and per-share figures are numeric strings, null when not reported.",
+                        "properties": {
+                          "acc_receivable_net_current": {
+                            "example": "33410000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "accession_no": {
+                            "example": "0000320193-24-000123",
+                            "type": "string"
+                          },
+                          "cash_and_cash_equivalents": {
+                            "example": "29943000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cash_at_carrying_value": {
+                            "example": "29943000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cash_flow_depreciation_and_amortization": {
+                            "example": "11445000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "cost_of_revenue": {
+                            "example": "210352000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "deffered_income_tax": {
+                            "example": "0",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "depreciation_and_amortization": {
+                            "example": "11445000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "dividend": {
+                            "example": "0.25",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "earnings_per_share": {
+                            "example": "6.08",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "filing_date": {
+                            "example": "2024-11-01",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "formtype": {
+                            "example": "10-K",
+                            "type": "string"
+                          },
+                          "goodwill": {
+                            "example": "8000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "gross_profit": {
+                            "example": "180683000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "income_before_tax": {
+                            "example": "123485000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "income_tax_expense": {
+                            "example": "29749000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "interest_and_dividend_incomes": {
+                            "example": "4800000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "interest_expense": {
+                            "example": "3900000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "inventories": {
+                            "example": "7286000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "long_term_investments": {
+                            "example": "91479000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "net_cash_provided_by_operating_activities": {
+                            "example": "118254000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "net_income": {
+                            "example": "93736000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "net_income_loss": {
+                            "example": "93736000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "operating_income": {
+                            "example": "123216000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_current_assets": {
+                            "example": "14287000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_non_cash_items": {
+                            "example": "-2000000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "other_non_current_assets": {
+                            "example": "74834000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "payments_for_repurchase": {
+                            "example": "94949000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "property_plant_and_equipment": {
+                            "example": "45680000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_period_end_date": {
+                            "example": "2024-09-30",
+                            "format": "date",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "report_year": {
+                            "example": 2024,
+                            "type": "integer"
+                          },
+                          "repurchase_and_retire_shares": {
+                            "example": "499000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "repurchase_and_retire_value": {
+                            "example": "94949000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "repurchase_shares": {
+                            "example": "499000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "repurchase_value": {
+                            "example": "94949000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "research_and_development_expenses": {
+                            "example": "31370000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "revenue": {
+                            "example": "391035000000",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "rsu_forfeited": {
+                            "example": "5.00",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "rsu_granted": {
+                            "example": "5.00",
+                         

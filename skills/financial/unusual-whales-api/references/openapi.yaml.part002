@@ -1,0 +1,2335 @@
+ trades only. CME clearing symbol.
+                nullable: true
+                type: string
+              crossed:
+                description: NBBO bid above ask. Regular prints only.
+                nullable: true
+                type: boolean
+              executed_at:
+                format: date-time
+                type: string
+              is_block:
+                description: True for CME block trades, false for regular prints.
+                type: boolean
+              is_spread:
+                description: Calendar or inter-commodity spread.
+                type: boolean
+              legs:
+                description: Block trades only. Legs of a multi-leg (MLEG) strategy.
+                items:
+                  properties:
+                    leg_side:
+                      nullable: true
+                      type: string
+                    price:
+                      nullable: true
+                      type: string
+                    qty:
+                      nullable: true
+                      type: string
+                    ratio_qty:
+                      nullable: true
+                      type: string
+                    sec_type:
+                      nullable: true
+                      type: string
+                    sym:
+                      nullable: true
+                      type: string
+                  type: object
+                nullable: true
+                type: array
+              nbbo_ask:
+                description: Regular prints only.
+                nullable: true
+                type: string
+              nbbo_bid:
+                description: Regular prints only.
+                nullable: true
+                type: string
+              price:
+                nullable: true
+                type: string
+              qty:
+                description: Block trades only.
+                nullable: true
+                type: string
+              reported_at:
+                description: Block trades only.
+                format: date-time
+                nullable: true
+                type: string
+              sec_type:
+                description: Block trades only. FUT, OPT, MLEG, etc.
+                nullable: true
+                type: string
+              side:
+                description: Regular prints only.
+                enum:
+                  - buy
+                  - sell
+                  - none
+                nullable: true
+                type: string
+              size:
+                description: Regular prints only.
+                nullable: true
+                type: integer
+              strategy_link_id:
+                description: Block trades only.
+                nullable: true
+                type: integer
+              trade_id:
+                nullable: true
+                type: integer
+            type: object
+          type: array
+      title: Futures Trades
+      type: object
+    GEX_Levels:
+      description: |
+        Key gamma-exposure price levels for a market date, derived from directionalized volume by default.
+        Each level is a price as a decimal string, or null when unavailable for the date.
+      example:
+        data:
+          call_wall: '600'
+          date: 2026-08-20
+          gamma_flip: '560'
+          gamma_magnet: '575'
+          nearby_flips:
+            - '560'
+            - '561.5'
+            - '572'
+          put_wall: '550'
+          source: vol
+          time: 2026-08-20T13:35:11.482Z
+      properties:
+        call_wall:
+          $ref: '#/components/schemas/Call_Wall'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        gamma_flip:
+          $ref: '#/components/schemas/Gamma_Flip'
+        gamma_magnet:
+          $ref: '#/components/schemas/Gamma_Magnet'
+        nearby_flips:
+          $ref: '#/components/schemas/Nearby_Gamma_Flips'
+        put_wall:
+          $ref: '#/components/schemas/Put_Wall'
+        source:
+          $ref: '#/components/schemas/GEX_Source'
+        time:
+          $ref: '#/components/schemas/Gex_Calculation_Time'
+      title: GEX Levels
+      type: object
+    GEX_Per_One_Percent_Move_Directionalized_Volume:
+      description: |
+        The gamma 1% move based on directionalized volume
+      example: '-5559678859.12'
+      title: GEX Per One Percent Move Directionalized Volume
+      type: string
+    GEX_Source:
+      default: vol
+      description: Which exposure basis to derive the levels from. `vol` is directionalized volume — the exposure dealers took on from the day's ask/bid sided flow. `oi` is open interest.
+      enum:
+        - vol
+        - oi
+      example: vol
+      title: GEX Source
+      type: string
+    Gamma:
+      description: The gamma of the option trade.
+      example: '0.00775013889662635'
+      title: Gamma
+      type: string
+    Gamma_Flip:
+      description: Price where net dealer gamma crosses zero, nearest to spot — the zero-gamma level.
+      example: '560'
+      nullable: true
+      title: Gamma Flip
+      type: string
+    Gamma_Magnet:
+      description: Strike with the largest-magnitude net gamma (the strongest pin).
+      example: '575'
+      nullable: true
+      title: Gamma Magnet
+      type: string
+    General_ISO_Date:
+      description: An ISO date.
+      example: 2024-01-09
+      title: General ISO Date
+      type: string
+    General_Tick_time:
+      description: The start time of the tick as a timestamp with timezone.
+      example: 2023-09-07T09:30:00-04:00
+      title: General Tick time
+      type: string
+    General_UTC_Timestamp:
+      description: A UTC timestamp.
+      example: 2023-12-12T16:35:52.168490Z
+      title: General UTC Timestamp
+      type: string
+    Gex_Calculation_Time:
+      description: The UTC timestamp of the calculation
+      example: 2023-12-13T05:00:41.481000Z
+      title: Gex Calculation Time
+      type: string
+    Gex_Call_Charm:
+      description: The sum of the charm values of all call transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '102382359.5786'
+      title: Gex Call Charm
+      type: string
+    Gex_Call_Delta:
+      description: The sum of the delta values of all call transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '227549667.4651'
+      title: Gex Call Delta
+      type: string
+    Gex_Call_Gamma:
+      description: The sum of the gamma values of all call transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '9356683.4241'
+      title: Gex Call Gamma
+      type: string
+    Gex_Call_Vanna:
+      description: The sum of the vanna values of all call transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '152099632406.9564'
+      title: Gex Call Vanna
+      type: string
+    Gex_Gamma_Per_One_Percent_Move_OI:
+      description: |
+        The gamma 1% move based on OI:
+        This is calculated as gamma * open interest * price * price
+      example: '65476967081.41'
+      title: Gex Gamma Per One Percent Move OI
+      type: string
+    Gex_Gamma_Per_One_Percent_Move_Volume:
+      description: |
+        The gamma 1% move based on volume:
+        This is calculated as gamma * volume * price * price
+      example: '12921519098.30'
+      title: Gex Gamma Per One Percent Move Volume
+      type: string
+    Gex_Put_Charm:
+      description: The sum of the charm values of all put transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '-943028472.4815'
+      title: Gex Put Charm
+      type: string
+    Gex_Put_Delta:
+      description: The sum of the delta values of all put transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '-191893077.7193'
+      title: Gex Put Delta
+      type: string
+    Gex_Put_Gamma:
+      description: The sum of the gamma values of all put transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '-12337386.0524'
+      title: Gex Put Gamma
+      type: string
+    Gex_Put_Vanna:
+      description: The sum of the vanna values of all put transactions that executed multiplied by the open interest and the number of shares per contract (typically 100 shares per contract).
+      example: '488921784213.1121'
+      title: Gex Put Vanna
+      type: string
+    Gex_Underlying_Price:
+      description: |
+        The underlying price used in calculations.
+        NOTE: For any index ticker this will be the current ATM strike.
+      example: '4650'
+      title: Gex Underlying Price
+      type: string
+    Greek_Exposure:
+      description: ''
+      example:
+        data:
+          - call_charm: '102382359.5786'
+            call_delta: '227549667.4651'
+            call_gamma: '9356683.4241'
+            call_vanna: '152099632406.9564'
+            date: 2023-09-08
+            put_charm: '-943028472.4815'
+            put_delta: '-191893077.7193'
+            put_gamma: '-12337386.0524'
+            put_vanna: '488921784213.1121'
+          - call_charm: '81465130.0002'
+            call_delta: '210202465.3421'
+            call_gamma: '8456599.8505'
+            call_vanna: '161231587973.6811'
+            date: 2023-09-07
+            put_charm: '-1054548432.6111'
+            put_delta: '-210881557.3003'
+            put_gamma: '-12703877.0243'
+            put_vanna: '488921784213.1121'
+      properties:
+        call_charm:
+          $ref: '#/components/schemas/Gex_Call_Charm'
+        call_delta:
+          $ref: '#/components/schemas/Gex_Call_Delta'
+        call_gamma:
+          $ref: '#/components/schemas/Gex_Call_Gamma'
+        call_vanna:
+          $ref: '#/components/schemas/Gex_Call_Vanna'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        put_charm:
+          $ref: '#/components/schemas/Gex_Put_Charm'
+        put_delta:
+          $ref: '#/components/schemas/Gex_Put_Delta'
+        put_gamma:
+          $ref: '#/components/schemas/Gex_Put_Gamma'
+        put_vanna:
+          $ref: '#/components/schemas/Gex_Put_Vanna'
+      title: Greek Exposure
+      type: object
+    Greek_Exposure_By_Expiry:
+      description: ''
+      example:
+        data:
+          - call_charm: '102382359.5786'
+            call_delta: '227549667.4651'
+            call_gex: '9356683.4241'
+            call_vanna: '152099632406.9564'
+            date: 2022-05-20
+            dte: 5
+            expiry: 2022-05-25
+            put_charm: '-943028472.4815'
+            put_delta: '-191893077.7193'
+            put_gex: '-12337386.0524'
+            put_vanna: '488921784213.1121'
+          - call_charm: '81465130.0002'
+            call_delta: '210202465.3421'
+            call_gex: '8456599.8505'
+            call_vanna: '161231587973.6811'
+            date: 2022-05-20
+            dte: 5
+            expiry: 2022-05-25
+            put_charm: '-1054548432.6111'
+            put_delta: '-210881557.3003'
+            put_gex: '-12703877.0243'
+            put_vanna: '488921784213.1121'
+      properties:
+        call_charm:
+          $ref: '#/components/schemas/Gex_Call_Charm'
+        call_delta:
+          $ref: '#/components/schemas/Gex_Call_Delta'
+        call_gex:
+          $ref: '#/components/schemas/Gex_Call_Gamma'
+        call_vanna:
+          $ref: '#/components/schemas/Gex_Call_Vanna'
+        expiry:
+          $ref: '#/components/schemas/Expiry'
+        put_charm:
+          $ref: '#/components/schemas/Gex_Put_Charm'
+        put_delta:
+          $ref: '#/components/schemas/Gex_Put_Delta'
+        put_gex:
+          $ref: '#/components/schemas/Gex_Put_Gamma'
+        put_vanna:
+          $ref: '#/components/schemas/Gex_Put_Vanna'
+      title: Greek Exposure By Expiry
+      type: object
+    Greek_Exposure_By_Strike:
+      description: ''
+      example:
+        data:
+          - call_charm: '102382359.5786'
+            call_delta: '227549667.4651'
+            call_gex: '9356683.4241'
+            call_vanna: '152099632406.9564'
+            put_charm: '-943028472.4815'
+            put_delta: '-191893077.7193'
+            put_gex: '-12337386.0524'
+            put_vanna: '488921784213.1121'
+            strike: '150'
+          - call_charm: '81465130.0002'
+            call_delta: '210202465.3421'
+            call_gex: '8456599.8505'
+            call_vanna: '161231587973.6811'
+            put_charm: '-1054548432.6111'
+            put_delta: '-210881557.3003'
+            put_gex: '-12703877.0243'
+            put_vanna: '488921784213.1121'
+            strike: '152.5'
+      properties:
+        call_charm:
+          $ref: '#/components/schemas/Gex_Call_Charm'
+        call_delta:
+          $ref: '#/components/schemas/Gex_Call_Delta'
+        call_gex:
+          $ref: '#/components/schemas/Gex_Call_Gamma'
+        call_vanna:
+          $ref: '#/components/schemas/Gex_Call_Vanna'
+        put_charm:
+          $ref: '#/components/schemas/Gex_Put_Charm'
+        put_delta:
+          $ref: '#/components/schemas/Gex_Put_Delta'
+        put_gex:
+          $ref: '#/components/schemas/Gex_Put_Gamma'
+        put_vanna:
+          $ref: '#/components/schemas/Gex_Put_Vanna'
+        strike:
+          $ref: '#/components/schemas/Strike'
+      title: Greek Exposure By Strike
+      type: object
+    Greek_Exposure_By_Strike_And_Expiry:
+      description: ''
+      example:
+        data:
+          - call_charm: '102382359.5786'
+            call_delta: '227549667.4651'
+            call_gex: '9356683.4241'
+            call_vanna: '152099632406.9564'
+            expiry: 2022-05-25
+            put_charm: '-943028472.4815'
+            put_delta: '-191893077.7193'
+            put_gex: '-12337386.0524'
+            put_vanna: '488921784213.1121'
+            strike: '150'
+          - call_charm: '81465130.0002'
+            call_delta: '210202465.3421'
+            call_gex: '8456599.8505'
+            call_vanna: '161231587973.6811'
+            expiry: 2022-05-25
+            put_charm: '-1054548432.6111'
+            put_delta: '-210881557.3003'
+            put_gex: '-12703877.0243'
+            put_vanna: '488921784213.1121'
+            strike: '152.5'
+      properties:
+        call_charm:
+          $ref: '#/components/schemas/Gex_Call_Charm'
+        call_delta:
+          $ref: '#/components/schemas/Gex_Call_Delta'
+        call_gex:
+          $ref: '#/components/schemas/Gex_Call_Gamma'
+        call_vanna:
+          $ref: '#/components/schemas/Gex_Call_Vanna'
+        expiry:
+          $ref: '#/components/schemas/Expiry'
+        put_charm:
+          $ref: '#/components/schemas/Gex_Put_Charm'
+        put_delta:
+          $ref: '#/components/schemas/Gex_Put_Delta'
+        put_gex:
+          $ref: '#/components/schemas/Gex_Put_Gamma'
+        put_vanna:
+          $ref: '#/components/schemas/Gex_Put_Vanna'
+        strike:
+          $ref: '#/components/schemas/Strike'
+      title: Greek Exposure By Strike And Expiry
+      type: object
+    Greek_Flow:
+      description: Greek flow by ticker and minute timestamps.
+      example:
+        data:
+          - dir_delta_flow: '-43593.96'
+            dir_vega_flow: '31243.04'
+            otm_dir_delta_flow: '14947.51'
+            otm_dir_vega_flow: '11421.03'
+            otm_total_delta_flow: '-28564.02'
+            otm_total_vega_flow: '101745.64'
+            ticker: SPY
+            timestamp: 2024-10-28T18:46:00Z
+            total_delta_flow: '-21257.36'
+            total_vega_flow: '350944.58'
+            transactions: 1188
+            volume: 12348
+      properties:
+        dir_delta_flow:
+          $ref: '#/components/schemas/Dir_Delta_Flow'
+        dir_vega_flow:
+          $ref: '#/components/schemas/Dir_Vega_Flow'
+        otm_dir_delta_flow:
+          $ref: '#/components/schemas/OTM_Dir_Delta_Flow'
+        otm_dir_vega_flow:
+          $ref: '#/components/schemas/OTM_Dir_Vega_Flow'
+        otm_total_delta_flow:
+          $ref: '#/components/schemas/OTM_Total_Delta_Flow'
+        otm_total_vega_flow:
+          $ref: '#/components/schemas/OTM_Total_Vega_Flow'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_delta_flow:
+          $ref: '#/components/schemas/Total_Delta_Flow'
+        total_vega_flow:
+          $ref: '#/components/schemas/Total_Vega_Flow'
+        transactions:
+          $ref: '#/components/schemas/Transactions'
+        volume:
+          $ref: '#/components/schemas/Volume'
+      title: Greek Flow
+      type: object
+    Greek_Flow_Expiry:
+      description: Greek flow by ticker, minute timestamps, and expiry date.
+      example:
+        data:
+          - dir_delta_flow: '-43593.96'
+            dir_vega_flow: '31243.04'
+            expiry: 2024-10-28
+            otm_dir_delta_flow: '14947.51'
+            otm_dir_vega_flow: '11421.03'
+            otm_total_delta_flow: '-28564.02'
+            otm_total_vega_flow: '101745.64'
+            ticker: SPY
+            timestamp: 2024-10-28T18:46:00Z
+            total_delta_flow: '-21257.36'
+            total_vega_flow: '350944.58'
+            transactions: 1188
+            volume: 12348
+      properties:
+        dir_delta_flow:
+          $ref: '#/components/schemas/Dir_Delta_Flow'
+        dir_vega_flow:
+          $ref: '#/components/schemas/Dir_Vega_Flow'
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        otm_dir_delta_flow:
+          $ref: '#/components/schemas/OTM_Dir_Delta_Flow'
+        otm_dir_vega_flow:
+          $ref: '#/components/schemas/OTM_Dir_Vega_Flow'
+        otm_total_delta_flow:
+          $ref: '#/components/schemas/OTM_Total_Delta_Flow'
+        otm_total_vega_flow:
+          $ref: '#/components/schemas/OTM_Total_Vega_Flow'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_delta_flow:
+          $ref: '#/components/schemas/Total_Delta_Flow'
+        total_vega_flow:
+          $ref: '#/components/schemas/Total_Vega_Flow'
+        transactions:
+          $ref: '#/components/schemas/Transactions'
+        volume:
+          $ref: '#/components/schemas/Volume'
+      title: Greek Flow Expiry
+      type: object
+    Greeks:
+      description: |
+        The greek values for a set of call and put contracts at the same strike and expiry for a ticker.
+      example:
+        data:
+          - call_charm: '9.32'
+            call_delta: '0.5'
+            call_gamma: '0.0051'
+            call_option_symbol: SPY240105C00480000
+            call_rho: '0.0321'
+            call_theta: '-0.62'
+            call_vanna: '-0.91'
+            call_vega: '0.15'
+            call_volatility: '0.3'
+            date: 2024-01-01
+            expiry: 2024-01-05
+            put_charm: '9.32'
+            put_delta: '-0.51'
+            put_gamma: '0.005'
+            put_option_symbol: SPY240105P00480000
+            put_rho: '-0.022'
+            put_theta: '-0.62'
+            put_vanna: '-0.91'
+            put_vega: '0.15'
+            put_volatility: '0.29'
+            strike: '480.0'
+          - call_charm: '9.32'
+            call_delta: '0.45'
+            call_gamma: '0.003'
+            call_option_symbol: SPY240105C00490000
+            call_rho: '0.0321'
+            call_theta: '-0.62'
+            call_vanna: '-0.91'
+            call_vega: '0.15'
+            call_volatility: '0.33'
+            date: 2024-01-01
+            expiry: 2024-01-05
+            put_charm: '9.32'
+            put_delta: '-0.55'
+            put_gamma: '0.007'
+            put_option_symbol: SPY240105P00490000
+            put_rho: '-0.022'
+            put_theta: '-0.62'
+            put_vanna: '-0.91'
+            put_vega: '0.15'
+            put_volatility: '0.32'
+            strike: '490.0'
+      properties:
+        call_charm:
+          $ref: '#/components/schemas/Charm'
+        call_delta:
+          $ref: '#/components/schemas/Delta'
+        call_gamma:
+          $ref: '#/components/schemas/Gamma'
+        call_option_symbol:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        call_rho:
+          $ref: '#/components/schemas/Rho'
+        call_theta:
+          $ref: '#/components/schemas/Theta'
+        call_vanna:
+          $ref: '#/components/schemas/Vanna'
+        call_vega:
+          $ref: '#/components/schemas/Vega'
+        call_volatility:
+          $ref: '#/components/schemas/Implied_Volatility'
+        date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        expiry:
+          $ref: '#/components/schemas/General_ISO_Date'
+        put_charm:
+          $ref: '#/components/schemas/Charm'
+        put_delta:
+          $ref: '#/components/schemas/Delta'
+        put_gamma:
+          $ref: '#/components/schemas/Gamma'
+        put_option_symbol:
+          $ref: '#/components/schemas/Option_Contract_Symbol'
+        put_rho:
+          $ref: '#/components/schemas/Rho'
+        put_theta:
+          $ref: '#/components/schemas/Theta'
+        put_vanna:
+          $ref: '#/components/schemas/Vanna'
+        put_vega:
+          $ref: '#/components/schemas/Vega'
+        put_volatility:
+          $ref: '#/components/schemas/Implied_Volatility'
+        strike:
+          $ref: '#/components/schemas/Strike'
+      title: Greeks
+      type: object
+    Group_Flow:
+      description: Greek flow by flow group and minute timestamps.
+      example:
+        data:
+          - dir_delta_flow: '-43593.96'
+            dir_vega_flow: '31243.04'
+            flow_group: airline
+            net_call_premium: '-1095135.00'
+            net_call_volume: 1049
+            net_put_premium: '135732.00'
+            net_put_volume: 415
+            otm_dir_delta_flow: '14947.51'
+            otm_dir_vega_flow: '11421.03'
+            otm_total_delta_flow: '-28564.02'
+            otm_total_vega_flow: '101745.64'
+            timestamp: 2024-10-28T18:46:00Z
+            total_delta_flow: '-21257.36'
+            total_vega_flow: '350944.58'
+            transactions: 1188
+            volume: 12348
+      properties:
+        dir_delta_flow:
+          $ref: '#/components/schemas/Dir_Delta_Flow'
+        dir_vega_flow:
+          $ref: '#/components/schemas/Dir_Vega_Flow'
+        flow_group:
+          $ref: '#/components/schemas/Flow_Group'
+        net_call_premium:
+          $ref: '#/components/schemas/Market_General_Net_Call_Premium'
+        net_call_volume:
+          $ref: '#/components/schemas/Market_General_Net_Call_Volume'
+        net_put_premium:
+          $ref: '#/components/schemas/Market_General_Net_Put_Premium'
+        net_put_volume:
+          $ref: '#/components/schemas/Market_General_Net_Put_Volume'
+        otm_dir_delta_flow:
+          $ref: '#/components/schemas/OTM_Dir_Delta_Flow'
+        otm_dir_vega_flow:
+          $ref: '#/components/schemas/OTM_Dir_Vega_Flow'
+        otm_total_delta_flow:
+          $ref: '#/components/schemas/OTM_Total_Delta_Flow'
+        otm_total_vega_flow:
+          $ref: '#/components/schemas/OTM_Total_Vega_Flow'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_delta_flow:
+          $ref: '#/components/schemas/Total_Delta_Flow'
+        total_vega_flow:
+          $ref: '#/components/schemas/Total_Vega_Flow'
+        transactions:
+          $ref: '#/components/schemas/Transactions'
+        volume:
+          $ref: '#/components/schemas/Volume'
+      title: Group Flow
+      type: object
+    Group_Flow_Expiry:
+      description: Greek flow by flow group, minute timestamps, and expiry date.
+      example:
+        data:
+          - dir_delta_flow: '-43593.96'
+            dir_vega_flow: '31243.04'
+            expiry: 2024-10-28
+            flow_group: airline
+            net_call_premium: '-1095135.00'
+            net_call_volume: 1049
+            net_put_premium: '135732.00'
+            net_put_volume: 415
+            otm_dir_delta_flow: '14947.51'
+            otm_dir_vega_flow: '11421.03'
+            otm_total_delta_flow: '-28564.02'
+            otm_total_vega_flow: '101745.64'
+            timestamp: 2024-10-28T18:46:00Z
+            total_delta_flow: '-21257.36'
+            total_vega_flow: '350944.58'
+            transactions: 1188
+            volume: 12348
+      properties:
+        dir_delta_flow:
+          $ref: '#/components/schemas/Dir_Delta_Flow'
+        dir_vega_flow:
+          $ref: '#/components/schemas/Dir_Vega_Flow'
+        expiry:
+          $ref: '#/components/schemas/Option_Contract_Expiry'
+        flow_group:
+          $ref: '#/components/schemas/Flow_Group'
+        net_call_premium:
+          $ref: '#/components/schemas/Market_General_Net_Call_Premium'
+        net_call_volume:
+          $ref: '#/components/schemas/Market_General_Net_Call_Volume'
+        net_put_premium:
+          $ref: '#/components/schemas/Market_General_Net_Put_Premium'
+        net_put_volume:
+          $ref: '#/components/schemas/Market_General_Net_Put_Volume'
+        otm_dir_delta_flow:
+          $ref: '#/components/schemas/OTM_Dir_Delta_Flow'
+        otm_dir_vega_flow:
+          $ref: '#/components/schemas/OTM_Dir_Vega_Flow'
+        otm_total_delta_flow:
+          $ref: '#/components/schemas/OTM_Total_Delta_Flow'
+        otm_total_vega_flow:
+          $ref: '#/components/schemas/OTM_Total_Vega_Flow'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_delta_flow:
+          $ref: '#/components/schemas/Total_Delta_Flow'
+        total_vega_flow:
+          $ref: '#/components/schemas/Total_Vega_Flow'
+        transactions:
+          $ref: '#/components/schemas/Transactions'
+        volume:
+          $ref: '#/components/schemas/Volume'
+      title: Group Flow Expiry
+      type: object
+    Has_More:
+      description: Indicates whether there are more results available beyond the current page.
+      example: false
+      title: Has More
+      type: boolean
+    Has_Options:
+      description: Whether the company has options available for trading
+      example: true
+      nullable: true
+      title: Has Options
+      type: boolean
+    Headline_News:
+      description: |
+        News headlines for financial markets.
+        This endpoint provides recent news headlines that may impact the markets,
+        including company-specific news, sector news, and market-wide events.
+      example:
+        data:
+          - created_at: 2023-04-15T16:30:00Z
+            headline: Company XYZ Reports Better Than Expected Earnings
+            is_major: true
+            meta: {}
+            sentiment: positive
+            source: BusinessWire
+            tags:
+              - earnings
+              - tech
+            tickers:
+              - XYZ
+              - EXMP
+          - created_at: 2023-04-15T14:20:00Z
+            headline: Federal Reserve Signals Possible Rate Cut
+            is_major: true
+            meta: {}
+            sentiment: neutral
+            source: MarketNews
+            tags:
+              - federal-reserve
+              - interest-rates
+            tickers: []
+      properties:
+        created_at:
+          description: Timestamp when the news headline was created or published.
+          format: date_time
+          type: string
+        headline:
+          description: The actual news headline text.
+          type: string
+        is_major:
+          description: Indicates whether the news is considered major or significant.
+          type: boolean
+        meta:
+          description: Additional metadata related to the headline.
+          type: object
+        sentiment:
+          description: Sentiment analysis of the headline (e.g., positive, negative, neutral).
+          type: string
+        source:
+          description: Source of the news headline (e.g., Reuters, Bloomberg, etc.).
+          type: string
+        tags:
+          description: Tags or categories related to the headline.
+          items:
+            type: string
+          type: array
+        tickers:
+          description: List of ticker symbols related to this news.
+          items:
+            type: string
+          type: array
+      required:
+        - created_at
+        - headline
+        - source
+      title: Headline News
+      type: object
+    Historical_Risk_Reversal_Skew:
+      description: ''
+      example:
+        data:
+          - date: 2024-01-01
+            delta: 10
+            risk_reversal: '0.014'
+            ticker: SPY
+          - date: 2024-01-02
+            delta: 10
+            risk_reversal: '0.009'
+            ticker: SPY
+      properties:
+        date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        delta:
+          $ref: '#/components/schemas/Risk_Reversal_Delta'
+        risk_reversal:
+          $ref: '#/components/schemas/Risk_Reversal'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+      title: Historical Risk Reversal Skew
+      type: object
+    Historical_Ticker_Earnings:
+      description: |
+        The earnings data for a ticker and date.
+      example:
+        data:
+          - actual_eps: '2.45'
+            ending_fiscal_quarter: 2024-09-30
+            expected_move: '9.91'
+            expected_move_perc: '0.0359'
+            long_straddle_1d: '0.2349'
+            long_straddle_1w: '0.0129'
+            post_earnings_move_1d: '0.0724'
+            post_earnings_move_1w: '0.132'
+            post_earnings_move_2w: '0.1582'
+            post_earnings_move_3d: '0.0231'
+            pre_earnings_move_1d: '0.0724'
+            pre_earnings_move_1w: '0.132'
+            pre_earnings_move_2w: '0.1582'
+            pre_earnings_move_3d: '0.0231'
+            report_date: 2024-11-10
+            report_time: postmarket
+            short_straddle_1d: '-0.5830'
+            short_straddle_1w: '-0.005'
+            source: company
+            street_mean_est: '2.25'
+          - actual_eps: '2.32'
+            ending_fiscal_quarter: 2024-06-30
+            expected_move: '8.23'
+            expected_move_perc: '0.0261'
+            long_straddle_1d: '0.2349'
+            long_straddle_1w: '0.0129'
+            post_earnings_move_1d: '0.0724'
+            post_earnings_move_1w: '0.132'
+            post_earnings_move_2w: '0.1582'
+            post_earnings_move_3d: '0.0231'
+            pre_earnings_move_1d: '0.0724'
+            pre_earnings_move_1w: '0.132'
+            pre_earnings_move_2w: '0.1582'
+            pre_earnings_move_3d: '0.0231'
+            report_date: 2024-08-02
+            report_time: postmarket
+            short_straddle_1d: '-0.5830'
+            short_straddle_1w: '-0.005'
+            source: company
+            street_mean_est: '2.15'
+      properties:
+        actual_eps:
+          $ref: '#/components/schemas/Actual_EPS'
+        ending_fiscal_quarter:
+          $ref: '#/components/schemas/General_ISO_Date'
+        expected_move:
+          $ref: '#/components/schemas/Expected_Move'
+        expected_move_perc:
+          $ref: '#/components/schemas/Expected_Move_Perc'
+        long_straddle_1d:
+          $ref: '#/components/schemas/Long_Straddle_1_Day'
+        long_straddle_1w:
+          $ref: '#/components/schemas/Long_Straddle_1_Week'
+        post_earnings_move_1d:
+          $ref: '#/components/schemas/Post_Earnings_Move_1_Day'
+        post_earnings_move_1w:
+          $ref: '#/components/schemas/Post_Earnings_Move_1_Week'
+        post_earnings_move_2w:
+          $ref: '#/components/schemas/Post_Earnings_Move_2_Week'
+        post_earnings_move_3d:
+          $ref: '#/components/schemas/Post_Earnings_Move_13Day'
+        pre_earnings_move_1d:
+          $ref: '#/components/schemas/Pre_Earnings_Move_1_Day'
+        pre_earnings_move_1w:
+          $ref: '#/components/schemas/Pre_Earnings_Move_1_Week'
+        pre_earnings_move_2w:
+          $ref: '#/components/schemas/Pre_Earnings_Move_2_Week'
+        pre_earnings_move_3d:
+          $ref: '#/components/schemas/Pre_Earnings_Move_13Day'
+        report_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        report_time:
+          $ref: '#/components/schemas/Report_Time'
+        short_straddle_1d:
+          $ref: '#/components/schemas/Short_Straddle_1_Day'
+        short_straddle_1w:
+          $ref: '#/components/schemas/Short_Straddle_1_Week'
+        source:
+          $ref: '#/components/schemas/Source'
+        street_mean_est:
+          $ref: '#/components/schemas/Street_Mean_Est'
+      title: Historical Ticker Earnings
+      type: object
+    Historical_Units:
+      description: Historical unit counts. Maximum length = 8.
+      example:
+        - 4103
+        - 4423
+      items:
+        type: integer
+      title: Historical Units
+      type: array
+    Holdings:
+      description: ''
+      example:
+        data:
+          - avg30_volume: '52433648'
+            bearish_premium: '32565174'
+            bullish_premium: '22987045'
+            call_premium: '45254976'
+            call_volume: 197685
+            close: '194.84'
+            has_options: true
+            high: '196.579'
+            low: '194.41'
+            name: APPLE INC
+            prev_price: '197.14'
+            put_premium: '16338631'
+            put_volume: 106773
+            sector: Technology
+            shares: 169938760
+            short_name: APPLE
+            ticker: AAPL
+            type: stock
+            volume: 12314310
+            week52_high: '199.62'
+            week52_low: '123.15'
+            weight: '7.335'
+          - avg30_volume: '30239291'
+            bearish_premium: '14318236'
+            bullish_premium: '14142305'
+            call_premium: '22499010'
+            call_volume: 48302
+            close: '371.0'
+            has_options: true
+            high: '371.0'
+            low: '368.73'
+            name: MICROSOFT CORP
+            prev_price: '369.36'
+            put_premium: '8688334'
+            put_volume: 35055
+            sector: Technology
+            shares: 85913823
+            short_name: MICROSOFT
+            ticker: MSFT
+            type: stock
+            volume: 3760724
+            week52_high: '384.3'
+            week52_low: '216.98'
+            weight: '6.959'
+          - avg30_volume: '51068229'
+            bearish_premium: '27305757'
+            bullish_premium: '37477652'
+            call_premium: '68914858'
+            call_volume: 243442
+            close: '152.82'
+            has_options: true
+            high: '152.9'
+            low: '150.09'
+            name: AMAZON.COM INC
+            prev_price: '149.6'
+            put_premium: '15242490'
+            put_volume: 86301
+            sector: Consumer Cyclical
+            shares: 104991822
+            short_name: AMAZON
+            ticker: AMZN
+            type: stock
+            volume: 11285233
+            week52_high: '150.57'
+            week52_low: '81.43'
+            weight: '3.44'
+      properties:
+        avg30_volume:
+          $ref: '#/components/schemas/Stock_Average_30_Day_Volume'
+        bearish_premium:
+          $ref: '#/components/schemas/Market_General_Bearish_Premium'
+        bullish_premium:
+          $ref: '#/components/schemas/Market_General_Bullish_Premium'
+        call_premium:
+          $ref: '#/components/schemas/Market_General_Call_Premium'
+        call_volume:
+          $ref: '#/components/schemas/Market_General_Call_Volume'
+        close:
+          $ref: '#/components/schemas/Candle_Close'
+        has_options:
+          $ref: '#/components/schemas/Stock_Has_Options'
+        high:
+          $ref: '#/components/schemas/Candle_High'
+        low:
+          $ref: '#/components/schemas/Candle_Low'
+        name:
+          $ref: '#/components/schemas/Stock_Company_Name'
+        open:
+          $ref: '#/components/schemas/Candle_Open'
+        prev_price:
+          $ref: '#/components/schemas/Stock_Prev_Close_Price'
+        put_premium:
+          $ref: '#/components/schemas/Market_General_Put_Premium'
+        put_volume:
+          $ref: '#/components/schemas/Market_General_Put_Volume'
+        sector:
+          $ref: '#/components/schemas/Market_General_Sector'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        volume:
+          $ref: '#/components/schemas/Stock_Day_Stock_Volume'
+        week_52_high:
+          $ref: '#/components/schemas/Stock_Week_52_High'
+        week_52_low:
+          $ref: '#/components/schemas/Stock_Week_52_low'
+      title: Holdings
+      type: object
+    IPO_Calendar_Response:
+      properties:
+        data:
+          properties:
+            ipos:
+              items:
+                $ref: '#/components/schemas/Upcoming_IPO'
+              type: array
+          type: object
+      title: IPO Calendar Response
+      type: object
+    IV_Rank:
+      description: |
+        The IV rank data for a ticker over a time period.
+        IV rank is a measure of where current implied volatility stands relative to its historical range.
+      example:
+        data:
+          - close: '180.50'
+            date: 2024-01-22
+            iv_rank_1y: '0.65'
+            updated_at: 2024-01-22T16:35:52.168490Z
+            volatility: '0.25'
+          - close: '181.25'
+            date: 2024-01-23
+            iv_rank_1y: '0.72'
+            updated_at: 2024-01-23T16:35:52.168490Z
+            volatility: '0.28'
+      properties:
+        close:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        iv_rank_1y:
+          $ref: '#/components/schemas/Market_General_IV_Rank'
+        updated_at:
+          $ref: '#/components/schemas/General_UTC_Timestamp'
+        volatility:
+          $ref: '#/components/schemas/Market_General_Volatility'
+      title: IV Rank
+      type: object
+    Implied_Volatility:
+      description: The implied volatility of the option trade.
+      example: '0.604347250962543'
+      title: Implied Volatility
+      type: string
+    Implied_Volatility_Term_Structure:
+      description: ''
+      example:
+        data:
+          - date: 2023-09-08
+            dte: 0
+            expiry: 2023-09-08
+            implied_move: '3.1025'
+            implied_move_perc: '0.01765'
+            volatility: '0.2319'
+          - date: 2023-09-08
+            dte: 7
+            expiry: 2023-09-15
+            implied_move: '4.923'
+            implied_move_perc: '0.02747'
+            volatility: '0.2352'
+      properties:
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        dte:
+          $ref: '#/components/schemas/DTE'
+        expiry:
+          $ref: '#/components/schemas/Stock_Expiry'
+        implied_move:
+          $ref: '#/components/schemas/Stock_Implied_Move'
+        implied_move_perc:
+          $ref: '#/components/schemas/Stock_Implied_Move_Perc'
+        volatility:
+          $ref: '#/components/schemas/Stock_Volatility'
+      title: Implied Volatility Term Structure
+      type: object
+    Implied_Volatility_Term_Structure_Distribution:
+      description: The range of one expiry's at the money implied volatility over the 365 calendar days ending on `date`. Volatility values are annualized decimals, so `0.43` means 43%.
+      properties:
+        date:
+          example: 2026-09-18
+          format: date
+          type: string
+        dte:
+          description: The number of calendar days from `date` to `expiry`.
+          example: 91
+          type: integer
+        expiry:
+          example: 2026-12-18
+          format: date
+          type: string
+        first_date:
+          description: The earliest trading day included in the lookback for the expiry.
+          example: 2025-09-19
+          format: date
+          type: string
+        max:
+          description: The highest daily value in the lookback.
+          example: '0.595370292271564'
+          type: string
+        median:
+          description: The median of the daily values, interpolated linearly and rounded to 6 decimals.
+          example: '0.491979'
+          type: string
+        min:
+          description: The lowest daily value in the lookback.
+          example: '0.4291603363676975'
+          type: string
+        percentile:
+          description: The share of daily values at or below `volatility`, from 0 to 1. The value on `date` counts as one of the daily values.
+          example: '0.0080'
+          type: string
+        q1:
+          description: The first quartile of the daily values, interpolated linearly and rounded to 6 decimals.
+          example: '0.474857'
+          type: string
+        q3:
+          description: The third quartile of the daily values, interpolated linearly and rounded to 6 decimals.
+          example: '0.548378'
+          type: string
+        samples:
+          description: The number of daily values in the lookback, one per trading day with a value for the expiry.
+          example: 251
+          type: integer
+        ticker:
+          example: TSLA
+          type: string
+        volatility:
+          description: The implied volatility of the expiry on `date`. It is the average of the latest call and put implied volatility at the at the money strike.
+          example: '0.4295974677151735'
+          type: string
+      title: Implied Volatility Term Structure Distribution
+      type: object
+    Income_Statement:
+      description: A single income-statement period. All monetary figures are numeric strings, null when not reported.
+      properties:
+        comprehensive_income_net_of_tax:
+          example: '22430000000'
+          nullable: true
+          type: string
+        cost_of_goods_and_services_sold:
+          example: '51000000000'
+          nullable: true
+          type: string
+        cost_of_revenue:
+          example: '52553000000'
+          nullable: true
+          type: string
+        depreciation:
+          example: '1200000000'
+          nullable: true
+          type: string
+        depreciation_and_amortization:
+          example: '2910000000'
+          nullable: true
+          type: string
+        ebit:
+          example: '29281000000'
+          nullable: true
+          type: string
+        ebitda:
+          example: '32191000000'
+          nullable: true
+          type: string
+        fiscal_date_ending:
+          example: 2024-09-30
+          format: date
+          type: string
+        gross_profit:
+          example: '42377000000'
+          nullable: true
+          type: string
+        income_before_tax:
+          example: '28279000000'
+          nullable: true
+          type: string
+        income_tax_expense:
+          example: '4422000000'
+          nullable: true
+          type: string
+        inserted_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+        interest_and_debt_expense:
+          example: '1002000000'
+          nullable: true
+          type: string
+        interest_expense:
+          example: '1002000000'
+          nullable: true
+          type: string
+        interest_income:
+          example: '1190000000'
+          nullable: true
+          type: string
+        investment_income_net:
+          example: '800000000'
+          nullable: true
+          type: string
+        net_income:
+          example: '23857000000'
+          nullable: true
+          type: string
+        net_income_from_continuing_operations:
+          example: '23857000000'
+          nullable: true
+          type: string
+        net_interest_income:
+          example: '188000000'
+          nullable: true
+          type: string
+        non_interest_income:
+          example: '93740000000'
+          nullable: true
+          type: string
+        operating_expenses:
+          example: '14286000000'
+          nullable: true
+          type: string
+        operating_income:
+          example: '28091000000'
+          nullable: true
+          type: string
+        other_non_operating_income:
+          example: '-13000000'
+          nullable: true
+          type: string
+        report_type:
+          enum:
+            - annual
+            - quarterly
+          example: quarterly
+          type: string
+        reported_currency:
+          example: USD
+          nullable: true
+          type: string
+        research_and_development:
+          example: '7763000000'
+          nullable: true
+          type: string
+        selling_general_and_administrative:
+          example: '6523000000'
+          nullable: true
+          type: string
+        ticker:
+          example: AAPL
+          type: string
+        total_revenue:
+          example: '94930000000'
+          nullable: true
+          type: string
+        updated_at:
+          example: 2026-07-29T12:34:56Z
+          format: date-time
+          type: string
+      title: Income Statement
+      type: object
+    Income_Statements_Response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Income_Statement'
+          type: array
+      title: Income Statements Response
+      type: object
+    Industries:
+      description: An array of one or more industries.
+      example:
+        - Semiconductors
+        - Software - Infrastructure
+      items:
+        type: string
+      title: Industries
+      type: array
+    Inflow_and_Outflow:
+      description: ''
+      example:
+        data:
+          - change: -50
+            change_prem: '-12000.0'
+            close: '236.16'
+            date: 2024-10-02
+            is_fomc: false
+            volume: 592342
+          - change: 100
+            change_prem: '23500.0'
+            close: '235.12'
+            date: 2024-10-01
+            is_fomc: false
+            volume: 602342
+      properties:
+        change:
+          $ref: '#/components/schemas/Etf_Share_Change'
+        change_prem:
+          $ref: '#/components/schemas/Etf_Premium_Change'
+        close:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        is_fomc:
+          $ref: '#/components/schemas/Is_FOMC_Date'
+        volume:
+          $ref: '#/components/schemas/Stock_Day_Stock_Volume'
+      title: Inflow & Outflow
+      type: object
+    Insider:
+      description: An insider
+      example:
+        data:
+          - cik: '0001823951'
+            display_name: KARP ALEXANDER
+            id: 10343
+            is_person: true
+            logo_url: https://storage.googleapis.com/uwassets/insiders/10343
+            name: KARP ALEXANDER
+            name_slug: karp-alexander
+            ticker: PLTR
+      properties:
+        cik:
+          $ref: '#/components/schemas/Insider_CIK'
+        id:
+          $ref: '#/components/schemas/Insider_ID'
+        is_person:
+          $ref: '#/components/schemas/Insider_Is_Person'
+        logo_url:
+          $ref: '#/components/schemas/Insider_Logo_URL'
+        name:
+          $ref: '#/components/schemas/Insider_Name'
+        name_slug:
+          $ref: '#/components/schemas/Insider_Name_Slug'
+        social_links:
+          $ref: '#/components/schemas/Insider_Social_Links'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+      title: Insider
+      type: object
+    Insider_Amount:
+      description: The amount of the insider trade.
+      example: 1000
+      title: Insider Amount
+      type: integer
+    Insider_Average_Price:
+      description: The average price of the insider trade.
+      example: '123.45'
+      title: Insider Average Price
+      type: string
+    Insider_CIK:
+      description: The insider's CIK (Central Index Key).
+      example: '0000902015'
+      title: Insider CIK
+      type: string
+    Insider_Date_Excercisable:
+      description: The date excercisable of the insider trade.
+      example: 2023-12-06
+      title: Insider Date Excercisable
+      type: string
+    Insider_Director_Indirect:
+      description: The director indirect of the insider trade.
+      example: John Doe
+      title: Insider Director Indirect
+      type: string
+    Insider_Expiration_Date:
+      description: The expiration date of the insider trade.
+      example: 2023-12-06
+      title: Insider Expiration Date
+      type: string
+    Insider_Filing_Date:
+      description: The filing date of the insider trade.
+      example: 2023-12-06
+      title: Insider Filing Date
+      type: string
+    Insider_Form_Type:
+      description: 'The SEC form the row came from: 3 (initial ownership), 4 (change in ownership), 5 (annual), 144 (notice of intended sale, not an executed trade), each with an /A variant for amendments.'
+      enum:
+        - '3'
+        - 3/A
+        - '4'
+        - 4/A
+        - '5'
+        - 5/A
+        - '144'
+        - 144/A
+      example: '4'
+      title: Insider Form Type
+      type: string
+    Insider_ID:
+      description: The insider's ID.
+      example: 1
+      title: Insider ID
+      type: integer
+    Insider_IDs:
+      description: The IDs of the insider trade.
+      example:
+        - '1234'
+      items:
+        type: string
+      title: Insider IDs
+      type: array
+    Insider_Is_10_Owner:
+      description: Whether the insider is a 10% owner.
+      example: true
+      title: Insider Is 10 Owner
+      type: boolean
+    Insider_Is_10b5-1:
+      description: True if this insider trade was part of a 10b5-1 plan
+      example: true
+      title: Insider Is 10b5-1
+      type: boolean
+    Insider_Is_Director:
+      description: Whether the insider is a director.
+      example: true
+      title: Insider Is Director
+      type: boolean
+    Insider_Is_Officer:
+      description: Whether the insider is an officer.
+      example: true
+      title: Insider Is Officer
+      type: boolean
+    Insider_Is_Person:
+      description: Whether the insider is a person. False if the insider is a fund, LLC, etc.
+      example: true
+      title: Insider Is Person
+      type: boolean
+    Insider_Logo_URL:
+      description: The URL to the insider's logo.
+      example: https://example.com/logo.png
+      title: Insider Logo URL
+      type: string
+    Insider_Name:
+      description: The name of the insider.
+      example: John Doe
+      title: Insider Name
+      type: string
+    Insider_Name_Slug:
+      description: The slugified name of the insider.
+      example: john-doe
+      title: Insider Name Slug
+      type: string
+    Insider_Nature_of_Ownership:
+      description: The nature of ownership of the insider trade.
+      example: Direct
+      title: Insider Nature of Ownership
+      type: string
+    Insider_Officer_Title:
+      description: The officer title of the insider trade.
+      example: CEO
+      title: Insider Officer Title
+      type: string
+    Insider_Owner_Name:
+      description: The owner name of the insider trade.
+      example: John Doe
+      title: Insider Owner Name
+      type: string
+    Insider_Premium:
+      description: The premium of the insider trade.
+      example: '123.45'
+      title: Insider Premium
+      type: string
+    Insider_Price:
+      description: The price of the insider trade.
+      example: '123.45'
+      title: Insider Price
+      type: string
+    Insider_Price_Excercisable:
+      description: The price excercisable of the insider trade.
+      example: '123.45'
+      title: Insider Price Excercisable
+      type: string
+    Insider_Sector_Flow:
+      description: The total buy/sell insider flow for a given sector on a given date. If there have been buy & sells on the same day then there will be 2 rows for that day.
+      example:
+        data:
+          - avg_price: 162.32
+            buy_sell: sell
+            date: 2024-12-12
+            premium: '664386'
+            transactions: 54
+            uniq_insiders: 10
+            volume: 244331
+        has_more: false
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/Insider_Average_Price'
+        buy_sell:
+          $ref: '#/components/schemas/Transaction_Side'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        has_more:
+          $ref: '#/components/schemas/Has_More'
+        premium:
+          $ref: '#/components/schemas/Insider_Premium'
+        transactions:
+          $ref: '#/components/schemas/Insider_Transactions'
+        uniq_insiders:
+          $ref: '#/components/schemas/Insider_Unique_Insiders'
+        volume:
+          $ref: '#/components/schemas/Insider_Volume'
+      title: Insider Sector Flow
+      type: object
+    Insider_Security_AD_Code:
+      description: The security AD code of the insider trade.
+      example: '1234'
+      title: Insider Security AD Code
+      type: string
+    Insider_Security_Title:
+      description: The security title of the insider trade.
+      example: Common Stock
+      title: Insider Security Title
+      type: string
+    Insider_Shares_Owned_After:
+      description: The number of shares owned after the insider trade.
+      example: 2000
+      title: Insider Shares Owned After
+      type: integer
+    Insider_Shares_Owned_Before:
+      description: The number of shares owned before the insider trade.
+      example: 1000
+      title: Insider Shares Owned Before
+      type: integer
+    Insider_Social_Links:
+      description: The social links of the insider.
+      example:
+        - https://twitter.com/johndoe
+      items:
+        type: string
+      title: Insider Social Links
+      type: array
+    Insider_Ticker_Flow:
+      description: The total buy/sell insider flow for a given ticker on a given date. If there have been buy & sells on the same day then there will be 2 rows for that day.
+      example:
+        data:
+          - avg_price: 162.32
+            buy_sell: sell
+            date: 2024-12-12
+            premium: '664386'
+            transactions: 54
+            uniq_insiders: 10
+            volume: 244331
+        has_more: false
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/Insider_Average_Price'
+        buy_sell:
+          $ref: '#/components/schemas/Transaction_Side'
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        has_more:
+          $ref: '#/components/schemas/Has_More'
+        premium:
+          $ref: '#/components/schemas/Insider_Premium'
+        transactions:
+          $ref: '#/components/schemas/Insider_Transactions'
+        uniq_insiders:
+          $ref: '#/components/schemas/Insider_Unique_Insiders'
+        volume:
+          $ref: '#/components/schemas/Insider_Volume'
+      title: Insider Ticker Flow
+      type: object
+    Insider_Trade_Agg:
+      description: An aggregated insider trade
+      example:
+        data:
+          - amount: -35921
+            date_excercisable:
+            director_indirect:
+            expiration_date:
+            filing_date: 2024-12-12
+            formtype: '144'
+            id: 2662b73d-0ad6-4568-adb0-739b96c18090
+            ids:
+              - 26f2911d-8e40-4fd4-9b74-c450e203a0ad
+            is_10b5_1: true
+            is_director: true
+            is_officer: true
+            is_s_p_500: true
+            is_ten_percent_owner: true
+            marketcap: '1375122749418'
+            natureofownership:
+            next_earnings_date: 2025-02-06
+            officer_title: COB and CEO
+            owner_name: ZUCKERBERG MARK
+            price: '632'
+            price_excercisable:
+            sector: Communication Services
+            security_ad_code:
+            security_title:
+            shares_owned_after:
+            shares_owned_before:
+            stock_price:
+            ticker: META
+            transaction_code: S
+            transaction_date: 2024-12-12
+            transactions: 1
+      properties:
+        accession_no:
+          $ref: '#/components/schemas/Accession_Number'
+        amended_original_accession_no:
+          $ref: '#/components/schemas/Amended_Original_Accession_Number'
+        amount:
+          $ref: '#/components/schemas/Insider_Amount'
+        date_excercisable:
+          $ref: '#/components/schemas/Insider_Date_Excercisable'
+        director_indirect:
+          $ref: '#/components/schemas/Insider_Director_Indirect'
+        expiration_date:
+          $ref: '#/components/schemas/Insider_Expiration_Date'
+        filing_date:
+          $ref: '#/components/schemas/Insider_Filing_Date'
+        formtype:
+          $ref: '#/components/schemas/Insider_Form_Type'
+        ids:
+          $ref: '#/components/schemas/Insider_IDs'
+        is_10b5_1:
+          $ref: '#/components/schemas/Insider_Is_10b5-1'
+        is_director:
+          $ref: '#/components/schemas/Insider_Is_Director'
+        is_officer:
+          $ref: '#/components/schemas/Insider_Is_Officer'
+        is_ten_percent_owner:
+          $ref: '#/components/schemas/Insider_Is_10_Owner'
+        issuer_cik:
+          $ref: '#/components/schemas/Issuer_CIK'
+        natureofownership:
+          $ref: '#/components/schemas/Insider_Nature_of_Ownership'
+        officer_title:
+          $ref: '#/components/schemas/Insider_Officer_Title'
+        owner_name:
+          $ref: '#/components/schemas/Insider_Owner_Name'
+        price:
+          $ref: '#/components/schemas/Insider_Price'
+        price_excercisable:
+          $ref: '#/components/schemas/Insider_Price_Excercisable'
+        reporter_cik:
+          $ref: '#/components/schemas/Reporter_CIK'
+        security_ad_code:
+          $ref: '#/components/schemas/Insider_Security_AD_Code'
+        security_title:
+          $ref: '#/components/schemas/Insider_Security_Title'
+        shares_owned_after:
+          $ref: '#/components/schemas/Insider_Shares_Owned_After'
+        shares_owned_before:
+          $ref: '#/components/schemas/Insider_Shares_Owned_Before'
+        ticker:
+          $ref: '#/components/schemas/Stock_Ticker'
+        transaction_code:
+          $ref: '#/components/schemas/Insider_Transaction_Code'
+        transaction_date:
+          $ref: '#/components/schemas/Insider_Transaction_Date'
+        transactions:
+          $ref: '#/components/schemas/Insider_Transactions'
+      title: Insider Trade Agg
+      type: object
+    Insider_Trades_Amount_Range:
+      description: The reported amount range of the transaction.
+      example: $1,000 - $15,000
+      title: Insider Trades Amount Range
+      type: string
+    Insider_Trades_Filing_Date:
+      description: The filing date as ISO date.
+      example: 2023-12-13
+      title: Insider Trades Filing Date
+      type: string
+    Insider_Trades_Filing_Notes:
+      description: Notes of the filing.
+      example: 'Subholding Of: Stephens Advantage Account Description: FT UNIT 10479 PFD mutual-fund 32500'
+      title: Insider Trades Filing Notes
+      type: string
+    Insider_Trades_Issuer:
+      description: The person who executed the transaction.
+      example: spouse
+      title: Insider Trades Issuer
+      type: string
+    Insider_Trades_Member_Type:
+      description: The type of person who executed the transaction.
+      example: true
+      title: Insider Trades Member Type
+      type: boolean
+    Insider_Trades_Notional_Purchases:
+      description: The total notional value of purchase transactions.
+      example: '14317122.490'
+      title: Insider Trades Notional Purchases
+      type: string
+    Insider_Trades_Notional_Sells:
+      description: The total notional value of sell transactions.
+      example: '-1291692.4942'
+      title: Insider Trades Notional Sells
+      type: string
+    Insider_Trades_Purchases:
+      description: The amount of purchase transactions.
+      example: 12
+      title: Insider Trades Purchases
+      type: integer
+    Insider_Trades_Reporter:
+      description: The person who reported the transaction (as written in filling).
+      example: Stephen Cohen
+      title: Insider Trades Reporter
+      type: string
+    Insider_Trades_Reporters_Standard_Name:
+      description: The Standardized name of the reporter (if found).
+      example: Stephen Cohen
+      title: Insider Trades Reporter's Standard Name
+      type: string
+    Insider_Trades_Sells:
+      description: The amount of sell transactions.
+      example: 10
+      title: Insider Trades Sells
+      type: integer
+    Insider_Trades_Transaction_Date:
+      description: The transaction date as ISO date.
+      example: 2023-12-06
+      title: Insider Trades Transaction Date
+      type: string
+    Insider_Trades_Transaction_Type:
+      description: The transaction type.
+      enum:
+        - Buy
+        - Sell (partial)
+        - Purchase
+        - Sale (Partial)
+        - Receive
+        - Sale (Full)
+        - Sell (PARTIAL)
+        - Sell
+        - Exchange
+      example: Sell
+      title: Insider Trades Transaction Type
+      type: string
+    Insider_Transaction_Code:
+      description: The transaction code of the insider trade.
+      example: S
+      title: Insider Transaction Code
+      type: string
+    Insider_Transaction_Date:
+      description: The transaction date of the insider trade.
+      example: 2023-12-06
+      title: Insider Transaction Date
+      type: string
+    Insider_Transactions:
+      description: The number of transactions of the insider trade.
+      example: 1
+      title: Insider Transactions
+      type: integer
+    Insider_Unique_Insiders:
+      description: The number of unique insiders of the insider trade.
+      example: 1
+      title: Insider Unique Insiders
+      type: integer
+    Insider_Volume:
+      description: The volume of the insider trade.
+      example: 1000
+      title: Insider Volume
+      type: integer
+    Insider_statistics:
+      description: ''
+      example:
+        data:
+          - filing_date: 2023-12-13
+            purchases: 12
+            purchases_notional: '14317122.490'
+            sells: 10
+            sells_notional: '-1291692.4942'
+          - filing_date: 2023-12-12
+            purchases: 78
+            purchases_notional: '46598915.1911'
+            sells: 211
+            sells_notional: '-182466466.7165'
+          - filing_date: 2023-12-11
+            purchases: 96
+            purchases_notional: '431722108.8184'
+            sells: 210
+            sells_notional: '-1058043617.3548'
+      properties:
+        filing_date:
+          $ref: '#/components/schemas/Insider_Trades_Filing_Date'
+        purchases:
+          $ref: '#/components/schemas/Insider_Trades_Purchases'
+        purchases_notional:
+          $ref: '#/components/schemas/Insider_Trades_Notional_Purchases'
+        sells:
+          $ref: '#/components/schemas/Insider_Trades_Sells'
+        sells_notional:
+          $ref: '#/components/schemas/Insider_Trades_Notional_Sells'
+      title: Insider statistics
+      type: object
+    Institution:
+      description: A large entity that manages funds and investments for others. Queryable by name or cik.
+      example: VANGUARD GROUP INC or 0000102909
+      title: Institution
+      type: string
+    Institution_Summary:
+      description: The summary data for an institution.
+      example:
+        data:
+          - buy_value: '359232.0'
+            call_holdings: '359232.0'
+            call_value: '359232.0'
+            cik: '0001791786'
+            date: 2024-12-31
+            debt_holdings: '359232.0'
+            debt_value: '359232.0'
+            description: Elliott Management Corporation is an American investment management firm. It is also one of the largest activist funds in the world.
+            filing_date: 2024-10-01
+            founder_img_url: https://storage.googleapis.com/uwassets/institution-img/ELLIOTT%20INVESTMENT%20MANAGEMENT%20L.P.%20Paul%20Singer.jpg
+            fund_holdings: '359232.0'
+            fund_value: '359232.0'
+            is_hedge_fund: true
+            logo_url: https://storage.googleapis.com/uwassets/institution-img/ELLIOTT%20INVESTMENT%20MANAGEMENT%20L.P.%20logo.webp
+            name: ELLIOTT INVESTMENT MANAGEMENT L.P.
+            people:
+              - Paul Singer
+            pfd_holdings: '359232.0'
+            pfd_value: '359232.0'
+            put_holdings: '359232.0'
+            put_value: '359232.0'
+            sell_value: '359232.0'
+            share_holdings: '359232.0'
+            share_value: '359232.0'
+            short_name: Elliott Investment Management
+            succession:
+            tags:
+              - activist
+            total_value: '359232.0'
+            warrant_holdings: '359232.0'
+            warrant_value: '359232.0'
+            website: https://elliott.com
+      properties:
+        buy_value:
+          $ref: '#/components/schemas/Buy_Value'
+        call_holdings:
+          $ref: '#/components/schemas/Call_Holding_Units'
+        call_value:
+          $ref: '#/components/schemas/Call_Value'
+        cik:
+          $ref: '#/components/schemas/CIK'
+        date:
+          $ref: '#/components/schemas/Report_Period_End_Date'
+        debt_holdings:
+          $ref: '#/components/schemas/Debt_Holding_Units'
+        debt_value:
+          $ref: '#/components/schemas/Debt_Value'
+        description:
+          $ref: '#/components/schemas/Description'
+        filing_date:
+          $ref: '#/components/schemas/Filing_Date'
+        founder_img_url:
+          $ref: '#/components/schemas/Founder_Image_URL'
+        fund_holdings:
+          $ref: '#/components/schemas/Fund_Holding_Units'
+        fund_value:
+          $ref: '#/components/schemas/Fund_Value'
+        is_hedge_fund:
+          $ref: '#/components/schemas/Is_Hedge_Fund'
+        logo_url:
+          $ref: '#/components/schemas/Logo_URL'
+        name:
+          $ref: '#/components/schemas/Name'
+        people:
+          $ref: '#/components/schemas/People'
+        pfd_holdings:
+          $ref: '#/components/schemas/Preferred_Share_Holding_Units'
+        pfd_value:
+          $ref: '#/components/schemas/Preferred_Share_Value'
+        put_holdings:
+          $ref: '#/components/schemas/Put_Holding_Units'
+        put_value:
+          $ref: '#/components/schemas/Put_Value'
+        sell_value:
+          $ref: '#/components/schemas/Sell_Value'
+        share_value:
+          $ref: '#/components/schemas/Share_Value'
+        short_name:
+          $ref: '#/components/schemas/Short_Name'
+        succession:
+          $ref: '#/components/schemas/Succession'
+        tags:
+          $ref: '#/components/schemas/Tags'
+        total_value:
+          $ref: '#/components/schemas/Total_Value'
+        warrant_holdings:
+          $ref: '#/components/schemas/Warrant_Holding_Units'
+        warrant_value:
+          $ref: '#/components/schemas/Warrant_Value'
+        website:
+          $ref: '#/components/schemas/Website'
+      title: Institution Summary
+      type: object
+    Institution_Tag:
+      description: ''
+      enum:
+        - advisor
+        - value_investor
+        - brokerage
+        - hedge_fund
+        - private_fund
+        - biotech
+        - activist
+        - top_fund
+        - tiger_club
+        - esg
+        - credit
+        - 13d_activist
+        - energy
+        - small_cap
+        - event
+        - real_estate
+        - technology
+        - all
+        - public_companies
+        - known
+      example: activist
+      title: Institution Tag
+      type: string
+    Institution_Tags:
+      description: An array of institution tags
+      example:
+        - activist
+      items:
+        $ref: '#/components/schemas/Institution_Tag'
+      title: Institution Tags
+      type: array
+    Institutional_Activity:
+      description: The trading activities for a given institution.
+      example:
+        data:
+          - avg_price: '432.31'
+            buy_price:
+            close: '513.23'
+            filing_date: 2024-12-23
+            price_on_filing: '510.34'
+            price_on_report: '495.95'
+            put_call:
+            report_date: 2024-09-30
+            security_type: Fund
+            sell_price:
+            shares_outstanding: '148239423.0'
+            ticker: SPLG
+            units: 5000
+            units_change: -500
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/Avg_Price'
+        buy_price:
+          $ref: '#/components/schemas/Buy_Price'
+        close:
+          $ref: '#/components/schemas/Stock_Close_Price'
+        filing_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        price_on_filing:
+          $ref: '#/components/schemas/Price_On_Filing'
+        price_on_report:
+          $ref: '#/components/schemas/Price_On_Report'
+        put_call:
+          $ref: '#/components/schemas/PutCall'
+        report_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        security_type:
+          $ref: '#/components/schemas/Security_Type'
+        sell_price:
+          $ref: '#/components/schemas/Sell_Price'
+        shares_outstanding:
+          $ref: '#/components/schemas/Shares_Outstanding'
+        ticker:
+          $ref: '#/components/schemas/Ticker_Symbol'
+        units:
+          $ref: '#/components/schemas/Units'
+        units_change:
+          $ref: '#/components/schemas/Units_Change'
+      title: Institutional Activity
+      type: object
+    Institutional_Activity_Order_By:
+      default: units
+      description: Optional columns to order the result by per report period end date.
+      enum:
+        - units
+        - units_change
+      example: units
+      title: Institutional Activity Order By
+      type: string
+    Institutional_Holdings_Order_By:
+      description: Optional columns to order the result by
+      enum:
+        - date
+        - ticker
+        - security_type
+        - put_call
+        - first_buy
+        - price_first_buy
+        - units
+        - units_change
+        - historical_units
+        - value
+        - avg_price
+        - close
+        - shares_outstanding
+      example: ticker
+      title: Institutional Holdings Order By
+      type: string
+    Institutional_List_Order_By:
+      description: Optional columns to order the result by
+      enum:
+        - name
+        - call_value
+        - put_value
+        - share_value
+        - call_holdings
+        - put_holdings
+        - share_holdings
+        - total_value
+        - warrant_value
+        - fund_value
+        - pfd_value
+        - debt_value
+        - total_holdings
+        - warrant_holdings
+        - fund_holdings
+        - pfd_holdings
+        - debt_holdings
+        - percent_of_total
+        - date
+        - buy_value
+        - sell_value
+      example: name
+      title: Institutional List Order By
+      type: string
+    Institutional_Ownership:
+      description: The institutional ownership of a given ticker.
+      example:
+        data:
+          - avg_price: '432.31'
+            filing_date: 2024-12-23
+            first_buy: 2021-02-25
+            historical_units:
+              - 4103
+              - 4423
+            inst_share_value: '582093953.0'
+            inst_value: '1095205923.0'
+            name: VANGUARD GROUP INC
+            people:
+              - John Doe
+            report_date: 2024-09-30
+            shares_outstanding: '148239423.0'
+            short_name: Vanguard
+            tags:
+              - value_investor
+            units: 5000
+            units_change: -500
+            value: '2934823.0'
+      properties:
+        avg_price:
+          $ref: '#/components/schemas/Avg_Price'
+        filing_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        first_buy:
+          $ref: '#/components/schemas/General_ISO_Date'
+        historical_units:
+          $ref: '#/components/schemas/Historical_Units'
+        inst_share_value:
+          $ref: '#/components/schemas/Share_Value'
+        inst_value:
+          $ref: '#/components/schemas/Total_Value'
+        name:
+          $ref: '#/components/schemas/Name'
+        people:
+          $ref: '#/components/schemas/People'
+        report_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        shares_outstanding:
+          $ref: '#/components/schemas/Shares_Outstanding'
+        short_name:
+          $ref: '#/components/schemas/Short_Name'
+        tags:
+          $ref: '#/components/schemas/Tags'
+        units:
+          $ref: '#/components/schemas/Units'
+        units_change:
+          $ref: '#/components/schemas/Units_Change'
+        value:
+          $ref: '#/components/schemas/Value'
+      title: Institutional Ownership
+      type: object
+    Institutional_Ownership_Order_By:
+      description: Optional columns to order the result by
+      enum:
+        - name
+        - short_name
+        - filing_date
+        - first_buy
+        - units
+        - units_change
+        - units_changed
+        - value
+        - avg_price
+        - perc_outstanding
+        - perc_units_changed
+        - activity
+        - perc_inst_value
+        - perc_share_value
+      example: name
+      title: Institutional Ownership Order By
+      type: string
+    Institutional_Report_End_Date:
+      description: |
+        A date in the format of YYYY-MM-DD, only institutional holdings with `report_date` values on or before this date will be returned.
+      example: 2023-03-31
+      format: date
+      title: Institutional Report End Date
+      type: string
+    Institutional_Report_Start_Date:
+      description: |
+        A date in the format of YYYY-MM-DD, only institutional holdings with `report_date` values on or after this date will be returned.
+      example: 2023-01-01
+      format: date
+      title: Institutional Report Start Date
+      type: string
+    Institutional_Reporting_End_Date:
+      description: |
+        End date to filter institutional reporting data in the format YYYY-MM-DD.
+
+        Only data with dates on or before this date will be returned.
+      example: 2023-03-31
+      format: date
+      title: Institutional Reporting End Date
+      type: string
+    Institutional_Reporting_Start_Date:
+      description: |
+        Start date to filter institutional reporting data in the format YYYY-MM-DD.
+
+        Only data with dates on or after this date will be returned.
+      example: 2023-01-01
+      format: date
+      title: Institutional Reporting Start Date
+      type: string
+    Interpolated_IV:
+      description: Interpolated implied volatility data for different time horizons
+      example:
+        data:
+          - date: 2025-05-30
+            days: 1
+            implied_move_perc: '0.003'
+            percentile: '100'
+            volatility: '1.739'
+          - date: 2025-05-30
+            days: 5
+            implied_move_perc: '0.02'
+            percentile: '94.737'
+            volatility: '0.696'
+          - date: 2025-05-30
+            days: 7
+            implied_move_perc: '0.026'
+            percentile: '52.632'
+            volatility: '0.278'
+          - date: 2025-05-30
+            days: 14
+            implied_move_perc: '0.041'
+            percentile: '68.421'
+            volatility: '0.311'
+          - date: 2025-05-30
+            days: 30
+            implied_move_perc: '0.058'
+            percentile: '77.193'
+            volatility: '0.299'
+      properties:
+        date:
+          $ref: '#/components/schemas/Market_General_Trading_day'
+        days:
+          description: Number of days to expiration
+          example: 30
+          type: integer
+        implied_move_perc:
+          description: Expected move as a percentage of the current price
+          example: '0.058'
+          type: string
+        percentile:
+          description: Percentile ranking of this volatility value over a 1y period
+          example: '77.193'
+          type: string
+        volatility:
+          description: Interpolated implied volatility value
+          example: '0.299'
+          type: string
+      title: Interpolated IV
+      type: object
+    Interpolated_IV_Distribution:
+      description: The range of one fixed maturity's interpolated implied volatility over the 365 calendar days ending on `date`. Volatility values are annualized decimals, so `0.43` means 43%.
+      properties:
+        date:
+          example: 2026-09-18
+          format: date
+          type: string
+        days:
+          description: The fixed maturity in calendar days. One of 7, 30, 60, 90, 180 or 365.
+          example: 30
+          type: integer
+        first_date:
+          description: The earliest trading day included in the lookback for the maturity.
+          example: 2025-09-19
+          format: date
+          type: string
+        max:
+          description: The highest daily value in the lookback.
+          example: '0.648'
+          type: string
+        median:
+          description: The median of the daily values, interpolated linearly and rounded to 6 decimals.
+          example: '0.461'
+          type: string
+        min:
+          description: The lowest daily value in the lookback.
+          example: '0.369'
+          type: string
+        percentile:
+          description: The share of daily values at or below `volatility`, from 0 to 1. The value on `date` counts as one of the daily values.
+          example: '0.1434'
+          type: string
+        q1:
+          description: The first quartile of the daily values, interpolated linearly and rounded to 6 decimals.
+          example: '0.426'
+          type: string
+        q3:
+          description: The third quartile of the daily values, interpolated linearly and rounded to 6 decimals.
+          example: '0.487'
+          type: string
+        samples:
+          description: The number of daily values in the lookback, one per trading day with a positive value.
+          example: 251
+          type: integer
+        ticker:
+          example: TSLA
+          type: string
+        volatility:
+          description: The interpolated implied volatility of the maturity on `date`.
+          example: '0.412'
+          type: string
+      title: Interpolated IV Distribution
+      type: object
+    Is_Active:
+      description: Is the politician an active member.
+      example: G000585
+      title: Is Active
+      type: string
+    Is_FOMC_Date:
+      description: If the date has an FOMC announcement.
+      example: false
+      title: Is FOMC Date
+      type: boolean
+    Is_Hedge_Fund:
+      description: ''
+      example: true
+      title: Is Hedge Fund
+      type: boolean
+    Is_OTM_Contract:
+      description: Only include contracts which are currently out of the money.
+      example: true
+      title: Is OTM Contract
+      type: boolean
+    Is_Part_of_the_SandP_500:
+      description: ''
+      title: Is Part of the S&P 500
+      type: boolean
+    Issue_types:
+      description: An array of 1 or more issue types.
+      example:
+        - Common Stock
+        - Index
+      items:
+        $ref: '#/components/schemas/Single_issue_type'
+      title: Issue types
+      type: array
+    Issuer_CIK:
+      description: SEC Central Index Key of the issuing company.
+      example: '0001326801'
+      title: Issuer CIK
+      type: string
+    Last_NBBO_Ask:
+      description: The NBBO Ask price for the final tick of that day's trading session.
+      example: '0.45'
+      title: Last NBBO Ask
+      type: string
+    Last_NBBO_Bid:
+      description: The NBBO Bid price for the final tick of that day's trading session.
+      example: '0.30'
+      title: Last NBBO Bid
+      type: string
+    Latest_Institutional_Filings:
+      description: The latest institutional filings.
+      example:
+        data:
+          - cik: '0001791786'
+            filing_date: 2024-10-03
+            is_hedge_fund: true
+            name: ELLIOTT INVESTMENT MANAGEMENT L.P.
+            people:
+              - Paul Singer
+            short_name: Elliott Investment Management
+            tags:
+              - activist
+      properties:
+        cik:
+          $ref: '#/components/schemas/CIK'
+        filing_date:
+          $ref: '#/components/schemas/General_ISO_Date'
+        is_hedge_fund:
+          $ref: '#/components/schemas/Is_Hedge_Fund'
+        name:
+          $ref: '#/components/schemas/Name'
+        people:
+          $ref: '#/components/schemas/People'
+        short_name:
+          $ref: '#/components/schemas/Short_Name'
+        tags:
+          $ref: '#/components/schemas/Tags'
+      title: Latest Institutional Filings
+      type: object
+    Latest_Institutional_Filings_Order_By:
+      description: Optional columns to order the result by. The filing date is always sorted in descending or

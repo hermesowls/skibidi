@@ -138,6 +138,8 @@ also want the perf harness.
 
 ## Pitfalls
 
+- **Network request blocking belongs to the live CDP session.** Keep the same WebSocket connection open from `Network.setBlockedURLs` through navigation, UI interactions, and assertions. Do not set blocking in a short-lived probe and assume it survives disconnect. Navigate the test tab to `about:blank` before disconnect to stop mount polling. If an earlier probe disconnected, disclose that its read boundaries were not proven even when a later correctly blocked rerun passes.
+
 - **Never kill the user's dev server or app to "free" anything.** A mid-serve
   kill nukes Chromium's socket pool, and the resulting `ERR_NETWORK_CHANGED`
   gets blamed on whatever you just changed.

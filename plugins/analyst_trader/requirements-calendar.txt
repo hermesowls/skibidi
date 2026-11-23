@@ -1,0 +1,7 @@
+# Optional, research-only maintained session calendar; install in project venv.
+# Resolved without changing any existing distribution (Python 3.11).
+exchange-calendars==4.13.2
+# Pin newly introduced transitives; existing pandas/numpy remain untouched.
+korean-lunar-calendar==0.4.0
+pyluach==2.3.0
+toolz==1.1.0

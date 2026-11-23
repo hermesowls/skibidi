@@ -1,0 +1,11 @@
+{
+  "logical_path": "references/categories/screener.md",
+  "parts": [
+    "references/categories/screener.md.part000",
+    "references/categories/screener.md.part001",
+    "references/categories/screener.md.part002"
+  ],
+  "sha256": "aa550d24df9d32589e44697a1bff20f9bc3f7a72815e60274fb9982721347c57",
+  "bytes": 238685,
+  "reconstruction": "Concatenate UTF-8 part bytes in listed order; no separators."
+}
